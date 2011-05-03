@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
+<?xml-stylesheet type='text/xsl' 'rfc2629.xslt ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+(Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="no" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->                                                                                         
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+(using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std"
+docName="draft-scim-saml2-binding-01"
+ipr="full3667">
+
+<!-- trust200902 -->
+<!-- category values: std, bcp, info, exp, and historic
+ipr values: full3667, noModification3667, noDerivatives3667
+you can add the attributes updates="NNNN" and obsoletes="NNNN"
+they will automatically be output with "(if approved)" -->
+
+<!-- ***** FRONT MATTER ***** -->
+
+<front>
+<!-- The abbreviated title is used in the page header - it is only necessary if the
+full title is longer than 39 characters -->
+
+<title abbrev="">SCIM scenarios</title>
+
+<!-- add 'role="editor"' below for the editors if appropriate -->
+<author fullname="Patrick Harding" initials="P." role="editor" surname="Harding">
+<organization>Ping Identity Corp.</organization>
+<address>
+<email>pharding@pingidentity.com</email>
+</address>
+</author>
+
+<author fullname="Darran Rolls" initials="D." role="editor" surname="Rolls">
+<organization>Sailpoint</organization>
+<address>
+<email>darranrolls@sailpoint.com</email>
+</address>
+</author>
+
+
+<date month="April" year="2011"/>
+
+<!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+in the current day for you. If only the current year is specified, xml2rfc will fill
+in the current day and month for you. If the year is not the current one, it is
+necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+purpose of calculating the expiry date).  With drafts it is normally sufficient to
+specify just the year. -->
+
+<!-- Meta-data Declarations -->
+
+<area>Internet</area>
+
+<workgroup>&nbsp;</workgroup> 
+
+<!-- WG name at the upperleft corner of the doc,
+IETF is fine for individual submissions.
+If this element is not present, the default is "Network Working Group",
+which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+<keyword>SCIM</keyword>
+<keyword>SAML</keyword>
+
+<!-- Keywords will be incorporated into HTML output
+files in a meta tag but they have no effect on text or nroff
+output. If you submit your draft to the RFC Editor, the
+keywords will be used for the search engine. -->
+
+<abstract>
+<t>The Simple Cloud Identity Management (SCIM) specification is designed to make managing user identity in cloud based applications and services easier. 
+</t>
+</abstract>
+</front>
+
+<middle>
+<section title="SCIM User Scenarios">
+
+	<section title="Background &amp; Context">
+	<t>The Simple Cloud Identity Management (SCIM) specification is designed to make managing user identity in cloud based applications and services easier. The specification suite seeks to build upon experience with existing schemas and deployments, placing specific emphasis on simplicity of development and integration, while applying existing authentication, authorization, and privacy models. It's intent is to reduce the cost and complexity of user management operations by providing a common user schema and extension model, as well as binding documents to provide patterns for exchanging this schema using standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around the cloud.</t>
+
+<t>The SCIM scenarios are overview user stories designed to help clarify the intended scope of the SCIM effort.  They are part use case, part user story and part overall positioning document.  
+</t>
+
+<t>To aid reading, understanding and commenting on the SCIM scenarios, this document makes consistent use of the three key model concepts called Triggers Actors and Modes.  Each of these concepts is discussed in more detail in the Model Concepts section below.  In summary, Triggers are things that start SCIM flows, Actors are the operating parities participating in the flow, and Modes represent the overall intent of the action (push or pull).</t>
+
+
+<t>There is nothing normative or overly definitive about these model terms.  They are only relevant to SCIM to the extent in which they help frame the discussion and create a common language for the ongoing discussion. 
+</t>
+
+	</section>
+
+<section title="Model Concepts">
+	<section title="Triggers">
+	
+	<t>Quite simply, triggers are actions or activities that start SCIM flows.  Triggers may not be relevant at the protocol or schema level, they really serve to help identity the type or activity that resulted in a SCIM protocol exchange.  
+The terms Joiner/Mover &amp; Leaver are frequently used Human Resource Management terms that refer to the life cycle of an employee or contractor.   We have chosen these terms in preference to the traditional C.R.U.D (Create Read Update &amp; Delete) terms used in existing provisioning standards. So far, we have identified the following five SCIM Triggers:</t>
+
+<t>
+<list style='symbols'>
+<t>Joiner Trigger  - Service On-boarding
+A joiner trigger is a service on-boarding activity in which a business action such as a new hire or new service subscription is initiated by one of the SCIM Actors.
+</t>
+<t>Mover Trigger - Service Change
+A mover trigger is a service change activity as a result of an identity moving or changing its service level.  A mover trigger might be the result of a change in a service subscription level or a change to key identity data used to denote a service subscription level.
+</t>
+<t>Leaver Trigger - Service Termination/Suspension
+A leaver trigger is simply an action or activity to suspend or terminate a service subscription.  At this stage its unclear if SCIM needs to identify separate protocol exchanges or identity a difference between a termination/deletion and a suspension.  This may be relevant as target services may well differentiate between the two.
+</t>
+
+<t>Sync Trigger - Bulk Synchronization </t>
+
+<t>Single-Sign On (SSO) Trigger - Real-time Service Access Request
+A SSO trigger is a special class of activity or action in which a Joiner or Mover action is initiated during an SSO interaction, which has resulted from a real-time service access request by the user.  
+</t>
+
+</list>
+</t>
+	</section>
+		<!-- end concepts -->
+	
+	
+	<section title="Actors">
+	<t>Actors are the operating parties that take part in both sides of a SCIM protocol exchange, and help identify the source of a given Trigger. So far, we have identified the following SCIM Actors:</t>
+	
+<t>
+<list style='symbols'>
+<t>Cloud Service Provider (CSP)</t>
+<t>Enterprise Cloud Subscriber (ECS)</t>
+				<t>Cloud Service User (CSU)</t>
+				</list>
+</t>
+	
+	</section>
+	<!-- end actors -->
+	
+	<section title="Modes &amp; Flows">
+	<t>Modes identify the functional intent of a data-flow initiated in a SCIM scenario.  The modes identified so far are 'push' and 'pull' referring to the fact of pushing data to, or pulling data from an authoritative identity data store.</t>
+
+<t>In the SCIM scenarios, Modes are often used in the context of a flow between two Actors. For example, one might refer to a Cloud-to-Cloud Pull mode.  Here one Cloud Service Provider (CSP) is pulling identity information from another CSP. Commonly referenced flows are:</t>
+
+<t>
+<list style='symbols'>
+<t>Cloud Service Provider to Cloud Service Provider (CSP->CSP)</t>
+<t>Enterprise Cloud Subscriber to Cloud Service Provider (ECS-CSP)</t>
+</list>
+</t>
+
+<t>Modes &amp; flows simply help us understand what is taking place; they are likely to be technically meaningless at the protocol level, but again they help the reader follow the SCIM scenario's and apply them to real work use cases.</t>
+
+	
+	</section>
+	<!-- end modes -->	
+	
+	<section title="Bulk &amp; Batch Operational Semantics">
+
+<t>
+It is assumed that each of the triggers action outlined in this document may be part of the larger bulk or batch operation.  Individual SCIM actions should be able to be collected together to create single protocol exchanges.  </t>
+
+<t>This draft of the SCIM scenarios document however, does not specifically address the complexity and behavioral semantics of bulk and batch (things such as rollback, one-fail-stop etc.). Our initial focus is on identifying base flows and single operations.  The specific complexity of full bulk and batch operations is left to a later version of the scenarios or to the main specification.  
+</t>
+
+</section>
+
+</section>
+
+
+
+<section title="Cloud Service Provider to Cloud Service Provider Flows">
+
+<t>
+These scenarios represent flows between two Cloud Service Providers (CSP's).  It is assumed that each CSP maintains an Identity Data Store for its Cloud Service Users (CSU's).  These scenarios address various joiner, mover, leaver and JIT triggers, resulting in push and pull data exchanges between the CSP's. 
+</t>
+
+<section title="CSP->CSP - Joiner Push">
+<t>
+In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service agreement in place that requires the exchange of Cloud Service User (CSU) accounts.  CSP-1 receives a Joiner trigger action from its Enterprise Cloud Subscriber (ECS).  CSP-1 creates a local user account for the new CSU.  CSP-1 then pushes the new CSU joiner push request down-stream to CSU-2 and gets confirmation that the account was successfully created.  After receiving the confirmation from CSP-2, CSP-1 sends an acknowledgement to the requesting ECS.
+</t>
+</section>
+
+<section title="CSP->CSP - Mover Push">
+<t>
+In this scenario two CSP's (CSP-1 & CSP-2) have a shared service agreement in place that requires the exchange of Cloud Service User (CSU) accounts.  The Enterprise Cloud Subscriber (ECS-1) has already created an account with CSP-1 and supplied a critical attribute "department" that is used by CSP-1 to drive service options.  CSP-1 then receives a mover trigger action from its Enterprise Cloud Subscriber (ECS).  CSP-1 updates its local directory account with the new department value.  CSP-1 then pushes the mover change request down-stream to CSU-2 and gets confirmation that the account was successfully updated.  After receiving the confirmation from CSP-2, CSP-1 sends an acknowledgement to the requesting ECS. 
+</t>
+</section>
+
+<section title="CSP->CSP - Leaver Push">
+<t>
+In this scenario two CSP's (CSP-1 & CSP-2) have a shared service agreement in place that requires the exchange of Cloud Service User (CSU) accounts.  CSP-1 receives a Leaver trigger action from its Enterprise Cloud Subscriber (ECS).  CSP-1 suspends the local directory account for the specified CSU account.  CSP-1 then pushes a termination request for the specified CSU account down-stream to CSU-2 and gets confirmation that the account was successfully removed.  After receiving the confirmation from CSP-2, CSP-1 sends an acknowledgement to the requesting ECS. 
+</t>
+</section>
+
+<section title="CSP->CSP - Sync">
+<t>
+In this scenario two CSP's (CSP-1 & CSP-2) have a shared service agreement in place that requires the synchronization of Cloud Service User (CSU) accounts.  On a periodic basis, CSP-1 sends a synchronization request to CSP-2 for a sub-set of its managed accounts.   CSP-1 has the option to send a change-delta data set or a full data set as part of the synchronization requests.  In either case, CSP-2 receives the data set and successfully carries out any required additions, updates or deletes.
+</t>
+</section>
+
+
+<section title="CSP->CSP - JIT Push">
+<t>
+In this scenario two CSP's (CSP-1 & CSP-2) have a shared service agreement in place that requires the exchange of Cloud Service User (CSU) accounts.  However, rather than pre-provisioning accounts from CSP-1 to CSP-2, CSP-1 waits for a service access request from the Cloud Service User (CSU) before issuing account creation details to CSP-2. When the CSU completes a SSO transaction from CSP-1 to CSP-2, CSP-2 then creates an account for the CSU based on information pushed to it from CSP-1.
+</t>
+</section>
+
+
+<section title="CSP->CSP - JIT Pull">
+<t>
+In this scenario two CSP's (CSP-1 & CSP-2) have a shared service agreement in place that requires the exchange of Cloud Service User (CSU) accounts.  However, rather than pre-provisioning accounts from CSP-1 to CSP-2, CSP-2 waits for a service access request from CSP-1's Cloud Service User (CSU).  When the CSU completes a SSO transaction from CSP-1 to CSP-2, CSP-2 then pulls sufficient information from CSP-1 to create a local account for the CSU.
+</t>
+</section>
+</section>
+
+<section title="Enterprise Cloud Subscriber to Cloud Service Provider Flows">
+
+<t>
+These scenarios represent flows between an Enterprise Cloud Subscriber (ECS) and a Cloud Service Providers (CSP).  It is assumed that both the ECS and the CSP maintains an LDAP service for the relevant Cloud Service Users (CSU's).  These scenarios address various joiner, mover, leaver and JIT triggers, resulting in push and pull data exchanges between the ECS and the CSP. 
+</t>
+<t>
+Many of these scenarios are very similar to those defined in the Cloud Service Provider to Cloud Service Provider section above.  They are identified separately here so that we may explore any differences and might emerge. 
+</t>
+
+<section title="ECS->CSP - Joiner Push">
+<t>
+In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a service with a Cloud Service Provider (CSP-1) that requires the sharing of various Cloud Service User (CSU) accounts.  A new user joins ECS-1 and so ECS-1 pushes an account creation request to CSP-1, supplying all required base SCIM schema attribute values and additional extended SCIM schema values as required.  
+</t>
+</section>
+
+<section title="ECS ->CSP - Mover Push">
+<t>
+In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a service with a Cloud Service Provider (CSP-1) that drives service definition from a key account schema attribute called Department.  ECS-1 wishes to move a given CSU from Department A to Department B and so it pushes an attribute update request to the CSP.
+</t>
+</section>
+
+<section title="ECS ->CSP - Leaver Push">
+<t>
+In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a service with a Cloud Service Provider (CSP-1).  Upon termination of one of its employees, ECS-1 sends a suspend account request to CSP-1.  One week later the ECS wished to complete the process by fully removing the Cloud Service User (CSU) account and so it sends a terminate account request to CSP-1.
+</t>
+</section>
+
+<section title="ECS ->CSP - JIT Push">
+<t>
+In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a service with a Cloud Service Provider (CSP-1).  No accounts are created or exchange in advance.  However, rather than pre-provisioning accounts from ECS-1 to CSP-1, ECS-1 waits for a service access request from the Cloud Service User (CSU) before issuing account creation details to CSP-1. When the CSU completes a SSO transaction from ECS-1 to CSP-2, CSP-2 then creates an account for the CSU based on information pushed to it from CSP-1.
+</t>
+</section>
+
+<section title="ECS ->CSP - JIT Pull">
+<t>
+In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a service with a Cloud Service Provider (CSP-1).  No accounts are created or exchange in advance. However, rather than pre-provisioning accounts from ECS-1 to CSP-1, ECS-1 waits for a service access request from the Cloud Service User (CSU) before issuing account creation details to CSP-1. When the CSU completes a SSO transaction from ECS-1 to CSP-1, CSP-2 then creates an account for the CSU based on information pushed to it from ECS-1.
+</t>
+</section>
+</section>
+
+</section>
+
+
+<appendix title='Document History'>
+
+<t>
+draft-scim-scenarios-01
+<list style='symbols'>
+<t>
+initial draft
+</t>
+</list>
+</t>
+</appendix>
+</middle>                                                                                           
+
+
+<!--  *****BACK MATTER ***** -->
+
+<back>
+
+
+</back>
+</rfc>
