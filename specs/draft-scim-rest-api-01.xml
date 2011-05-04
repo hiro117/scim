@@ -11,7 +11,7 @@
     <front>
         <title>SCIM REST API</title>
 
-        <author initials="T.D." surname="Drake" fullname="Trey Drake">
+        <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
             <organization abbrev="UnboundID">UnboundID</organization>
             <address>
                 <email>trey.drake@unboundid.com</email>
