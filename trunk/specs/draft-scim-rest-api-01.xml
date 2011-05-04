@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="no"?>
+<?rfc private="DRAFT"?>
+<!DOCTYPE rfc
+        SYSTEM "rfc2629.dtd">
+<rfc>
+    <front>
+        <title>SCIM REST API</title>
+
+        <author initials="T.D." surname="Drake" fullname="Trey Drake">
+            <organization abbrev="UnboundID">UnboundID</organization>
+            <address>
+                <email>trey.drake@unboundid.com</email>
+            </address>
+        </author>
+        <author initials="C.M." surname="Mortimore" fullname="Chuck Mortimore">
+            <organization abbrev="SalesForce">SalesForce</organization>
+            <address>
+                <email>cmortimore@salesforce.com</email>
+            </address>
+        </author>
+
+        <date month="May" year="2011"/>
+        <keyword>SCIM</keyword>
+        <abstract>
+            <t>
+                The Simple Cloud Identity Management (SCIM) specification is designed to make managing user identity in
+                cloud based applications and services easier. The specification suite seeks to build upon experience
+                with existing schemas and deployments, placing specific emphasis on simplicity of development and
+                integration, while applying existing authentication, authorization, and privacy models. It's intent is
+                to reduce the cost and complexity of user management operations by providing a common user schema and
+                extension model, as well as binding documents to provide patterns for exchanging this schema using
+                standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around
+                the cloud.
+
+                This document provides a REST API for exchanging user identity via JSON and/or XML
+            </t>
+        </abstract>
+    </front>
+
+
+    <middle>
+        <section title="Introduction and Overview" anchor="intro" toc="default">
+            <t>The SCIM API is an application-level protocol for managing user identity using HTTP [RFC2616] The
+                protocol supports creating, editing, deleting, querying and retrieving user identity.
+            </t>
+
+            <section title="Intended Audience" toc="default">
+                <t>
+                    This document is intended as a guide to SCIM API usage for both user identity providers and
+                    consumers.
+                </t>
+            </section>
+            <section title="Notational Conventions" anchor="notat" toc="default">
+                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+                    "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
+                    [RFC2119].
+                </t>
+
+            </section>
+            <section title="Definitions" anchor="defs" toc="default">
+                <list style="hanging">
+                    <t hangText="Service Provider:">A web application that provides User information via the SCIM
+                        protocol.
+                    </t>
+                    <t hangText="Consumer:">A website or application that uses the SCIM protocol to request Users
+                        managed by the Service Provider.
+                    </t>
+                    <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL for the API. The Base URL
+                        MUST NOT contain any query string, as additional path information and query string variables MAY
+                        be appended by Consumers as part of forming the request. Example: https://example.com/scim
+                    </t>
+                    <t hangText="Singular Field:">A User field that can appear at most once per User, e.g.displayName.
+                    </t>
+                    <t hangText="Plural Field:">A User field that can appear multiple times per User, e.g. emails</t>
+                    <t hangText="Simple Field:">A Singular Field or Plural Field whose value is a single string
+                        attribute.
+                    </t>
+                    <t hangText="Complex Field:">A Singular Field or Plural Field whose value is an object containing
+                        multiple sub-field attributes.
+                    </t>
+                    <t hangText="Primary Sub-Value:">The sub-field in a Complex Field that should be used when sorting
+                        or filtering by that field. Unless otherwise specified, the value sub-field is always the
+                        Primary Sub-Field.
+                    </t>
+                </list>
+            </section>
+        </section>
+
+        <section title="Authentication and Authorization" toc="default">
+            <t>
+                Authentication to the SCIM REST API is performed using OAuth2:
+                http://tools.ietf.org/html/draft-ietf-oauth-v2-15
+            </t>
+            <t>
+                For example:
+            </t>
+            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+            GET /resource/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer h480djs93hd8
+                                   ]]></artwork>
+            </figure>
+            <t>
+                The context of the request (i.e. the user for whom data is being requested) MUST be inferred by Service
+                Providers from the Base URL and the authorization credentials provided. The same Base URL MAY return
+                information for different users depending on the authorization credentials provided.
+            </t>
+
+
+        </section>
+
+        <section title="Security Considerations" anchor="Security" toc="default">
+            <t>Securing the protocol:TBD</t>
+        </section>
+
+
+        <section title="API">
+            <t>
+                All requests to the Service Provider are made via
+                <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9">HTTP operations</eref>
+                on a URL deriving from the Base URL. Responses are returned in the body of the HTTP response, formatted
+                as JSON or XML, depending on what is requested. Response and error codes SHOULD be transmitted via the
+                HTTP status code of the response (if possible), and SHOULD also be specified in the body of the
+                response.
+            </t>
+
+            <section title="Creating Users with POST" toc="default">
+                <t>To create new Users, clients send POST requests to the User endpoint /User.</t>
+
+                <t>Successful User creation is indicated with a 201 ("Created") response code. Upon successful creation,
+                    the response body should contain the newly created Resource. Since the server is free to alter
+                    and/or ignore POSTed content, returning the User can be useful to the client, enabling it to
+                    correlate the client and server views of the new User.
+
+                    When a User is created, its User URI must be returned in a Location header in the response.
+                </t>
+
+                <section title="Example" toc="default">
+                    <t>Below, the client sends a POST request containing a User</t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+POST /User  HTTP/1.1
+Host: example.com
+Content-Type:  application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "userName": "bjensen@example.com",
+  "name": {
+    "familyName": "Jensen",
+    "givenName": "Barbara"
+  },
+  "displayName": "Babs Jensen", "emails": [
+    {
+      "value": "bjensen@example.com",
+      "type": "work",
+      "primary": true
+    }
+  ]
+}
+                        ]]></artwork>
+                    </figure>
+
+                    <t>The server signals a successful creation with a status code of 201. The response includes a
+                        Location header indicating the User URI, and a representation of that User in the body of the
+                        response.
+                    </t>
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: http://example.com/scim/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
+
+{
+  "id" : "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "errors" : [ ],  //TODO - not in core schema
+  "success" : true //TODO - not in core schema
+}
+
+                        ]]></artwork>
+                    </figure>
+                </section>
+
+
+            </section>
+            <section title="Retrieving Users" toc="default">
+                <t>Users may be retrieved via opaque, unique URIs or via Query</t>
+
+                <section title="Retrieving a known User with GET" toc="default">
+                    <t>To retrieve a known User, clients send GET requests to the User endpoint /User/{id}.</t>
+
+                    <t>If the User exists the server responds with a status code of 200 and includes the User in the</t>
+
+                    <section title="Example">
+                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                <![CDATA[
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+                        ]]></artwork>
+                        </figure>
+
+                        <t>The server responds with:
+                        </t>
+
+                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                <![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "externalId": "701984",
+  "userName": "bjensen@example.com",
+  "name": {
+    "formatted": "Ms. Barbara J Jensen III",
+    "familyName": "Jensen",
+    "givenName": "Barbara",
+    "middleName": "Jane",
+    "honorificPrefix": "Ms.",
+    "honorificSuffix": "III"
+  },
+    "displayName": "Babs Jensen",
+    "nickName": "Babs",
+    "profileUrl": "https://login.example.org/bjensen",
+    "emails": [
+      {
+        "value": "bjensen@example.com",
+        "type": "work",
+        "primary": true
+      },
+      {
+        "value": "babs@jensen.org",
+        "type": "home"
+      }
+    ],
+    "meta": {
+      "created": "2011-04-27T16:37:25Z",
+      "lastModified": "2011-04-27T16:37:25Z"
+  }
+}
+
+
+                        ]]></artwork>
+                        </figure>
+                    </section>
+
+                </section>
+
+                <section title="Listing/Querying Users with GET" toc="default">
+                    <t>
+                        SCIM defines a standard set of operations that can be used to filter, sort, and paginate
+                        response results. The operations are specified by adding query parameter to the Users endpoint.
+                        Service Providers MAY support additional query parameters not specified here, and Providers
+                        SHOULD ignore any query parameters they don't recognize.
+                    </t>
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+
+GET /Users?attributes=userName,displayName
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+                      ]]></artwork>
+                    </figure>
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "totalResults": 3,
+  "entry": [
+    {
+      "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+      "displayName": "Babs Jensen",
+      "userName": "bjensen",
+      "meta": {
+        "location":"http://example.org/path/to/api/3f62ce30-...",
+      }
+    },
+    {
+      "id": "4f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+      "displayName": "Mandy Pepperidge",
+      "userName": "mPepperidge",
+      "meta": {
+        "location":"http://example.org/path/to/api/4f62ce30-...",
+      }
+    },
+    {
+      "id": "5f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+      "displayName": "Noel Smith",
+      "userName": "nsmith",
+      "meta": {
+        "location":"http://example.org/path/to/api/5f62ce30-...",
+      }
+    }
+  ]
+}
+                      ]]></artwork>
+                    </figure>
+
+
+                    <section title="Filtering">
+                        <t>
+                            Filtering is used to limit the request results to Users that match given criteria. Content
+                            filtering is accomplished by combining three request parameters:
+                        </t>
+
+                        <list style="hanging">
+                            <t hangText="filterBy:">
+                                Specifies the field name to filter by. If the specified field is a Plural Field, the
+                                User SHALL match if any of the instances of the given field match the specified
+                                criterion (e.g. if a contact has multiple emails values, only one has to match for the
+                                entire User to match). If a Simple Field is specified, its value must match the
+                                specified filterValue according to the specified filterOp. If a Complex Field is
+                                specified, its Primary Sub-Field must match. If the specified field is not a direct
+                                child of the entry element, the full path MUST be specified using the '.' character as
+                                separator. For example, to filter by userName the parameter value is userName and to
+                                filter by first name, the parameter value is name.givenName.
+                            </t>
+                            <t hangText="filterOp:">
+                                Specifies the comparison method used to evaluate the field value with the value of the
+                                filter criterion.
+
+                                Providers SHOULD support the following values:
+
+                                <list style="hanging">
+                                    <t hangText="equals:">the two values must be identical strings. TODO: case
+                                        sensitivity?
+                                    </t>
+                                    <t hangText="contains:">the entire filterValue must be a substring of the User field
+                                        value.
+                                    </t>
+                                    <t hangText="startswith:">the entire filterValue must be a substring of the User
+                                        field value, starting at the beginning of the field value. This criterion is
+                                        satisfied if the two strings are equal.
+                                    </t>
+                                    <t hangText="present:">a User matches the criterion if the field specified by
+                                        filterBy has a non-empty value, or if it contains a non-empty node for complex
+                                        fields.
+                                    </t>
+                                </list>
+                                Providers MAY support additional filter operations if they choose. Providers MUST
+                                decline to filter results if the specified filter operation is not recognized
+
+                            </t>
+
+                            <t hangText="filterValue:">
+                                Specifies the value to filter by, using the comparison method defined by filterOp. In
+                                addition, requests can filter content based on their update timestamp: updatedSince:
+                            </t>
+                        </list>
+
+                        <t>
+                            Here are a few illustrative examples of filtering matches with filterBy, filterOp, and
+                            filterValue. In each case, assume the following two Users would be returned if no filtering
+                            parameters were provided:
+                        </t>
+                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                <![CDATA[
+{
+  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "externalId": "701984",
+  "userName": "bjensen@example.com",
+  "name": {
+    "formatted": "Ms. Barbara J Jensen III",
+  },
+  "displayName": "Babs Jensen",
+},
+{
+  "id": "4d31ce30-dcd6-4dd7-abfe-2352a76f8852",
+  "externalId": "563471",
+  "userName": "jsmith@example.org",
+  "name": {
+    "formatted": "Mr. John Smith",
+  },
+  "displayName": "John Smith"
+  }
+}
+
+                        ]]></artwork>
+                        </figure>
+
+                        <t>
+                            Given the parameters filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs, only
+                            the first User (with id=3f62ce30-dcd6-4dd7-abfe-2352a76f9978) would match and be returned.
+                            However, with parameters filterBy=displayName&amp;filterOp=present, both contacts would be
+                            returned. Given the parameters filterBy=email&amp;filterOp=contains&amp;filterValue=example.org,
+                            only the second contact (with id=2) would match, as would it be the only contact to match
+                            given the parameters filterBy=email&amp; filterOp=present.
+
+                            If a request specifies a filterValue but no filterBy or filterOp, it is up to the Provider
+                            how to interpret this filter request. Providers MAY choose to default to filtering by a
+                            given field (e.g., displayName); they MAY choose to implement a custom, Provider-specific
+                            query syntax for filterValue in this case; or they MAY choose to reject requests of this
+                            type. In general, if Consumers want to request specific behavior from Providers, they should
+                            do so by being explicit in their use of query parameters.
+                        </t>
+                    </section>
+
+                    <section title="Sorting">
+                        <t>Sorting allows requests to specify the order in which Users are returned.</t>
+
+                        <list style="hanging">
+                            <t hangText="sortBy:">
+                                Specifies the field name whose value SHALL be used to order the returned Users. The sort
+                                order is determine by the sortOrder parameter. If sortBy is a Singular Field, users are
+                                sorted according to that field's value; if it's a Plural Field, Users are sorted by the
+                                Value (or Major Value, if it's a Complex Field) of the field marked with "primary":
+                                "true", if any, or else the first value in the list, if any, or else they are sorted
+                                last if the given User has no data for the given field.
+                            </t>
+
+                            <t hangText="sortOrder:">
+                                The order in which the sortBy parameter is applied. Allowed values are ascending and
+                                descending. If a value for sortBy is provided and no sortOrder is specifies, the
+                                sortOrder SHALL default to ascending. Sort order is expected to be case-insensitive
+                                Unicode alphabetic sort order, with no specific locale implied.
+                            </t>
+                        </list>
+                    </section>
+
+                    <section title="Pagination">
+                        <t>The pagination parameters can be used together to "page through" a large number of results in
+                            manageable chunks
+                        </t>
+
+                        <list style="hanging">
+                            <t hangText="startIndex:">
+                                Specifies the offset of the first result to be returned with respect to the list of
+                                Users that would be returned if no startIndex were provided. For instance, if in a given
+                                request 10 Users would normally be provided, if startIndex is 7 and no count is
+                                specified, then only the last 3 Users in that list would be returned (contacts are
+                                zero-indexed). If startIndex is greater than or equal to the total number of results
+                                that would be returned, no Users are returned. Value MUST be a non-negative integer and
+                                defaults to 0 if no value is specified.
+                            </t>
+
+                            <t hangText="count:">
+                                If non-zero, specifies the maximum number of Users the Consumer would like the Provider
+                                to return at a time. Value MUST be a non-negative integer and defaults to 0 if no value
+                                is specified. A count of 0 means that is up to the Provider to determine how many Users
+                                to return by default (some Providers may return all Users by default; others may return
+                                a fixed default number like 10). Providers SHOULD honor a very large count value, and
+                                SHOULD support returning all Users at once when presented with a count request that is
+                                larger than the number of Users the user has, but Providers MAY choose to never return
+                                more than a Provider-determined maximum number of contacts per request, if returning all
+                                Users is too burdensome. In all cases, at most count Users SHALL be returned, starting
+                                at startIndex and counting up from there. In each of these cases, Providers MUST
+                                indicate the total number of Users they chose to return in the response using the
+                                itemsPerPage response element.
+                            </t>
+                        </list>
+                        <t>
+                            For instance, on an initial query, specifying startIndex=0&amp;count=10 will return only the
+                            first 10 results. The total number of possible results is indicated by the totalResults
+                            field of results, so the client knows how many "pages" of results exist. A subsequent query
+                            of startIndex=10&amp;count=10 will return the next 10 results, and so on.
+                        </t>
+                    </section>
+
+                </section>
+
+                <section title="Additional retrieval query parameters" toc="default">
+                    <t>
+                        Clients MAY request a partial User representation by specifying an attributes query parameter
+                        within the request URL. If non-empty, each User returned SHALL contain only the fields
+                        explicitly requested. The server MAY return a subset of the requested fields if they are not
+                        supported. This field is used for efficiency when the client only wishes to access a subset of
+                        the fields normally returned in results. Value is a comma separated list of top level attribute
+                        names (e.g. id,name,emails) and defaults to an empty list which means it's up to the Server
+                        which fields to return.
+                    </t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=displayName
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+                    ]]></artwork>
+                    </figure>
+                    <t>Giving the repsonse</t>
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+    "displayName": "Babs Jensen",
+}
+
+                        ]]></artwork>
+                    </figure>
+                </section>
+            </section>
+
+
+            <section title="Editing a User" toc="default">
+                <t></t>
+                <section title="Editing a User via PUT" toc="default">
+                    <t>
+                        PUT performs a full User update. Consumers must retrieve the entire User and PUT the desired
+                        User modifications.
+                    </t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+PUT /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "externalId": "701984",
+  "userName": "bjensen@example.com",
+  "name": {
+    "formatted": "Ms. Barbara J Jensen III",
+    "familyName": "Jensen",
+    "givenName": "Barbara",
+    "middleName": "Jane",
+    "honorificPrefix": "Ms.",
+    "honorificSuffix": "III"
+  },
+  "displayName": "Barbara Jensen",
+  "nickName": "Babs",
+  "profileUrl": "https://login.example.org/bjensen",
+  "emails": [
+    {
+      "value": "bjensen@example.com",
+      "type": "work",
+      "primary": true
+    },
+    {
+    "value": "babs@jensen.org",
+    "type": "home"
+    }
+  ]
+}
+                       ]]></artwork>
+                    </figure>
+                    <t>
+                        The service responds with the entire, updated User
+                    </t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+ "schemas": ["urn:scim:schemas:core:1.0", "http://hrextension/"],
+  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "externalId": "701984",
+  "userName": "bjensen@example.com",
+  "name": {
+   "formatted": "Ms. Barbara J Jensen III",
+   "familyName": "Jensen",
+   "givenName": "Barbara",
+   "middleName": "Jane",
+   "honorificPrefix": "Ms.",
+   "honorificSuffix": "III"
+ },
+ "displayName": "Barbara Jensen",
+ "nickName": "Babs",
+ "profileUrl": "https://login.example.org/bjensen",
+ "emails": [
+   {
+     "value": "bjensen@example.com",
+     "type": "work",
+     "primary": true
+   },
+   {
+     "value": "babs@jensen.org",
+     "type": "home"
+   }
+ ],
+ "gender": "female",
+ "birthday": "1942-04-26",
+ "meta": {
+   "created": "2011-05-27T16:37:25Z",
+   "lastModified": "2011-05-27T16:37:25Z"
+ }
+}
+
+               ]]></artwork>
+                    </figure>
+                </section>
+
+                <section title="Editing a User via PATCH" toc="default">
+                    <t>PATCH enables consumers to send only those attributes requiring modification reducing network and
+                        processing overhead. Attributes may be deleted, replaced or added in a single request.
+                    </t>
+                    <list style="hanging">
+                        <t hangText="Deleting attribute values:">
+
+                            Use the meta attribute to specify the attribute(s) to be deleted from the User. In the case
+                            of plural attributes all attribute values will be deleted. The below request will delete the
+                            “emails” attribute values.
+                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                    <![CDATA[
+
+"meta": {
+"attributes": "emails"
+}
+                             ]]></artwork>
+                            </figure>
+                        </t>
+
+                        <t hangText="Adding attributes (Singluar):">
+                            If the User does not already contain a value for the specified attribute the attribute value
+                            is added (or said another way “set”).
+                        </t>
+
+                        <t hangText="Adding attributes (Plural):">
+                            If the User does not already contain the value the value is added to the attribute
+
+                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                    <![CDATA[
+
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "emails": [
+    {
+      "value": "babs@exmaple.org",
+      "type": "home"
+    }
+  ]
+}
+]]></artwork>
+                            </figure>
+                        </t>
+
+
+                        <t hangText="Updating attributes (Singular):">
+                            If the attribute value already exists the value is replaced by the value specified in the
+                            request.
+                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                    <![CDATA[
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+{
+"schemas": ["urn:scim:schemas:core:1.0"],
+"displayName":"Mrs Barbara Jensen"
+}
+
+Singular, complex attributes may be partially merged by specifying only those attributes intended
+for update.
+
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+{
+"schemas": ["urn:scim:schemas:core:1.0"],
+"name": {
+"familyName": "Smith"
+}
+     ]]></artwork>
+                            </figure>
+                        </t>
+
+                        <t hangText="Updating attributes (Plural):">
+
+
+                            To replace the contents of a plural attribute specify the attribute name in the meta
+                            attributes and specify all of the replacement attributes.
+
+                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                    <![CDATA[
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "emails": [
+  {
+    "value": "babs@exmaple.org",
+    "type": "home"
+  },
+  {
+    "value": "babswork@exmaple.org",
+    "type": "work"
+  },
+  "meta": {
+  "attributes": "emails"
+  }
+}
+                         ]]></artwork>
+                            </figure>
+                        </t>
+
+                    </list>
+
+                    <section title="Additional query parameters" toc="default">
+                        <t>
+                            Consumers MAY request a partial User representation by specifying an attributes query
+                            parameter within the request URL. If non-empty, each User returned SHALL contain only the
+                            fields explicitly requested. The server MAY return a subset of the requested fields if they
+                            are not supported. This field is used for efficiency when the client only wishes to access a
+                            subset of the fields normally returned in results. Value is a comma separated list of top
+                            level attribute names (e.g. id,name,emails) and defaults to an empty list which means it's
+                            up to the Server which fields to return. For example:
+                        </t>
+
+                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                                <![CDATA[
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
+                                    ]]></artwork>
+                        </figure>
+
+                    </section>
+                </section>
+            </section>
+            <section title="Deleting a User via DELETE" toc="default">
+                <t>Consumers may request User removal via DELETE.</t>
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+
+DELETE /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Authorization: Bearer h480djs93hd8
+                                      ]]></artwork>
+                </figure>
+
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+HTTP/1.1 200 OK
+            ]]></artwork>
+                </figure>
+
+
+            </section>
+
+            <section title="Retrieving the Service Provider User Schema" toc="default">
+                <t>The SCIM API allows you to inspect the metadata associated with the User object by performing a GET
+                    on the /User endpoint
+                </t>
+
+
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+
+GET /User
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+            ]]></artwork>
+                </figure>
+
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "schema": ["urn:scim:schemas:core:1.0"],
+    "attributes":[
+      {
+        "name":"displayName",
+        "type":"xs:string",
+        "singleValue":true,
+        "required":false,
+        "description":"Preferred name to be used when displaying the user",
+        "schema":"urn:scim:schemas:core:1.0"
+      },
+      {
+        "name":"email",
+        "type":"xs:string",
+        "singleValue":false,
+        "required":false,
+        "description":"User’s email address",
+        "schema":"urn:scim:schemas:core:1.0"
+      },
+      {
+        "name":"gender",
+        "type":"xs:string",
+        "singleValue":true,
+        "required":false,
+        "description":"User’s birthday",
+        "schema":"http:/hrextension"
+      },
+      {
+        "name":"address",
+        "type":"xs:complexType",
+        "singleValue":false,
+        "required":false,
+        "description":"User’s Address",
+        "schema":"http:/hrextension",
+        "attributes":[
+          {
+            "name":"street",
+            "type":"xs:string",
+            "singleValue":true,
+            "required":false,
+            "description":"Street Name",
+            "schema":"http:/hrextension"
+          },
+          {
+            "name":"postalCode",
+            "type":"xs:string",
+            "singleValue":false,
+            "required":false,
+            "description":"Postal Code",
+            "schema":"http:/hrextension"
+          }
+        ]
+      }
+
+  ]
+}
+            ]]></artwork>
+                </figure>
+
+            </section>
+
+            <section title="Data Input/Output Formats">
+                <t>
+                    Consumers SHOULD specify the format in which the data is submitted and MAY specify the desired
+                    response data format. Consumers MAY indicate the desired format via an HTTP Accept Header;
+                    e.g.,"Accept: application/json" or via URI suffix; e.g.,
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
+Host: example.com
+
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.xml
+Host: example.com
+            ]]></artwork>
+                    </figure>
+
+                </t>
+
+                <t>
+                    Service Providers MUST support the Accept Headers "Accept: application/json" for JSON
+                    (http://json.org) and "Accept: application/xml" for XML (http://www.w3.org/XML/) and MAY support
+                    additional formats if desired. The format defaults to json if no format is specified. The data
+                    structure returned is equivalent in both formats; the only difference is in the encoding of the
+                    data. Singular Fields are encoded as string key/value pairs in JSON and tags with text content in
+                    XML, e.g. "field": "value" and
+                    <field>value</field>
+                    respectively. Plural Fields and Plural Bundles are encoded as arrays in JSON and repeated tags in
+                    XML, e.g. "fields": [ "value1", "value2" ] and
+                    <fields>value1</fields>
+                    <fields>value2</fields>
+                    respectively. Nodes with multiple sub-nodes are represented as objects in JSON and tags with
+                    sub-tags in XML, e.g. "field": { "subfield1": "value1", "subfield2": "value2" } and
+                    <field>
+                        <subfield1>value1</subfield1>
+                        <subfield2>value2</subfield2>
+                    </field>
+                    respectively.
+                </t>
+            </section>
+            <section title="HTTP Method Overloading">
+                <t>In recognition that some clients, servers and firewalls prevent PUT, PATCH and DELETE operations a
+                    client MAY override the POST operation by specifying the custom header "X-HTTP-Method-Override" with
+                    the intended PUT, PATCH, DELETE operation. For example:
+                </t>
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+POST /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+X-HTTP-Method-Override: DELETE
+]]></artwork>
+                </figure>
+
+            </section>
+
+        </section>
+
+    </middle>
+
+    <back>
+
+        <references>
+            <reference anchor='PortableContacts'>
+                <front>
+                    <title abbrev='PortableContacts'>Portable Contacts 1.0 Draft C - Schema Only</title>
+                    <author initials='J. S.' surname='Smarr' fullname='J. Smarr'>
+                    </author>
+                    <date month='August' year='2008'/>
+                </front>
+            </reference>
+        </references>
+    </back>
+</rfc>
