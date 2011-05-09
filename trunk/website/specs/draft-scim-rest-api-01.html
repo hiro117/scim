@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en"><head><title>DRAFT: SCIM REST API</title>
+<html lang="en"><head><title>DRAFT: SCIM PROTOCOL</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="SCIM REST API">
+<meta name="description" content="SCIM PROTOCOL">
 <meta name="keywords" content="SCIM">
 <meta name="generator" content="xml2rfc v1.36 (http://xml.resource.org/)">
 <style type='text/css'><!--
@@ -142,13 +142,13 @@
 <body>
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
-<tr><td class="header">DRAFT</td><td class="header">T. Drake (editor)</td></tr>
+<tr><td class="header">DRAFT</td><td class="header">T. Drake, Ed.</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">UnboundID</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">C. Mortimore</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">SalesForce</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">May 4, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">May 9, 2011</td></tr>
 </table></td></tr></table>
-<h1><br />SCIM REST API</h1>
+<h1><br />SCIM PROTOCOL</h1>
 
 <h3>Abstract</h3>
 
@@ -175,40 +175,46 @@ Intended Audience<br />
 Notational Conventions<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#defs">1.3.</a>&nbsp;
 Definitions<br />
-<a href="#anchor2">2.</a>&nbsp;
+<a href="#aa">2.</a>&nbsp;
 Authentication and Authorization<br />
 <a href="#Security">3.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor3">4.</a>&nbsp;
+<a href="#api">4.</a>&nbsp;
 API<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">4.1.</a>&nbsp;
-Creating Users with POST<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">4.1.1.</a>&nbsp;
-Example<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#create-user">4.1.</a>&nbsp;
+Creating Users<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-users-ops">4.2.</a>&nbsp;
 Retrieving Users<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.2.1.</a>&nbsp;
-Retrieving a known User with GET<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.2.2.</a>&nbsp;
-Listing/Querying Users with GET<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">4.2.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-user">4.2.1.</a>&nbsp;
+Retrieving a known User<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-users">4.2.2.</a>&nbsp;
+Listing/Querying Users<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.2.3.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.3.</a>&nbsp;
 Editing a User<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">4.3.1.</a>&nbsp;
-Editing a User via PUT<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">4.3.2.</a>&nbsp;
-Editing a User via PATCH<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor18">4.4.</a>&nbsp;
-Deleting a User via DELETE<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor19">4.5.</a>&nbsp;
-Retrieving the Service Provider User Schema<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor20">4.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-user-with-put">4.3.1.</a>&nbsp;
+Editing a User with PUT<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-user-with-patch">4.3.2.</a>&nbsp;
+Editing a User with PATCH<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#delete-user">4.4.</a>&nbsp;
+Removing a User<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#schemas">4.5.</a>&nbsp;
+Retrieving Service Provider Schema<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-schema">4.5.1.</a>&nbsp;
+Retrieving a specific Schema<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-schemas">4.5.2.</a>&nbsp;
+Retrieving all Service Provider supported Schemas<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.6.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor21">4.7.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.7.</a>&nbsp;
+HTTP Response Codes<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.8.</a>&nbsp;
 HTTP Method Overloading<br />
-<a href="#rfc.references1">5.</a>&nbsp;
-References<br />
+<a href="#anchor11">5.</a>&nbsp;
+Todos<br />
+<a href="#anchor12">6.</a>&nbsp;
+Acknowledgments<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
 </p>
@@ -219,8 +225,8 @@ Authors' Addresses<br />
 <a name="rfc.section.1"></a><h3>1.&nbsp;
 Introduction and Overview</h3>
 
-<p>The SCIM API is an application-level protocol for managing user identity using HTTP [RFC2616] The
-                protocol supports creating, editing, deleting, querying and retrieving user identity.
+<p>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on the web. The protocol supports
+                creating, editing, deleting, querying and retrieving User resources.
             
 </p>
 <a name="anchor1"></a><br /><hr />
@@ -255,8 +261,8 @@ Definitions</h3>
                     
 </dd>
 <dt>Consumer:</dt>
-<dd>A website or application that uses the SCIM protocol to request Users
-                        managed by the Service Provider.
+<dd>A website or application that uses the SCIM protocol to manage Users managed
+                        by the Service Provider.
                     
 </dd>
 <dt>Base URL:</dt>
@@ -289,7 +295,7 @@ Definitions</h3>
                     
 </dd>
 </dl></blockquote>
-<a name="anchor2"></a><br /><hr />
+<a name="aa"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2"></a><h3>2.&nbsp;
 Authentication and Authorization</h3>
@@ -320,40 +326,113 @@ Security Considerations</h3>
 
 <p>Securing the protocol:TBD
 </p>
-<a name="anchor3"></a><br /><hr />
+<a name="api"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4"></a><h3>4.&nbsp;
 API</h3>
 
 <p>
+                The SCIM protocol specifies well known endpoints and operations for managing User and User discovery
+                resources via standard HTTP methods:
+            
+</p>
+<blockquote class="text"><dl>
+<dt>GET</dt>
+<dd>Retrieves a complete or partial User/Schema
+                
+</dd>
+<dt>POST</dt>
+<dd>Creates a new User
+                
+</dd>
+<dt>PUT</dt>
+<dd>Modifies a User with a complete, consumer specified User (replace)
+                
+</dd>
+<dt>PATCH</dt>
+<dd>Modifies a User with a set of consumer specified changes (partial update)
+                
+</dd>
+<dt>DELETE</dt>
+<dd>Deletes a User.
+                
+</dd>
+</dl></blockquote><br /><hr class="insert" />
+<a name="endpoint-summary"></a>
+
+<p style='text-align: center'>
+</p><table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
+<col align="left"><col align="left"><col align="left"><col align="left">
+<tr><th align="left">Resource</th><th align="left">Endpoint</th><th align="left">Operations</th><th align="left">Description</th></tr>
+<tr>
+<td align="left">User</td>
+<td align="left">/User</td>
+<td align="left"><a class='info' href='#get-user'>GET<span> (</span><span class='info'>Retrieving a known User</span><span>)</span></a>,
+                    <a class='info' href='#create-user'>POST<span> (</span><span class='info'>Creating Users</span><span>)</span></a>,
+                    <a class='info' href='#edit-user-with-put'>PUT<span> (</span><span class='info'>Editing a User with PUT</span><span>)</span></a>,
+                    <a class='info' href='#edit-user-with-patch'>PATCH<span> (</span><span class='info'>Editing a User with PATCH</span><span>)</span></a>,
+                    <a class='info' href='#delete-user'>DELETE<span> (</span><span class='info'>Removing a User</span><span>)</span></a>
+                </td>
+<td align="left">Read/Modify Users</td>
+</tr>
+<tr>
+<td align="left">
+                    User Query/Listing
+                </td>
+<td align="left">/Users</td>
+<td align="left">
+                    <a class='info' href='#query-users'>GET<span> (</span><span class='info'>Listing/Querying Users</span><span>)</span></a>
+                </td>
+<td align="left">Retrieve User via ad hoc queries</td>
+</tr>
+<tr>
+<td align="left">User Schema</td>
+<td align="left">
+                    /Schema
+                </td>
+<td align="left">
+                    <a class='info' href='#get-schema'>GET<span> (</span><span class='info'>Retrieving a specific Schema</span><span>)</span></a>
+                </td>
+<td align="left">Retrieve a specified User schema</td>
+</tr>
+<tr>
+<td align="left">User Schemas</td>
+<td align="left">
+                    /Schemas
+                </td>
+<td align="left">
+                    <a class='info' href='#get-schemas'>GET<span> (</span><span class='info'>Retrieving all Service Provider supported Schemas</span><span>)</span></a>
+                </td>
+<td align="left">Retrieve all Service Provider supported schemas</td>
+</tr>
+</table>
+<br clear="all" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 1: Defined endpoints&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+
+<p>
                 All requests to the Service Provider are made via
                 <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9'>HTTP operations</a>
-                on a URL deriving from the Base URL. Responses are returned in the body of the HTTP response, formatted
+                on a URL derived from the Base URL. Responses are returned in the body of the HTTP response, formatted
                 as JSON or XML, depending on what is requested. Response and error codes SHOULD be transmitted via the
                 HTTP status code of the response (if possible), and SHOULD also be specified in the body of the
                 response.
             
 </p>
-<a name="anchor4"></a><br /><hr />
+<a name="create-user"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
-Creating Users with POST</h3>
+Creating Users</h3>
 
 <p>To create new Users, clients send POST requests to the User endpoint /User.
 </p>
 <p>Successful User creation is indicated with a 201 ("Created") response code. Upon successful creation,
-                    the response body should contain the newly created Resource. Since the server is free to alter
-                    and/or ignore POSTed content, returning the User can be useful to the client, enabling it to
-                    correlate the client and server views of the new User.
+                    the response body MUST contain the newly created Resource. Since the server is free to alter and/or
+                    ignore POSTed content, returning the User can be useful to the client, enabling it to correlate the
+                    client and server views of the new User.
 
-                    When a User is created, its User URI must be returned in a Location header in the response.
+                    When a User is created, its User URI must be returned in the response Location header.
                 
 </p>
-<a name="anchor5"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.1.1"></a><h3>4.1.1.&nbsp;
-Example</h3>
-
 <p>Below, the client sends a POST request containing a User
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 POST /User  HTTP/1.1
@@ -378,14 +457,13 @@ Content-Length: ...
   ]
 }
 </pre></div>
-<p>The server signals a successful creation with a status code of 201. The response includes a
-                        Location header indicating the User URI, and a representation of that User in the body of the
-                        response.
-                    
+<p>The server signals a successful creation with a status code of 201. The response includes a Location
+                    header indicating the User URI, and a representation of that User in the body of the response.
+                
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: http://example.com/scim/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
+Location: /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 
 {
   "id" : "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
@@ -394,23 +472,25 @@ Location: http://example.com/scim/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
 }
 
 </pre></div>
-<a name="anchor6"></a><br /><hr />
+<a name="get-users-ops"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2"></a><h3>4.2.&nbsp;
 Retrieving Users</h3>
 
 <p>Users may be retrieved via opaque, unique URIs or via Query
 </p>
-<a name="anchor7"></a><br /><hr />
+<a name="get-user"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.1"></a><h3>4.2.1.&nbsp;
-Retrieving a known User with GET</h3>
+Retrieving a known User</h3>
 
 <p>To retrieve a known User, clients send GET requests to the User endpoint /User/{id}.
 </p>
 <p>If the User exists the server responds with a status code of 200 and includes the User in the
+                        body of the response.
+                    
 </p>
-<a name="anchor8"></a><br /><hr />
+<a name="anchor2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.1.1"></a><h3>4.2.1.1.&nbsp;
 Example</h3>
@@ -461,17 +541,17 @@ Content-Type: application/json
       }
     ],
     "meta": {
-      "created": "2011-04-27T16:37:25Z",
-      "lastModified": "2011-04-27T16:37:25Z"
+     "created": "2010-03-25T15:11:18Z",
+     "lastModified": "2011-05-27T16:37:25Z"
   }
 }
 
 
 </pre></div>
-<a name="anchor9"></a><br /><hr />
+<a name="query-users"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2"></a><h3>4.2.2.&nbsp;
-Listing/Querying Users with GET</h3>
+Listing/Querying Users</h3>
 
 <p>
                         SCIM defines a standard set of operations that can be used to filter, sort, and paginate
@@ -491,37 +571,39 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
   "totalResults": 3,
   "entry": [
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Babs Jensen",
       "userName": "bjensen",
       "meta": {
-        "location":"http://example.org/path/to/api/3f62ce30-...",
+        "location":"/User/3f62ce30-..."
       }
     },
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "4f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Mandy Pepperidge",
       "userName": "mPepperidge",
       "meta": {
-        "location":"http://example.org/path/to/api/4f62ce30-...",
+        "location":"/User/4f62ce30-..."
       }
     },
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "5f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Noel Smith",
       "userName": "nsmith",
       "meta": {
-        "location":"http://example.org/path/to/api/5f62ce30-...",
+        "location":"/User/5f62ce30-..."
       }
     }
   ]
 }
 </pre></div>
-<a name="anchor10"></a><br /><hr />
+<a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2.1"></a><h3>4.2.2.1.&nbsp;
 Filtering</h3>
@@ -597,6 +679,7 @@ Filtering</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 {
+  "schemas": ["urn:scim:schemas:core:1.0"],
   "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -606,6 +689,7 @@ Filtering</h3>
   "displayName": "Babs Jensen",
 },
 {
+  "schemas": ["urn:scim:schemas:core:1.0"],
   "id": "4d31ce30-dcd6-4dd7-abfe-2352a76f8852",
   "externalId": "563471",
   "userName": "jsmith@example.org",
@@ -633,7 +717,7 @@ Filtering</h3>
                             do so by being explicit in their use of query parameters.
                         
 </p>
-<a name="anchor11"></a><br /><hr />
+<a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2.2"></a><h3>4.2.2.2.&nbsp;
 Sorting</h3>
@@ -660,7 +744,7 @@ Sorting</h3>
                             
 </dd>
 </dl></blockquote>
-<a name="anchor12"></a><br /><hr />
+<a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2.3"></a><h3>4.2.2.3.&nbsp;
 Pagination</h3>
@@ -705,7 +789,7 @@ Pagination</h3>
                             of startIndex=10&amp;count=10 will return the next 10 results, and so on.
                         
 </p>
-<a name="anchor13"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.3"></a><h3>4.2.3.&nbsp;
 Additional retrieval query parameters</h3>
@@ -729,7 +813,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 </pre></div>
-<p>Giving the repsonse
+<p>Giving the response
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 HTTP/1.1 200 OK
@@ -737,21 +821,19 @@ Content-Type: application/json
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
-    "displayName": "Babs Jensen",
+  "displayName": "Babs Jensen"
 }
 
 </pre></div>
-<a name="anchor14"></a><br /><hr />
+<a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
 Editing a User</h3>
 
-<p>
-</p>
-<a name="anchor15"></a><br /><hr />
+<a name="edit-user-with-put"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.1"></a><h3>4.3.1.&nbsp;
-Editing a User via PUT</h3>
+Editing a User with PUT</h3>
 
 <p>
                         PUT performs a full User update. Consumers must retrieve the entire User and PUT the desired
@@ -827,19 +909,25 @@ Content-Type: application/json
      "type": "home"
    }
  ],
- "gender": "female",
- "birthday": "1942-04-26",
+ "http://hrextension" : [
+   {
+     "gender": "female"
+   },
+   {
+     "birthday": "1942-04-26"
+   }
+ ],
  "meta": {
-   "created": "2011-05-27T16:37:25Z",
+   "created": "2010-03-25T15:11:18Z",
    "lastModified": "2011-05-27T16:37:25Z"
  }
 }
 
 </pre></div>
-<a name="anchor16"></a><br /><hr />
+<a name="edit-user-with-patch"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.2"></a><h3>4.3.2.&nbsp;
-Editing a User via PATCH</h3>
+Editing a User with PATCH</h3>
 
 <p>PATCH enables consumers to send only those attributes requiring modification reducing network and
                         processing overhead. Attributes may be deleted, replaced or added in a single request.
@@ -855,8 +943,12 @@ Editing a User via PATCH</h3>
                             <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-"meta": {
-"attributes": "emails"
+{
+  "meta": {
+    "attributes": [
+      "emails"
+    ]
+  }
 }
 </pre></div>
                         
@@ -918,7 +1010,8 @@ Authorization: Bearer h480djs93hd8
 {
 "schemas": ["urn:scim:schemas:core:1.0"],
 "name": {
-"familyName": "Smith"
+  "familyName": "Smith"
+  }
 }
 </pre></div>
                         
@@ -940,23 +1033,24 @@ Authorization: Bearer h480djs93hd8
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
   "emails": [
-  {
-    "value": "babs@exmaple.org",
-    "type": "home"
-  },
-  {
-    "value": "babswork@exmaple.org",
-    "type": "work"
-  },
+    {
+      "value": "babs@exmaple.org",
+      "type": "home"
+    },
+    {
+      "value": "babswork@exmaple.org",
+      "type": "work"
+    }
+  ],
   "meta": {
-  "attributes": "emails"
+    "attributes": "emails"
   }
 }
 </pre></div>
                         
 </dd>
 </dl></blockquote>
-<a name="anchor17"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.2.1"></a><h3>4.3.2.1.&nbsp;
 Additional query parameters</h3>
@@ -974,12 +1068,15 @@ Additional query parameters</h3>
 
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
 </pre></div>
-<a name="anchor18"></a><br /><hr />
+<a name="delete-user"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
-Deleting a User via DELETE</h3>
+Removing a User</h3>
 
-<p>Consumers may request User removal via DELETE.
+<p>Consumers request User removal via DELETE. Service Providers MAY choose not to permenantly delete the
+                    User, but MUST return a 404 error code for all PUT, PATCH, DELETE and GET operations with the User
+                    id. Service Providers MUST also omit the User from query results.
+                
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
@@ -990,18 +1087,59 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 </pre></div>
-<a name="anchor19"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.5"></a><h3>4.5.&nbsp;
-Retrieving the Service Provider User Schema</h3>
-
-<p>The SCIM API allows you to inspect the metadata associated with the User object by performing a GET
-                    on the /User endpoint
-                
+<p>Example: Consumer attempt to retrieve the previously deleted User
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-GET /User
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Authorization: Bearer h480djs93hd8
+</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 404 NOT FOUND
+</pre></div>
+<a name="schemas"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.5"></a><h3>4.5.&nbsp;
+Retrieving Service Provider Schema</h3>
+
+<p>Service Providers MUST support the core schema and MAY support additional schemas.
+</p>
+<a name="get-schema"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.5.1"></a><h3>4.5.1.&nbsp;
+Retrieving a specific Schema</h3>
+
+<p>To retrieve schema send a GET request to /Schema/{resource}/{schema urn}.
+
+                        Consumers may request the core User schema by omitting the schema URN; e.g.,/Schema/User/ or
+                        specifying the core schema URN; e.g., /Schema/User/urn:scim:schemas:core:1.0
+                    
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+
+GET /Schema/User
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+TBD
+
+</pre></div>
+<a name="get-schemas"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.5.2"></a><h3>4.5.2.&nbsp;
+Retrieving all Service Provider supported Schemas</h3>
+
+<p>Consumers may request all supported schemas for a given resource via /Schemas/{resource}
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+
+GET /Schemas/User
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1011,63 +1149,29 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schema": ["urn:scim:schemas:core:1.0"],
-    "attributes":[
-      {
-        "name":"displayName",
-        "type":"xs:string",
-        "singleValue":true,
-        "required":false,
-        "description":"Preferred name to be used when displaying the user",
-        "schema":"urn:scim:schemas:core:1.0"
-      },
-      {
-        "name":"email",
-        "type":"xs:string",
-        "singleValue":false,
-        "required":false,
-        "description":"User’s email address",
-        "schema":"urn:scim:schemas:core:1.0"
-      },
-      {
-        "name":"gender",
-        "type":"xs:string",
-        "singleValue":true,
-        "required":false,
-        "description":"User’s birthday",
-        "schema":"http:/hrextension"
-      },
-      {
-        "name":"address",
-        "type":"xs:complexType",
-        "singleValue":false,
-        "required":false,
-        "description":"User’s Address",
-        "schema":"http:/hrextension",
-        "attributes":[
-          {
-            "name":"street",
-            "type":"xs:string",
-            "singleValue":true,
-            "required":false,
-            "description":"Street Name",
-            "schema":"http:/hrextension"
-          },
-          {
-            "name":"postalCode",
-            "type":"xs:string",
-            "singleValue":false,
-            "required":false,
-            "description":"Postal Code",
-            "schema":"http:/hrextension"
-          }
-        ]
+  "totalResults": 2,
+  "entry": [
+    {
+      "name": "Core",
+      "urn": "urn:scim:schemas:core:1.0",
+      "description": "SCIM Core 1.0 User Schema",
+      "meta": {
+        "location":"/Schema/User/urn:scim:schemas:core:1.0"
       }
-
+    },
+    {
+      "name": "HR",
+      "urn": "http://hrextension/",
+      "description": "SCIM HR extension",
+      "meta": {
+        "location":"/Schema/User/http://hrextension"
+      }
+    }
   ]
 }
+
 </pre></div>
-<a name="anchor20"></a><br /><hr />
+<a name="io-format"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
 Data Input/Output Formats</h3>
@@ -1091,12 +1195,14 @@ Host: example.com
                 
 </p>
 <p>
-                    Service Providers MUST support the Accept Headers "Accept: application/json" for JSON
-                    (http://json.org) and "Accept: application/xml" for XML (http://www.w3.org/XML/) and MAY support
-                    additional formats if desired. The format defaults to json if no format is specified. The data
-                    structure returned is equivalent in both formats; the only difference is in the encoding of the
-                    data. Singular Fields are encoded as string key/value pairs in JSON and tags with text content in
-                    XML, e.g. "field": "value" and
+                    Service Providers MUST support the Accept Headers "Accept: application/json" for
+                    <a href='http://json.org'>JSON</a>
+                    and "Accept: application/xml" for
+                    <a href='http://www.w3.org/XML/'>XML</a>
+                    and MAY support additional formats if desired. The format defaults to json if no format is
+                    specified. The data structure returned is equivalent in both formats; the only difference is in the
+                    encoding of the data. Singular Fields are encoded as string key/value pairs in JSON and tags with
+                    text content in XML, e.g. "field": "value" and
                     
                     respectively. Plural Fields and Plural Bundles are encoded as arrays in JSON and repeated tags in
                     XML, e.g. "fields": [ "value1", "value2" ] and
@@ -1108,9 +1214,21 @@ Host: example.com
                     respectively.
                 
 </p>
-<a name="anchor21"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
+HTTP Response Codes</h3>
+
+<p>
+                    The SCIM Protocol uses the response status codes defined in HTTP to indicate operation success or
+                    failure. Refer to the HTTP specification for <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>status code descriptions</a>.
+                    Implementers SHOULD, per the HTTP specification, return human-readable explanations for HTTP 4xx and
+                    5xx responses.
+                
+</p>
+<a name="anchor10"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT, PATCH and DELETE operations a
@@ -1122,14 +1240,34 @@ HTTP Method Overloading</h3>
 POST /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 X-HTTP-Method-Override: DELETE
 </pre></div>
-<a name="rfc.references1"></a><br /><hr />
+<a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>5.&nbsp;References</h3>
-<table width="99%" border="0">
-<tr><td class="author-text" valign="top"><a name="PortableContacts">[PortableContacts]</a></td>
-<td class="author-text">Smarr, J., &ldquo;Portable Contacts 1.0 Draft C - Schema Only,&rdquo; August&nbsp;2008.</td></tr>
-</table>
+<a name="rfc.section.5"></a><h3>5.&nbsp;
+Todos</h3>
 
+<ol class="text">
+<li>Relative or Absolute URLS for Location header and embedded meta tag
+</li>
+<li>Additional Endpoints: Groups e.g., /Group(s) If so change user 'groups' semantics to 'memberOf')?
+                
+</li>
+<li>Change password; e.g., /ChangePassword
+</li>
+<li>Endpoint extension"Via extension a la schema e.g., /Device, /Service
+                
+</li>
+<li>Data consistency semantics - Suggest etag
+</li>
+<li>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to skip binary attrs?
+</li>
+</ol>
+<a name="anchor12"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.6"></a><h3>6.&nbsp;
+Acknowledgments</h3>
+
+<p>Portable Contacts - <a href='http://www.portablecontacts.net/draft-spec.html'>Portable Contacts 1.0 Draft C</a>
+</p>
 <a name="rfc.authors"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <h3>Authors' Addresses</h3>
