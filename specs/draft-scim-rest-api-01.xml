@@ -9,7 +9,7 @@
         SYSTEM "rfc2629.dtd">
 <rfc>
     <front>
-        <title>SCIM REST API</title>
+        <title>SCIM PROTOCOL</title>
 
         <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
             <organization abbrev="UnboundID">UnboundID</organization>
@@ -45,8 +45,8 @@
 
     <middle>
         <section title="Introduction and Overview" anchor="intro" toc="default">
-            <t>The SCIM API is an application-level protocol for managing user identity using HTTP [RFC2616] The
-                protocol supports creating, editing, deleting, querying and retrieving user identity.
+            <t>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on the web. The protocol supports
+                creating, editing, deleting, querying and retrieving User resources.
             </t>
 
             <section title="Intended Audience" toc="default">
@@ -67,8 +67,8 @@
                     <t hangText="Service Provider:">A web application that provides User information via the SCIM
                         protocol.
                     </t>
-                    <t hangText="Consumer:">A website or application that uses the SCIM protocol to request Users
-                        managed by the Service Provider.
+                    <t hangText="Consumer:">A website or application that uses the SCIM protocol to manage Users managed
+                        by the Service Provider.
                     </t>
                     <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL for the API. The Base URL
                         MUST NOT contain any query string, as additional path information and query string variables MAY
@@ -91,7 +91,7 @@
             </section>
         </section>
 
-        <section title="Authentication and Authorization" toc="default">
+        <section title="Authentication and Authorization" anchor="aa" toc="default">
             <t>
                 Authentication to the SCIM REST API is performed using OAuth2:
                 http://tools.ietf.org/html/draft-ietf-oauth-v2-15
@@ -120,31 +120,92 @@
         </section>
 
 
-        <section title="API">
+        <section title="API" anchor="api">
+            <t>
+                The SCIM protocol specifies well known endpoints and operations for managing User and User discovery
+                resources via standard HTTP methods:
+            </t>
+            <list style="hanging">
+                <t hangText="GET">Retrieves a complete or partial User/Schema
+                </t>
+                <t hangText="POST">Creates a new User
+                </t>
+                <t hangText="PUT">Modifies a User with a complete, consumer specified User (replace)
+                </t>
+                <t hangText="PATCH">Modifies a User with a set of consumer specified changes (partial update)
+                </t>
+                <t hangText="DELETE">Deletes a User.
+                </t>
+            </list>
+
+            <texttable anchor='endpoint-summary' title="Defined endpoints">
+                <preamble></preamble>
+                <ttcol align='left'>Resource</ttcol>
+                <ttcol align='left'>Endpoint</ttcol>
+                <ttcol align='left'>Operations</ttcol>
+                <ttcol align='left'>Description</ttcol>
+                <c>User</c>
+                <c>/User</c>
+                <c><xref target="get-user" format="default">GET</xref>,
+                    <xref target="create-user" format="default">POST</xref>,
+                    <xref target="edit-user-with-put" format="default">PUT</xref>,
+                    <xref target="edit-user-with-patch" format="default">PATCH</xref>,
+                    <xref target="delete-user" format="default">DELETE</xref>
+                </c>
+                <c>Read/Modify Users</c>
+
+                <c>
+                    User Query/Listing
+                </c>
+                <c>/Users</c>
+                <c>
+                    <xref target="query-users" format="default">GET</xref>
+                </c>
+                <c>Retrieve User via ad hoc queries</c>
+
+
+                <c>User Schema</c>
+                <c>
+                    /Schema
+                </c>
+                <c>
+                    <xref target="get-schema" format="default">GET</xref>
+                </c>
+                <c>Retrieve a specified User schema</c>
+
+                <c>User Schemas</c>
+                <c>
+                    /Schemas
+                </c>
+                <c>
+                    <xref target="get-schemas" format="default">GET</xref>
+                </c>
+                <c>Retrieve all Service Provider supported schemas</c>
+            </texttable>
+
             <t>
                 All requests to the Service Provider are made via
                 <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9">HTTP operations</eref>
-                on a URL deriving from the Base URL. Responses are returned in the body of the HTTP response, formatted
+                on a URL derived from the Base URL. Responses are returned in the body of the HTTP response, formatted
                 as JSON or XML, depending on what is requested. Response and error codes SHOULD be transmitted via the
                 HTTP status code of the response (if possible), and SHOULD also be specified in the body of the
                 response.
             </t>
 
-            <section title="Creating Users with POST" toc="default">
+            <section title="Creating Users" anchor="create-user" toc="default">
                 <t>To create new Users, clients send POST requests to the User endpoint /User.</t>
 
                 <t>Successful User creation is indicated with a 201 ("Created") response code. Upon successful creation,
-                    the response body should contain the newly created Resource. Since the server is free to alter
-                    and/or ignore POSTed content, returning the User can be useful to the client, enabling it to
-                    correlate the client and server views of the new User.
+                    the response body MUST contain the newly created Resource. Since the server is free to alter and/or
+                    ignore POSTed content, returning the User can be useful to the client, enabling it to correlate the
+                    client and server views of the new User.
 
-                    When a User is created, its User URI must be returned in a Location header in the response.
+                    When a User is created, its User URI must be returned in the response Location header.
                 </t>
 
-                <section title="Example" toc="default">
-                    <t>Below, the client sends a POST request containing a User</t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+                <t>Below, the client sends a POST request containing a User</t>
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
 POST /User  HTTP/1.1
 Host: example.com
 Content-Type:  application/json
@@ -167,18 +228,17 @@ Content-Length: ...
   ]
 }
                         ]]></artwork>
-                    </figure>
+                </figure>
 
-                    <t>The server signals a successful creation with a status code of 201. The response includes a
-                        Location header indicating the User URI, and a representation of that User in the body of the
-                        response.
-                    </t>
+                <t>The server signals a successful creation with a status code of 201. The response includes a Location
+                    header indicating the User URI, and a representation of that User in the body of the response.
+                </t>
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: http://example.com/scim/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
+Location: /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 
 {
   "id" : "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
@@ -187,18 +247,19 @@ Location: http://example.com/scim/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
 }
 
                         ]]></artwork>
-                    </figure>
-                </section>
+                </figure>
 
 
             </section>
-            <section title="Retrieving Users" toc="default">
+            <section title="Retrieving Users" anchor="get-users-ops" toc="default">
                 <t>Users may be retrieved via opaque, unique URIs or via Query</t>
 
-                <section title="Retrieving a known User with GET" toc="default">
+                <section title="Retrieving a known User" anchor="get-user" toc="default">
                     <t>To retrieve a known User, clients send GET requests to the User endpoint /User/{id}.</t>
 
-                    <t>If the User exists the server responds with a status code of 200 and includes the User in the</t>
+                    <t>If the User exists the server responds with a status code of 200 and includes the User in the
+                        body of the response.
+                    </t>
 
                     <section title="Example">
                         <figure height="" suppress-title="false" width="" alt="" title="" align="left">
@@ -253,8 +314,8 @@ Content-Type: application/json
       }
     ],
     "meta": {
-      "created": "2011-04-27T16:37:25Z",
-      "lastModified": "2011-04-27T16:37:25Z"
+     "created": "2010-03-25T15:11:18Z",
+     "lastModified": "2011-05-27T16:37:25Z"
   }
 }
 
@@ -265,7 +326,7 @@ Content-Type: application/json
 
                 </section>
 
-                <section title="Listing/Querying Users with GET" toc="default">
+                <section title="Listing/Querying Users" anchor="query-users" toc="default">
                     <t>
                         SCIM defines a standard set of operations that can be used to filter, sort, and paginate
                         response results. The operations are specified by adding query parameter to the Users endpoint.
@@ -290,31 +351,33 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
   "totalResults": 3,
   "entry": [
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Babs Jensen",
       "userName": "bjensen",
       "meta": {
-        "location":"http://example.org/path/to/api/3f62ce30-...",
+        "location":"/User/3f62ce30-..."
       }
     },
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "4f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Mandy Pepperidge",
       "userName": "mPepperidge",
       "meta": {
-        "location":"http://example.org/path/to/api/4f62ce30-...",
+        "location":"/User/4f62ce30-..."
       }
     },
     {
+      "schemas": ["urn:scim:schemas:core:1.0"],
       "id": "5f62ce30-dcd6-4dd7-abfe-2352a76f9978",
       "displayName": "Noel Smith",
       "userName": "nsmith",
       "meta": {
-        "location":"http://example.org/path/to/api/5f62ce30-...",
+        "location":"/User/5f62ce30-..."
       }
     }
   ]
@@ -383,6 +446,7 @@ Content-Type: application/json
                             <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                                 <![CDATA[
 {
+  "schemas": ["urn:scim:schemas:core:1.0"],
   "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -392,6 +456,7 @@ Content-Type: application/json
   "displayName": "Babs Jensen",
 },
 {
+  "schemas": ["urn:scim:schemas:core:1.0"],
   "id": "4d31ce30-dcd6-4dd7-abfe-2352a76f8852",
   "externalId": "563471",
   "userName": "jsmith@example.org",
@@ -507,7 +572,7 @@ Content-Type: application/json
 
                     ]]></artwork>
                     </figure>
-                    <t>Giving the repsonse</t>
+                    <t>Giving the response</t>
 
                     <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                         <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
@@ -517,7 +582,7 @@ Content-Type: application/json
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
-    "displayName": "Babs Jensen",
+  "displayName": "Babs Jensen"
 }
 
                         ]]></artwork>
@@ -527,8 +592,7 @@ Content-Type: application/json
 
 
             <section title="Editing a User" toc="default">
-                <t></t>
-                <section title="Editing a User via PUT" toc="default">
+                <section title="Editing a User with PUT" anchor="edit-user-with-put" toc="default">
                     <t>
                         PUT performs a full User update. Consumers must retrieve the entire User and PUT the desired
                         User modifications.
@@ -606,10 +670,16 @@ Content-Type: application/json
      "type": "home"
    }
  ],
- "gender": "female",
- "birthday": "1942-04-26",
+ "http://hrextension" : [
+   {
+     "gender": "female"
+   },
+   {
+     "birthday": "1942-04-26"
+   }
+ ],
  "meta": {
-   "created": "2011-05-27T16:37:25Z",
+   "created": "2010-03-25T15:11:18Z",
    "lastModified": "2011-05-27T16:37:25Z"
  }
 }
@@ -618,7 +688,7 @@ Content-Type: application/json
                     </figure>
                 </section>
 
-                <section title="Editing a User via PATCH" toc="default">
+                <section title="Editing a User with PATCH" anchor="edit-user-with-patch" toc="default">
                     <t>PATCH enables consumers to send only those attributes requiring modification reducing network and
                         processing overhead. Attributes may be deleted, replaced or added in a single request.
                     </t>
@@ -632,8 +702,12 @@ Content-Type: application/json
                                 <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                                     <![CDATA[
 
-"meta": {
-"attributes": "emails"
+{
+  "meta": {
+    "attributes": [
+      "emails"
+    ]
+  }
 }
                              ]]></artwork>
                             </figure>
@@ -697,7 +771,8 @@ Authorization: Bearer h480djs93hd8
 {
 "schemas": ["urn:scim:schemas:core:1.0"],
 "name": {
-"familyName": "Smith"
+  "familyName": "Smith"
+  }
 }
      ]]></artwork>
                             </figure>
@@ -720,16 +795,17 @@ Authorization: Bearer h480djs93hd8
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
   "emails": [
-  {
-    "value": "babs@exmaple.org",
-    "type": "home"
-  },
-  {
-    "value": "babswork@exmaple.org",
-    "type": "work"
-  },
+    {
+      "value": "babs@exmaple.org",
+      "type": "home"
+    },
+    {
+      "value": "babswork@exmaple.org",
+      "type": "work"
+    }
+  ],
   "meta": {
-  "attributes": "emails"
+    "attributes": "emails"
   }
 }
                          ]]></artwork>
@@ -759,8 +835,11 @@ PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
                     </section>
                 </section>
             </section>
-            <section title="Deleting a User via DELETE" toc="default">
-                <t>Consumers may request User removal via DELETE.</t>
+            <section title="Removing a User" anchor="delete-user" toc="default">
+                <t>Consumers request User removal via DELETE. Service Providers MAY choose not to permenantly delete the
+                    User, but MUST return a 404 error code for all PUT, PATCH, DELETE and GET operations with the User
+                    id. Service Providers MUST also omit the User from query results.
+                </t>
                 <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                         <![CDATA[
@@ -771,6 +850,7 @@ Authorization: Bearer h480djs93hd8
                                       ]]></artwork>
                 </figure>
 
+                Server Response:
                 <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                         <![CDATA[
@@ -779,93 +859,114 @@ HTTP/1.1 200 OK
                 </figure>
 
 
-            </section>
-
-            <section title="Retrieving the Service Provider User Schema" toc="default">
-                <t>The SCIM API allows you to inspect the metadata associated with the User object by performing a GET
-                    on the /User endpoint
-                </t>
-
-
+                <t>Example: Consumer attempt to retrieve the previously deleted User</t>
                 <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                         <![CDATA[
 
-GET /User
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Host: example.com
+Authorization: Bearer h480djs93hd8
+                                      ]]></artwork>
+                </figure>
+
+                Server Response:
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+HTTP/1.1 404 NOT FOUND
+            ]]></artwork>
+                </figure>
+
+            </section>
+            <section title="Retrieving Service Provider Schema" anchor="schemas" toc="default">
+                <t>Service Providers MUST support the core schema and MAY support additional schemas.</t>
+                <section title="Retrieving a specific Schema" anchor="get-schema" toc="default">
+                    <t>To retrieve schema send a GET request to /Schema/{resource}/{schema urn}.
+
+                        Consumers may request the core User schema by omitting the schema URN; e.g.,/Schema/User/ or
+                        specifying the core schema URN; e.g., /Schema/User/urn:scim:schemas:core:1.0
+                    </t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
+
+GET /Schema/User
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
             ]]></artwork>
-                </figure>
+                    </figure>
 
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+                    Server Response:
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+TBD
+
+            ]]></artwork>
+                    </figure>
+
+                </section>
+
+                <section title="Retrieving all Service Provider supported Schemas" anchor="get-schemas" toc="default">
+                    <t>Consumers may request all supported schemas for a given resource via /Schemas/{resource}</t>
+
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
+
+GET /Schemas/User
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+                ]]></artwork>
+                    </figure>
+
+                    Server Response:
+
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schema": ["urn:scim:schemas:core:1.0"],
-    "attributes":[
-      {
-        "name":"displayName",
-        "type":"xs:string",
-        "singleValue":true,
-        "required":false,
-        "description":"Preferred name to be used when displaying the user",
-        "schema":"urn:scim:schemas:core:1.0"
-      },
-      {
-        "name":"email",
-        "type":"xs:string",
-        "singleValue":false,
-        "required":false,
-        "description":"User’s email address",
-        "schema":"urn:scim:schemas:core:1.0"
-      },
-      {
-        "name":"gender",
-        "type":"xs:string",
-        "singleValue":true,
-        "required":false,
-        "description":"User’s birthday",
-        "schema":"http:/hrextension"
-      },
-      {
-        "name":"address",
-        "type":"xs:complexType",
-        "singleValue":false,
-        "required":false,
-        "description":"User’s Address",
-        "schema":"http:/hrextension",
-        "attributes":[
-          {
-            "name":"street",
-            "type":"xs:string",
-            "singleValue":true,
-            "required":false,
-            "description":"Street Name",
-            "schema":"http:/hrextension"
-          },
-          {
-            "name":"postalCode",
-            "type":"xs:string",
-            "singleValue":false,
-            "required":false,
-            "description":"Postal Code",
-            "schema":"http:/hrextension"
-          }
-        ]
+  "totalResults": 2,
+  "entry": [
+    {
+      "name": "Core",
+      "urn": "urn:scim:schemas:core:1.0",
+      "description": "SCIM Core 1.0 User Schema",
+      "meta": {
+        "location":"/Schema/User/urn:scim:schemas:core:1.0"
       }
-
+    },
+    {
+      "name": "HR",
+      "urn": "http://hrextension/",
+      "description": "SCIM HR extension",
+      "meta": {
+        "location":"/Schema/User/http://hrextension"
+      }
+    }
   ]
 }
-            ]]></artwork>
-                </figure>
 
+                ]]></artwork>
+                    </figure>
+
+
+                </section>
             </section>
 
-            <section title="Data Input/Output Formats">
+
+            <section title="Data Input/Output Formats" anchor="io-format">
                 <t>
                     Consumers SHOULD specify the format in which the data is submitted and MAY specify the desired
                     response data format. Consumers MAY indicate the desired format via an HTTP Accept Header;
@@ -885,12 +986,14 @@ Host: example.com
                 </t>
 
                 <t>
-                    Service Providers MUST support the Accept Headers "Accept: application/json" for JSON
-                    (http://json.org) and "Accept: application/xml" for XML (http://www.w3.org/XML/) and MAY support
-                    additional formats if desired. The format defaults to json if no format is specified. The data
-                    structure returned is equivalent in both formats; the only difference is in the encoding of the
-                    data. Singular Fields are encoded as string key/value pairs in JSON and tags with text content in
-                    XML, e.g. "field": "value" and
+                    Service Providers MUST support the Accept Headers "Accept: application/json" for
+                    <eref target="http://json.org">JSON</eref>
+                    and "Accept: application/xml" for
+                    <eref target="http://www.w3.org/XML/">XML</eref>
+                    and MAY support additional formats if desired. The format defaults to json if no format is
+                    specified. The data structure returned is equivalent in both formats; the only difference is in the
+                    encoding of the data. Singular Fields are encoded as string key/value pairs in JSON and tags with
+                    text content in XML, e.g. "field": "value" and
                     <field>value</field>
                     respectively. Plural Fields and Plural Bundles are encoded as arrays in JSON and repeated tags in
                     XML, e.g. "fields": [ "value1", "value2" ] and
@@ -905,6 +1008,18 @@ Host: example.com
                     respectively.
                 </t>
             </section>
+
+            <section title="HTTP Response Codes">
+                <t>
+                    The SCIM Protocol uses the response status codes defined in HTTP to indicate operation success or
+                    failure. Refer to the HTTP specification for <eref
+                        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">status code descriptions</eref>.
+                    Implementers SHOULD, per the HTTP specification, return human-readable explanations for HTTP 4xx and
+                    5xx responses.
+                </t>
+            </section>
+
+
             <section title="HTTP Method Overloading">
                 <t>In recognition that some clients, servers and firewalls prevent PUT, PATCH and DELETE operations a
                     client MAY override the POST operation by specifying the custom header "X-HTTP-Method-Override" with
@@ -921,20 +1036,28 @@ X-HTTP-Method-Override: DELETE
             </section>
 
         </section>
+        <section title="Todos">
+            <list style="numbers">
+                <t>Relative or Absolute URLS for Location header and embedded meta tag</t>
+                <t>Additional Endpoints: Groups e.g., /Group(s) If so change user 'groups' semantics to 'memberOf')?
+                </t>
+
+                <t>Change password; e.g., /ChangePassword</t>
+                <t>Endpoint extension"Via extension a la schema e.g., /Device, /Service
+                </t>
+                <t>Data consistency semantics - Suggest etag</t>
+                <t>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to skip binary attrs?</t>
+
+            </list>
+        </section>
+
+
+        <section title="Acknowledgments">
+          <t>Portable Contacts - <eref target="http://www.portablecontacts.net/draft-spec.html" type="HTML">Portable Contacts 1.0 Draft C</eref></t>
+        </section>
 
     </middle>
 
     <back>
-
-        <references>
-            <reference anchor='PortableContacts'>
-                <front>
-                    <title abbrev='PortableContacts'>Portable Contacts 1.0 Draft C - Schema Only</title>
-                    <author initials='J. S.' surname='Smarr' fullname='J. Smarr'>
-                    </author>
-                    <date month='August' year='2008'/>
-                </front>
-            </reference>
-        </references>
     </back>
 </rfc>
