@@ -146,7 +146,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">UnboundID</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">C. Mortimore</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">SalesForce</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">May 9, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">May 14, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />SCIM PROTOCOL</h1>
 
@@ -162,7 +162,7 @@
                 standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around
                 the cloud.
 
-                This document provides a REST API for exchanging user identity via JSON and/or XML
+                This document provides a REST API for exchanging User and User related resources via JSON and/or XML
             
 </p><a name="toc"></a><br /><hr />
 <h3>Table of Contents</h3>
@@ -209,7 +209,9 @@ Retrieving all Service Provider supported Schemas<br />
 Data Input/Output Formats<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.7.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.8.</a>&nbsp;
+Versioning Resources<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.9.</a>&nbsp;
 HTTP Method Overloading<br />
 <a href="#anchor11">5.</a>&nbsp;
 Todos<br />
@@ -225,8 +227,8 @@ Authors' Addresses<br />
 <a name="rfc.section.1"></a><h3>1.&nbsp;
 Introduction and Overview</h3>
 
-<p>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on the web. The protocol supports
-                creating, editing, deleting, querying and retrieving User resources.
+<p>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on
+                the web. The protocol supports creating, editing, deleting, querying and retrieving User resources.
             
 </p>
 <a name="anchor1"></a><br /><hr />
@@ -271,27 +273,34 @@ Definitions</h3>
                         be appended by Consumers as part of forming the request. Example: https://example.com/scim
                     
 </dd>
-<dt>Singular Field:</dt>
-<dd>A User field that can appear at most once per User, e.g.displayName.
+<dt>Singular Attribute:</dt>
+<dd>A User attribute that can appear at most once per User,
+                        e.g.displayName.
                     
 </dd>
-<dt>Plural Field:</dt>
-<dd>A User field that can appear multiple times per User, e.g. emails
-</dd>
-<dt>Simple Field:</dt>
-<dd>A Singular Field or Plural Field whose value is a single string
-                        attribute.
+<dt>Plural Attribute:</dt>
+<dd>A User attribute that can appear multiple times per User, e.g.
+                        emails
                     
 </dd>
-<dt>Complex Field:</dt>
-<dd>A Singular Field or Plural Field whose value is an object containing
-                        multiple sub-field attributes.
+<dt>Simple Attribute:</dt>
+<dd>A Singular attribute or Plural attribute whose value is a single
+                        string attribute.
+                    
+</dd>
+<dt>Complex Attribute:</dt>
+<dd>A Singular attribute or Plural attribute whose value is an object
+                        containing multiple sub-attribute attributes.
                     
 </dd>
 <dt>Primary Sub-Value:</dt>
-<dd>The sub-field in a Complex Field that should be used when sorting
-                        or filtering by that field. Unless otherwise specified, the value sub-field is always the
-                        Primary Sub-Field.
+<dd>The sub-attribute in a Complex attribute that should be used when
+                        sorting or filtering by that attribute. Unless otherwise specified, the value sub-attribute is
+                        always the Primary Sub-attribute.
+                    
+</dd>
+<dt>Resource:</dt>
+<dd>The Service Provider managed artifact; e.g., User or Group
                     
 </dd>
 </dl></blockquote>
@@ -338,30 +347,28 @@ API</h3>
 </p>
 <blockquote class="text"><dl>
 <dt>GET</dt>
-<dd>Retrieves a complete or partial User/Schema
+<dd>Retrieves a complete or partial Resource; e.g., User or Schema
                 
 </dd>
 <dt>POST</dt>
-<dd>Creates a new User
+<dd>Creates a new Resource; e.g., User or Schema
                 
 </dd>
 <dt>PUT</dt>
-<dd>Modifies a User with a complete, consumer specified User (replace)
+<dd>Modifies a Resource with a complete, consumer specified Resource (replace)
                 
 </dd>
 <dt>PATCH</dt>
-<dd>Modifies a User with a set of consumer specified changes (partial update)
+<dd>Modifies a Resource with a set of consumer specified changes (partial update)
                 
 </dd>
 <dt>DELETE</dt>
-<dd>Deletes a User.
+<dd>Deletes a Resource.
                 
 </dd>
 </dl></blockquote><br /><hr class="insert" />
 <a name="endpoint-summary"></a>
-
-<p style='text-align: center'>
-</p><table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
+<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
 <col align="left"><col align="left"><col align="left"><col align="left">
 <tr><th align="left">Resource</th><th align="left">Endpoint</th><th align="left">Operations</th><th align="left">Description</th></tr>
 <tr>
@@ -463,7 +470,7 @@ Content-Length: ...
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Location: http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 
 {
   "id" : "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
@@ -579,7 +586,7 @@ Content-Type: application/json
       "displayName": "Babs Jensen",
       "userName": "bjensen",
       "meta": {
-        "location":"/User/3f62ce30-..."
+        "location":"http://example.com/User/3f62ce30-..."
       }
     },
     {
@@ -588,7 +595,7 @@ Content-Type: application/json
       "displayName": "Mandy Pepperidge",
       "userName": "mPepperidge",
       "meta": {
-        "location":"/User/4f62ce30-..."
+        "location":"http://example.com/User/4f62ce30-..."
       }
     },
     {
@@ -597,7 +604,7 @@ Content-Type: application/json
       "displayName": "Noel Smith",
       "userName": "nsmith",
       "meta": {
-        "location":"/User/5f62ce30-..."
+        "location":"http://example.com/User/5f62ce30-..."
       }
     }
   ]
@@ -616,21 +623,21 @@ Filtering</h3>
 <blockquote class="text"><dl>
 <dt>filterBy:</dt>
 <dd>
-                                Specifies the field name to filter by. If the specified field is a Plural Field, the
-                                User SHALL match if any of the instances of the given field match the specified
-                                criterion (e.g. if a contact has multiple emails values, only one has to match for the
-                                entire User to match). If a Simple Field is specified, its value must match the
-                                specified filterValue according to the specified filterOp. If a Complex Field is
-                                specified, its Primary Sub-Field must match. If the specified field is not a direct
-                                child of the entry element, the full path MUST be specified using the '.' character as
-                                separator. For example, to filter by userName the parameter value is userName and to
-                                filter by first name, the parameter value is name.givenName.
+                                Specifies the attribute name to filter by. If the specified attribute is a Plural
+                                attribute, the User SHALL match if any of the instances of the given attribute match the
+                                specified criterion (e.g. if a User has multiple emails values, only one has to match
+                                for the entire User to match). If a Simple attribute is specified, its value must match
+                                the specified filterValue according to the specified filterOp. If a Complex attribute is
+                                specified, its Primary Sub-attribute must match. If the specified attribute is not a
+                                direct child of the entry element, the full path MUST be specified using the '.'
+                                character as separator. For example, to filter by userName the parameter value is
+                                userName and to filter by first name, the parameter value is name.givenName.
                             
 </dd>
 <dt>filterOp:</dt>
 <dd>
-                                Specifies the comparison method used to evaluate the field value with the value of the
-                                filter criterion.
+                                Specifies the comparison method used to evaluate the attribute value with the value of
+                                the filter criterion.
 
                                 Providers SHOULD support the following values:
 
@@ -642,20 +649,19 @@ Filtering</h3>
                                     
 </dd>
 <dt>contains:</dt>
-<dd>the entire filterValue must be a substring of the User field
+<dd>the entire filterValue must be a substring of the attribute
                                         value.
                                     
 </dd>
 <dt>startswith:</dt>
-<dd>the entire filterValue must be a substring of the User
-                                        field value, starting at the beginning of the field value. This criterion is
-                                        satisfied if the two strings are equal.
+<dd>the entire filterValue must be a substring of the
+                                        attribute value, starting at the beginning of the attribute value. This
+                                        criterion is satisfied if the two strings are equal.
                                     
 </dd>
 <dt>present:</dt>
-<dd>a User matches the criterion if the field specified by
-                                        filterBy has a non-empty value, or if it contains a non-empty node for complex
-                                        fields.
+<dd>if the attribute specified by filterBy has a non-empty value,
+                                        or if it contains a non-empty node for complex attributes there is a match.
                                     
 </dd>
 </dl></blockquote>
@@ -673,7 +679,7 @@ Filtering</h3>
 </dl></blockquote>
 <p>
                             Here are a few illustrative examples of filtering matches with filterBy, filterOp, and
-                            filterValue. In each case, assume the following two Users would be returned if no filtering
+                            filterValue. In each case, assume the following two Users will be returned if no filtering
                             parameters were provided:
                         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -702,21 +708,27 @@ Filtering</h3>
 
 </pre></div>
 <p>
-                            Given the parameters filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs, only
-                            the first User (with id=3f62ce30-dcd6-4dd7-abfe-2352a76f9978) would match and be returned.
-                            However, with parameters filterBy=displayName&amp;filterOp=present, both contacts would be
-                            returned. Given the parameters filterBy=email&amp;filterOp=contains&amp;filterValue=example.org,
-                            only the second contact (with id=2) would match, as would it be the only contact to match
-                            given the parameters filterBy=email&amp; filterOp=present.
-
-                            If a request specifies a filterValue but no filterBy or filterOp, it is up to the Provider
-                            how to interpret this filter request. Providers MAY choose to default to filtering by a
-                            given field (e.g., displayName); they MAY choose to implement a custom, Provider-specific
-                            query syntax for filterValue in this case; or they MAY choose to reject requests of this
-                            type. In general, if Consumers want to request specific behavior from Providers, they should
-                            do so by being explicit in their use of query parameters.
+                            Given the parameters:
                         
 </p>
+<blockquote class="text"><dl>
+<dt>filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs:</dt>
+<dd>
+                                the first User (with id=3f62ce30-dcd6-4dd7-abfe-2352a76f9978) will match and be returned
+                            
+</dd>
+<dt>filterBy=displayName&amp;filterOp=present:</dt>
+<dd>
+                                both Users will be returned
+                            
+</dd>
+<dt>filterBy=email&amp;filterOp=contains&amp;filterValue=example.org:</dt>
+<dd>
+                                the second User (with id=4d31ce30-dcd6-4dd7-abfe-2352a76f8852) would match, as would it
+                                be the only User to match given the parameters filterBy=email&amp; filterOp=present
+                            
+</dd>
+</dl></blockquote>
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2.2"></a><h3>4.2.2.2.&nbsp;
@@ -727,12 +739,12 @@ Sorting</h3>
 <blockquote class="text"><dl>
 <dt>sortBy:</dt>
 <dd>
-                                Specifies the field name whose value SHALL be used to order the returned Users. The sort
-                                order is determine by the sortOrder parameter. If sortBy is a Singular Field, users are
-                                sorted according to that field's value; if it's a Plural Field, Users are sorted by the
-                                Value (or Major Value, if it's a Complex Field) of the field marked with "primary":
-                                "true", if any, or else the first value in the list, if any, or else they are sorted
-                                last if the given User has no data for the given field.
+                                Specifies the attribute name whose value SHALL be used to order the returned Users. The
+                                sort order is determine by the sortOrder parameter. If sortBy is a Singular Attribute,
+                                users are sorted according to that attribute's value; if it's a Plural Attribute, Users
+                                are sorted by the Value (or Major Value, if it's a Complex Attribute) of the attribute
+                                marked with "primary": "true", if any, or else the first value in the list, if any, or
+                                else they are sorted last if the given User has no data for the given attribute.
                             
 </dd>
 <dt>sortOrder:</dt>
@@ -759,7 +771,7 @@ Pagination</h3>
                                 Specifies the offset of the first result to be returned with respect to the list of
                                 Users that would be returned if no startIndex were provided. For instance, if in a given
                                 request 10 Users would normally be provided, if startIndex is 7 and no count is
-                                specified, then only the last 3 Users in that list would be returned (contacts are
+                                specified, then only the last 3 Users in that list would be returned (Users are
                                 zero-indexed). If startIndex is greater than or equal to the total number of results
                                 that would be returned, no Users are returned. Value MUST be a non-negative integer and
                                 defaults to 0 if no value is specified.
@@ -774,7 +786,7 @@ Pagination</h3>
                                 a fixed default number like 10). Providers SHOULD honor a very large count value, and
                                 SHOULD support returning all Users at once when presented with a count request that is
                                 larger than the number of Users the user has, but Providers MAY choose to never return
-                                more than a Provider-determined maximum number of contacts per request, if returning all
+                                more than a Provider-determined maximum number of Users per request, if returning all
                                 Users is too burdensome. In all cases, at most count Users SHALL be returned, starting
                                 at startIndex and counting up from there. In each of these cases, Providers MUST
                                 indicate the total number of Users they chose to return in the response using the
@@ -785,8 +797,8 @@ Pagination</h3>
 <p>
                             For instance, on an initial query, specifying startIndex=0&amp;count=10 will return only the
                             first 10 results. The total number of possible results is indicated by the totalResults
-                            field of results, so the client knows how many "pages" of results exist. A subsequent query
-                            of startIndex=10&amp;count=10 will return the next 10 results, and so on.
+                            attribute of results, so the client knows how many "pages" of results exist. A subsequent
+                            query of startIndex=10&amp;count=10 will return the next 10 results, and so on.
                         
 </p>
 <a name="anchor6"></a><br /><hr />
@@ -795,13 +807,14 @@ Pagination</h3>
 Additional retrieval query parameters</h3>
 
 <p>
-                        Clients MAY request a partial User representation by specifying an attributes query parameter
-                        within the request URL. If non-empty, each User returned SHALL contain only the fields
-                        explicitly requested. The server MAY return a subset of the requested fields if they are not
-                        supported. This field is used for efficiency when the client only wishes to access a subset of
-                        the fields normally returned in results. Value is a comma separated list of top level attribute
-                        names (e.g. id,name,emails) and defaults to an empty list which means it's up to the Server
-                        which fields to return.
+                        Clients MAY request a partial User representation by specifying the query parameter
+                        'attributes'. If non-empty, each User returned SHALL contain only the attributes explicitly
+                        requested. The server MAY return a subset of the requested attributes if they are not supported.
+                        This attribute is used for efficiency when the client only wishes to access a subset of the
+                        attributes normally returned in results. The value is a comma separated list of top level
+                        attribute names (e.g. id,name,emails) and defaults to an empty list which means it's up to the
+                        Server which attributes to return. If extended schema attributes are specified the attribute
+                        names MUST be fully qualified.
                     
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=displayName
@@ -998,9 +1011,13 @@ Authorization: Bearer h480djs93hd8
 "schemas": ["urn:scim:schemas:core:1.0"],
 "displayName":"Mrs Barbara Jensen"
 }
+</pre></div>
 
-Singular, complex attributes may be partially merged by specifying only those attributes intended
-for update.
+                            Singular, complex attributes may be partially merged by specifying only those attributes
+                            intended for update.
+
+                            <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
 
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
@@ -1056,13 +1073,13 @@ Authorization: Bearer h480djs93hd8
 Additional query parameters</h3>
 
 <p>
-                            Consumers MAY request a partial User representation by specifying an attributes query
-                            parameter within the request URL. If non-empty, each User returned SHALL contain only the
-                            fields explicitly requested. The server MAY return a subset of the requested fields if they
-                            are not supported. This field is used for efficiency when the client only wishes to access a
-                            subset of the fields normally returned in results. Value is a comma separated list of top
-                            level attribute names (e.g. id,name,emails) and defaults to an empty list which means it's
-                            up to the Server which fields to return. For example:
+                            Consumers MAY request a partial User representation by specifying the query parameter
+                            'attributes'. If non-empty, each User returned SHALL contain only the attributes explicitly
+                            requested. The server MAY return a subset of the requested attributes if they are not
+                            supported. This attribute is used for efficiency when the client only wishes to access a
+                            subset of the attributes normally returned in results. Value is a comma separated list of
+                            top level attribute names (e.g. id,name,emails) and defaults to an empty list which means
+                            it's up to the Server which attributes to return. For example:
                         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1147,7 +1164,6 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-
 {
   "totalResults": 2,
   "entry": [
@@ -1156,7 +1172,7 @@ Content-Type: application/json
       "urn": "urn:scim:schemas:core:1.0",
       "description": "SCIM Core 1.0 User Schema",
       "meta": {
-        "location":"/Schema/User/urn:scim:schemas:core:1.0"
+        "location":"http://example.com/Schema/User/urn:scim:schemas:core:1.0"
       }
     },
     {
@@ -1164,7 +1180,7 @@ Content-Type: application/json
       "urn": "http://hrextension/",
       "description": "SCIM HR extension",
       "meta": {
-        "location":"/Schema/User/http://hrextension"
+        "location":"http://example.com/Schema/User/http://hrextension"
       }
     }
   ]
@@ -1199,36 +1215,204 @@ Host: example.com
                     <a href='http://json.org'>JSON</a>
                     and "Accept: application/xml" for
                     <a href='http://www.w3.org/XML/'>XML</a>
-                    and MAY support additional formats if desired. The format defaults to json if no format is
+                    and MAY support additional formats if desired. The format defaults to JSON if no format is
                     specified. The data structure returned is equivalent in both formats; the only difference is in the
-                    encoding of the data. Singular Fields are encoded as string key/value pairs in JSON and tags with
-                    text content in XML, e.g. "field": "value" and
-                    
-                    respectively. Plural Fields and Plural Bundles are encoded as arrays in JSON and repeated tags in
-                    XML, e.g. "fields": [ "value1", "value2" ] and
-                    
-                    
-                    respectively. Nodes with multiple sub-nodes are represented as objects in JSON and tags with
-                    sub-tags in XML, e.g. "field": { "subfield1": "value1", "subfield2": "value2" } and
-                    
-                    respectively.
+                    encoding of the data.
                 
 </p>
+<p>
+                    Singular attributes are encoded as string key/value pairs in JSON; e.g.,
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+"attribute": "value"
+</pre></div>
+<p> and tags with text content in XML; e.g.,
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+&lt;attribute&gt;value&lt;/attribute&gt;
+</pre></div>
+<p>
+                    Plural attributes and Plural Bundles are encoded as arrays in JSON; e.g.,
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+"attributes": [ "value1", "value2" ]
+</pre></div>
+<p>
+                     and repeated tags in XML; e.g.,
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+&lt;attributes&gt;value1&lt;/attributes&gt;
+&lt;attributes&gt;value2&lt;/attributes&gt;
+</pre></div>
+<p>
+                    Nodes with multiple sub-nodes are represented as objects in JSON; e.g,
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+"attribute": { "subattribute1": "value1", "subattribute2": "value2" }
+</pre></div>
+<p>
+                     and repeated tags in XML; e.g.,
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+&lt;attribute&gt;
+  &lt;subattribute1&gt;value1&lt;/subattribute1&gt;
+  &lt;subattribute2&gt;value2&lt;/subattribute2&gt;
+&lt;/attribute&gt;
+</pre></div>
 <a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
-                    The SCIM Protocol uses the response status codes defined in HTTP to indicate operation success or
-                    failure. Refer to the HTTP specification for <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>status code descriptions</a>.
-                    Implementers SHOULD, per the HTTP specification, return human-readable explanations for HTTP 4xx and
-                    5xx responses.
+                    The SCIM Protocol uses the response
+                    <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'>status codes defined in HTTP</a>
+                    to indicate operation success or failure. Implementers SHOULD, per the HTTP specification, return
+                    human-readable explanations for HTTP 4xx and 5xx responses. Additionally, implementers SHOULD handle
+                    the identified errors as described below.
+                
+</p><br /><hr class="insert" />
+<a name="http-error-handling-table"></a>
+<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
+<col align="left"><col align="left"><col align="left">
+<tr><th align="left">Code</th><th align="left">Applicability</th><th align="left">Suggested Explanation</th></tr>
+<tr>
+<td align="left">400 BAD REQUEST</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">Request is unparseable, syntactically incorrect, or violates schema</td>
+</tr>
+<tr>
+<td align="left">401 UNAUTHORIZED</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">Authorization failure</td>
+</tr>
+<tr>
+<td align="left">403 FORBIDDEN</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">Server does not support requested operation</td>
+</tr>
+<tr>
+<td align="left">404 NOT FOUND</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">Specified resource; e.g., User, does not exist</td>
+</tr>
+<tr>
+<td align="left">409 CONFLICT</td>
+<td align="left">POST,PUT,PATCH,DELETE</td>
+<td align="left">The specified version number does not match the resource's latest version number or a Service
+                        Provider refused to create a new, duplicate resource
+                    </td>
+</tr>
+<tr>
+<td align="left">412 PRECONDITION FAILED</td>
+<td align="left">PUT,PATCH</td>
+<td align="left">Failed to update as Resource {id} changed on the server since you last retrieved it</td>
+</tr>
+<tr>
+<td align="left">500 INTERNAL SERVER ERROR</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">An internal error. Implementers SHOULD provide descriptive debugging advice</td>
+</tr>
+<tr>
+<td align="left">501 NOT IMPLEMENTED</td>
+<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">Service Provider does not support the request operation; e.g., PATCH</td>
+</tr>
+</table>
+<br clear="all" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 2: Defined error cases&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+
+<a name="etags"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+Versioning Resources</h3>
+
+<p>
+                    The API supports resource versioning via standard,<a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19'>HTTP ETags</a>.
+                    Service providers MAY support both weak and strong ETags as the preferred mechanism for performing
+                    conditional retrievals and ensuring consumers do not inadvertently overwrite each others changes,
+                    respectively. When supported SCIM ETags SHOULD be specified as an HTTP header and SHOULD be
+                    specified as an attribute within a Resource's 'meta' structure.
+                
+</p>
+<p>The following example
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+POST /User  HTTP/1.1
+Host: example.com
+Content-Type:  application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "userName": "bjensen@example.com",
+  "name": {
+    "familyName": "Jensen",
+    "givenName": "Barbara"
+  }
+}
+</pre></div>
+<p>The server responds with an ETag in the response header and meta structure.
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+ETag: "e180ee84f0671b1"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "id":"3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+  "userName": "bjensen@example.com",
+  "name": {
+    "familyName": "Jensen",
+    "givenName": "Barbara"
+  },
+    "meta": {
+     "created": "2010-03-25T15:11:18Z",
+     "location":"http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
+     "ETag": "\"e180ee84f0671b1\""
+  }
+}
+</pre></div>
+<p>With the returned ETag, Consumers can choose to retrieve the Resource only if the Resource has been
+                    modified. In addition, if updating, specifying an ETag guarantees that previous updates will not be
+                    overwritten. Note: Per the HTTP specification the ETag value is quoted.
+                
+</p>
+<p>Conditional retrieval example using
+                    <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26'>If-None-Match</a>
+                    header:
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=displayName
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+If-None-Match: "e180ee84f0671b1"
+
+</pre></div>
+<p>
+                    If the Resource has not changed the Service Provider simply returns an empty body with a 304 "Not
+                    Modified" response code.
+                
+</p>
+<p>
+                    Similarly, consumers may supply an
+                    <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24'>If-Match</a>
+                    ETag header for PUT, PATCH, and DELETE operations to ensure that the requested operation succeeds
+                    only if the supplied ETag matches the latest Service Provider Resource; e.g., If-Match:
+                    "e180ee84f0671b1"
+                
+</p>
+<p>
+                    To perform DELETE, PATCH, or PUT operations and override ETag versioning specify
+                    <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24'>"If-Match: *"</a>
+                    in lieu of an ETag header.
                 
 </p>
 <a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT, PATCH and DELETE operations a
@@ -1246,19 +1430,21 @@ X-HTTP-Method-Override: DELETE
 Todos</h3>
 
 <ol class="text">
-<li>Relative or Absolute URLS for Location header and embedded meta tag
-</li>
-<li>Additional Endpoints: Groups e.g., /Group(s) If so change user 'groups' semantics to 'memberOf')?
+<li>Additional Resources: Groups e.g., /Group(s) If so change user 'groups' semantics to 'memberOf')?
                 
-</li>
-<li>Change password; e.g., /ChangePassword
 </li>
 <li>Endpoint extension"Via extension a la schema e.g., /Device, /Service
                 
 </li>
-<li>Data consistency semantics - Suggest etag
+<li>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to
+                    skip binary attrs?
+                
 </li>
-<li>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to skip binary attrs?
+<li>Minimum attributes? Always include meta attributes?
+                
+</li>
+<li>Attribute names should be case insensitive?
+                
 </li>
 </ol>
 <a name="anchor12"></a><br /><hr />
@@ -1266,7 +1452,9 @@ Todos</h3>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 Acknowledgments</h3>
 
-<p>Portable Contacts - <a href='http://www.portablecontacts.net/draft-spec.html'>Portable Contacts 1.0 Draft C</a>
+<p>Portable Contacts -
+                <a href='http://www.portablecontacts.net/draft-spec.html'>Portable Contacts 1.0 Draft C</a>
+            
 </p>
 <a name="rfc.authors"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
