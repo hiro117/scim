@@ -216,9 +216,11 @@ Minimal Representation<br />
 Full Representation<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">7.3.</a>&nbsp;
 Extended Representation<br />
+<a href="#TODO">8.</a>&nbsp;
+TODO<br />
 <a href="#anchor15">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements<br />
-<a href="#rfc.references1">8.</a>&nbsp;
+<a href="#rfc.references1">9.</a>&nbsp;
 Normative References<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
@@ -352,7 +354,7 @@ schemas Field</h3>
 
 <p>SCIM schema is identified using the following URI:
         'urn:scim:schemas:core:1.0' ( Note: we're currently using an
-        un-registered urn while in draft form) 
+        un-registered urn while in draft form)
 </p>
 <p>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -361,8 +363,8 @@ schemas Field</h3>
 </p>
 <p>When a representation does not explicitly provide support for
         indicating a schema, such as JSON, a 'schemas' field is used to
-        indicate the version of CloudSchema as well as any schema extensions.
-        
+        indicate the version of CloudSchema as well as any schema
+        extensions.
 </p>
 <p>
           </p>
@@ -380,8 +382,6 @@ schemas Field</h3>
             REQUIRED where applicable.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor2"></a><br /><hr />
@@ -450,8 +450,6 @@ Identifiers</h3>
             requests. REQUIRED.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor4"></a><br /><hr />
@@ -546,8 +544,6 @@ Singular Fields</h3>
             Section N (meta Element). OPTIONAL.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor5"></a><br /><hr />
@@ -556,7 +552,7 @@ Singular Fields</h3>
 Plural Fields</h3>
 
 <p>Unless specified otherwise, all Plural Fields have the same three
-        standard sub-fields: 
+        standard sub-fields:
 </p>
 <p></p>
 <blockquote class="text"><dl>
@@ -644,8 +640,6 @@ Plural Fields</h3>
             canonical types and removes the standard canonical types.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor6"></a><br /><hr />
@@ -694,8 +688,6 @@ name Element</h3>
             full name Ms. Barbara J Jensen, III.). OPTIONAL.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor7"></a><br /><hr />
@@ -741,8 +733,6 @@ address Element</h3>
             what ISO code list should we use here?
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="anchor8"></a><br /><hr />
@@ -769,8 +759,6 @@ meta Element</h3>
             the same as the value of created. OPTIONAL.
 </dd>
 </dl></blockquote><p>
-
-          
         
 </p>
 <a name="json_representation"></a><br /><hr />
@@ -784,7 +772,7 @@ JSON Representation</h3>
 Minimal Representation</h3>
 
 <p>The following is a non-normative example of the minimal required
-        SCIM representation in JSON 
+        SCIM representation in JSON
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -800,7 +788,7 @@ Minimal Representation</h3>
 Full Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        SCIM representation in JSON 
+        SCIM representation in JSON
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -913,7 +901,7 @@ Full Representation</h3>
 Extended Representation</h3>
 
 <p>The following is a non-normative example of SCIM representation
-        that includes a fictional schema extension 
+        that includes a fictional schema extension
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -941,7 +929,7 @@ XML Representation</h3>
 Minimal Representation</h3>
 
 <p>The following is a non-normative example of the minimal required
-        SCIM representation in XML 
+        SCIM representation in XML
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
@@ -956,7 +944,7 @@ Minimal Representation</h3>
 Full Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        SCIM representation in XML 
+        SCIM representation in XML
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
@@ -1037,7 +1025,7 @@ Full Representation</h3>
 Extended Representation</h3>
 
 <p>The following is a non-normative example of SCIM XML representation
-        that includes a fictional schema extension 
+        that includes a fictional schema extension
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:hr="http://hrextension/"&gt;
@@ -1053,6 +1041,50 @@ Extended Representation</h3>
 	&lt;/SCIM&gt;
 
 </pre></div>
+<a name="TODO"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8"></a><h3>8.&nbsp;
+TODO</h3>
+
+<p>The following are outstanding work items
+</p>
+<p>Macro level issues</p>
+<ul class="text">
+<li>Refactor core schema so the core is tighter; create an enterprise
+          focused extension, and allow for other extensions such as mobile and
+          consumer 
+</li>
+<li>Attempt to align schema with PoCo and OpenID Connect
+</li>
+<li>Add a top level groups object
+</li>
+<li>Debate the need for nested groups
+</li>
+<li>Debate the need for Service Provisioning
+</li>
+<li>Update plural attributes to deal with concerns around label and
+          value
+</li>
+</ul>
+
+<p>Clerical Issues</p>
+<ul class="text">
+<li>Clarify language and use-cases around externalId
+</li>
+<li>Terms 'field' and 'attribute' seem frequent and interchangeable;
+          use attribute
+</li>
+<li>Add a binarydata to the photo object. Make it only available for
+          explicit read ( this is probably for the REST API ) 
+</li>
+<li>Update language on singular vs plural emails 
+</li>
+<li>Add a explicit DateTime value type
+</li>
+</ul>
+
+<p>
+</p>
 <a name="anchor15"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
@@ -1083,12 +1115,12 @@ Acknowledgements</h3>
       
 </p>
 <p>Special thanks to Joeseph Smarr, who's excellent work on the Portable
-      Contacts Specification <a class='info' href='#PortableContacts'>[PortableContacts]<span> (</span><span class='info'>Smarr, J., &ldquo;Portable Contacts 1.0 Draft C - Schema Only,&rdquo; August&nbsp;2008.</span><span>)</span></a> provided the basis for much of the SCIM schema
-      structure and text.
+      Contacts Specification <a class='info' href='#PortableContacts'>[PortableContacts]<span> (</span><span class='info'>Smarr, J., &ldquo;Portable Contacts 1.0 Draft C - Schema Only,&rdquo; August&nbsp;2008.</span><span>)</span></a> provided the
+      basis for much of the SCIM schema structure and text.
 </p>
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>8.&nbsp;Normative References</h3>
+<h3>9.&nbsp;Normative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="PortableContacts">[PortableContacts]</a></td>
 <td class="author-text">Smarr, J., &ldquo;<a href="http://www.portablecontacts.net/draft-schema.html">Portable Contacts 1.0 Draft C - Schema Only</a>,&rdquo; August&nbsp;2008.</td></tr>
