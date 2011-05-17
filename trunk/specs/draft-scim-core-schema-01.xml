@@ -175,7 +175,7 @@
       <section title="schemas Field">
         <t>SCIM schema is identified using the following URI:
         'urn:scim:schemas:core:1.0' ( Note: we're currently using an
-        un-registered urn while in draft form) </t>
+        un-registered urn while in draft form)</t>
 
         <t>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -184,8 +184,8 @@
 
         <t>When a representation does not explicitly provide support for
         indicating a schema, such as JSON, a 'schemas' field is used to
-        indicate the version of CloudSchema as well as any schema extensions.
-        </t>
+        indicate the version of CloudSchema as well as any schema
+        extensions.</t>
 
         <t>
           <list style="hanging">
@@ -200,8 +200,6 @@
             Ordering on the array is ignored has no impact on behavior.
             REQUIRED where applicable.</t>
           </list>
-
-          
         </t>
 
         <section title="Schema Extension Model">
@@ -259,8 +257,6 @@
             that does not change when the same user is returned in subsequent
             requests. REQUIRED.</t>
           </list>
-
-          
         </t>
       </section>
 
@@ -334,14 +330,12 @@
             version of meta data about this User account, as described in
             Section N (meta Element). OPTIONAL.</t>
           </list>
-
-          
         </t>
       </section>
 
       <section title="Plural Fields">
         <t>Unless specified otherwise, all Plural Fields have the same three
-        standard sub-fields: </t>
+        standard sub-fields:</t>
 
         <t><list style="hanging">
             <t hangText="value">The primary value of this field, e.g. the
@@ -416,8 +410,6 @@
             considered out of scope for this specification. This value has NO
             canonical types and removes the standard canonical types.</t>
           </list>
-
-          
         </t>
       </section>
 
@@ -455,8 +447,6 @@
             User, or "Suffix" in most Western languages (e.g. III. given the
             full name Ms. Barbara J Jensen, III.). OPTIONAL.</t>
           </list>
-
-          
         </t>
       </section>
 
@@ -491,8 +481,6 @@
             <t hangText="country">The country name component. OPTIONAL. TODO
             what ISO code list should we use here?</t>
           </list>
-
-          
         </t>
       </section>
 
@@ -512,8 +500,6 @@
             never been modified since its initial creation, the value MUST be
             the same as the value of created. OPTIONAL.</t>
           </list>
-
-          
         </t>
       </section>
     </section>
@@ -521,8 +507,9 @@
     <section anchor="json_representation" title="JSON Representation">
       <section title="Minimal Representation">
         <t>The following is a non-normative example of the minimal required
-        SCIM representation in JSON </t>
-<artwork><![CDATA[
+        SCIM representation in JSON</t>
+
+        <artwork><![CDATA[
 
 	{ 
 	    "schemas": ["urn:scim:schemas:core:1.0"], 
@@ -535,8 +522,9 @@
 
       <section title="Full Representation">
         <t>The following is a non-normative example of the fully populated
-        SCIM representation in JSON </t>
-<artwork><![CDATA[
+        SCIM representation in JSON</t>
+
+        <artwork><![CDATA[
 
 	{ 
 	    "schemas": ["urn:scim:schemas:core:1.0"], 
@@ -644,11 +632,11 @@
 ]]></artwork>
       </section>
 
-
       <section title="Extended Representation">
         <t>The following is a non-normative example of SCIM representation
-        that includes a fictional schema extension </t>
-<artwork><![CDATA[
+        that includes a fictional schema extension</t>
+
+        <artwork><![CDATA[
 
 	{ 
 	    "schemas": ["urn:scim:schemas:core:1.0", "http://hrextension/"], 
@@ -670,8 +658,9 @@
     <section anchor="xml_representation" title="XML Representation">
       <section title="Minimal Representation">
         <t>The following is a non-normative example of the minimal required
-        SCIM representation in XML </t>
-<artwork><![CDATA[
+        SCIM representation in XML</t>
+
+        <artwork><![CDATA[
 
 	<SCIM xmlns="urn:scim:schemas:core:1.0">
 	    <id>005D0000001Az1u</id>
@@ -683,8 +672,9 @@
 
       <section title="Full Representation">
         <t>The following is a non-normative example of the fully populated
-        SCIM representation in XML </t>
-<artwork><![CDATA[
+        SCIM representation in XML</t>
+
+        <artwork><![CDATA[
 
 	<SCIM xmlns="urn:scim:schemas:core:1.0">
 	    <id>005D0000001Az1u</id>
@@ -762,8 +752,9 @@
 
       <section title="Extended Representation">
         <t>The following is a non-normative example of SCIM XML representation
-        that includes a fictional schema extension </t>
-<artwork><![CDATA[
+        that includes a fictional schema extension</t>
+
+        <artwork><![CDATA[
 
 	<SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:hr="http://hrextension/">
 	    <id>005D0000001Az1u</id>
@@ -781,11 +772,47 @@
       </section>
     </section>
 
+    <section anchor="TODO" title="TODO">
+      <t>The following are outstanding work items</t>
+
+      <t>Macro level issues<list style="symbols">
+          <t>Refactor core schema so the core is tighter; create an enterprise
+          focused extension, and allow for other extensions such as mobile and
+          consumer </t>
+
+          <t>Attempt to align schema with PoCo and OpenID Connect</t>
+
+          <t>Add a top level groups object</t>
+
+          <t>Debate the need for nested groups</t>
+
+          <t>Debate the need for Service Provisioning</t>
+
+          <t>Update plural attributes to deal with concerns around label and
+          value</t>
+        </list></t>
+
+      <t>Clerical Issues<list style="symbols">
+          <t>Clarify language and use-cases around externalId</t>
+
+          <t>Terms 'field' and 'attribute' seem frequent and interchangeable;
+          use attribute</t>
+
+          <t>Add a binarydata to the photo object. Make it only available for
+          explicit read ( this is probably for the REST API ) </t>
+
+          <t>Update language on singular vs plural emails </t>
+
+          <t>Add a explicit DateTime value type</t>
+        </list></t>
+
+      <t />
+    </section>
+
     <appendix title="Acknowledgements">
       <t>The SCIM Community would like to thank the following people for the
       work they've done in the research, formulation, drafting, editing, and
       support of this specification.</t>
-
 
       <t>
         <list style="empty">
@@ -802,20 +829,17 @@
           <t>Sidharth Choudhury (schoudhury@salesforce.com)</t>
 
           <t>...</t>
-
         </list>
       </t>
 
       <t>Special thanks to Joeseph Smarr, who's excellent work on the Portable
-      Contacts Specification <xref target="PortableContacts" /> provided the basis for much of the SCIM schema
-      structure and text.</t>
-
+      Contacts Specification <xref target="PortableContacts" /> provided the
+      basis for much of the SCIM schema structure and text.</t>
     </appendix>
   </middle>
 
   <back>
     <references title="Normative References">
-
       <?rfc include="reference.RFC.2119"?>
 
       <reference anchor="PortableContacts">
@@ -829,9 +853,9 @@
           <date day="5" month="August" year="2008" />
         </front>
 
-        <format target="http://www.portablecontacts.net/draft-schema.html" type="HTML" />
+        <format target="http://www.portablecontacts.net/draft-schema.html"
+                type="HTML" />
       </reference>
-
     </references>
   </back>
 </rfc>
