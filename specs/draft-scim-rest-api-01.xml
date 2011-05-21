@@ -46,7 +46,8 @@
     <middle>
         <section title="Introduction and Overview" anchor="intro" toc="default">
             <t>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on
-                the web. The protocol supports creating, editing, deleting, querying and retrieving User resources.
+                the web. The protocol supports creating, editing, deleting, querying and retrieving Users and Groups as
+                well as simple password change requests.
             </t>
 
             <section title="Intended Audience" toc="default">
@@ -127,17 +128,18 @@
 
         <section title="API" anchor="api">
             <t>
-                The SCIM protocol specifies well known endpoints and operations for managing User and User discovery
+                The SCIM protocol specifies well known endpoints and operations for managing User, Group and Password
                 resources via standard HTTP methods:
             </t>
             <list style="hanging">
-                <t hangText="GET">Retrieves a complete or partial Resource; e.g., User or Schema
+                <t hangText="GET">Retrieves a complete or partial Resource
                 </t>
-                <t hangText="POST">Creates a new Resource; e.g., User or Schema
+                <t hangText="POST">Creates a new Resource
                 </t>
                 <t hangText="PUT">Modifies a Resource with a complete, consumer specified Resource (replace)
                 </t>
-                <t hangText="PATCH">Modifies a Resource with a set of consumer specified changes (partial update)
+                <t hangText="PATCH">Modifies a Resource with a set of consumer specified changes (partial update) or
+                    changes a User password
                 </t>
                 <t hangText="DELETE">Deletes a Resource.
                 </t>
@@ -150,11 +152,11 @@
                 <ttcol align='left'>Description</ttcol>
                 <c>User</c>
                 <c>/User</c>
-                <c><xref target="get-user" format="default">GET</xref>,
-                    <xref target="create-user" format="default">POST</xref>,
-                    <xref target="edit-user-with-put" format="default">PUT</xref>,
-                    <xref target="edit-user-with-patch" format="default">PATCH</xref>,
-                    <xref target="delete-user" format="default">DELETE</xref>
+                <c><xref target="get-resource" format="default">GET</xref>,
+                    <xref target="create-resource" format="default">POST</xref>,
+                    <xref target="edit-resource-with-put" format="default">PUT</xref>,
+                    <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
+                    <xref target="delete-resource" format="default">DELETE</xref>
                 </c>
                 <c>Read/Modify Users</c>
 
@@ -163,10 +165,37 @@
                 </c>
                 <c>/Users</c>
                 <c>
-                    <xref target="query-users" format="default">GET</xref>
+                    <xref target="query-resources" format="default">GET</xref>
                 </c>
-                <c>Retrieve User via ad hoc queries</c>
+                <c>Retrieve User(s) via ad hoc queries</c>
 
+                <c>Group</c>
+                <c>/Group</c>
+                <c><xref target="get-resource" format="default">GET</xref>,
+                    <xref target="create-resource" format="default">POST</xref>,
+                    <xref target="edit-resource-with-put" format="default">PUT</xref>,
+                    <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
+                    <xref target="delete-resource" format="default">DELETE</xref>
+                </c>
+                <c>Read/Modify Groups</c>
+
+                <c>
+                    User Query/Listing
+                </c>
+                <c>/Groups</c>
+                <c>
+                    <xref target="query-resources" format="default">GET</xref>
+                </c>
+                <c>Retrieve Group(s) via ad hoc queries</c>
+
+                <c>Change User Password</c>
+                <c>
+                    /User/{userId}/password
+                </c>
+                <c>
+                    <xref target="change-password" format="default">PATCH</xref>
+                </c>
+                <c>Change a User's password</c>
 
                 <c>User Schema</c>
                 <c>
@@ -196,15 +225,16 @@
                 response.
             </t>
 
-            <section title="Creating Users" anchor="create-user" toc="default">
-                <t>To create new Users, clients send POST requests to the User endpoint /User.</t>
+            <section title="Creating Resources" anchor="create-resource" toc="default">
+                <t>To create new Resources, clients send POST requests to the Resource endpoint; i.e., /User or /Group.
+                </t>
 
-                <t>Successful User creation is indicated with a 201 ("Created") response code. Upon successful creation,
-                    the response body MUST contain the newly created Resource. Since the server is free to alter and/or
-                    ignore POSTed content, returning the User can be useful to the client, enabling it to correlate the
-                    client and server views of the new User.
+                <t>Successful Resource creation is indicated with a 201 ("Created") response code. Upon successful
+                    creation, the response body MUST contain the newly created Resource. Since the server is free to
+                    alter and/or ignore POSTed content, returning the full representation can be useful to the client,
+                    enabling it to correlate the client and server views of the new Resource.
 
-                    When a User is created, its User URI must be returned in the response Location header.
+                    When a Resource is created, its URI must be returned in the response Location header.
                 </t>
 
                 <t>Below, the client sends a POST request containing a User</t>
@@ -255,20 +285,22 @@ Location: http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 
 
             </section>
-            <section title="Retrieving Users" anchor="get-users-ops" toc="default">
-                <t>Users may be retrieved via opaque, unique URIs or via Query</t>
+            <section title="Retrieving Resources" anchor="get-resources-ops" toc="default">
+                <t>Users and Groups are retrieved via opaque, unique URIs or via Query</t>
 
-                <section title="Retrieving a known User" anchor="get-user" toc="default">
-                    <t>To retrieve a known User, clients send GET requests to the User endpoint /User/{id}.</t>
-
-                    <t>If the User exists the server responds with a status code of 200 and includes the User in the
-                        body of the response.
+                <section title="Retrieving a known Resource" anchor="get-resource" toc="default">
+                    <t>To retrieve a known Resource, clients send GET requests to the Resource endpoint; e.g.,
+                        /User/{id} or /Group/{id}.
                     </t>
 
-                    <section title="Example">
-                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                <![CDATA[
+                    <t>If the Resource exists the server responds with a status code of 200 and includes the result in
+                        the body of the response.
+                    </t>
+
+                    <t>The below example retrieves a single User via the /User endpoint.</t>
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
 GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
 Accept: application/json
@@ -278,14 +310,14 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
                         ]]></artwork>
-                        </figure>
+                    </figure>
 
-                        <t>The server responds with:
-                        </t>
+                    <t>The server responds with:
+                    </t>
 
-                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                <![CDATA[
+                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                            <![CDATA[
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -325,19 +357,19 @@ Content-Type: application/json
 
 
                         ]]></artwork>
-                        </figure>
-                    </section>
+                    </figure>
 
                 </section>
 
-                <section title="Listing/Querying Users" anchor="query-users" toc="default">
+                <section title="List/Query Resources" anchor="query-resources" toc="default">
                     <t>
                         SCIM defines a standard set of operations that can be used to filter, sort, and paginate
-                        response results. The operations are specified by adding query parameter to the Users endpoint.
-                        Service Providers MAY support additional query parameters not specified here, and Providers
-                        SHOULD ignore any query parameters they don't recognize.
+                        response results. The operations are specified by adding query parameters to the Resource's
+                        endpoint. Service Providers MAY support additional query parameters not specified here, and
+                        Providers SHOULD ignore any query parameters they don't recognize.
                     </t>
 
+                    <t>The below example returns the userName and displayName for all Users</t>
                     <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                         <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
 
@@ -478,15 +510,15 @@ Content-Type: application/json
                         </t>
 
                         <list style="hanging">
-                            <t hangText="filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs:">
+                            <t hangText="filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs">
                                 the first User (with id=3f62ce30-dcd6-4dd7-abfe-2352a76f9978) will match and be returned
                             </t>
-                            <t hangText="filterBy=displayName&amp;filterOp=present:">
+                            <t hangText="filterBy=displayName&amp;filterOp=present">
                                 both Users will be returned
                             </t>
-                            <t hangText="filterBy=email&amp;filterOp=contains&amp;filterValue=example.org:">
+                            <t hangText="filterBy=email&amp;filterOp=contains&amp;filterValue=example.org">
                                 the second User (with id=4d31ce30-dcd6-4dd7-abfe-2352a76f8852) would match, as would it
-                                be the only User to match given the parameters filterBy=email&amp; filterOp=present
+                                be the only User to match given the parameters filterBy=email&amp; filterOp=contains
                             </t>
                         </list>
                         If a request specifies a filterValue but no filterBy or filterOp, it is up to the Provider how
@@ -602,11 +634,15 @@ Content-Type: application/json
             </section>
 
 
-            <section title="Editing a User" toc="default">
-                <section title="Editing a User with PUT" anchor="edit-user-with-put" toc="default">
+            <section title="Modifying Resources" toc="default">
+                <section title="Modifying with PUT" anchor="edit-resource-with-put" toc="default">
                     <t>
-                        PUT performs a full User update. Consumers must retrieve the entire User and PUT the desired
-                        User modifications.
+                        PUT performs a full update. Consumers must retrieve the entire Resource and PUT the desired
+                        modifications as the operation overwrites all previously stored data. Unless otherwise specified
+                        a successful PUT operation returns a 200 OK response code and the entire Resource within the
+                        response body.
+
+                        For example:
                     </t>
                     <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                         <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
@@ -699,16 +735,17 @@ Content-Type: application/json
                     </figure>
                 </section>
 
-                <section title="Editing a User with PATCH" anchor="edit-user-with-patch" toc="default">
+                <section title="Modifying with PATCH" anchor="edit-resource-with-patch" toc="default">
                     <t>PATCH enables consumers to send only those attributes requiring modification reducing network and
                         processing overhead. Attributes may be deleted, replaced or added in a single request.
                     </t>
                     <list style="hanging">
                         <t hangText="Deleting attribute values:">
 
-                            Use the meta attribute to specify the attribute(s) to be deleted from the User. In the case
-                            of plural attributes all attribute values will be deleted. The below request will delete the
-                            “emails” attribute values.
+                            Use the meta attribute to specify the attribute(s) to be deleted from the Resource. In the
+                            case of plural attributes all attribute values will be deleted.
+
+                            The below example will delete the User “emails” attribute values.
                             <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                                 <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                                     <![CDATA[
@@ -725,12 +762,12 @@ Content-Type: application/json
                         </t>
 
                         <t hangText="Adding attributes (Singluar):">
-                            If the User does not already contain a value for the specified attribute the attribute value
-                            is added (or said another way “set”).
+                            If the Resource does not already contain a value for the specified attribute the attribute
+                            value is added (or said another way “set”).
                         </t>
 
                         <t hangText="Adding attributes (Plural):">
-                            If the User does not already contain the value the value is added to the attribute
+                            If the Resource does not already contain the value the value is added to the attribute
 
                             <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                                 <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
@@ -756,8 +793,7 @@ Authorization: Bearer h480djs93hd8
 
 
                         <t hangText="Updating attributes (Singular):">
-                            If the attribute value already exists the value is replaced by the value specified in the
-                            request.
+                            If the attribute value exists the value is replaced by the value specified in the request.
                             <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                                 <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
                                     <![CDATA[
@@ -834,12 +870,16 @@ Authorization: Bearer h480djs93hd8
                     <section title="Additional query parameters" toc="default">
                         <t>
                             Consumers MAY request a partial User representation by specifying the query parameter
-                            'attributes'. If non-empty, each User returned SHALL contain only the attributes explicitly
-                            requested. The server MAY return a subset of the requested attributes if they are not
-                            supported. This attribute is used for efficiency when the client only wishes to access a
-                            subset of the attributes normally returned in results. Value is a comma separated list of
-                            top level attribute names (e.g. id,name,emails) and defaults to an empty list which means
-                            it's up to the Server which attributes to return. For example:
+                            'attributes'. If non-empty, the Service Provider MUST only return the Resource id, meta
+                            attribute, and those attributes explicitly requested. The server MAY return a subset of the
+                            requested attributes.
+
+                            This attribute is used for efficiency when the client only wishes to
+                            access a subset of the attributes normally returned in results. The 'attributes' value is a
+                            comma separated list of top level attribute names (e.g. id,name,emails) and defaults to an
+                            empty list which means it's up to the Server which attributes to return.
+
+                            For example:
                         </t>
 
                         <figure height="" suppress-title="false" width="" alt="" title="" align="left">
@@ -852,10 +892,10 @@ PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
                     </section>
                 </section>
             </section>
-            <section title="Removing a User" anchor="delete-user" toc="default">
-                <t>Consumers request User removal via DELETE. Service Providers MAY choose not to permenantly delete the
-                    User, but MUST return a 404 error code for all PUT, PATCH, DELETE and GET operations with the User
-                    id. Service Providers MUST also omit the User from query results.
+            <section title="Deleting Resources" anchor="delete-resource" toc="default">
+                <t>Consumers request Resource removal via DELETE. Service Providers MAY choose not to permanently delete
+                    the Resource, but MUST return a 404 error code for all operations associated with the previously
+                    deleted Id. Service Providers MUST also omit the Resource from query results.
                 </t>
                 <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
@@ -896,13 +936,49 @@ HTTP/1.1 404 NOT FOUND
                 </figure>
 
             </section>
+            <section title="Change password" anchor="change-password" toc="default">
+                <t>Consumers request User password change via PATCH. The change password operation is OPTIONAL, hence
+                    Service Providers MAY choose not to honor the request.
+
+                    Since a password is a facet of the User the User endpoint is overloaded; i.e., /User/{id}/password.
+                    The consumer MUST specify the attribute 'password' in the request body and MUST not specify any
+                    other attributes. If successful the Service Provider MUST return a 200 OK response code and no
+                    content within the response body.
+                </t>
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+
+PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978/password
+Host: example.com
+Authorization: Bearer h480djs93hd8
+
+{
+  "password": "t1meMa$heen"
+}
+                                      ]]></artwork>
+                </figure>
+
+                Server Response:
+                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+                        <![CDATA[
+HTTP/1.1 200 OK
+            ]]></artwork>
+                </figure>
+            </section>
+
             <section title="Retrieving Service Provider Schema" anchor="schemas" toc="default">
                 <t>Service Providers MUST support the core schema and MAY support additional schemas.</t>
                 <section title="Retrieving a specific Schema" anchor="get-schema" toc="default">
                     <t>To retrieve schema send a GET request to /Schema/{resource}/{schema urn}.
 
-                        Consumers may request the core User schema by omitting the schema URN; e.g.,/Schema/User/ or
-                        specifying the core schema URN; e.g., /Schema/User/urn:scim:schemas:core:1.0
+                        Consumers request the core User schema by omitting the schema URN; e.g.,/Schema/User/ or
+                        specifying the core schema URN; e.g., /Schema/User/urn:scim:schemas:core:1.0. Similarly,
+                        Consumers request the core Group schema via e.g.,/Schema/Group/ or specifying the core schema
+                        URN; e.g., /Schema/Group/urn:scim:schemas:core:1.0.
+
+                        The below example retrieves the core User schema.
                     </t>
                     <figure height="" suppress-title="false" width="" alt="" title="" align="left">
                         <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
@@ -931,7 +1007,10 @@ TBD
                 </section>
 
                 <section title="Retrieving all Service Provider supported Schemas" anchor="get-schemas" toc="default">
-                    <t>Consumers may request all supported schemas for a given resource via /Schemas/{resource}</t>
+                    <t>Consumers may request all supported schemas for a given resource via /Schemas/{resource}
+
+                        For example:
+                    </t>
 
 
                     <figure height="" suppress-title="false" width="" alt="" title="" align="left">
@@ -1018,7 +1097,7 @@ Host: example.com
 "attribute": "value"
                     ]]></artwork>
                 </figure>
-                <t> and tags with text content in XML; e.g.,</t>
+                <t>and tags with text content in XML; e.g.,</t>
                 <figure>
                     <artwork><![CDATA[
 <attribute>value</attribute>
@@ -1033,7 +1112,7 @@ Host: example.com
                     ]]></artwork>
                 </figure>
                 <t>
-                     and repeated tags in XML; e.g.,
+                    and repeated tags in XML; e.g.,
                 </t>
                 <figure>
                     <artwork><![CDATA[
@@ -1050,7 +1129,7 @@ Host: example.com
                     ]]></artwork>
                 </figure>
                 <t>
-                     and repeated tags in XML; e.g.,
+                    and repeated tags in XML; e.g.,
                 </t>
                 <figure>
                     <artwork><![CDATA[
@@ -1226,16 +1305,12 @@ X-HTTP-Method-Override: DELETE
         </section>
         <section title="Todos">
             <list style="numbers">
-                <t>Additional Resources: Groups e.g., /Group(s) If so change user 'groups' semantics to 'memberOf')?
-                </t>
-                <t>Endpoint extension"Via extension a la schema e.g., /Device, /Service
-                </t>
                 <t>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to
                     skip binary attrs?
                 </t>
                 <t>Minimum attributes? Always include meta attributes?
                 </t>
-                <t>Attribute names should be case insensitive?
+                <t>Query value case sensitive?
                 </t>
             </list>
         </section>
