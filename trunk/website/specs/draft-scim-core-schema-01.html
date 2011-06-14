@@ -150,7 +150,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Ping</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">J. Smarr</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">April 30, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">June 13, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />Simple Cloud Identity Management: Core
     Schema 1.0 - draft 1</h1>
@@ -731,7 +731,7 @@ SCIM Enterprise User Schema Extension</h3>
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extention is identified using the
       following URI: 'urn:scim:schemas:extension:user:enterprise:1.0' ( Note:
-      we're currently using an un-registered urn while in draft form). 
+      we're currently using an un-registered urn while in draft form).
 </p>
 <p>The following Singular Attributes are defined:
 </p>
@@ -798,7 +798,8 @@ SCIM Group Schema</h3>
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
 <dt>displayName</dt>
-<dd>A human readable name for the group. OPTIONAL.
+<dd>A human readable name for the group.
+          OPTIONAL.
 </dd>
 </dl></blockquote>
 
@@ -1072,7 +1073,8 @@ Enterprise User Extension Representation</h3>
 <a name="rfc.section.9.4"></a><h3>9.4.&nbsp;
 Group Representation</h3>
 
-<p>The following is a non-normative example of SCIM Group representation
+<p>The following is a non-normative example of SCIM Group
+        representation
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -1192,7 +1194,7 @@ Full Representation</h3>
 Enterprise User Extension Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-	        user using the enterprise user extension in XML
+        user using the enterprise user extension in XML
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 		&lt;SCIM xmlns="urn:scim:schemas:core:user:1.0"  xmlns:enterprise="urn:scim:schemas:extension:user:enterprise:1.0"&gt;
@@ -1271,7 +1273,8 @@ Enterprise User Extension Representation</h3>
 <a name="rfc.section.10.4"></a><h3>10.4.&nbsp;
 Group Representation</h3>
 
-<p>The following is a non-normative example of SCIM Group representation
+<p>The following is a non-normative example of SCIM Group
+        representation
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:group:1.0"&gt;
@@ -1293,36 +1296,17 @@ TODO</h3>
 </p>
 <p>Macro level issues</p>
 <ul class="text">
-<li>Refactor core schema so the core is tighter; create an enterprise
-          focused extension, and allow for other extensions such as mobile and
-          consumer
+<li>How do we deal with PUT/PATCH operations against Manager where
+          there is an attempt to update the Name. This should be disallowed,
+          but need the right model for this.
 </li>
-<li>Attempt to align schema with PoCo and OpenID Connect
-</li>
-<li>Add a top level groups object
-</li>
-<li>Debate the need for nested groups
-</li>
-<li>Debate the need for Service Provisioning
-</li>
-<li>Update plural attributes to deal with concerns around label and
-          value
+<li>Clarify language, use-cases, and usage models around externalId.
+          
 </li>
 </ul>
 
-<p>Clerical Issues</p>
-<ul class="text">
-<li>Clarify language and use-cases around externalId
-</li>
-<li>Add a binarydata to the photo object. Make it only available for
-          explicit read ( this is probably for the REST API )
-</li>
-<li>Update language on singular vs plural emails
-</li>
-<li>Add a explicit DateTime value type
-</li>
-</ul>
-
+<p>
+</p>
 <p>
 </p>
 <a name="anchor17"></a><br /><hr />
