@@ -53,7 +53,7 @@
       </address>
     </author>
 
-    <date day="30" month="April" year="2011" />
+    <date day="13" month="June" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
@@ -483,7 +483,7 @@
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extention is identified using the
       following URI: 'urn:scim:schemas:extension:user:enterprise:1.0' ( Note:
-      we're currently using an un-registered urn while in draft form). </t>
+      we're currently using an un-registered urn while in draft form).</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -531,10 +531,10 @@
       defined by the Service Provider and considered out of scope for this
       specification.</t>
 
-
       <t>The following Singular Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="displayName">A human readable name for the group. OPTIONAL.</t>
+          <t hangText="displayName">A human readable name for the group.
+          OPTIONAL.</t>
         </list></t>
 
       <t />
@@ -794,7 +794,8 @@
       </section>
 
       <section title="Group Representation">
-        <t>The following is a non-normative example of SCIM Group representation</t>
+        <t>The following is a non-normative example of SCIM Group
+        representation</t>
 
         <artwork><![CDATA[
 
@@ -906,15 +907,11 @@
 ]]></artwork>
       </section>
 
-		
-		
-		
+      <section title="Enterprise User Extension Representation">
+        <t>The following is a non-normative example of the fully populated
+        user using the enterprise user extension in XML</t>
 
-	      <section title="Enterprise User Extension Representation">
-	        <t>The following is a non-normative example of the fully populated
-	        user using the enterprise user extension in XML</t>
-
-	        <artwork><![CDATA[
+        <artwork><![CDATA[
 
 		<SCIM xmlns="urn:scim:schemas:core:user:1.0"  xmlns:enterprise="urn:scim:schemas:extension:user:enterprise:1.0">
 		    <id>005D0000001Az1u</id>
@@ -987,12 +984,11 @@
 		</SCIM>
 
 	]]></artwork>
-	      </section>
-	
-	
-		      <section title="Group Representation">
-		        <t>The following is a non-normative example of SCIM Group representation</t>
+      </section>
 
+      <section title="Group Representation">
+        <t>The following is a non-normative example of SCIM Group
+        representation</t>
 
         <artwork><![CDATA[
 
@@ -1013,32 +1009,15 @@
       <t>The following are outstanding work items</t>
 
       <t>Macro level issues<list style="symbols">
-          <t>Refactor core schema so the core is tighter; create an enterprise
-          focused extension, and allow for other extensions such as mobile and
-          consumer</t>
+          <t>How do we deal with PUT/PATCH operations against Manager where
+          there is an attempt to update the Name. This should be disallowed,
+          but need the right model for this.</t>
 
-          <t>Attempt to align schema with PoCo and OpenID Connect</t>
-
-          <t>Add a top level groups object</t>
-
-          <t>Debate the need for nested groups</t>
-
-          <t>Debate the need for Service Provisioning</t>
-
-          <t>Update plural attributes to deal with concerns around label and
-          value</t>
+          <t>Clarify language, use-cases, and usage models around externalId.
+          </t>
         </list></t>
 
-      <t>Clerical Issues<list style="symbols">
-          <t>Clarify language and use-cases around externalId</t>
-
-          <t>Add a binarydata to the photo object. Make it only available for
-          explicit read ( this is probably for the REST API )</t>
-
-          <t>Update language on singular vs plural emails</t>
-
-          <t>Add a explicit DateTime value type</t>
-        </list></t>
+      <t />
 
       <t />
     </section>
