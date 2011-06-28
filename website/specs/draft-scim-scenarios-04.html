@@ -2,6 +2,7 @@
 <html lang="en"><head><title>SCIM scenarios</title>
 
 
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="description" content="SCIM scenarios">
 <meta name="keywords" content="SCIM, Cloud, Provisioning, Identity">
@@ -146,9 +147,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Sailpoint</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">P. Harding, Ed.</td></tr>
 <tr><td class="header">Expires: November 25, 2011</td><td class="header">Ping Identity Corp.</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">June 14, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">June 28, 2011</td></tr>
 </tbody></table></td></tr></tbody></table>
-<h1><br>SCIM scenarios<br>draft-scim-scenarios-03</h1>
+<h1><br>SCIM scenarios<br>draft-scim-scenarios-04</h1>
 
 <h3>Abstract</h3>
 
@@ -219,11 +220,14 @@ CSP-&gt;CSP - Update Identity (Push)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">1.3.3.</a>&nbsp;
 CSP-&gt;CSP - Delete Identity (Push)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor12">1.3.4.</a>&nbsp;
-CSP-&gt;CSP - Sync Identity (Push or Pull)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">1.3.5.</a>&nbsp;
+CSP-&gt;CSP - Sync Identity (Push &amp; Pull)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">1.3.5.</a>&nbsp;
 CSP-&gt;CSP - SSO Trigger (Push)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">1.3.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">1.3.6.</a>&nbsp;
 CSP-&gt;CSP - SSO Trigger (Pull)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor23">1.3.7.</a>&nbsp;
+CSP-&gt;CSP - Password Reset (Push)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">1.4.</a>&nbsp;
 Enterprise Cloud Subscriber to Cloud Service Provider Flows (ECS-&gt;CSP)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">1.4.1.</a>&nbsp;
@@ -233,13 +237,7 @@ ECS -&gt;CSP - Update Identity (Push)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor18">1.4.3.</a>&nbsp;
 ECS -&gt;CSP - Delete Identity (Push)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor19">1.4.4.</a>&nbsp;
-ECS -&gt;CSP - SSO Push<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor20">1.4.5.</a>&nbsp;
 ECS -&gt;CSP - SSO Pull<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor21">1.5.</a>&nbsp;
-Cloud Service User to Cloud Service Provider Flows (CSU-&gt;CSP)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor22">1.5.1.</a>&nbsp;
-CSU -&gt;CSP - Password Reset (Push)<br>
 <a href="#anchor23">Appendix&nbsp;A.</a>&nbsp;
 Document History<br>
 <a href="#rfc.authors">§</a>&nbsp;
@@ -247,6 +245,7 @@ Authors' Addresses<br>
 <a href="#rfc.copyright">§</a>&nbsp;
 Intellectual Property and Copyright Statements<br>
 </p>
+
 <br clear="all">
 
 <a name="anchor1"></a><br><hr>
@@ -307,7 +306,7 @@ Model Concepts</h3>
 Triggers</h3>
 
 <p>Quite simply, triggers are actions or activities that start SCIM 
-flows.  Triggers may not be relevant at the protocol or schema level, 
+flows.  Triggers may not be relevant at the protocol or the schema, 
 they 
 	    really serve to help identity the type or activity that resulted in
  a SCIM protocol exchange.  
@@ -373,7 +372,7 @@ enhanced meta-data<br>
 Create or Update trigger is initiated during an SSO operational flow. The 
 implication here 
     is that as the result of a real-time service access request by the 
-end user (SSO), defined SCIM protocol exchanges can be used to initiated SCIM resource CRUD somewhere in the service cloud.  
+end user (SSO), defined SCIM protocol exchanges can be used to initiate SCIM resource CRUD somewhere in the service cloud.  
 
 </li>
 </ul><p>
@@ -432,7 +431,7 @@ manage
     their CRM process.</li>
 </ul>&nbsp;&nbsp;&nbsp; <br>
 <br>
-<div style="text-align: center;"><img style="width: 486px; height: 216px;" alt="SCIM Actors" src="images/Figure_1.2.2-1_SCIM_Actors.png"><br>
+<div style="text-align: center;"><img style="width: 775px; height: 345px;" alt="SCIM Actors" src="images/Figure_1.2.2-1_SCIM_Actors.png"><br>
 <a name="Figure_1.2.2-1_SCIM_Actors"></a>Figure 1.2.2-1 SCIM Actors<br>
 </div>
 <p>
@@ -467,7 +466,7 @@ information from another CSP. Commonly referenced flows are:
 <p>Modes &amp; flows simply help us understand what is taking place; 
 they are likely to be technically meaningless at the protocol level, but
  again they help the reader follow the SCIM scenario's and apply them to
- real work use cases.
+ real world use cases.
 </p>
 <a name="anchor7"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
@@ -501,7 +500,7 @@ joiner, mover, leaver and JIT triggers, resulting in push and pull data
 exchanges between the CSP's.<br>
 <br>
 </p>
-<p style="text-align: center;"><img style="width: 394px; height: 61px;" alt="CSP to CSP Flows" src="images/Figure_1.3-1.png"><br>
+<p style="text-align: center;"><img style="width: 487px; height: 87px;" alt="CSP to CSP Flows" src="images/Figure_1.3-1.png"><br>
 </p>
 <p style="text-align: center;"><a name="Figure_1.3-1"></a>Figure 1.3-1 CSP -&gt; CSP Flows<br>
  
@@ -518,38 +517,19 @@ In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service
 agreement in place that requires the exchange of Cloud Service User 
 (CSU) accounts.  
 CSP-1 receives a Create Identity trigger action from its Enterprise 
-Cloud Subscriber (ECS).  CSP-1 creates a local user account for the new 
+Cloud Subscriber (ECS-1).  CSP-1 creates a local user account for the new 
 CSU.  
 CSP-1 then pushes the new CSU joiner push request down-stream to CSU-2 
 and gets confirmation that the account was successfully created.  
 After receiving the confirmation from CSP-2, CSP-1 sends an 
 acknowledgement to the requesting ECS.<br>
 <br>
-<br>
 </p>
-<p style="text-align: center;"><img style="width: 391px; height: 231px;" alt="CSP-&gt;CSP Create Identity Push" src="images/Figure_1.3.1-1.png"><br>
+<p style="text-align: center;"><img style="width: 514px; height: 304px;" alt="CSP-&gt;CSP Create Identity Push" src="images/Figure_1.3.1-1.png"><br>
 <a name="Figure_1.3.1-1"></a>Figure 1.3.1-1 CSP-&gt;CSP Create Identity (Push)<br>
 <br>
 </p>
-<p style="text-align: left;">This overall flows in the scenario are
-broken down into following sample SCIM protocol exchanges.&nbsp;
-Firstly the ECS requests a change to the target identity under its
-scope of control.<br>
-</p>
-<div style="display: table; width: 0pt; margin-left: 3em; margin-right: auto;"><pre>PUT /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978<br>Host: FooBarInc.com<br>Accept: application/json<br>Authorization: Bearer h480djs93hd8<br><br>{<br>  "schemas": ["urn:scim:schemas:core:1.0"],<br>  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",<br>  "externalId": "701984",<br>  "userName": "bjensen@example.com",<br>  "name": {<br>    "formatted": "Ms. Barbara J Jensen III",<br>    "familyName": "Jensen",<br>    "givenName": "Barbara",<br>    "middleName": "Jane",<br>    "honorificPrefix": "Ms.",<br>    "honorificSuffix": "III"<br>  },<br>  "displayName": "Barbara Jensen",<br>  "nickName": "Babs",<br>  "profileUrl": "https://login.example.org/bjensen",<br>  "emails": [<br>    {<br>      "value": "bjensen@example.com",<br>      "type": "work",<br>      "primary": true<br>    },<br>    {<br>    "value": "babs@jensen.org",<br>    "type": "home"<br>    }<br>  ]<br>}<br></pre></div>
 
-<p>
-                        The service responds with the entire, updated User
-                    
-</p>
-<div style="display: table; width: 0pt; margin-left: 3em; margin-right: auto;"><pre>HTTP/1.1 200 OK<br>Content-Type: application/json<br><br>{<br> "schemas": ["urn:scim:schemas:core:1.0", "http://hrextension/"],<br>  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",<br>  "externalId": "701984",<br>  "userName": "bjensen@example.com",<br>  "name": {<br>   "formatted": "Ms. Barbara J Jensen III",<br>   "familyName": "Jensen",<br>   "givenName": "Barbara",<br>   "middleName": "Jane",<br>   "honorificPrefix": "Ms.",<br>   "honorificSuffix": "III"<br> },<br> "displayName": "Barbara Jensen",<br> "nickName": "Babs",<br> "profileUrl": "https://login.example.org/bjensen",<br> "emails": [<br>   {<br>     "value": "bjensen@example.com",<br>     "type": "work",<br>     "primary": true<br>   },<br>   {<br>     "value": "babs@jensen.org",<br>     "type": "home"<br>   }<br> ],<br> "http://hrextension" : [<br>   {<br>     "gender": "female"<br>   },<br>   {<br>     "birthday": "1942-04-26"<br>   }<br> ],<br> "meta": {<br>   "created": "2010-03-25T15:11:18Z",<br>   "lastModified": "2011-05-27T16:37:25Z"<br> }<br>}<br><br></pre></div>
-<p style="text-align: left;">
-
-</p>
-
-<br>
-From here the CSP-1 sends on the same update to CSP-2 <br>
-<br>
 <a name="anchor10"></a><br>
 <hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
@@ -557,7 +537,7 @@ From here the CSP-1 sends on the same update to CSP-2 <br>
 CSP-&gt;CSP - Update Identity (Push)</h3>
 
 <p>
-In this scenario two CSP's (CSP-1 &amp;CSP-2) have a shared service 
+In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service 
 agreement in place that requires the exchange of Cloud Service User 
 (CSU) accounts.  
 The Enterprise Cloud Subscriber (ECS-1) has already created an account 
@@ -566,86 +546,192 @@ by CSP-1
 to drive service options.  CSP-1 then receives an Update Identity 
 trigger action from its Enterprise Cloud Subscriber (ECS).  CSP-1 
 updates its local 
-directory account with the new department value.  CSP-1 then pushes the 
-mover change request down-stream to CSU-2 and gets confirmation that the
- account 
-was successfully updated.  After receiving the confirmation from CSP-2, 
-CSP-1 sends an acknowledgment to the requesting ECS. 
-
+directory account with the new department value.  CSP-1 then initiates a seperate SCIM protocol exchange to push the 
+mover change request down-stream to CSP-2.&nbsp; After receiving the confirmation from CSP-2, 
+CSP-1 sends an acknowledgment to ECS-1.<br>
+<br>
 </p>
+<div style="text-align: center;"><img style="width: 512px; height: 307px;" alt="CSP-&gt;CSP Update Identity Push" src="images/Figure_1.3.2-1.png"><br>
+
+<a name="Figure_1.3.2-1"></a>Figure 1.3.2-1 CSP-&gt;CSP Update Identity (Push)<br>
+ 
+
+</div>
+
 <a name="anchor11"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.3.3"></a><h3>1.3.3.&nbsp;
 CSP-&gt;CSP - Delete Identity (Push)</h3>
 
 <p>
-In this scenario two CSP's (CSP-1 &amp;CSP-2) have a shared service 
+In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service 
 agreement in place that requires the exchange of Cloud Service User 
 (CSU) accounts.  
 CSP-1 receives a Delete Identity trigger action from its Enterprise 
-Cloud Subscriber (ECS).  CSP-1 suspends the local directory account for 
+Cloud Subscriber (ECS-1).  CSP-1 suspends the local directory account for 
 the specified 
 CSU account.  CSP-1 then pushes a termination request for the specified 
-CSU account down-stream to CSU-2 and gets confirmation that the account 
+CSU account down-stream to CSP-2 and gets confirmation that the account 
 was 
 successfully removed.  After receiving the confirmation from CSP-2, 
-CSP-1 sends an acknowledgment to the requesting ECS. 
+CSP-1 sends an acknowledgment to the requesting ECS.<br>
+</p>
+<p>This use case highlights how different CSP's may implement different
+operational semantics behind the same SCIM operation.&nbsp; Note CSP-1
+suspends the account representation for its service where as CPS-2
+implements a true delete operation.&nbsp; <br>
+
 
 </p>
+<div style="text-align: center;"><img style="width: 515px; height: 304px;" alt="CSP-&gt;CSP Delete Identity Push" src="images/Figure_1.3.3-1.png"><br>
+
+<a name="Figure_1.3.3-1"></a>Figure 1.3.3-1 CSP-&gt;CSP Delete Identity (Push)<br>
+ 
+
+</div>
+
+
+<p> 
+
+</p>
+
 <a name="anchor12"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.3.4"></a><h3>1.3.4.&nbsp;
-CSP-&gt;CSP - Sync Identity (Push or Pull)</h3>
+CSP-&gt;CSP - Sync Identity(s) (Push &amp; Pull)</h3>
 
-<p>
-In this scenario two CSP's (CSP-1 &amp;CSP-2) have a shared service 
-agreement in place that requires the synchronization of Cloud Service 
-User (CSU) accounts.  
-On a periodic basis, CSP-1 sends a synchronization request to CSP-2 for a
- sub-set of its managed accounts.   CSP-1 has the option to send a 
-change-delta data 
-set or a full data set as part of the synchronization requests.  In 
-either case, CSP-2 receives the data set and successfully carries out 
-any required additions, 
-updates or deletes.
+<p>In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service
+agreement in place that requires the synchronization of Cloud Service
+User (CSU) accounts. On a periodic basis, either CSP is able to respond
+to or initiate synchronization request for a sub-set of its managed
+accounts. In the Push scenario, CSP-1 has the option to push a
+change-delta data set to CSP-1.&nbsp; The key to the Push scenario is
+its initiation by CSP-1.&nbsp; In the Pull scenario, CSP-2 initiates
+the sync requests and CSP-1 responds with the resulting data set. In
+either case, CSP-2 receives the data set and successfully carries out
+any required additions, updates or deletes.<br>
+</p>
+<p>In Figure 1.3.4-1 we see a flow initiated by CSP-1 posting of the
+sync data set to CSP-2.&nbsp; To fulfill this use case, it is
+acceptable that CSP-1 be required to send a simple "primer" request to
+CSP-2, without a data set, that prompts CSP-2 to Pull the data as shown
+in 1.3.4-2.&nbsp; The crux of the use case is the fact that CSP-1 is
+initiating the resulting sync data flow.<br>
+<br>
+
+
+
 
 </p>
+<div style="text-align: center;"><img style="width: 508px; height: 134px;" alt="CSP-&gt;CSP Sync Identity Push" src="images/Figure_1.3.4-1.png"><br>
+
+<a name="Figure_1.3.4-1"></a>Figure 1.3.4-1 CSP-&gt;CSP Sync Identity(s) - Push<br>
+<br>
+<br>
+<br>
+<img style="width: 510px; height: 181px;" alt="CSP-&gt;CSP Sync Identity Pull" src="images/Figure_1.3.4-2.png"><br>
+
+
+<a name="Figure_1.3.4-2"></a>Figure 1.3.4-2 CSP-&gt;CSP Sync Identity(s) - Pull<br>
+<br>
+ 
+
+</div>
+
+
+
+
+<p> 
+
+</p>
+
+
+
 <a name="anchor13"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.3.5"></a><h3>1.3.5.&nbsp;
 CSP-&gt;CSP - SSO Trigger (Push)</h3>
 
 <p>
-In this scenario two CSP's (CSP-1 &amp;CSP-2) have a shared service 
+In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service 
 agreement in place that requires the exchange of Cloud Service User 
 (CSU) accounts.  However, 
 rather than pre-provisioning accounts from CSP-1 to CSP-2, CSP-1 waits 
-for a service access request from the Cloud Service User (CSU) before 
+for a service access request from the end Cloud Service User (CSU-1) before 
 issuing account 
 creation details to CSP-2. When the CSU completes a SSO transaction from
  CSP-1 to CSP-2, CSP-2 then creates an account for the CSU based on 
 information pushed 
-to it from CSP-1.
+to it from CSP-1.<br>
+</p>
+<p>At the protocol level, this class of scenarios may result in the use
+of common protocol exchange patters between CSP-1 &amp; CSP-2.<br>
+<br>
+</p>
+<p style="text-align: center;"><img style="width: 508px; height: 305px;" alt="Figure 1.3.5-1 CSP-&gt;CSP SSO Trigger - Push" src="images/Figure_1.3.5-1.png"><br>
+<a name="Figure_1.3.5-1"></a>Figure 1.3.5-1 CSP-&gt;CSP SSO Trigger - Push<br>
+
 
 </p>
+
 <a name="anchor14"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.3.6"></a><h3>1.3.6.&nbsp;
 CSP-&gt;CSP - SSO Trigger (Pull)</h3>
 
-<p>
-In this scenario two CSP's (CSP-1 &amp;CSP-2) have a shared service 
-agreement in place that requires the exchange of Cloud Service User 
-(CSU) accounts.  However, 
-rather than pre-provisioning accounts from CSP-1 to CSP-2, CSP-2 waits 
-for a service access request from CSP-1's Cloud Service User (CSU).  
-When the CSU completes 
-a SSO transaction from CSP-1 to CSP-2, CSP-2 then pulls sufficient 
-information from CSP-1 to create a local account for the CSU.
+<p>In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service
+agreement in place that requires the exchange of Cloud Service User
+(CSU) accounts. However, rather than pre-provisioning accounts from
+CSP-1 to CSP-2, CSP-2 waits for a service access request from the Cloud
+Service User (CSU-1) before initiating a Pull request to gather
+information about the CSU sufficient to create a local account. <br>
+</p>
+<p>At the protocol level, this class of scenarios may result in the use of
+common protocol exchange patters between CSP-2 &amp; CSP-1.<br>
+<br>
+</p>
+<p style="text-align: center;"><img style="width: 518px; height: 306px;" alt="Figure 1.3.6-1 CSP-&gt;CSP SSO Trigger - Pull" src="images/Figure_1.3.6-1.png"><br>
+
+<a name="Figure_1.3.6-1"></a>Figure 1.3.6-1 CSP-&gt;CSP SSO Trigger - Pull
 
 </p>
-<a name="anchor15"></a><br><hr>
+
+<a name="anchor15"></a><br>
+<br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
+<br>
+<a name="rfc.section.1.3.7"></a>
+<h3>1.3.7.&nbsp;
+CSU -&gt;CSP - Password Reset (Push)</h3>
+
+
+<p>
+            
+In this scenario two CSP's (CSP-1 &amp; CSP-2) have a shared service 
+agreement in place that requires the exchange of Cloud Service User 
+(CSU) accounts.&nbsp; CSP-1
+wants to change the password for a specific Cloud Service User
+(CSU-1).&nbsp; CSP-1 sends a request to CSP-2 to reset the password
+value for CSU-1. <br>
+</p>
+<p>At the protocol level, this scenarios may result in the same protocol exchange as any other 
+            attribute change request.<br>
+</p>
+<p style="text-align: center;"><img style="width: 508px; height: 139px;" alt="Figure 1.3.7-1 CSP-&gt;CSP Password Reset - Push" src="images/Figure_1.3.7-1.png"><br>
+
+
+<a name="Figure_1.3.7-1"></a>Figure 1.3.7-1 CSP-&gt;CSP Password Reset - Push
+        
+</p>
+
+<a name="anchor23"></a><br>
+<br>
+<hr>
+<table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2">
+<tbody><tr><td class="TOCbug"><a href="draft-scim-scenarios-03.html#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody>
+</table>
+
+<br>
 <a name="rfc.section.1.4"></a><h3>1.4.&nbsp;
 Enterprise Cloud Subscriber to Cloud Service Provider Flows (ECS-&gt;CSP)</h3>
 
@@ -659,14 +745,19 @@ maintains an LDAP service for the relevant Cloud Service Users (CSU's).
 push and pull data exchanges between the ECS and the CSP. 
 
 </p>
-<p>
-Many of these scenarios are very similar to those defined in the Cloud 
-Service Provider to Cloud Service Provider section above.  They are 
-identified 
-separately here so that we may explore any differences and might emerge.
+<p>Many of these scenarios are very similar to those defined in the
+Cloud Service Provider to Cloud Service Provider section above. There
+are captured here to help explore potential differences that might
+emerge.<br>
+</p>
+<p style="text-align: center;"><img style="width: 512px; height: 90px;" alt="Figure 1.4.-1 ECS-&gt;CSP Flows" src="images/Figure_1.4-1.png"><br>
+
+
+<a name="Figure_1.4-1"></a>Figure 1.4.-1 ECS-&gt;CSP Flows
  
 
 </p>
+
 <a name="anchor16"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.4.1"></a><h3>1.4.1.&nbsp;
@@ -680,9 +771,16 @@ Cloud Service User (CSU) accounts.  A new user joins ECS-1 and so ECS-1
 pushes an account creation request to CSP-1, supplying all required base
  SCIM 
 schema attribute values and additional extended SCIM schema values as 
-required.  
+required.<br>
+<br>
+</p>
+<p style="text-align: center;"><img style="width: 511px; height: 136px;" alt="Figure 1.4.1-1 ECS-&gt;CSP Creaet Identity - Push" src="images/Figure_1.4.1-1.png"><br>
+
+
+<a name="Figure_1.4.1-1"></a>Figure 1.4.1-1 ECS-&gt;CSP Creaet Identity - Push  
 
 </p>
+
 <a name="anchor17"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.4.2"></a><h3>1.4.2.&nbsp;
@@ -690,14 +788,22 @@ ECS -&gt;CSP - Update Identity (Push)</h3>
 
 <p>
 In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a 
-service with a Cloud Service Provider (CSP-1) that drives service 
+service with Cloud Service Provider (CSP-1) that drives service 
 definition from a 
 key account schema attribute called Department.  ECS-1 wishes to move a 
 given CSU from Department A to Department B and so it pushes an 
 attribute update 
-request to the CSP.
+request to the CSP.<br>
+<br>
+</p>
+<p style="text-align: center;"><img style="width: 509px; height: 140px;" alt="Figure 1.4.2-1 ECS-&gt;CSP Update Identity - Push" src="images/Figure_1.4.2-1.png"><br>
+
+
+
+<a name="Figure_1.4.2-1"></a>Figure 1.4.2-1 ECS-&gt;CSP Update Identity - Push
 
 </p>
+
 <a name="anchor18"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.4.3"></a><h3>1.4.3.&nbsp;
@@ -707,69 +813,56 @@ ECS -&gt;CSP - Delete Identity (Push)</h3>
 In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a 
 service with a Cloud Service Provider (CSP-1).  Upon termination of one 
 of its employees, 
-ECS-1 sends a suspend account request to CSP-1.  One week later the ECS 
-wished to complete the process by fully removing the Cloud Service User 
+ECS-1 sends a suspend account request to CSP-1 (Figure 1.4.3-1).  One week later the ECS 
+wishes to complete the process by fully removing the Cloud Service User 
 (CSU) account 
-and so it sends a terminate account request to CSP-1.
+and so it sends a terminate account request to CSP-1 (Figure 1.4.3-2).<br>
+<br>
+</p>
+<div style="text-align: center;"><img style="width: 512px; height: 123px;" alt="Figure 1.4.3-1 ECS-&gt;CSP suspend Identity - Push" src="images/Figure_1.4.3-1.png"><br>
+
+
+
+
+<a name="Figure_1.4.3-1"></a>Figure 1.4.3-1 ECS-&gt;CSP suspend Identity - Push<br>
+</div>
+<p style="text-align: center;"><br>
+</p>
+<p style="text-align: center;"><img style="width: 510px; height: 120px;" alt="Figure 1.4.3-2 ECS-&gt;CSP Delete Identity - Push" src="images/Figure_1.4.3-2.png"><br>
+
+
+
+
+<a name="Figure_1.4.3-2"></a>Figure 1.4.3-2 ECS-&gt;CSP Delete Identity - Push<br>
+
 
 </p>
+
 <a name="anchor19"></a><br><hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.1.4.4"></a><h3>1.4.4.&nbsp;
-ECS -&gt;CSP - SSO Push</h3>
-
-<p>
-In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a 
-service with a Cloud Service Provider (CSP-1).  No accounts are created 
-or exchange in advance.  
-However, rather than pre-provisioning accounts from ECS-1 to CSP-1, 
-ECS-1 waits for a service access request from the Cloud Service User 
-(CSU) before issuing 
-account creation details to CSP-1. When the CSU completes a SSO 
-transaction from ECS-1 to CSP-2, CSP-2 then creates an account for the 
-CSU based on information 
-pushed to it from CSP-1.
-
-</p>
-<a name="anchor20"></a><br><hr>
-<table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
-<a name="rfc.section.1.4.5"></a><h3>1.4.5.&nbsp;
 ECS -&gt;CSP - SSO Pull</h3>
 
-<p>
-In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a 
-service with a Cloud Service Provider (CSP-1).  No accounts are created 
-or exchange in advance. 
-However, rather than pre-provisioning accounts from ECS-1 to CSP-1, 
-ECS-1 waits for a service access request from the Cloud Service User 
-(CSU) before issuing account 
-creation details to CSP-1. When the CSU completes a SSO transaction from
- ECS-1 to CSP-1, CSP-2 then creates an account for the CSU based on 
-information pushed to it 
-from ECS-1.
-
+<p>In this scenario an Enterprise Cloud Subscriber (ECS-1) maintains a
+service with a Cloud Service Provider (CSP-1). No accounts are created
+or exchange in advance. However, rather than pre-provisioning accounts
+from ECS-1 to CSP-1, CSP-1 waits for a service access request from the
+Cloud Service User (CSU-1) under the control domain of ECS-1, before
+issuing an account Pull request to CSP-1. <br>
+<br>
 </p>
-<a name="anchor21"></a><br><hr>
-<table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
-<a name="rfc.section.1.5"></a><h3>1.5.&nbsp;
-Cloud Service User to Cloud Service Provider Flows (CSU-&gt;CSP)</h3>
+<p></p>
+<div style="text-align: center;"><img style="width: 527px; height: 307px;" alt="Figure 1.4.4-1 ECS-&gt;CSP SSO Pull" src="images/Figure_1.4.4-1.png"><br>
 
-<a name="anchor22"></a><br><hr>
-<table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
-<a name="rfc.section.1.5.1"></a><h3>1.5.1.&nbsp;
-CSU -&gt;CSP - Password Reset (Push)</h3>
 
-<p>
-            In this scenario a Cloud Service User (CSU) wants to change 
-its password at cloud service authentication point.  Post suitable 
-authentication and 
-            authorization, the CSU sends the CSP a new password value.  
-In some scenarios this activity will not be meaningfully differentiated 
-from any other 
-            attribute change.
-        
+
+
+
+<a name="Figure_1.4.4-1"></a>Figure 1.4.4-1 ECS-&gt;CSP SSO Pull<br>
+</div>
+<p><a name="anchor20"></a><br>
 </p>
-<a name="anchor23"></a><br><hr>
+<hr>
 <table summary="layout" class="TOCbug" align="right" cellpadding="0" cellspacing="2"><tbody><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></tbody></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Document History</h3>
@@ -808,9 +901,22 @@ Document History</h3>
 <li>
                 Updated terms and general wordsmith</li>
   <li>Added images</li>
-  <li>Started enhancing the scnearios to add protocol exchange samples<br>
+  <li>Started enhancing the scnearios to add protocol exchange samples</li>
+</ul>
+<p>
+        draft-scim-scenarios-04
+        </p>
+
+
+<ul class="text">
+<li>
+                Updated terms and general wordsmith</li><li>Added images for the rest of the scenarios<br>
+</li><li>Removed scenario 1.4.5 and merged it with 1.4.4</li>
+  <li>Moved the password reset use case to be a CSP-&gt;CSP flow (1.3.7)</li>
+  <li>Removed section 1.5 (CSU-CSP use cases) - password operations moved to 1.3.7 and no other use cases exist to date<br>
   </li>
 </ul>
+
 <p>
     
 </p>
