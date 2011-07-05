@@ -6,749 +6,862 @@
 <?rfc inline="no"?>
 <?rfc private="DRAFT"?>
 <!DOCTYPE rfc
-        SYSTEM "rfc2629.dtd">
+  SYSTEM "rfc2629.dtd">
 <rfc>
-    <front>
-        <title>SCIM PROTOCOL</title>
+  <front>
+    <title>SCIM PROTOCOL</title>
 
-        <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
-            <organization abbrev="UnboundID">UnboundID</organization>
-            <address>
-                <email>trey.drake@unboundid.com</email>
-            </address>
-        </author>
-        <author initials="C.M." surname="Mortimore" fullname="Chuck Mortimore">
-            <organization abbrev="SalesForce">SalesForce</organization>
-            <address>
-                <email>cmortimore@salesforce.com</email>
-            </address>
-        </author>
+    <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
+      <organization abbrev="UnboundID">UnboundID</organization>
+      <address>
+        <email>trey.drake@unboundid.com</email>
+      </address>
+    </author>
+    <author initials="C.M." surname="Mortimore" fullname="Chuck Mortimore">
+      <organization abbrev="SalesForce">SalesForce</organization>
+      <address>
+        <email>cmortimore@salesforce.com</email>
+      </address>
+    </author>
 
-        <date month="May" year="2011"/>
-        <keyword>SCIM</keyword>
-        <abstract>
-            <t>
-                The Simple Cloud Identity Management (SCIM) specification is designed to make managing user identity in
-                cloud based applications and services easier. The specification suite seeks to build upon experience
-                with existing schemas and deployments, placing specific emphasis on simplicity of development and
-                integration, while applying existing authentication, authorization, and privacy models. It's intent is
-                to reduce the cost and complexity of user management operations by providing a common user schema and
-                extension model, as well as binding documents to provide patterns for exchanging this schema using
-                standard protocols. In essence, make it fast, cheap, and easy to move users in to, out of, and around
-                the cloud.
+    <date month="May" year="2011"/>
+    <keyword>SCIM</keyword>
+    <abstract>
+      <t>
+        The Simple Cloud Identity Management (SCIM) specification is designed to
+        make managing user identity in cloud based applications and services
+        easier. The specification suite seeks to build upon experience with
+        existing schemas and deployments, placing specific emphasis on
+        simplicity of development and integration, while applying existing
+        authentication, authorization, and privacy models. It's intent is to
+        reduce the cost and complexity of user management operations by
+        providing a common user schema and extension model, as well as binding
+        documents to provide patterns for exchanging this schema using standard
+        protocols. In essence, make it fast, cheap, and easy to move users in
+        to, out of, and around the cloud.
 
-                This document provides a REST API for exchanging User and User related resources via JSON and/or XML
-            </t>
-        </abstract>
-    </front>
+        This document provides a REST API for exchanging User and User related
+        resources via JSON and/or XML
+      </t>
+    </abstract>
+  </front>
 
 
-    <middle>
-        <section title="Introduction and Overview" anchor="intro" toc="default">
-            <t>The SCIM Protocol is an application-level, REST protocol for provisioning and managing user identity on
-                the web. The protocol supports creating, editing, deleting, querying and retrieving Users and Groups as
-                well as simple password change requests.
-            </t>
+  <middle>
+    <section title="Introduction and Overview" anchor="intro" toc="default">
+      <t>The SCIM Protocol is an application-level, REST protocol for
+        provisioning and managing user identity on the web. The protocol
+        supports creating, editing, deleting, querying and retrieving Users and
+        Groups as well as simple password change requests.
+      </t>
 
-            <section title="Intended Audience" toc="default">
-                <t>
-                    This document is intended as a guide to SCIM API usage for both user identity providers and
-                    consumers.
-                </t>
-            </section>
-            <section title="Notational Conventions" anchor="notat" toc="default">
-                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-                    "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
-                    [RFC2119].
-                </t>
+      <section title="Intended Audience" toc="default">
+        <t>
+          This document is intended as a guide to SCIM API usage for both user
+          identity providers and consumers.
+        </t>
+      </section>
+      <section title="Notational Conventions" anchor="notat" toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+          document are to be interpreted as described in [RFC2119].
+        </t>
 
-            </section>
-            <section title="Definitions" anchor="defs" toc="default">
-                <list style="hanging">
-                    <t hangText="Service Provider:">A web application that provides User information via the SCIM
-                        protocol.
-                    </t>
-                    <t hangText="Consumer:">A website or application that uses the SCIM protocol to manage Users managed
-                        by the Service Provider.
-                    </t>
-                    <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL for the API. The Base URL
-                        MUST NOT contain any query string, as additional path information and query string variables MAY
-                        be appended by Consumers as part of forming the request. Example: https://example.com/scim
-                    </t>
-                    <t hangText="Singular Attribute:">A User attribute that can appear at most once per User,
-                        e.g.displayName.
-                    </t>
-                    <t hangText="Plural Attribute:">A User attribute that can appear multiple times per User, e.g.
-                        emails
-                    </t>
-                    <t hangText="Simple Attribute:">A Singular attribute or Plural attribute whose value is a single
-                        string attribute.
-                    </t>
-                    <t hangText="Complex Attribute:">A Singular attribute or Plural attribute whose value is an object
-                        containing multiple sub-attribute attributes.
-                    </t>
-                    <t hangText="Primary Sub-Value:">The sub-attribute in a Complex attribute that should be used when
-                        sorting or filtering by that attribute. Unless otherwise specified, the value sub-attribute is
-                        always the Primary Sub-attribute.
-                    </t>
-                    <t hangText="Resource:">The Service Provider managed artifact; e.g., User or Group
-                    </t>
-                </list>
-            </section>
-        </section>
+        <t>
+          For purposes of readability examples are not URL encoded. Implementers
+          MUST percent encode URLs as described in
+          <eref
+            target="http://tools.ietf.org/html/rfc3986#section-2
+          .1">RFC3896 2.1
+          </eref>
+        </t>
+      </section>
+      <section title="Definitions" anchor="defs" toc="default">
+        <list style="hanging">
+          <t hangText="Service Provider:">A web application that provides
+            identity information via the SCIM protocol.
+          </t>
+          <t hangText="Consumer:">A website or application that uses the SCIM
+            protocol to manage identity managed by the Service Provider.
+          </t>
+          <t hangText="Base URL:">The SCIM REST API is always relative to a Base
+            URL for the API. The Base URL MUST NOT contain any query string, as
+            additional path information and query string variables MAY be
+            appended by Consumers as part of forming the request. Example:
+            https://example.com/scim/v1/
+          </t>
+          <t hangText="Singular Attribute:">A Resource attribute that can appear
+            at most once per Resource, e.g.displayName.
+          </t>
+          <t hangText="Plural Attribute:">A Resource attribute that can appear
+            multiple times per Resource, e.g. emails
+          </t>
+          <t hangText="Simple Attribute:">A Singular attribute or Plural
+            attribute whose value is a single attribute.
+          </t>
+          <t hangText="Complex Attribute:">A Singular attribute or Plural
+            attribute whose value is an object containing multiple sub-attribute
+            attributes.
+          </t>
+          <t hangText="Primary Sub-Value:">The sub-attribute in a Complex
+            attribute that should be used when sorting or filtering by that
+            attribute. Unless otherwise specified, the value sub-attribute is
+            always the Primary Sub-attribute.
+          </t>
+          <t hangText="Resource:">The Service Provider managed artifact; e.g.,
+            User or Group
+          </t>
+        </list>
+      </section>
+    </section>
 
-        <section title="Authentication and Authorization" anchor="aa" toc="default">
-            <t>
-                Authentication to the SCIM REST API is performed using OAuth2:
-                http://tools.ietf.org/html/draft-ietf-oauth-v2-15
-            </t>
-            <t>
-                For example:
-            </t>
-            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
-            GET /resource/1 HTTP/1.1
+    <section title="Authentication and Authorization" anchor="aa" toc="default">
+      <t>
+        The SCIM protocol does not define a new scheme for authentication and
+        authorization therefore implementers are free to choose mechanisms
+        appropriate to their use cases. Implementers SHOULD support existing
+        authentication/authorization schemes. In particular,
+        <eref target="http://tools
+        .ietf.org/html/draft-ietf-oauth-v2-16">
+          OAuth2</eref> is RECOMMENDED.
+      </t>
+      <t>
+        All examples assume OAuth2; e.g.,
+      </t>
+      <figure height="" suppress-title="false" width="" alt="" title=""
+              align="left">
+        <artwork height="" name="" width="" type="" alt="" align="left"
+                 xml:space="preserve"><![CDATA[
+            GET /User/uid=bjensen,ou=People,dc=example,dc=com HTTP/1.1
             Host: example.com
             Authorization: Bearer h480djs93hd8
                                    ]]></artwork>
-            </figure>
-            <t>
-                The context of the request (i.e. the user for whom data is being requested) MUST be inferred by Service
-                Providers from the Base URL and the authorization credentials provided. The same Base URL MAY return
-                information for different users depending on the authorization credentials provided.
-            </t>
+      </figure>
+      <t>
+        The context of the request (i.e. the user for whom data is being
+        requested) MUST be inferred by Service Providers.
+      </t>
+
+    </section>
+
+    <section title="Security Considerations" anchor="Security" toc="default">
+      <t>Securing the protocol:TBD</t>
+    </section>
 
 
-        </section>
+    <section title="API" anchor="api">
+      <t>
+        The SCIM protocol specifies well known endpoints and operations for
+        managing User, Group and Password resources via standard HTTP methods:
+      </t>
+      <list style="hanging">
+        <t hangText="GET">Retrieves a complete or partial Resource
+        </t>
+        <t hangText="POST">Creates a new Resource
+        </t>
+        <t hangText="PUT">Modifies a Resource with a complete, consumer
+          specified Resource (replace)
+        </t>
+        <t hangText="PATCH">Modifies a Resource with a set of consumer specified
+          changes (partial update) or changes a User password
+        </t>
+        <t hangText="DELETE">Deletes a Resource.
+        </t>
+      </list>
 
-        <section title="Security Considerations" anchor="Security" toc="default">
-            <t>Securing the protocol:TBD</t>
-        </section>
+      <texttable anchor='endpoint-summary' title="Defined endpoints">
+        <ttcol align='left'>Resource</ttcol>
+        <ttcol align='left'>Endpoint</ttcol>
+        <ttcol align='left'>Operations</ttcol>
+        <ttcol align='left'>Description</ttcol>
+        <c>User</c>
+        <c>/User</c>
+        <c><xref target="get-resource" format="default">GET</xref>,
+          <xref target="create-resource" format="default">POST</xref>,
+          <xref target="edit-resource-with-put" format="default">PUT</xref>,
+          <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
+          <xref target="delete-resource" format="default">DELETE</xref>
+        </c>
+        <c>Read/Modify Users</c>
 
+        <c>
+          User Query/Listing
+        </c>
+        <c>/Users</c>
+        <c>
+          <xref target="query-resources" format="default">GET</xref>
+        </c>
+        <c>Retrieve User(s) via ad hoc queries</c>
 
-        <section title="API" anchor="api">
-            <t>
-                The SCIM protocol specifies well known endpoints and operations for managing User, Group and Password
-                resources via standard HTTP methods:
-            </t>
-            <list style="hanging">
-                <t hangText="GET">Retrieves a complete or partial Resource
-                </t>
-                <t hangText="POST">Creates a new Resource
-                </t>
-                <t hangText="PUT">Modifies a Resource with a complete, consumer specified Resource (replace)
-                </t>
-                <t hangText="PATCH">Modifies a Resource with a set of consumer specified changes (partial update) or
-                    changes a User password
-                </t>
-                <t hangText="DELETE">Deletes a Resource.
-                </t>
-            </list>
+        <c>Group</c>
+        <c>/Group</c>
+        <c><xref target="get-resource" format="default">GET</xref>,
+          <xref target="create-resource" format="default">POST</xref>,
+          <xref target="edit-resource-with-put" format="default">PUT</xref>,
+          <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
+          <xref target="delete-resource" format="default">DELETE</xref>
+        </c>
+        <c>Read/Modify Groups</c>
 
-            <texttable anchor='endpoint-summary' title="Defined endpoints">
-                <ttcol align='left'>Resource</ttcol>
-                <ttcol align='left'>Endpoint</ttcol>
-                <ttcol align='left'>Operations</ttcol>
-                <ttcol align='left'>Description</ttcol>
-                <c>User</c>
-                <c>/User</c>
-                <c><xref target="get-resource" format="default">GET</xref>,
-                    <xref target="create-resource" format="default">POST</xref>,
-                    <xref target="edit-resource-with-put" format="default">PUT</xref>,
-                    <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
-                    <xref target="delete-resource" format="default">DELETE</xref>
-                </c>
-                <c>Read/Modify Users</c>
+        <c>
+          User Query/Listing
+        </c>
+        <c>/Groups</c>
+        <c>
+          <xref target="query-resources" format="default">GET</xref>
+        </c>
+        <c>Retrieve Group(s) via ad hoc queries</c>
 
-                <c>
-                    User Query/Listing
-                </c>
-                <c>/Users</c>
-                <c>
-                    <xref target="query-resources" format="default">GET</xref>
-                </c>
-                <c>Retrieve User(s) via ad hoc queries</c>
+        <c>Change User Password</c>
+        <c>
+          /User/{userId}/password
+        </c>
+        <c>
+          <xref target="change-password" format="default">PATCH</xref>
+        </c>
+        <c>Change a User's password</c>
 
-                <c>Group</c>
-                <c>/Group</c>
-                <c><xref target="get-resource" format="default">GET</xref>,
-                    <xref target="create-resource" format="default">POST</xref>,
-                    <xref target="edit-resource-with-put" format="default">PUT</xref>,
-                    <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
-                    <xref target="delete-resource" format="default">DELETE</xref>
-                </c>
-                <c>Read/Modify Groups</c>
+        <c>User Schema</c>
+        <c>
+          /Schema
+        </c>
+        <c>
+          <xref target="get-schema" format="default">GET</xref>
+        </c>
+        <c>Retrieve a specified User schema</c>
 
-                <c>
-                    User Query/Listing
-                </c>
-                <c>/Groups</c>
-                <c>
-                    <xref target="query-resources" format="default">GET</xref>
-                </c>
-                <c>Retrieve Group(s) via ad hoc queries</c>
+        <c>User Schemas</c>
+        <c>
+          /Schemas
+        </c>
+        <c>
+          <xref target="get-schemas" format="default">GET</xref>
+        </c>
+        <c>Retrieve all Service Provider supported schemas</c>
+      </texttable>
 
-                <c>Change User Password</c>
-                <c>
-                    /User/{userId}/password
-                </c>
-                <c>
-                    <xref target="change-password" format="default">PATCH</xref>
-                </c>
-                <c>Change a User's password</c>
+      <t>
+        All requests to the Service Provider are made via
+        <eref
+          target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9">
+          HTTP operations
+        </eref>
+        on a URL derived from the Base URL. Responses are returned in the body
+        of the HTTP response, formatted as JSON or XML, depending on what is
+        requested. Response and error codes SHOULD be transmitted via the HTTP
+        status code of the response (if possible), and SHOULD also be specified
+        in the body of the response.
+      </t>
 
-                <c>User Schema</c>
-                <c>
-                    /Schema
-                </c>
-                <c>
-                    <xref target="get-schema" format="default">GET</xref>
-                </c>
-                <c>Retrieve a specified User schema</c>
+      <section title="Creating Resources" anchor="create-resource"
+               toc="default">
+        <t>To create new Resources, clients send POST requests to the Resource
+          endpoint; i.e., /User or /Group.
+        </t>
 
-                <c>User Schemas</c>
-                <c>
-                    /Schemas
-                </c>
-                <c>
-                    <xref target="get-schemas" format="default">GET</xref>
-                </c>
-                <c>Retrieve all Service Provider supported schemas</c>
-            </texttable>
+        <t>Successful Resource creation is indicated with a 201 ("Created")
+          response code. Upon successful creation, the response body MUST
+          contain the newly created Resource. Since the server is free to alter
+          and/or ignore POSTed content, returning the full representation can be
+          useful to the client, enabling it to correlate the client and server
+          views of the new Resource.
 
-            <t>
-                All requests to the Service Provider are made via
-                <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9">HTTP operations</eref>
-                on a URL derived from the Base URL. Responses are returned in the body of the HTTP response, formatted
-                as JSON or XML, depending on what is requested. Response and error codes SHOULD be transmitted via the
-                HTTP status code of the response (if possible), and SHOULD also be specified in the body of the
-                response.
-            </t>
+          When a Resource is created, its URI must be returned in the response
+          Location header.
+        </t>
 
-            <section title="Creating Resources" anchor="create-resource" toc="default">
-                <t>To create new Resources, clients send POST requests to the Resource endpoint; i.e., /User or /Group.
-                </t>
-
-                <t>Successful Resource creation is indicated with a 201 ("Created") response code. Upon successful
-                    creation, the response body MUST contain the newly created Resource. Since the server is free to
-                    alter and/or ignore POSTed content, returning the full representation can be useful to the client,
-                    enabling it to correlate the client and server views of the new Resource.
-
-                    When a Resource is created, its URI must be returned in the response Location header.
-                </t>
-
-                <t>Below, the client sends a POST request containing a User</t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+        <t>Below, the client sends a POST request containing a User</t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
 POST /User  HTTP/1.1
 Host: example.com
-Content-Type:  application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "userName": "bjensen@example.com",
-  "name": {
-    "familyName": "Jensen",
-    "givenName": "Barbara"
-  },
-  "displayName": "Babs Jensen", "emails": [
-    {
-      "value": "bjensen@example.com",
-      "type": "work",
-      "primary": true
-    }
-  ]
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <userName>bjensen@example.com</userName>
+    <externalId>701984</externalId>
+    <name>
+        <formatted>Ms. Babs J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+        <middleName>Jane</middleName>
+    </name>
+    <emails>
+        <email>
+            <value>bjensen@example.com</value>
+            <primary>true</primary>
+            <type>work</type>
+        </email>
+    </emails>
+</scim:User>
+
                         ]]></artwork>
-                </figure>
+        </figure>
 
-                <t>The server signals a successful creation with a status code of 201. The response includes a Location
-                    header indicating the User URI, and a representation of that User in the body of the response.
-                </t>
+        <t>The server signals a successful creation with a status code of 201.
+          The response includes a Location header indicating the User URI, and a
+          representation of that User in the body of the response.
+        </t>
 
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
-Content-Type: application/json
-Location: http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Content-Type: application/xml
+Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+ETag: "e180ee84f0671b1"
 
-{
-  "id" : "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "errors" : [ ],  //TODO - not in core schema
-  "success" : true //TODO - not in core schema
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <meta>
+        <created>2010-01-23T04:56:22Z</created>
+        <location>
+            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+        </location>
+        <version>e180ee84f0671b1</version>
+    </meta>
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <userName>bjensen@example.com</userName>
+    <externalId>701984</externalId>
+    <name>
+        <formatted>Ms. Babs J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+        <middleName>Jane</middleName>
+    </name>
+    <emails>
+        <email>
+            <value>bjensen@example.com</value>
+            <primary>true</primary>
+            <type>work</type>
+        </email>
+    </emails>
+</scim:User>
 
                         ]]></artwork>
-                </figure>
+        </figure>
 
+      </section>
+      <section title="Retrieving Resources" anchor="get-resources-ops"
+               toc="default">
+        <t>Users and Group Resources are retrieved via opaque, unique URLs or
+          via Query. Service Providers MAY choose to respond with a sub-set of
+          Resource attributes, though MUST minimally return the Resource id and
+          meta attributes.
+        </t>
 
-            </section>
-            <section title="Retrieving Resources" anchor="get-resources-ops" toc="default">
-                <t>Users and Groups are retrieved via opaque, unique URIs or via Query</t>
+        <section title="Retrieving a known Resource" anchor="get-resource"
+                 toc="default">
+          <t>To retrieve a known Resource, clients send GET requests to the
+            Resource endpoint; e.g., /User/{id} or /Group/{id}.
+          </t>
 
-                <section title="Retrieving a known Resource" anchor="get-resource" toc="default">
-                    <t>To retrieve a known Resource, clients send GET requests to the Resource endpoint; e.g.,
-                        /User/{id} or /Group/{id}.
-                    </t>
+          <t>If the Resource exists the server responds with a status code of
+            200 and includes the result in the body of the response.
+          </t>
 
-                    <t>If the Resource exists the server responds with a status code of 200 and includes the result in
-                        the body of the response.
-                    </t>
+          <t>The below example retrieves a single User via the /User endpoint.
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 
-                    <t>The below example retrieves a single User via the /User endpoint.</t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+GET /User/uid=bjensen,ou=People,dc=example,dc=com
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
 
-HTTP/1.1 200 OK
-Content-Type: application/json
-
                         ]]></artwork>
-                    </figure>
+          </figure>
 
-                    <t>The server responds with:
-                    </t>
+          <t>The server responds with:
+          </t>
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/xml
+Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+ETag: "f250dd84f0671c3"
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "externalId": "701984",
-  "userName": "bjensen@example.com",
-  "name": {
-    "formatted": "Ms. Barbara J Jensen III",
-    "familyName": "Jensen",
-    "givenName": "Barbara",
-    "middleName": "Jane",
-    "honorificPrefix": "Ms.",
-    "honorificSuffix": "III"
-  },
-    "displayName": "Babs Jensen",
-    "nickName": "Babs",
-    "profileUrl": "https://login.example.org/bjensen",
-    "emails": [
-      {
-        "value": "bjensen@example.com",
-        "type": "work",
-        "primary": true
-      },
-      {
-        "value": "babs@jensen.org",
-        "type": "home"
-      }
-    ],
-    "meta": {
-     "created": "2010-03-25T15:11:18Z",
-     "lastModified": "2011-05-27T16:37:25Z"
-  }
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <meta>
+        <created>2010-01-23T04:56:22Z</created>
+        <location>
+            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+        </location>
+        <version>f250dd84f0671c3</version>
+    </meta>
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <userName>bjensen@example.com</userName>
+    <externalId>701984</externalId>
+    <name>
+        <formatted>Ms. Babs J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+        <middleName>Jane</middleName>
+    </name>
+    <emails>
+        <email>
+            <value>bjensen@example.com</value>
+            <primary>true</primary>
+            <type>work</type>
+        </email>
+    </emails>
+</scim:User>
 
 
                         ]]></artwork>
-                    </figure>
+          </figure>
 
-                </section>
+        </section>
 
-                <section title="List/Query Resources" anchor="query-resources" toc="default">
-                    <t>
-                        SCIM defines a standard set of operations that can be used to filter, sort, and paginate
-                        response results. The operations are specified by adding query parameters to the Resource's
-                        endpoint. Service Providers MAY support additional query parameters not specified here, and
-                        Providers SHOULD ignore any query parameters they don't recognize.
-                    </t>
+        <section title="List/Query Resources" anchor="query-resources"
+                 toc="default">
+          <t>
+            SCIM defines a standard set of operations that can be used to
+            filter, sort, and paginate response results. The operations are
+            specified by adding query parameters to the Resource's endpoint.
+            Service Providers MAY support additional query parameters not
+            specified here, and Providers SHOULD ignore any query parameters
+            they don't recognize.
+          </t>
 
-                    <t>The below example returns the userName and displayName for all Users</t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+          <t>The below example returns the userName and displayName for all
+            Users
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
 
 GET /Users?attributes=userName,displayName
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
                       ]]></artwork>
-                    </figure>
+          </figure>
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/xml
 
-{
-  "totalResults": 3,
-  "entry": [
-    {
-      "schemas": ["urn:scim:schemas:core:1.0"],
-      "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-      "displayName": "Babs Jensen",
-      "userName": "bjensen",
-      "meta": {
-        "location":"http://example.com/User/3f62ce30-..."
-      }
-    },
-    {
-      "schemas": ["urn:scim:schemas:core:1.0"],
-      "id": "4f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-      "displayName": "Mandy Pepperidge",
-      "userName": "mPepperidge",
-      "meta": {
-        "location":"http://example.com/User/4f62ce30-..."
-      }
-    },
-    {
-      "schemas": ["urn:scim:schemas:core:1.0"],
-      "id": "5f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-      "displayName": "Noel Smith",
-      "userName": "nsmith",
-      "meta": {
-        "location":"http://example.com/User/5f62ce30-..."
-      }
-    }
-  ]
-}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
+    <totalResults>3</totalResults>
+    <Resources>
+        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <id>uid=bjensen,ou=people,dc=example,dc=com</id>
+            <userName>bjensen</userName>
+            <displayName>Ms. Babs J Jensen III</displayName>
+        </Resource>
+        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <id>uid=jsmith,ou=people,dc=example,dc=com</id>
+            <userName>jsmith</userName>
+            <displayName>Ms. Jane Smith</displayName>
+        </Resource>
+        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <id>uid=msmith,ou=people,dc=example,dc=com</id>
+            <userName>msmith@example.com</userName>
+            <displayName>Mr. Michael Smith</displayName>
+        </Resource>
+    </Resources>
+</scim:Response>
+
                       ]]></artwork>
-                    </figure>
+          </figure>
 
 
-                    <section title="Filtering">
-                        <t>
-                            Filtering is used to limit the request results to Users that match given criteria. Content
-                            filtering is accomplished by combining three request parameters:
-                        </t>
+          <section title="Filtering">
+            <t>
+              Filtering is used to limit the request results to Resources that
+              match given criteria. Content filtering is accomplished by
+              combining three request parameters:
+            </t>
 
-                        <list style="hanging">
-                            <t hangText="filterBy:">
-                                Specifies the attribute name to filter by. If the specified attribute is a Plural
-                                attribute, the User SHALL match if any of the instances of the given attribute match the
-                                specified criterion (e.g. if a User has multiple emails values, only one has to match
-                                for the entire User to match). If a Simple attribute is specified, its value must match
-                                the specified filterValue according to the specified filterOp. If a Complex attribute is
-                                specified, its Primary Sub-attribute must match. If the specified attribute is not a
-                                direct child of the entry element, the full path MUST be specified using the '.'
-                                character as separator. For example, to filter by userName the parameter value is
-                                userName and to filter by first name, the parameter value is name.givenName.
-                            </t>
-                            <t hangText="filterOp:">
-                                Specifies the comparison method used to evaluate the attribute value with the value of
-                                the filter criterion.
+            <list style="hanging">
+              <t hangText="filterBy:">
+                Specifies the attribute name to filter by. If the specified
+                attribute is a Plural attribute, the Resource SHALL match if any
+                of the instances of the given attribute match the specified
+                criterion (e.g. if a User has multiple emails values, only one
+                has to match for the entire User to match). If a Simple
+                attribute is specified, its value must match the specified
+                filterValue according to the specified filterOp. If a Complex
+                attribute is specified, its Primary Sub-attribute must match. If
+                the specified attribute is not a direct child of the entry
+                element, the full path MUST be specified using the '.' character
+                as separator. For example, to filter by userName the parameter
+                value is userName and to filter by first name, the parameter
+                value is name.givenName.
+              </t>
+              <t hangText="filterOp:">
+                Specifies the comparison method used to evaluate the attribute
+                value with the value of the filter criterion.
 
-                                Providers SHOULD support the following values:
+                Providers SHOULD support the following values:
 
-                                <list style="hanging">
-                                    <t hangText="equals:">the two values must be identical strings. TODO: case
-                                        sensitivity?
-                                    </t>
-                                    <t hangText="contains:">the entire filterValue must be a substring of the attribute
-                                        value.
-                                    </t>
-                                    <t hangText="startswith:">the entire filterValue must be a substring of the
-                                        attribute value, starting at the beginning of the attribute value. This
-                                        criterion is satisfied if the two strings are equal.
-                                    </t>
-                                    <t hangText="present:">if the attribute specified by filterBy has a non-empty value,
-                                        or if it contains a non-empty node for complex attributes there is a match.
-                                    </t>
-                                </list>
-                                Providers MAY support additional filter operations if they choose. Providers MUST
-                                decline to filter results if the specified filter operation is not recognized
+                <list style="hanging">
+                  <t hangText="equals:">the two values must be identical</t>
+                  <t hangText="contains:">the entire filterValue must be a
+                    substring of the attribute value.
+                  </t>
+                  <t hangText="startsWith:">the entire filterValue must be a
+                    substring of the attribute value, starting at the beginning
+                    of the attribute value. This criterion is satisfied if the
+                    two strings are identical.
+                  </t>
+                  <t hangText="present:">if the attribute specified by filterBy
+                    has a non-empty value, or if it contains a non-empty node
+                    for complex attributes there is a match.
+                  </t>
+                </list>
+                Providers MAY support additional filter operations if they
+                choose. Providers MUST decline to filter results if the
+                specified filter operation is not recognized.
+              </t>
 
-                            </t>
+              <t hangText="filterValue:">
+                Specifies the value to filter by, using the comparison method
+                defined by filterOp. String types are case insensitive therefore
+                equals, startsWith, and contains operations MUST ignore case
+                sensitivity.
 
-                            <t hangText="filterValue:">
-                                Specifies the value to filter by, using the comparison method defined by filterOp. In
-                                addition, requests can filter content based on their update timestamp: updatedSince:
-                            </t>
-                        </list>
+                In addition, requests can filter content based on their update
+                timestamp: updatedSince:
+              </t>
+            </list>
 
-                        <t>
-                            Here are a few illustrative examples of filtering matches with filterBy, filterOp, and
-                            filterValue. In each case, assume the following two Users will be returned if no filtering
-                            parameters were provided:
-                        </t>
-                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                <![CDATA[
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "externalId": "701984",
-  "userName": "bjensen@example.com",
-  "name": {
-    "formatted": "Ms. Barbara J Jensen III",
-  },
-  "displayName": "Babs Jensen",
-},
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "4d31ce30-dcd6-4dd7-abfe-2352a76f8852",
-  "externalId": "563471",
-  "userName": "jsmith@example.org",
-  "name": {
-    "formatted": "Mr. John Smith",
-  },
-  "displayName": "John Smith"
-  }
-}
+            <t>
+              Here are a few illustrative examples of filtering matches with
+              filterBy, filterOp, and filterValue. In each case, assume the
+              following two Users will be returned if no filtering parameters
+              were provided:
+            </t>
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+              <artwork height="" name="" width="" type="" alt="" align="left"
+                       xml:space="preserve">
+                <![CDATA[
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
+    <totalResults>2</totalResults>
+    <Resources>
+        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <id>uid=bjensen,ou=people,dc=example,dc=com</id>
+            <userName>bjensen</userName>
+            <displayName>Ms. Babs J Jensen III</displayName>
+        </Resource>
+        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <id>uid=jsmith,ou=people,dc=example,dc=com</id>
+            <userName>jsmith</userName>
+            <displayName>Ms. Jane Smith</displayName>
+            <emails>
+                <email>
+                    <value>jsmith@example.com</value>
+                    <primary>true</primary>
+                    <type>work</type>
+                </email>
+            </emails>
+        </Resource>
+    </Resources>
+</scim:Response>
 
                         ]]></artwork>
-                        </figure>
+            </figure>
 
-                        <t>
-                            Given the parameters:
-                        </t>
+            <t>
+              Given the parameters:
+            </t>
 
-                        <list style="hanging">
-                            <t hangText="filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Babs">
-                                the first User (with id=3f62ce30-dcd6-4dd7-abfe-2352a76f9978) will match and be returned
-                            </t>
-                            <t hangText="filterBy=displayName&amp;filterOp=present">
-                                both Users will be returned
-                            </t>
-                            <t hangText="filterBy=email&amp;filterOp=contains&amp;filterValue=example.org">
-                                the second User (with id=4d31ce30-dcd6-4dd7-abfe-2352a76f8852) would match, as would it
-                                be the only User to match given the parameters filterBy=email&amp; filterOp=contains
-                            </t>
-                        </list>
-                        If a request specifies a filterValue but no filterBy or filterOp, it is up to the Provider how
-                        to interpret this filter request. Providers MAY choose to default to filtering by a given
-                        attribute (e.g., displayName); they MAY choose to implement a custom, Provider-specific query
-                        syntax for filterValue in this case; or they MAY choose to reject requests of this type. In
-                        general, if Consumers want to request specific behavior from Providers, they should do so by
-                        being explicit in their use of query parameters.
-                    </section>
+            <list style="hanging">
+              <t
+                hangText="filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Ms. Babs">
+                the first User (with id=uid=bjensen,
+                ou=people,dc=example,dc=com) will match and be returned
+              </t>
+              <t hangText="filterBy=displayName&amp;filterOp=present">
+                both Users will be returned
+              </t>
+              <t
+                hangText="filterBy=email&amp;filterOp=contains&amp;filterValue=example.com">
+                the second User (with id=uid=jsmith,
+                ou=people,dc=example,dc=com) would match, as it is the only User
+                to match given the parameters filterBy=email&amp;
+                filterOp=contains
+              </t>
+            </list>
+            If a request specifies a filterValue but no filterBy or filterOp, it
+            is up to the Provider how to interpret this filter request.
+            Providers MAY choose to default to filtering by a given attribute
+            (e.g., displayName); they MAY choose to implement a custom,
+            Provider-specific query syntax for filterValue in this case; or they
+            MAY choose to reject requests of this type. In general, if Consumers
+            want to request specific behavior from Providers, they should do so
+            by being explicit in their use of query parameters.
+          </section>
 
-                    <section title="Sorting">
-                        <t>Sorting allows requests to specify the order in which Users are returned.</t>
+          <section title="Sorting">
+            <t>Sorting allows requests to specify the order in which Users are
+              returned.
+            </t>
 
-                        <list style="hanging">
-                            <t hangText="sortBy:">
-                                Specifies the attribute name whose value SHALL be used to order the returned Users. The
-                                sort order is determine by the sortOrder parameter. If sortBy is a Singular Attribute,
-                                users are sorted according to that attribute's value; if it's a Plural Attribute, Users
-                                are sorted by the Value (or Major Value, if it's a Complex Attribute) of the attribute
-                                marked with "primary": "true", if any, or else the first value in the list, if any, or
-                                else they are sorted last if the given User has no data for the given attribute.
-                            </t>
+            <list style="hanging">
+              <t hangText="sortBy:">
+                Specifies the attribute name whose value SHALL be used to order
+                the returned Users. The sort order is determine by the sortOrder
+                parameter. If sortBy is a Singular Attribute, users are sorted
+                according to that attribute's value; if it's a Plural Attribute,
+                Users are sorted by the Value (or Major Value, if it's a Complex
+                Attribute) of the attribute marked with "primary": "true", if
+                any, or else the first value in the list, if any, or else they
+                are sorted last if the given User has no data for the given
+                attribute.
+              </t>
 
-                            <t hangText="sortOrder:">
-                                The order in which the sortBy parameter is applied. Allowed values are ascending and
-                                descending. If a value for sortBy is provided and no sortOrder is specifies, the
-                                sortOrder SHALL default to ascending. Sort order is expected to be case-insensitive
-                                Unicode alphabetic sort order, with no specific locale implied.
-                            </t>
-                        </list>
-                    </section>
+              <t hangText="sortOrder:">
+                The order in which the sortBy parameter is applied. Allowed
+                values are ascending and descending. If a value for sortBy is
+                provided and no sortOrder is specifies, the sortOrder SHALL
+                default to ascending. Sort order is expected to be
+                case-insensitive Unicode alphabetic sort order, with no specific
+                locale implied.
+              </t>
+            </list>
+          </section>
 
-                    <section title="Pagination">
-                        <t>The pagination parameters can be used together to "page through" a large number of results in
-                            manageable chunks
-                        </t>
+          <section title="Pagination">
+            <t>The pagination parameters can be used together to "page through"
+              a large number of results in manageable chunks
+            </t>
 
-                        <list style="hanging">
-                            <t hangText="startIndex:">
-                                Specifies the offset of the first result to be returned with respect to the list of
-                                Users that would be returned if no startIndex were provided. For instance, if in a given
-                                request 10 Users would normally be provided, if startIndex is 7 and no count is
-                                specified, then only the last 3 Users in that list would be returned (Users are
-                                zero-indexed). If startIndex is greater than or equal to the total number of results
-                                that would be returned, no Users are returned. Value MUST be a non-negative integer and
-                                defaults to 0 if no value is specified.
-                            </t>
+            <list style="hanging">
+              <t hangText="startIndex:">
+                Specifies the offset of the first result to be returned with
+                respect to the list of Users that would be returned if no
+                startIndex were provided. For instance, if in a given request 10
+                Users would normally be provided, if startIndex is 7 and no
+                count is specified, then only the last 3 Users in that list
+                would be returned (Users are zero-indexed). If startIndex is
+                greater than or equal to the total number of results that would
+                be returned, no Users are returned. Value MUST be a non-negative
+                integer and defaults to 0 if no value is specified.
+              </t>
 
-                            <t hangText="count:">
-                                If non-zero, specifies the maximum number of Users the Consumer would like the Provider
-                                to return at a time. Value MUST be a non-negative integer and defaults to 0 if no value
-                                is specified. A count of 0 means that is up to the Provider to determine how many Users
-                                to return by default (some Providers may return all Users by default; others may return
-                                a fixed default number like 10). Providers SHOULD honor a very large count value, and
-                                SHOULD support returning all Users at once when presented with a count request that is
-                                larger than the number of Users the user has, but Providers MAY choose to never return
-                                more than a Provider-determined maximum number of Users per request, if returning all
-                                Users is too burdensome. In all cases, at most count Users SHALL be returned, starting
-                                at startIndex and counting up from there. In each of these cases, Providers MUST
-                                indicate the total number of Users they chose to return in the response using the
-                                itemsPerPage response element.
-                            </t>
-                        </list>
-                        <t>
-                            For instance, on an initial query, specifying startIndex=0&amp;count=10 will return only the
-                            first 10 results. The total number of possible results is indicated by the totalResults
-                            attribute of results, so the client knows how many "pages" of results exist. A subsequent
-                            query of startIndex=10&amp;count=10 will return the next 10 results, and so on.
-                        </t>
-                    </section>
+              <t hangText="count:">
+                If non-zero, specifies the maximum number of Users the Consumer
+                would like the Provider to return at a time. Value MUST be a
+                non-negative integer and defaults to 0 if no value is specified.
+                A count of 0 means that is up to the Provider to determine how
+                many Users to return by default (some Providers may return all
+                Users by default; others may return a fixed default number like
+                10). Providers SHOULD honor a very large count value, and SHOULD
+                support returning all Users at once when presented with a count
+                request that is larger than the number of Users the user has,
+                but Providers MAY choose to never return more than a
+                Provider-determined maximum number of Users per request, if
+                returning all Users is too burdensome. In all cases, at most
+                count Users SHALL be returned, starting at startIndex and
+                counting up from there. In each of these cases, Providers MUST
+                indicate the total number of Users they chose to return in the
+                response using the itemsPerPage response element.
+              </t>
+            </list>
+            <t>
+              For instance, on an initial query, specifying startIndex=0&amp;count=10
+              will return only the first 10 results. The total number of
+              possible results is indicated by the totalResults attribute of
+              results, so the client knows how many "pages" of results exist. A
+              subsequent query of startIndex=10&amp;count=10 will return the
+              next 10 results, and so on.
+            </t>
+          </section>
 
-                </section>
+        </section>
 
-                <section title="Additional retrieval query parameters" toc="default">
-                    <t>
-                        Clients MAY request a partial User representation by specifying the query parameter
-                        'attributes'. If non-empty, each User returned SHALL contain only the attributes explicitly
-                        requested. The server MAY return a subset of the requested attributes if they are not supported.
-                        This attribute is used for efficiency when the client only wishes to access a subset of the
-                        attributes normally returned in results. The value is a comma separated list of top level
-                        attribute names (e.g. id,name,emails) and defaults to an empty list which means it's up to the
-                        Server which attributes to return. If extended schema attributes are specified the attribute
-                        names MUST be fully qualified.
-                    </t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=displayName
+        <section title="Additional retrieval query parameters" toc="default">
+          <t>
+            Consumers MAY request a partial Resource representation by
+            specifying the URL query parameter 'attributes'. When specified,
+            each Resource returned SHALL contain the minimal set of Resource
+            attributes and, at the Service Providers discretion, the attributes
+            explicitly requested.
+
+            The query parameter attributes value is a comma separated list of
+            Resource attribute names (e.g. userName, name, emails). Extended
+            schema attribute names must be prefixed with the attribute name's
+            URN separated by a colon; e.g., 'urn:hr:edu:age'.
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
-
-HTTP/1.1 200 OK
-Content-Type: application/json
 
                     ]]></artwork>
-                    </figure>
-                    <t>Giving the response</t>
+          </figure>
+          <t>Giving the response</t>
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/xml
+Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+ETag: "a330bc54f0671c9"
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "displayName": "Babs Jensen"
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <displayName>Ms. Babs J Jensen III</displayName>
+</scim:User>
 
                         ]]></artwork>
-                    </figure>
-                </section>
-            </section>
+          </figure>
+        </section>
+      </section>
 
 
-            <section title="Modifying Resources" toc="default">
-                <section title="Modifying with PUT" anchor="edit-resource-with-put" toc="default">
-                    <t>
-                        PUT performs a full update. Consumers must retrieve the entire Resource and PUT the desired
-                        modifications as the operation overwrites all previously stored data. Unless otherwise specified
-                        a successful PUT operation returns a 200 OK response code and the entire Resource within the
-                        response body.
+      <section title="Modifying Resources" toc="default">
+        <section title="Modifying with PUT" anchor="edit-resource-with-put"
+                 toc="default">
+          <t>
+            PUT performs a full update. Consumers must retrieve the entire
+            Resource and PUT the desired modifications as the operation
+            overwrites all previously stored data. Unless otherwise specified a
+            successful PUT operation returns a 200 OK response code and the
+            entire Resource within the response body.
 
-                        For example:
-                    </t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
-PUT /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+            For example:
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PUT /User/uid=bjensen,ou=People,dc=example,dc=com
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "externalId": "701984",
-  "userName": "bjensen@example.com",
-  "name": {
-    "formatted": "Ms. Barbara J Jensen III",
-    "familyName": "Jensen",
-    "givenName": "Barbara",
-    "middleName": "Jane",
-    "honorificPrefix": "Ms.",
-    "honorificSuffix": "III"
-  },
-  "displayName": "Barbara Jensen",
-  "nickName": "Babs",
-  "profileUrl": "https://login.example.org/bjensen",
-  "emails": [
-    {
-      "value": "bjensen@example.com",
-      "type": "work",
-      "primary": true
-    },
-    {
-    "value": "babs@jensen.org",
-    "type": "home"
-    }
-  ]
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <userName>bjensen@example.com</userName>
+    <externalId>701984</externalId>
+    <name>
+        <formatted>Ms. Babs J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+        <middleName>Jane</middleName>
+    </name>
+    <emails>
+        <email>
+            <value>bjensen@example.com</value>
+            <primary>true</primary>
+            <type>work</type>
+        </email>
+        <email>
+            <value>bjensen_other_address@example.com</value>
+            <type>other</type>
+        </email>
+    </emails>
+</scim:User>
                        ]]></artwork>
-                    </figure>
-                    <t>
-                        The service responds with the entire, updated User
-                    </t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+          </figure>
+          <t>
+            The service responds with the entire, updated User
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/xml
+Authorization: Bearer h480djs93hd8
+ETag: "b431af54f0671a2"
 
-{
- "schemas": ["urn:scim:schemas:core:1.0", "http://hrextension/"],
-  "id": "3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "externalId": "701984",
-  "userName": "bjensen@example.com",
-  "name": {
-   "formatted": "Ms. Barbara J Jensen III",
-   "familyName": "Jensen",
-   "givenName": "Barbara",
-   "middleName": "Jane",
-   "honorificPrefix": "Ms.",
-   "honorificSuffix": "III"
- },
- "displayName": "Barbara Jensen",
- "nickName": "Babs",
- "profileUrl": "https://login.example.org/bjensen",
- "emails": [
-   {
-     "value": "bjensen@example.com",
-     "type": "work",
-     "primary": true
-   },
-   {
-     "value": "babs@jensen.org",
-     "type": "home"
-   }
- ],
- "http://hrextension" : [
-   {
-     "gender": "female"
-   },
-   {
-     "birthday": "1942-04-26"
-   }
- ],
- "meta": {
-   "created": "2010-03-25T15:11:18Z",
-   "lastModified": "2011-05-27T16:37:25Z"
- }
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <meta>
+        <created>2010-01-23T04:56:22Z</created>
+        <lastModified>2011-06-27T04:56:22Z</lastModified>
+        <location>
+            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+        </location>
+        <version>b431af54f0671a2</version>
+    </meta>
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <userName>bjensen@example.com</userName>
+    <externalId>701984</externalId>
+    <name>
+        <formatted>Ms. Babs J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+        <middleName>Jane</middleName>
+    </name>
+    <emails>
+        <email>
+            <value>bjensen@example.com</value>
+            <primary>true</primary>
+            <type>work</type>
+        </email>
+        <email>
+            <value>babs@example.com</value>
+            <type>other</type>
+        </email>
+    </emails>
+</scim:User>
 
                ]]></artwork>
-                    </figure>
-                </section>
+          </figure>
+        </section>
 
-                <section title="Modifying with PATCH" anchor="edit-resource-with-patch" toc="default">
-                    <t>PATCH enables consumers to send only those attributes requiring modification reducing network and
-                        processing overhead. Attributes may be deleted, replaced or added in a single request.
-                    </t>
-                    <list style="hanging">
-                        <t hangText="Deleting attribute values:">
+        <section title="Modifying with PATCH" anchor="edit-resource-with-patch"
+                 toc="default">
+          <t>PATCH enables consumers to send only those attributes requiring
+            modification reducing network and processing overhead. Attributes
+            may be deleted, replaced or added in a single request.
+          </t>
+          <list style="hanging">
+            <t hangText="Deleting attribute values:">
 
-                            Use the meta attribute to specify the attribute(s) to be deleted from the Resource. In the
-                            case of plural attributes all attribute values will be deleted.
+              Use the meta attribute to specify the attribute(s) to be deleted
+              from the Resource. In the case of plural attributes all attribute
+              values will be deleted.
 
-                            The below example will delete the User “emails” attribute values.
-                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                    <![CDATA[
+              The below example will delete the User “emails” attribute values.
+              <figure height="" suppress-title="false" width="" alt="" title=""
+                      align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                  <![CDATA[
 
 {
   "meta": {
@@ -758,20 +871,24 @@ Content-Type: application/json
   }
 }
                              ]]></artwork>
-                            </figure>
-                        </t>
+              </figure>
+            </t>
 
-                        <t hangText="Adding attributes (Singluar):">
-                            If the Resource does not already contain a value for the specified attribute the attribute
-                            value is added (or said another way “set”).
-                        </t>
+            <t hangText="Adding attributes (Singluar):">
+              If the Resource does not already contain a value for the specified
+              attribute the attribute value is added (or said another way
+              “set”).
+            </t>
 
-                        <t hangText="Adding attributes (Plural):">
-                            If the Resource does not already contain the value the value is added to the attribute
+            <t hangText="Adding attributes (Plural):">
+              If the Resource does not already contain the value the value is
+              added to the attribute
 
-                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                    <![CDATA[
+              <figure height="" suppress-title="false" width="" alt="" title=""
+                      align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                  <![CDATA[
 
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
@@ -788,15 +905,18 @@ Authorization: Bearer h480djs93hd8
   ]
 }
 ]]></artwork>
-                            </figure>
-                        </t>
+              </figure>
+            </t>
 
 
-                        <t hangText="Updating attributes (Singular):">
-                            If the attribute value exists the value is replaced by the value specified in the request.
-                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                    <![CDATA[
+            <t hangText="Updating attributes (Singular):">
+              If the attribute value exists the value is replaced by the value
+              specified in the request.
+              <figure height="" suppress-title="false" width="" alt="" title=""
+                      align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                  <![CDATA[
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
 Accept: application/json
@@ -807,14 +927,16 @@ Authorization: Bearer h480djs93hd8
 "displayName":"Mrs Barbara Jensen"
 }
                                           ]]></artwork>
-                            </figure>
+              </figure>
 
-                            Singular, complex attributes may be partially merged by specifying only those attributes
-                            intended for update.
+              Singular, complex attributes may be partially merged by specifying
+              only those attributes intended for update.
 
-                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                    <![CDATA[
+              <figure height="" suppress-title="false" width="" alt="" title=""
+                      align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                  <![CDATA[
 
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
@@ -828,18 +950,21 @@ Authorization: Bearer h480djs93hd8
   }
 }
      ]]></artwork>
-                            </figure>
-                        </t>
+              </figure>
+            </t>
 
-                        <t hangText="Updating attributes (Plural):">
+            <t hangText="Updating attributes (Plural):">
 
 
-                            To replace the contents of a plural attribute specify the attribute name in the meta
-                            attributes and specify all of the replacement attributes.
+              To replace the contents of a plural attribute specify the
+              attribute name in the meta attributes and specify all of the
+              replacement attributes.
 
-                            <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                                <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                    <![CDATA[
+              <figure height="" suppress-title="false" width="" alt="" title=""
+                      align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                  <![CDATA[
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
 Host: example.com
 Accept: application/json
@@ -862,469 +987,558 @@ Authorization: Bearer h480djs93hd8
   }
 }
                          ]]></artwork>
-                            </figure>
-                        </t>
+              </figure>
+            </t>
 
-                    </list>
+          </list>
 
-                    <section title="Additional query parameters" toc="default">
-                        <t>
-                            Consumers MAY request a partial User representation by specifying the query parameter
-                            'attributes'. If non-empty, the Service Provider MUST only return the Resource id, meta
-                            attribute, and those attributes explicitly requested. The server MAY return a subset of the
-                            requested attributes.
+          <section title="Additional query parameters" toc="default">
+            <t>
+              Consumers MAY request a partial User representation by specifying
+              the query parameter 'attributes'. If non-empty, the Service
+              Provider MUST only return the Resource id, meta attribute, and
+              those attributes explicitly requested. The server MAY return a
+              subset of the requested attributes.
 
-                            This attribute is used for efficiency when the client only wishes to
-                            access a subset of the attributes normally returned in results. The 'attributes' value is a
-                            comma separated list of top level attribute names (e.g. id,name,emails) and defaults to an
-                            empty list which means it's up to the Server which attributes to return.
+              This attribute is used for efficiency when the client only wishes
+              to access a subset of the attributes normally returned in results.
+              The 'attributes' value is a comma separated list of top level
+              attribute names (e.g. id,name,emails) and defaults to an empty
+              list which means it's up to the Server which attributes to return.
 
-                            For example:
-                        </t>
+              For example:
+            </t>
 
-                        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                            <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                                <![CDATA[
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+              <artwork height="" name="" width="" type="" alt="" align="left"
+                       xml:space="preserve">
+                <![CDATA[
 PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
                                     ]]></artwork>
-                        </figure>
+            </figure>
 
-                    </section>
-                </section>
-            </section>
-            <section title="Deleting Resources" anchor="delete-resource" toc="default">
-                <t>Consumers request Resource removal via DELETE. Service Providers MAY choose not to permanently delete
-                    the Resource, but MUST return a 404 error code for all operations associated with the previously
-                    deleted Id. Service Providers MUST also omit the Resource from query results.
-                </t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+          </section>
+        </section>
+      </section>
+      <section title="Deleting Resources" anchor="delete-resource"
+               toc="default">
+        <t>Consumers request Resource removal via DELETE. Service Providers MAY
+          choose not to permanently delete the Resource, but MUST return a 404
+          error code for all operations associated with the previously deleted
+          Id. Service Providers MUST also omit the Resource from query results.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 
-DELETE /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+DELETE /User/uid=bjensen,ou=People,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
-                                      ]]></artwork>
-                </figure>
+ETag: "c310cd84f0281b7"
 
-                Server Response:
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+                                      ]]></artwork>
+        </figure>
+
+        Server Response:
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 HTTP/1.1 200 OK
             ]]></artwork>
-                </figure>
+        </figure>
 
 
-                <t>Example: Consumer attempt to retrieve the previously deleted User</t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+        <t>Example: Consumer attempt to retrieve the previously deleted User</t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+GET /User/uid=bjensen,ou=People,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
                                       ]]></artwork>
-                </figure>
+        </figure>
 
-                Server Response:
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+        Server Response:
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 HTTP/1.1 404 NOT FOUND
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
+    <errors>
+        <error>
+            <description>User 'uid=bjensen,ou=People,dc=example,dc=com' not found</description>
+            <code>404</code>
+            <uri>http://example.com/errors/404</uri>
+        </error>
+    </errors>
+</scim:Response>
+
             ]]></artwork>
-                </figure>
+        </figure>
 
-            </section>
-            <section title="Change password" anchor="change-password" toc="default">
-                <t>Consumers request User password change via PATCH. The change password operation is OPTIONAL, hence
-                    Service Providers MAY choose not to honor the request.
+      </section>
+      <section title="Change password" anchor="change-password" toc="default">
+        <t>Consumers request User password change via PATCH. The change password
+          operation is OPTIONAL, hence Service Providers MAY choose not to honor
+          the request.
 
-                    Since a password is a facet of the User the User endpoint is overloaded; i.e., /User/{id}/password.
-                    The consumer MUST specify the attribute 'password' in the request body and MUST not specify any
-                    other attributes. If successful the Service Provider MUST return a 200 OK response code and no
-                    content within the response body.
-                </t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+          Since a password is a facet of the User the User endpoint is
+          overloaded; i.e., /User/{id}/password. The consumer MUST specify the
+          attribute 'password' in the request body and MUST not specify any
+          other attributes. If successful the Service Provider MUST return a 200
+          OK response code and no content within the response body.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978/password
+PATCH /User/uid=bjensen,ou=People,dc=example,dc=com/password
 Host: example.com
 Authorization: Bearer h480djs93hd8
 
-{
-  "password": "t1meMa$heen"
-}
-                                      ]]></artwork>
-                </figure>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+  <password>t1meMa$heen</password>
+</scim:User>
 
-                Server Response:
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
+]]></artwork>
+        </figure>
+
+        Server Response:
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
 HTTP/1.1 200 OK
             ]]></artwork>
-                </figure>
-            </section>
+        </figure>
+      </section>
 
-            <section title="Retrieving Service Provider Schema" anchor="schemas" toc="default">
-                <t>Service Providers MUST support the core schema and MAY support additional schemas.</t>
-                <section title="Retrieving a specific Schema" anchor="get-schema" toc="default">
-                    <t>To retrieve schema send a GET request to /Schema/{resource}/{schema urn}.
+      <section title="Retrieving Service Provider Schema" anchor="schemas"
+               toc="default">
+        <t>Service Providers MUST support the core schema and MAY support
+          additional schemas.
+        </t>
+        <section title="Retrieving a specific Schema" anchor="get-schema"
+                 toc="default">
+          <t>To retrieve schema send a GET request to /Schema/{resource}/{schema
+            urn}.
 
-                        Consumers request the core User schema by omitting the schema URN; e.g.,/Schema/User/ or
-                        specifying the core schema URN; e.g., /Schema/User/urn:scim:schemas:core:1.0. Similarly,
-                        Consumers request the core Group schema via e.g.,/Schema/Group/ or specifying the core schema
-                        URN; e.g., /Schema/Group/urn:scim:schemas:core:1.0.
+            Consumers request the core User schema by omitting the schema URN;
+            e.g.,/Schema/User/ or specifying the core schema URN; e.g.,
+            /Schema/User/urn:scim:schemas:core:1.0. Similarly, Consumers request
+            the core Group schema via e.g.,/Schema/Group/ or specifying the core
+            schema URN; e.g., /Schema/Group/urn:scim:schemas:core:1.0.
 
-                        The below example retrieves the core User schema.
-                    </t>
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
+            The below example retrieves the core User schema.
+          </t>
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 
 GET /Schema/User
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
             ]]></artwork>
-                    </figure>
+          </figure>
 
-                    Server Response:
+          Server Response:
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 TBD
 
             ]]></artwork>
-                    </figure>
+          </figure>
 
-                </section>
+        </section>
 
-                <section title="Retrieving all Service Provider supported Schemas" anchor="get-schemas" toc="default">
-                    <t>Consumers may request all supported schemas for a given resource via /Schemas/{resource}
+        <section title="Retrieving all Service Provider supported Schemas"
+                 anchor="get-schemas" toc="default">
+          <t>Consumers may request all supported schemas for a given resource
+            via /Schemas/{resource}
 
-                        For example:
-                    </t>
+            For example:
+          </t>
 
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 
 GET /Schemas/User
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
                 ]]></artwork>
-                    </figure>
+          </figure>
 
-                    Server Response:
+          Server Response:
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
-HTTP/1.1 200 OK
-Content-Type: application/json
-{
-  "totalResults": 2,
-  "entry": [
-    {
-      "name": "Core",
-      "urn": "urn:scim:schemas:core:1.0",
-      "description": "SCIM Core 1.0 User Schema",
-      "meta": {
-        "location":"http://example.com/Schema/User/urn:scim:schemas:core:1.0"
-      }
-    },
-    {
-      "name": "HR",
-      "urn": "http://hrextension/",
-      "description": "SCIM HR extension",
-      "meta": {
-        "location":"http://example.com/Schema/User/http://hrextension"
-      }
-    }
-  ]
-}
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
+TODO: REFERENCE NORMATIVE XSD SCHEMA
 
                 ]]></artwork>
-                    </figure>
+          </figure>
 
 
-                </section>
-            </section>
+        </section>
+      </section>
 
 
-            <section title="Data Input/Output Formats" anchor="io-format">
-                <t>
-                    Consumers SHOULD specify the format in which the data is submitted and MAY specify the desired
-                    response data format. Consumers MAY indicate the desired format via an HTTP Accept Header;
-                    e.g.,"Accept: application/json" or via URI suffix; e.g.,
+      <section title="Data Input/Output Formats" anchor="io-format">
+        <t>
+          Consumers SHOULD specify the format in which the data is submitted and
+          MAY specify the desired response data format. Consumers MAY indicate
+          the desired format via an HTTP Accept Header; e.g.,"Accept:
+          application/json" or via URI suffix; e.g.,
 
-                    <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                        <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                            <![CDATA[
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve">
+              <![CDATA[
 GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
 Host: example.com
 
 GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.xml
 Host: example.com
             ]]></artwork>
-                    </figure>
+          </figure>
 
-                </t>
+        </t>
 
-                <t>
-                    Service Providers MUST support the Accept Headers "Accept: application/json" for
-                    <eref target="http://json.org">JSON</eref>
-                    and "Accept: application/xml" for
-                    <eref target="http://www.w3.org/XML/">XML</eref>
-                    and MAY support additional formats if desired. The format defaults to JSON if no format is
-                    specified. The data structure returned is equivalent in both formats; the only difference is in the
-                    encoding of the data.
-                </t>
-                <t>
-                    Singular attributes are encoded as string key/value pairs in JSON; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
+        <t>
+          Service Providers MUST support the Accept Headers "Accept:
+          application/json" for
+          <eref target="http://json.org">JSON</eref>
+          and "Accept: application/xml" for
+          <eref target="http://www.w3.org/XML/">XML</eref>
+          and MAY support additional formats if desired. The format defaults to
+          JSON if no format is specified. The data structure returned is
+          equivalent in both formats; the only difference is in the encoding of
+          the data.
+        </t>
+        <t>
+          Singular attributes are encoded as string key/value pairs in JSON;
+          e.g.,
+        </t>
+        <figure>
+          <artwork><![CDATA[
 "attribute": "value"
                     ]]></artwork>
-                </figure>
-                <t>and tags with text content in XML; e.g.,</t>
-                <figure>
-                    <artwork><![CDATA[
+        </figure>
+        <t>and tags with text content in XML; e.g.,</t>
+        <figure>
+          <artwork><![CDATA[
 <attribute>value</attribute>
                     ]]></artwork>
-                </figure>
-                <t>
-                    Plural attributes and Plural Bundles are encoded as arrays in JSON; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
+        </figure>
+        <t>
+          Plural attributes and Plural Bundles are encoded as arrays in JSON;
+          e.g.,
+        </t>
+        <figure>
+          <artwork><![CDATA[
 "attributes": [ "value1", "value2" ]
                     ]]></artwork>
-                </figure>
-                <t>
-                    and repeated tags in XML; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
+        </figure>
+        <t>
+          and repeated tags in XML; e.g.,
+        </t>
+        <figure>
+          <artwork><![CDATA[
 <attributes>value1</attributes>
 <attributes>value2</attributes>
                     ]]></artwork>
-                </figure>
-                <t>
-                    Nodes with multiple sub-nodes are represented as objects in JSON; e.g,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
+        </figure>
+        <t>
+          Nodes with multiple sub-nodes are represented as objects in JSON; e.g,
+        </t>
+        <figure>
+          <artwork><![CDATA[
 "attribute": { "subattribute1": "value1", "subattribute2": "value2" }
                     ]]></artwork>
-                </figure>
-                <t>
-                    and repeated tags in XML; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
+        </figure>
+        <t>
+          and repeated tags in XML; e.g.,
+        </t>
+        <figure>
+          <artwork><![CDATA[
 <attribute>
   <subattribute1>value1</subattribute1>
   <subattribute2>value2</subattribute2>
 </attribute>
                     ]]></artwork>
-                </figure>
-            </section>
+        </figure>
+      </section>
 
-            <section title="HTTP Response Codes">
-                <t>
-                    The SCIM Protocol uses the response
-                    <eref
-                            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">status codes defined in HTTP
-                    </eref>
-                    to indicate operation success or failure. Implementers SHOULD, per the HTTP specification, return
-                    human-readable explanations for HTTP 4xx and 5xx responses. Additionally, implementers SHOULD handle
-                    the identified errors as described below.
-                </t>
+      <section title="HTTP Response Codes">
+        <t>
+          The SCIM Protocol uses the response
+          <eref
+            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">
+            status codes defined in HTTP
+          </eref>
+          to indicate operation success or failure. In addition to returning a
+          HTTP response code implementers MUST return the errors in the body of
+          the response in the client requested format containing the error
+          response and, per the HTTP specification, human-readable explanations.
+          Implementers SHOULD handle the identified errors as described below.
+        </t>
 
-                <texttable anchor='http-error-handling-table' title="Defined error cases">
-                    <ttcol align='left'>Code</ttcol>
-                    <ttcol align='left'>Applicability</ttcol>
-                    <ttcol align='left'>Suggested Explanation</ttcol>
-                    <c>400 BAD REQUEST</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>Request is unparseable, syntactically incorrect, or violates schema</c>
-                    <c>401 UNAUTHORIZED</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>Authorization failure</c>
-                    <c>403 FORBIDDEN</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>Server does not support requested operation</c>
-                    <c>404 NOT FOUND</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>Specified resource; e.g., User, does not exist</c>
-                    <c>409 CONFLICT</c>
-                    <c>POST,PUT,PATCH,DELETE</c>
-                    <c>The specified version number does not match the resource's latest version number or a Service
-                        Provider refused to create a new, duplicate resource
-                    </c>
-                    <c>412 PRECONDITION FAILED</c>
-                    <c>PUT,PATCH</c>
-                    <c>Failed to update as Resource {id} changed on the server since you last retrieved it</c>
-                    <c>500 INTERNAL SERVER ERROR</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>An internal error. Implementers SHOULD provide descriptive debugging advice</c>
-                    <c>501 NOT IMPLEMENTED</c>
-                    <c>GET,POST,PUT,PATCH,DELETE</c>
-                    <c>Service Provider does not support the request operation; e.g., PATCH</c>
-                </texttable>
+        <texttable anchor='http-error-handling-table'
+                   title="Defined error cases">
+          <ttcol align='left'>Code</ttcol>
+          <ttcol align='left'>Applicability</ttcol>
+          <ttcol align='left'>Suggested Explanation</ttcol>
+          <c>400 BAD REQUEST</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>Request is unparseable, syntactically incorrect, or violates schema
+          </c>
+          <c>401 UNAUTHORIZED</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>Authorization failure</c>
+          <c>403 FORBIDDEN</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>Server does not support requested operation</c>
+          <c>404 NOT FOUND</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>Specified resource; e.g., User, does not exist</c>
+          <c>409 CONFLICT</c>
+          <c>POST,PUT,PATCH,DELETE</c>
+          <c>The specified version number does not match the resource's latest
+            version number or a Service Provider refused to create a new,
+            duplicate resource
+          </c>
+          <c>412 PRECONDITION FAILED</c>
+          <c>PUT,PATCH</c>
+          <c>Failed to update as Resource {id} changed on the server since you
+            last retrieved it
+          </c>
+          <c>500 INTERNAL SERVER ERROR</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>An internal error. Implementers SHOULD provide descriptive
+            debugging advice
+          </c>
+          <c>501 NOT IMPLEMENTED</c>
+          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>Service Provider does not support the request operation; e.g.,
+            PATCH
+          </c>
+        </texttable>
 
-            </section>
+        <t>Error example in response to a non-existent GET request.</t>
 
-            <section title="Versioning Resources" anchor="etags">
-                <t>
-                    The API supports resource versioning via standard,<eref
-                        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19">HTTP ETags</eref>.
-                    Service providers MAY support both weak and strong ETags as the preferred mechanism for performing
-                    conditional retrievals and ensuring consumers do not inadvertently overwrite each others changes,
-                    respectively. When supported SCIM ETags SHOULD be specified as an HTTP header and SHOULD be
-                    specified as an attribute within a Resource's 'meta' structure.
-                </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
 
-                <t>The following example</t>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
+    <errors>
+        <error>
+            <description>User 'babs' not found</description>
+            <code>404</code>
+            <uri>http://example.com/errors/404</uri>
+        </error>
+    </errors>
+</scim:Response>
 
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+              ]]></artwork>
+        </figure>
+      </section>
+
+      <section title="Versioning Resources" anchor="etags">
+        <t>
+          The API supports resource versioning via standard,<eref
+          target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19">
+          HTTP ETags</eref>. Service providers MAY support both weak and strong
+          ETags as the preferred mechanism for performing conditional retrievals
+          and ensuring consumers do not inadvertently overwrite each others
+          changes, respectively. When supported SCIM ETags MUST be specified as
+          an HTTP header and SHOULD be specified as an attribute within a
+          Resource's 'meta' structure.
+        </t>
+
+        <t>The following example</t>
+
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
 POST /User  HTTP/1.1
 Host: example.com
-Content-Type:  application/json
+Content-Type:  application/xml
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "userName": "bjensen@example.com",
-  "name": {
-    "familyName": "Jensen",
-    "givenName": "Barbara"
-  }
-}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <userName>bjensen</userName>
+    <name>
+        <formatted>Ms. Barbara J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+    </name>
+</scim:User>
                         ]]></artwork>
-                </figure>
+        </figure>
 
-                <t>The server responds with an ETag in the response header and meta structure.
-                </t>
+        <t>The server responds with an ETag in the response header and meta
+          structure.
+        </t>
 
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
-Content-Type: application/json
-Location: http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+Content-Type: application/xml
+Location: http://example.com/User/uid=user.0,ou=People,dc=example,dc=com
 ETag: "e180ee84f0671b1"
 
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "id":"3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-  "userName": "bjensen@example.com",
-  "name": {
-    "familyName": "Jensen",
-    "givenName": "Barbara"
-  },
-    "meta": {
-     "created": "2010-03-25T15:11:18Z",
-     "location":"http://example.com/User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978",
-     "ETag": "\"e180ee84f0671b1\""
-  }
-}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <id>uid=bjensen,ou=people,dc=example,dc=com</id>
+    <meta>
+        <created>2010-03-25T15:11:18Z"</created>
+        <location>http://example.com/User/uid=bjensen,ou=people,dc=example,dc=com</location>
+        <version>e180ee84f0671b1</version>
+    </meta>
+    <userName>bjensen</userName>
+    <name>
+        <formatted>Ms. Barbara J Jensen III</formatted>
+        <familyName>Jensen</familyName>
+        <givenName>Barbara</givenName>
+    </name>
+</scim:User>
                         ]]></artwork>
-                </figure>
-                <t>With the returned ETag, Consumers can choose to retrieve the Resource only if the Resource has been
-                    modified. In addition, if updating, specifying an ETag guarantees that previous updates will not be
-                    overwritten. Note: Per the HTTP specification the ETag value is quoted.
-                </t>
+        </figure>
+        <t>With the returned ETag, Consumers can choose to retrieve the Resource
+          only if the Resource has been modified. In addition, if updating,
+          specifying an ETag guarantees that previous updates will not be
+          overwritten. Note: Per the HTTP specification the ETag value is
+          quoted.
+        </t>
 
-                <t>Conditional retrieval example using
-                    <eref
-                            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26">If-None-Match
-                    </eref>
-                    header:
-                </t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve"><![CDATA[
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=displayName
+        <t>Conditional retrieval example using
+          <eref
+            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26">
+            If-None-Match
+          </eref>
+          header:
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
+GET /User/uid=bjensen,ou=people,dc=example,dc=com?attributes=displayName
 Host: example.com
-Accept: application/json
+Accept: application/xml
 Authorization: Bearer h480djs93hd8
 If-None-Match: "e180ee84f0671b1"
 
                 ]]></artwork>
-                </figure>
+        </figure>
 
-                <t>
-                    If the Resource has not changed the Service Provider simply returns an empty body with a 304 "Not
-                    Modified" response code.
-                </t>
+        <t>
+          If the Resource has not changed the Service Provider simply returns an
+          empty body with a 304 "Not Modified" response code.
+        </t>
 
-                <t>
-                    Similarly, consumers may supply an
-                    <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">If-Match
-                    </eref>
-                    ETag header for PUT, PATCH, and DELETE operations to ensure that the requested operation succeeds
-                    only if the supplied ETag matches the latest Service Provider Resource; e.g., If-Match:
-                    "e180ee84f0671b1"
-                </t>
+        <t>
+          Similarly, consumers may supply an
+          <eref
+            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">
+            If-Match
+          </eref>
+          ETag header for PUT, PATCH, and DELETE operations to ensure that the
+          requested operation succeeds only if the supplied ETag matches the
+          latest Service Provider Resource; e.g., If-Match: "e180ee84f0671b1"
+        </t>
 
-                <t>
-                    To perform DELETE, PATCH, or PUT operations and override ETag versioning specify
-                    <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">"If-Match: *"</eref>
-                    in lieu of an ETag header.
-                </t>
-
-
-            </section>
-            <section title="HTTP Method Overloading">
-                <t>In recognition that some clients, servers and firewalls prevent PUT, PATCH and DELETE operations a
-                    client MAY override the POST operation by specifying the custom header "X-HTTP-Method-Override" with
-                    the intended PUT, PATCH, DELETE operation. For example:
-                </t>
-                <figure height="" suppress-title="false" width="" alt="" title="" align="left">
-                    <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
-                        <![CDATA[
-POST /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
+        <t>
+          To perform DELETE, PATCH, or PUT operations and override ETag
+          versioning specify
+          <eref
+            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">
+            "If-Match: *"
+          </eref>
+          in lieu of an ETag header.
+        </t>
+      </section>
+      <section title="HTTP Method Overloading">
+        <t>In recognition that some clients, servers and firewalls prevent PUT,
+          PATCH and DELETE operations a client MAY override the POST operation
+          by specifying the custom header "X-HTTP-Method-Override" with the
+          intended PUT, PATCH, DELETE operation. For example:
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve">
+            <![CDATA[
+POST /User/uid=bjensen,ou=people,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 ]]></artwork>
-                </figure>
+        </figure>
 
-            </section>
+      </section>
 
-        </section>
-        <section title="Todos">
-            <list style="numbers">
-                <t>Binary Data handling. Suggest encode as base64. Need to jive with Schema, should provide api way to
-                    skip binary attrs?
-                </t>
-                <t>Minimum attributes? Always include meta attributes?
-                </t>
-                <t>Query value case sensitive?
-                </t>
-            </list>
-        </section>
+    </section>
+    <section title="Todos">
+      <list style="numbers">
+        <t>Binary Data handling. Suggest encode as base64. Need to jive with
+          Schema, should provide api way to skip binary attrs?
+        </t>
+        <t>Query value case sensitive?
+        </t>
+      </list>
+    </section>
 
 
-        <section title="Acknowledgments">
-            <t>Portable Contacts -
-                <eref target="http://www.portablecontacts.net/draft-spec.html" type="HTML">Portable Contacts 1.0 Draft C
-                </eref>
-            </t>
-        </section>
+    <section title="Acknowledgments">
+      <t>Portable Contacts -
+        <eref target="http://www.portablecontacts.net/draft-spec.html"
+              type="HTML">Portable Contacts 1.0 Draft C
+        </eref>
+      </t>
+    </section>
 
-    </middle>
+  </middle>
 
-    <back>
-    </back>
+  <back>
+  </back>
 </rfc>
