@@ -193,9 +193,7 @@ Retrieving Resources<br />
 Retrieving a known Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-resources">4.2.2.</a>&nbsp;
 List/Query Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">4.2.3.</a>&nbsp;
-Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">4.3.</a>&nbsp;
 Modifying Resources<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-resource-with-put">4.3.1.</a>&nbsp;
 Modifying with PUT<br />
@@ -213,15 +211,15 @@ Retrieving a specific Schema<br />
 Retrieving all Service Provider supported Schemas<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.7.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.8.</a>&nbsp;
+Additional retrieval query parameters<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.9.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.10.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">4.11.</a>&nbsp;
 HTTP Method Overloading<br />
-<a href="#anchor10">5.</a>&nbsp;
-Todos<br />
-<a href="#anchor11">6.</a>&nbsp;
+<a href="#anchor9">5.</a>&nbsp;
 Acknowledgments<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
@@ -257,6 +255,12 @@ Notational Conventions</h3>
 <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
           "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
           document are to be interpreted as described in [RFC2119].
+
+          These keywords are capitalized when used to unambiguously specify
+          requirements of the protocol or application features and behavior that
+          affect the interoperability and security of implementations. When
+          these words are not capitalized, they are meant in their
+          natural-language sense
         
 </p>
 <p>
@@ -330,12 +334,25 @@ Definitions</h3>
 Authentication and Authorization</h3>
 
 <p>
-        The SCIM protocol does not define a new scheme for authentication and
+        The SCIM protocol does not define a scheme for authentication and
         authorization therefore implementers are free to choose mechanisms
-        appropriate for their use cases. Implementers SHOULD support existing
+        appropriate to their use cases. The choice of authentication mechanism
+        will impact interoperability. It is RECOMMENDED that clients be
+        implemented in such a way that new authentication schemes can be
+        deployed. Implementers SHOULD support existing
         authentication/authorization schemes. In particular,
         <a href='http://tools
-        .ietf.org/html/draft-ietf-oauth-v2-16'>OAuth2</a> is RECOMMENDED.
+        .ietf.org/html/draft-ietf-oauth-v2-16'>OAuth2</a>
+        is RECOMMENDED. Appropriate security considerations of the selected
+        authentication and authorization schemes SHOULD be taken.
+
+        Because this protocol uses HTTP response status codes as the primary
+        means of reporting the result of a request, servers are advised to
+        respond to unauthorized or unauthenticated requests using the 401
+        response code in accordance with section 10.4.2 of<a href='http://www
+        .w3
+        .org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2'>RFC2616</a>.
+      
 </p>
 <p>
         All examples assume OAuth2; e.g.,
@@ -345,12 +362,24 @@ Authentication and Authorization</h3>
             Host: example.com
             Authorization: Bearer h480djs93hd8
 </pre></div>
+<p>
+        The context of the request (i.e. the user for whom data is being
+        requested) MUST be inferred by Service Providers.
+      
+</p>
 <a name="Security"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3"></a><h3>3.&nbsp;
 Security Considerations</h3>
 
-<p>Securing the protocol:TBD
+<p>
+        The SCIM Protocol is based on HTTP and thus subject to the security
+        considerations found in Section 15 of<a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
+
+        In recognition that SCIM Resources; e.g., User and Group, contain
+        sensitive information Consumers and Service Providers SHOULD require an
+        authenticated and TLS protected transport.
+      
 </p>
 <a name="api"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -830,22 +859,22 @@ Content-Type: application/xml
 <a name="rfc.section.4.2.2.2"></a><h3>4.2.2.2.&nbsp;
 Sorting</h3>
 
-<p>Sorting allows requests to specify the order in which Users are
-              returned.
+<p>Sorting allows requests to specify the order in which Resources
+              are returned.
             
 </p>
 <blockquote class="text"><dl>
 <dt>sortBy:</dt>
 <dd>
                 Specifies the attribute name whose value SHALL be used to order
-                the returned Users. The sort order is determine by the sortOrder
-                parameter. If sortBy is a Singular Attribute, users are sorted
-                according to that attribute's value; if it's a Plural Attribute,
-                Users are sorted by the Value (or Major Value, if it's a Complex
-                Attribute) of the attribute marked with "primary": "true", if
-                any, or else the first value in the list, if any, or else they
-                are sorted last if the given User has no data for the given
-                attribute.
+                the returned Resources. The sort order is determine by the
+                sortOrder parameter. If sortBy is a Singular Attribute, users
+                are sorted according to that attribute's value; if it's a Plural
+                Attribute, Resources are sorted by the Value (or Major Value, if
+                it's a Complex Attribute) of the attribute marked with
+                "primary": "true", if any, or else the first value in the list,
+                if any, or else they are sorted last if the given User has no
+                data for the given attribute.
               
 </dd>
 <dt>sortOrder:</dt>
@@ -914,48 +943,18 @@ Pagination</h3>
 </p>
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.3"></a><h3>4.2.3.&nbsp;
-Additional retrieval query parameters</h3>
-
-<p>
-            Consumers MAY request a partial Resource representation by
-            specifying the URL query parameter 'attributes'. When specified,
-            each Resource returned SHALL contain the minimal set of Resource
-            attributes and, at the Service Providers discretion, the attributes
-            explicitly requested.
-
-            The query parameter attributes value is a comma separated list of
-            Resource attribute names (e.g. userName, name, emails). Extended
-            schema attribute names must be prefixed with the attribute name's
-            URN separated by a colon; e.g., 'urn:hr:edu:age'.
-          
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
-Host: example.com
-Accept: application/xml
-Authorization: Bearer h480djs93hd8
-
-</pre></div>
-<p>Giving the response
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-HTTP/1.1 200 OK
-Content-Type: application/xml
-Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
-ETag: "a330bc54f0671c9"
-
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;scim:User xmlns:scim="urn:scim:schemas:core:1.0"&gt;
-    &lt;id&gt;uid=bjensen,ou=People,dc=example,dc=com&lt;/id&gt;
-    &lt;displayName&gt;Ms. Babs J Jensen III&lt;/displayName&gt;
-&lt;/scim:User&gt;
-
-</pre></div>
-<a name="anchor6"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
 Modifying Resources</h3>
 
+<p>Resources can be modified in whole or in part via PUT or PATCH,
+          respectively. Implementers MUST support PUT as specified in
+          <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.6'>RFC2616</a>
+          . Resources such as Groups may be very large hence implementers SHOULD
+          support
+          <a href='http://tools.ietf.org/html/rfc5789'>PATCH</a>
+          to enable partial resource modifications.
+        
+</p>
 <a name="edit-resource-with-put"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.1"></a><h3>4.3.1.&nbsp;
@@ -1052,158 +1051,11 @@ Modifying with PATCH</h3>
 <p>PATCH enables consumers to send only those attributes requiring
             modification reducing network and processing overhead. Attributes
             may be deleted, replaced or added in a single request.
+
+            TBD.
+
           
 </p>
-<blockquote class="text"><dl>
-<dt>Deleting attribute values:</dt>
-<dd>
-
-              Use the meta attribute to specify the attribute(s) to be deleted
-              from the Resource. In the case of plural attributes all attribute
-              values will be deleted.
-
-              The below example will delete the User “emails” attribute values.
-              <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-{
-  "meta": {
-    "attributes": [
-      "emails"
-    ]
-  }
-}
-</pre></div>
-            
-</dd>
-<dt>Adding attributes (Singluar):</dt>
-<dd>
-              If the Resource does not already contain a value for the specified
-              attribute the attribute value is added (or said another way
-              “set”).
-            
-</dd>
-<dt>Adding attributes (Plural):</dt>
-<dd>
-              If the Resource does not already contain the value the value is
-              added to the attribute
-
-              <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "emails": [
-    {
-      "value": "babs@exmaple.org",
-      "type": "home"
-    }
-  ]
-}
-</pre></div>
-            
-</dd>
-<dt>Updating attributes (Singular):</dt>
-<dd>
-              If the attribute value exists the value is replaced by the value
-              specified in the request.
-              <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-"schemas": ["urn:scim:schemas:core:1.0"],
-"displayName":"Mrs Barbara Jensen"
-}
-</pre></div>
-
-              Singular, complex attributes may be partially merged by specifying
-              only those attributes intended for update.
-
-              <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-"schemas": ["urn:scim:schemas:core:1.0"],
-"name": {
-  "familyName": "Smith"
-  }
-}
-</pre></div>
-            
-</dd>
-<dt>Updating attributes (Plural):</dt>
-<dd>
-
-
-              To replace the contents of a plural attribute specify the
-              attribute name in the meta attributes and specify all of the
-              replacement attributes.
-
-              <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "emails": [
-    {
-      "value": "babs@exmaple.org",
-      "type": "home"
-    },
-    {
-      "value": "babswork@exmaple.org",
-      "type": "work"
-    }
-  ],
-  "meta": {
-    "attributes": "emails"
-  }
-}
-</pre></div>
-            
-</dd>
-</dl></blockquote>
-<a name="anchor7"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.3.2.1"></a><h3>4.3.2.1.&nbsp;
-Additional query parameters</h3>
-
-<p>
-              Consumers MAY request a partial User representation by specifying
-              the query parameter 'attributes'. If non-empty, the Service
-              Provider MUST only return the Resource id, meta attribute, and
-              those attributes explicitly requested. The server MAY return a
-              subset of the requested attributes.
-
-              This attribute is used for efficiency when the client only wishes
-              to access a subset of the attributes normally returned in results.
-              The 'attributes' value is a comma separated list of top level
-              attribute names (e.g. id,name,emails) and defaults to an empty
-              list which means it's up to the Server which attributes to return.
-
-              For example:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
-</pre></div>
 <a name="delete-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
@@ -1212,7 +1064,8 @@ Deleting Resources</h3>
 <p>Consumers request Resource removal via DELETE. Service Providers MAY
           choose not to permanently delete the Resource, but MUST return a 404
           error code for all operations associated with the previously deleted
-          Id. Service Providers MUST also omit the Resource from query results.
+          Id. Service Providers MUST also omit the Resource from future query
+          results.
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1418,9 +1271,49 @@ Host: example.com
   &lt;subattribute2&gt;value2&lt;/subattribute2&gt;
 &lt;/attribute&gt;
 </pre></div>
-<a name="anchor8"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+Additional retrieval query parameters</h3>
+
+<p>
+          Consumers MAY request a partial Resource representation on any
+          operation that returns a Resource within the response by specifying
+          the URL query parameter 'attributes'. When specified, each Resource
+          returned SHALL contain the minimal set of Resource attributes and, at
+          the Service Providers discretion, the attributes explicitly requested.
+
+          The query parameter attributes value is a comma separated list of
+          Resource attribute names (e.g. userName, name, emails). Extended
+          schema attribute names must be prefixed with the attribute name's
+          fully qualified URL or URN separated by a '/' or ':' respectively; e
+          .g., 'http://hr.example.com/age'.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
+Host: example.com
+Accept: application/xml
+Authorization: Bearer h480djs93hd8
+
+</pre></div>
+<p>Giving the response
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+ETag: "a330bc54f0671c9"
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;scim:User xmlns:scim="urn:scim:schemas:core:1.0"&gt;
+    &lt;id&gt;uid=bjensen,ou=People,dc=example,dc=com&lt;/id&gt;
+    &lt;displayName&gt;Ms. Babs J Jensen III&lt;/displayName&gt;
+&lt;/scim:User&gt;
+
+</pre></div>
+<a name="anchor7"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
@@ -1455,12 +1348,12 @@ HTTP Response Codes</h3>
 </tr>
 <tr>
 <td align="left">404 NOT FOUND</td>
-<td align="left">GET,POST,PUT,PATCH,DELETE</td>
+<td align="left">GET,PUT,PATCH,DELETE</td>
 <td align="left">Specified resource; e.g., User, does not exist</td>
 </tr>
 <tr>
 <td align="left">409 CONFLICT</td>
-<td align="left">POST,PUT,PATCH,DELETE</td>
+<td align="left">PUT,PATCH,DELETE</td>
 <td align="left">The specified version number does not match the resource's latest
             version number or a Service Provider refused to create a new,
             duplicate resource
@@ -1508,7 +1401,7 @@ HTTP Response Codes</h3>
 </pre></div>
 <a name="etags"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
+<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
 Versioning Resources</h3>
 
 <p>
@@ -1602,9 +1495,9 @@ If-None-Match: "e180ee84f0671b1"
           in lieu of an ETag header.
         
 </p>
-<a name="anchor9"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
+<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT,
@@ -1617,27 +1510,9 @@ HTTP Method Overloading</h3>
 POST /User/uid=bjensen,ou=people,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 </pre></div>
-<a name="anchor10"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
-Todos</h3>
-
-<ol class="text">
-<li>Binary Data handling. Suggest encode as base64. Need to jive with
-          Schema, should provide api way to skip binary attrs?
-        
-</li>
-<li>Query API
-        
-</li>
- <li>PATCH operation (partial update)</li>
- <li>Schema/discovery</li>
- <li>Security Considerations</li>
- <li>Query API - updateSince term needed?</li>
-</ol>
-<a name="anchor11"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6"></a><h3>6.&nbsp;
 Acknowledgments</h3>
 
 <p>Portable Contacts -

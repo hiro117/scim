@@ -65,6 +65,12 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
           "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
           document are to be interpreted as described in [RFC2119].
+
+          These keywords are capitalized when used to unambiguously specify
+          requirements of the protocol or application features and behavior that
+          affect the interoperability and security of implementations. When
+          these words are not capitalized, they are meant in their
+          natural-language sense
         </t>
 
         <t>
@@ -117,13 +123,29 @@
 
     <section title="Authentication and Authorization" anchor="aa" toc="default">
       <t>
-        The SCIM protocol does not define a new scheme for authentication and
+        The SCIM protocol does not define a scheme for authentication and
         authorization therefore implementers are free to choose mechanisms
-        appropriate to their use cases. Implementers SHOULD support existing
+        appropriate to their use cases. The choice of authentication mechanism
+        will impact interoperability. It is RECOMMENDED that clients be
+        implemented in such a way that new authentication schemes can be
+        deployed. Implementers SHOULD support existing
         authentication/authorization schemes. In particular,
         <eref target="http://tools
         .ietf.org/html/draft-ietf-oauth-v2-16">
-          OAuth2</eref> is RECOMMENDED.
+          OAuth2
+        </eref>
+        is RECOMMENDED. Appropriate security considerations of the selected
+        authentication and authorization schemes SHOULD be taken.
+
+        Because this protocol uses HTTP response status codes as the primary
+        means of reporting the result of a request, servers are advised to
+        respond to unauthorized or unauthenticated requests using the 401
+        response code in accordance with section 10.4.2 of<eref
+        target="http://www
+        .w3
+        .org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">
+        RFC2616
+      </eref>.
       </t>
       <t>
         All examples assume OAuth2; e.g.,
@@ -144,10 +166,20 @@
 
     </section>
 
+    http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15
     <section title="Security Considerations" anchor="Security" toc="default">
-      <t>Securing the protocol:TBD</t>
-    </section>
+      <t>
+        The SCIM Protocol is based on HTTP and thus subject to the security
+        considerations found in Section 15 of<eref
+        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
+        RFC2616
+      </eref>.
 
+        In recognition that SCIM Resources; e.g., User and Group, contain
+        sensitive information Consumers and Service Providers SHOULD require an
+        authenticated and TLS protected transport.
+      </t>
+    </section>
 
     <section title="API" anchor="api">
       <t>
@@ -622,21 +654,21 @@ Content-Type: application/xml
           </section>
 
           <section title="Sorting">
-            <t>Sorting allows requests to specify the order in which Users are
-              returned.
+            <t>Sorting allows requests to specify the order in which Resources
+              are returned.
             </t>
 
             <list style="hanging">
               <t hangText="sortBy:">
                 Specifies the attribute name whose value SHALL be used to order
-                the returned Users. The sort order is determine by the sortOrder
-                parameter. If sortBy is a Singular Attribute, users are sorted
-                according to that attribute's value; if it's a Plural Attribute,
-                Users are sorted by the Value (or Major Value, if it's a Complex
-                Attribute) of the attribute marked with "primary": "true", if
-                any, or else the first value in the list, if any, or else they
-                are sorted last if the given User has no data for the given
-                attribute.
+                the returned Resources. The sort order is determine by the
+                sortOrder parameter. If sortBy is a Singular Attribute, users
+                are sorted according to that attribute's value; if it's a Plural
+                Attribute, Resources are sorted by the Value (or Major Value, if
+                it's a Complex Attribute) of the attribute marked with
+                "primary": "true", if any, or else the first value in the list,
+                if any, or else they are sorted last if the given User has no
+                data for the given attribute.
               </t>
 
               <t hangText="sortOrder:">
@@ -699,55 +731,21 @@ Content-Type: application/xml
 
         </section>
 
-        <section title="Additional retrieval query parameters" toc="default">
-          <t>
-            Consumers MAY request a partial Resource representation by
-            specifying the URL query parameter 'attributes'. When specified,
-            each Resource returned SHALL contain the minimal set of Resource
-            attributes and, at the Service Providers discretion, the attributes
-            explicitly requested.
 
-            The query parameter attributes value is a comma separated list of
-            Resource attribute names (e.g. userName, name, emails). Extended
-            schema attribute names must be prefixed with the attribute name's
-            URN separated by a colon; e.g., 'urn:hr:edu:age'.
-          </t>
-          <figure height="" suppress-title="false" width="" alt="" title=""
-                  align="left">
-            <artwork height="" name="" width="" type="" alt="" align="left"
-                     xml:space="preserve"><![CDATA[
-GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
-Host: example.com
-Accept: application/xml
-Authorization: Bearer h480djs93hd8
-
-                    ]]></artwork>
-          </figure>
-          <t>Giving the response</t>
-
-          <figure height="" suppress-title="false" width="" alt="" title=""
-                  align="left">
-            <artwork height="" name="" width="" type="" alt="" align="left"
-                     xml:space="preserve"><![CDATA[
-
-HTTP/1.1 200 OK
-Content-Type: application/xml
-Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
-ETag: "a330bc54f0671c9"
-
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <displayName>Ms. Babs J Jensen III</displayName>
-</scim:User>
-
-                        ]]></artwork>
-          </figure>
-        </section>
       </section>
-
-
       <section title="Modifying Resources" toc="default">
+        <t>Resources can be modified in whole or in part via PUT or PATCH,
+          respectively. Implementers MUST support PUT as specified in
+          <eref
+            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.6">
+            RFC2616
+          </eref>
+          . Resources such as Groups may be very large hence implementers SHOULD
+          support
+          <eref target="http://tools.ietf.org/html/rfc5789">PATCH
+          </eref>
+          to enable partial resource modifications.
+        </t>
         <section title="Modifying with PUT" anchor="edit-resource-with-put"
                  toc="default">
           <t>
@@ -848,177 +846,12 @@ ETag: "b431af54f0671a2"
           <t>PATCH enables consumers to send only those attributes requiring
             modification reducing network and processing overhead. Attributes
             may be deleted, replaced or added in a single request.
+
+            TBD.
+
           </t>
-          <list style="hanging">
-            <t hangText="Deleting attribute values:">
-
-              Use the meta attribute to specify the attribute(s) to be deleted
-              from the Resource. In the case of plural attributes all attribute
-              values will be deleted.
-
-              The below example will delete the User “emails” attribute values.
-              <figure height="" suppress-title="false" width="" alt="" title=""
-                      align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                  <![CDATA[
-
-{
-  "meta": {
-    "attributes": [
-      "emails"
-    ]
-  }
-}
-                             ]]></artwork>
-              </figure>
-            </t>
-
-            <t hangText="Adding attributes (Singluar):">
-              If the Resource does not already contain a value for the specified
-              attribute the attribute value is added (or said another way
-              “set”).
-            </t>
-
-            <t hangText="Adding attributes (Plural):">
-              If the Resource does not already contain the value the value is
-              added to the attribute
-
-              <figure height="" suppress-title="false" width="" alt="" title=""
-                      align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                  <![CDATA[
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "emails": [
-    {
-      "value": "babs@exmaple.org",
-      "type": "home"
-    }
-  ]
-}
-]]></artwork>
-              </figure>
-            </t>
 
 
-            <t hangText="Updating attributes (Singular):">
-              If the attribute value exists the value is replaced by the value
-              specified in the request.
-              <figure height="" suppress-title="false" width="" alt="" title=""
-                      align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                  <![CDATA[
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-"schemas": ["urn:scim:schemas:core:1.0"],
-"displayName":"Mrs Barbara Jensen"
-}
-                                          ]]></artwork>
-              </figure>
-
-              Singular, complex attributes may be partially merged by specifying
-              only those attributes intended for update.
-
-              <figure height="" suppress-title="false" width="" alt="" title=""
-                      align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                  <![CDATA[
-
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-"schemas": ["urn:scim:schemas:core:1.0"],
-"name": {
-  "familyName": "Smith"
-  }
-}
-     ]]></artwork>
-              </figure>
-            </t>
-
-            <t hangText="Updating attributes (Plural):">
-
-
-              To replace the contents of a plural attribute specify the
-              attribute name in the meta attributes and specify all of the
-              replacement attributes.
-
-              <figure height="" suppress-title="false" width="" alt="" title=""
-                      align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                  <![CDATA[
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-
-{
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "emails": [
-    {
-      "value": "babs@exmaple.org",
-      "type": "home"
-    },
-    {
-      "value": "babswork@exmaple.org",
-      "type": "work"
-    }
-  ],
-  "meta": {
-    "attributes": "emails"
-  }
-}
-                         ]]></artwork>
-              </figure>
-            </t>
-
-          </list>
-
-          <section title="Additional query parameters" toc="default">
-            <t>
-              Consumers MAY request a partial User representation by specifying
-              the query parameter 'attributes'. If non-empty, the Service
-              Provider MUST only return the Resource id, meta attribute, and
-              those attributes explicitly requested. The server MAY return a
-              subset of the requested attributes.
-
-              This attribute is used for efficiency when the client only wishes
-              to access a subset of the attributes normally returned in results.
-              The 'attributes' value is a comma separated list of top level
-              attribute names (e.g. id,name,emails) and defaults to an empty
-              list which means it's up to the Server which attributes to return.
-
-              For example:
-            </t>
-
-            <figure height="" suppress-title="false" width="" alt="" title=""
-                    align="left">
-              <artwork height="" name="" width="" type="" alt="" align="left"
-                       xml:space="preserve">
-                <![CDATA[
-PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
-                                    ]]></artwork>
-            </figure>
-
-          </section>
         </section>
       </section>
       <section title="Deleting Resources" anchor="delete-resource"
@@ -1026,7 +859,8 @@ PATCH /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978?attributes=userName,displayName
         <t>Consumers request Resource removal via DELETE. Service Providers MAY
           choose not to permanently delete the Resource, but MUST return a 404
           error code for all operations associated with the previously deleted
-          Id. Service Providers MUST also omit the Resource from query results.
+          Id. Service Providers MUST also omit the Resource from future query
+          results.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -1303,6 +1137,55 @@ Host: example.com
         </figure>
       </section>
 
+      <section title="Additional retrieval query parameters" toc="default">
+        <t>
+          Consumers MAY request a partial Resource representation on any
+          operation that returns a Resource within the response by specifying
+          the URL query parameter 'attributes'. When specified, each Resource
+          returned SHALL contain the minimal set of Resource attributes and, at
+          the Service Providers discretion, the attributes explicitly requested.
+
+          The query parameter attributes value is a comma separated list of
+          Resource attribute names (e.g. userName, name, emails). Extended
+          schema attribute names must be prefixed with the attribute name's
+          fully qualified URL or URN separated by a '/' or ':' respectively; e
+          .g., 'http://hr.example.com/age'.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
+GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
+Host: example.com
+Accept: application/xml
+Authorization: Bearer h480djs93hd8
+
+                    ]]></artwork>
+        </figure>
+        <t>Giving the response</t>
+
+        <figure height="" suppress-title="false" width="" alt="" title=""
+                align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left"
+                   xml:space="preserve"><![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+ETag: "a330bc54f0671c9"
+
+<?xml version="1.0" encoding="UTF-8"?>
+<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
+    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
+    <displayName>Ms. Babs J Jensen III</displayName>
+</scim:User>
+
+                        ]]></artwork>
+        </figure>
+
+      </section>
+
+
       <section title="HTTP Response Codes">
         <t>
           The SCIM Protocol uses the response
@@ -1333,10 +1216,10 @@ Host: example.com
           <c>GET,POST,PUT,PATCH,DELETE</c>
           <c>Server does not support requested operation</c>
           <c>404 NOT FOUND</c>
-          <c>GET,POST,PUT,PATCH,DELETE</c>
+          <c>GET,PUT,PATCH,DELETE</c>
           <c>Specified resource; e.g., User, does not exist</c>
           <c>409 CONFLICT</c>
-          <c>POST,PUT,PATCH,DELETE</c>
+          <c>PUT,PATCH,DELETE</c>
           <c>The specified version number does not match the resource's latest
             version number or a Service Provider refused to create a new,
             duplicate resource
@@ -1514,21 +1397,8 @@ POST /User/uid=bjensen,ou=people,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 ]]></artwork>
         </figure>
-
       </section>
-
     </section>
-    <section title="Todos">
-      <list style="numbers">
-        <t>Binary Data handling. Suggest encode as base64. Need to jive with
-          Schema, should provide api way to skip binary attrs?
-        </t>
-        <t>Query value case sensitive?
-        </t>
-      </list>
-    </section>
-
-
     <section title="Acknowledgments">
       <t>Portable Contacts -
         <eref target="http://www.portablecontacts.net/draft-spec.html"
