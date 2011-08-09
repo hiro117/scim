@@ -23,6 +23,12 @@
         <email>cmortimore@salesforce.com</email>
       </address>
     </author>
+    <author initials="M.A." surname="Ansari" fullname="Morteza Ansari">
+      <organization abbrev="Cisco">Cisco</organization>
+      <address>
+        <email>morteza.ansari@webex.com</email>
+      </address>
+    </author>
 
     <date month="May" year="2011"/>
     <keyword>SCIM</keyword>
@@ -58,7 +64,7 @@
       <section title="Intended Audience" toc="default">
         <t>
           This document is intended as a guide to SCIM API usage for both user
-          identity providers and consumers.
+          identity service providers and consumers.
         </t>
       </section>
       <section title="Notational Conventions" anchor="notat" toc="default">
@@ -78,7 +84,7 @@
           MUST percent encode URLs as described in
           <eref
             target="http://tools.ietf.org/html/rfc3986#section-2
-          .1">RFC3896 2.1
+          .1"> RFC3896 2.1
           </eref>
         </t>
       </section>
@@ -91,7 +97,7 @@
             protocol to manage identity managed by the Service Provider.
           </t>
           <t hangText="Base URL:">The SCIM REST API is always relative to a Base
-            URL for the API. The Base URL MUST NOT contain any query string, as
+            URL for the API. The Base URL MUST NOT contain a query string, as
             additional path information and query string variables MAY be
             appended by Consumers as part of forming the request. Example:
             https://example.com/scim/v1/
@@ -102,17 +108,14 @@
           <t hangText="Plural Attribute:">A Resource attribute that can appear
             multiple times per Resource, e.g. emails
           </t>
-          <t hangText="Simple Attribute:">A Singular attribute or Plural
-            attribute whose value is a single attribute.
+          <t hangText="Simple Attribute:">A Singular or Plural attribute whose
+            value is a single attribute.
           </t>
-          <t hangText="Complex Attribute:">A Singular attribute or Plural
-            attribute whose value is an object containing multiple sub-attribute
-            attributes.
+          <t hangText="Complex Attribute:">A Singular or Plural attribute whose
+            value is an object containing multiple sub-attribute attributes.
           </t>
-          <t hangText="Primary Sub-Value:">The sub-attribute in a Complex
-            attribute that should be used when sorting or filtering by that
-            attribute. Unless otherwise specified, the value sub-attribute is
-            always the Primary Sub-attribute.
+          <t hangText="Sub-Attribute:">An attribute contained by a Complex
+            Attribute.
           </t>
           <t hangText="Resource:">The Service Provider managed artifact; e.g.,
             User or Group
@@ -141,9 +144,7 @@
         means of reporting the result of a request, servers are advised to
         respond to unauthorized or unauthenticated requests using the 401
         response code in accordance with section 10.4.2 of<eref
-        target="http://www
-        .w3
-        .org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">
+        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">
         RFC2616
       </eref>.
       </t>
@@ -154,7 +155,7 @@
               align="left">
         <artwork height="" name="" width="" type="" alt="" align="left"
                  xml:space="preserve"><![CDATA[
-            GET /User/uid=bjensen,ou=People,dc=example,dc=com HTTP/1.1
+            GET /User/uid=bjensen,dc=example,dc=com HTTP/1.1
             Host: example.com
             Authorization: Bearer h480djs93hd8
                                    ]]></artwork>
@@ -170,7 +171,7 @@
     <section title="Security Considerations" anchor="Security" toc="default">
       <t>
         The SCIM Protocol is based on HTTP and thus subject to the security
-        considerations found in Section 15 of<eref
+        considerations found in Section 15 of <eref
         target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
         RFC2616
       </eref>.
@@ -224,7 +225,6 @@
           <xref target="query-resources" format="default">GET</xref>
         </c>
         <c>Retrieve User(s) via ad hoc queries</c>
-
         <c>Group</c>
         <c>/Group</c>
         <c><xref target="get-resource" format="default">GET</xref>,
@@ -309,28 +309,20 @@
                    xml:space="preserve"><![CDATA[
 POST /User  HTTP/1.1
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <userName>bjensen@example.com</userName>
-    <externalId>701984</externalId>
-    <name>
-        <formatted>Ms. Babs J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-        <middleName>Jane</middleName>
-    </name>
-    <emails>
-        <email>
-            <value>bjensen@example.com</value>
-            <primary>true</primary>
-            <type>work</type>
-        </email>
-    </emails>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "userName":"bjensen",
+  "externalId":"bjensen",
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara"
+  }
+}
 
                         ]]></artwork>
         </figure>
@@ -345,37 +337,24 @@ Content-Length: ...
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
-Content-Type: application/xml
-Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+Content-Type: application/json
+Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
 ETag: "e180ee84f0671b1"
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <meta>
-        <created>2010-01-23T04:56:22Z</created>
-        <location>
-            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
-        </location>
-        <version>e180ee84f0671b1</version>
-    </meta>
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <userName>bjensen@example.com</userName>
-    <externalId>701984</externalId>
-    <name>
-        <formatted>Ms. Babs J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-        <middleName>Jane</middleName>
-    </name>
-    <emails>
-        <email>
-            <value>bjensen@example.com</value>
-            <primary>true</primary>
-            <type>work</type>
-        </email>
-    </emails>
-</scim:User>
-
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "meta":{
+    "created":"2011-08-01T21:32:44.882Z",
+    "lastModified":"2011-08-01T21:32:44.882Z"
+  },
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara"
+  },
+  "userName":"bjensen"
+}
                         ]]></artwork>
         </figure>
 
@@ -406,9 +385,9 @@ ETag: "e180ee84f0671b1"
                      xml:space="preserve">
               <![CDATA[
 
-GET /User/uid=bjensen,ou=People,dc=example,dc=com
+GET /User/uid=bjensen,dc=example,dc=com
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
 
                         ]]></artwork>
@@ -424,38 +403,36 @@ Authorization: Bearer h480djs93hd8
               <![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/xml
-Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+Content-Type: application/json
+Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
 ETag: "f250dd84f0671c3"
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <meta>
-        <created>2010-01-23T04:56:22Z</created>
-        <location>
-            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
-        </location>
-        <version>f250dd84f0671c3</version>
-    </meta>
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <userName>bjensen@example.com</userName>
-    <externalId>701984</externalId>
-    <name>
-        <formatted>Ms. Babs J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-        <middleName>Jane</middleName>
-    </name>
-    <emails>
-        <email>
-            <value>bjensen@example.com</value>
-            <primary>true</primary>
-            <type>work</type>
-        </email>
-    </emails>
-</scim:User>
-
-
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "meta":{
+    "created":"2011-08-01T18:29:49.793Z",
+    "lastModified":"2011-08-01T18:29:49.793Z"
+  },
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara"
+  },
+  "userName":"bjensen",
+  "phoneNumbers":[
+    {
+      "value":"555-555-8377",
+      "type":"work"
+    }
+  ],
+  "emails":[
+    {
+      "value":"bjensen@example.com",
+      "type":"work"
+    }
+  ]
+}
                         ]]></artwork>
           </figure>
 
@@ -472,17 +449,16 @@ ETag: "f250dd84f0671c3"
             they don't recognize.
           </t>
 
-          <t>The below example returns the userName and displayName for all
-            Users
+          <t>The below example returns the userName for all Users
           </t>
           <figure height="" suppress-title="false" width="" alt="" title=""
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
 
-GET /Users?attributes=userName,displayName
+GET /Users?attributes=userName
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
                       ]]></artwork>
           </figure>
@@ -493,237 +469,297 @@ Authorization: Bearer h480djs93hd8
                      xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/xml
+Content-Type: application/json
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
-    <totalResults>3</totalResults>
-    <Resources>
-        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <id>uid=bjensen,ou=people,dc=example,dc=com</id>
-            <userName>bjensen</userName>
-            <displayName>Ms. Babs J Jensen III</displayName>
-        </Resource>
-        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <id>uid=jsmith,ou=people,dc=example,dc=com</id>
-            <userName>jsmith</userName>
-            <displayName>Ms. Jane Smith</displayName>
-        </Resource>
-        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <id>uid=msmith,ou=people,dc=example,dc=com</id>
-            <userName>msmith@example.com</userName>
-            <displayName>Mr. Michael Smith</displayName>
-        </Resource>
-    </Resources>
-</scim:Response>
-
-                      ]]></artwork>
+{
+  "totalResults":2,
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "Resources":[
+    {
+      "userName":"bjensen"
+    },
+    {
+      "userName":"jsmith"
+    }
+  ]
+}                  ]]></artwork>
           </figure>
-
-
-          <section title="Filtering">
+          <section title="Filtering is OPTIONAL">
             <t>
-              Filtering is used to limit the request results to Resources that
-              match given criteria. Content filtering is accomplished by
-              combining three request parameters:
+              Consumers may request a subset of Resources by specifying the
+              'filter' URL query parameter containing a filter expression. When
+              specified only those Resources matching the filter expression
+              SHALL be returned.
             </t>
-
-            <list style="hanging">
-              <t hangText="filterBy:">
-                Specifies the attribute name to filter by. If the specified
-                attribute is a Plural attribute, the Resource SHALL match if any
-                of the instances of the given attribute match the specified
-                criterion (e.g. if a User has multiple emails values, only one
-                has to match for the entire User to match). If a Simple
-                attribute is specified, its value must match the specified
-                filterValue according to the specified filterOp. If a Complex
-                attribute is specified, its Primary Sub-attribute must match. If
-                the specified attribute is not a direct child of the entry
-                element, the full path MUST be specified using the '.' character
-                as separator. For example, to filter by userName the parameter
-                value is userName and to filter by first name, the parameter
-                value is name.givenName.
-              </t>
-              <t hangText="filterOp:">
-                Specifies the comparison method used to evaluate the attribute
-                value with the value of the filter criterion.
-
-                Providers SHOULD support the following values:
-
-                <list style="hanging">
-                  <t hangText="equals:">the two values must be identical</t>
-                  <t hangText="contains:">the entire filterValue must be a
-                    substring of the attribute value.
-                  </t>
-                  <t hangText="startsWith:">the entire filterValue must be a
-                    substring of the attribute value, starting at the beginning
-                    of the attribute value. This criterion is satisfied if the
-                    two strings are identical.
-                  </t>
-                  <t hangText="present:">if the attribute specified by filterBy
-                    has a non-empty value, or if it contains a non-empty node
-                    for complex attributes there is a match.
-                  </t>
-                </list>
-                Providers MAY support additional filter operations if they
-                choose. Providers MUST decline to filter results if the
-                specified filter operation is not recognized.
-              </t>
-
-              <t hangText="filterValue:">
-                Specifies the value to filter by, using the comparison method
-                defined by filterOp. String types are case insensitive therefore
-                equals, startsWith, and contains operations MUST ignore case
-                sensitivity.
-
-                In addition, requests can filter content based on their update
-                timestamp: updatedSince:
-              </t>
-            </list>
-
             <t>
-              Here are a few illustrative examples of filtering matches with
-              filterBy, filterOp, and filterValue. In each case, assume the
-              following two Users will be returned if no filtering parameters
-              were provided:
+              The expression language that is used in the filter parameter
+              supports references to attributes and literals. The literal values
+              can be strings enclosed in single quotes, numbers and Boolean
+              values (true or false).
+            </t>
+            <t>
+              The attribute name and attribute operator are case insensitive.
+              For example, the following two expressions will evaluate to the
+              same logical value:
             </t>
             <figure height="" suppress-title="false" width="" alt="" title=""
                     align="left">
               <artwork height="" name="" width="" type="" alt="" align="left"
-                       xml:space="preserve">
-                <![CDATA[
-HTTP/1.1 200 OK
-Content-Type: application/xml
+                       xml:space="preserve"><![CDATA[
+filter=userName Eq 'john'
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
-    <totalResults>2</totalResults>
-    <Resources>
-        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <id>uid=bjensen,ou=people,dc=example,dc=com</id>
-            <userName>bjensen</userName>
-            <displayName>Ms. Babs J Jensen III</displayName>
-        </Resource>
-        <Resource xsi:type="scim:User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <id>uid=jsmith,ou=people,dc=example,dc=com</id>
-            <userName>jsmith</userName>
-            <displayName>Ms. Jane Smith</displayName>
-            <emails>
-                <email>
-                    <value>jsmith@example.com</value>
-                    <primary>true</primary>
-                    <type>work</type>
-                </email>
-            </emails>
-        </Resource>
-    </Resources>
-</scim:Response>
-
-                        ]]></artwork>
+filter=Username eq 'john'
+              ]]></artwork>
             </figure>
 
             <t>
-              Given the parameters:
+              The filter parameter MUST contain at least one valid Boolean
+              expression. Each expression MUST contain an attribute name
+              followed by an attribute operator and optional value. Multiple
+              expressions MAY be combined using the two logical operators.
+              Furthermore expressions can be grouped together using “()”.
+            </t>
+            <t>
+              The operators supported in the expression are listed in the
+              following table.
             </t>
 
-            <list style="hanging">
-              <t
-                hangText="filterBy=displayName&amp;filterOp=startswith&amp;filterValue=Ms. Babs">
-                the first User (with id=uid=bjensen,
-                ou=people,dc=example,dc=com) will match and be returned
-              </t>
-              <t hangText="filterBy=displayName&amp;filterOp=present">
-                both Users will be returned
-              </t>
-              <t
-                hangText="filterBy=email&amp;filterOp=contains&amp;filterValue=example.com">
-                the second User (with id=uid=jsmith,
-                ou=people,dc=example,dc=com) would match, as it is the only User
-                to match given the parameters filterBy=email&amp;
-                filterOp=contains
-              </t>
-            </list>
-            If a request specifies a filterValue but no filterBy or filterOp, it
-            is up to the Provider how to interpret this filter request.
-            Providers MAY choose to default to filtering by a given attribute
-            (e.g., displayName); they MAY choose to implement a custom,
-            Provider-specific query syntax for filterValue in this case; or they
-            MAY choose to reject requests of this type. In general, if Consumers
-            want to request specific behavior from Providers, they should do so
-            by being explicit in their use of query parameters.
+            <texttable anchor='filter-operator-table' title="Attribute
+            Operators" alight='left'>
+              <ttcol align='left'>Operator</ttcol>
+              <ttcol align='left'>Description</ttcol>
+              <ttcol align='left'>Behavior</ttcol>
+              <c>eq</c>
+              <c>equal</c>
+              <c>The attribute and operator values must be identical for a
+                match.
+              </c>
+
+              <c>co</c>
+              <c>contains</c>
+              <c>The entire operator value must be a substring of the attribute
+                value for a match.
+              </c>
+
+              <c>sw</c>
+              <c>starts with</c>
+              <c>The entire operator value must be a substring of the attribute
+                value, starting at the beginning of the attribute value. This
+                criterion is satisfied if the two strings are identical.
+              </c>
+
+              <c>pr</c>
+              <c>present (has value)</c>
+              <c>If the attribute has a non-empty value, or if it contains a
+                non-empty node for complex attributes there is a match.
+              </c>
+
+              <c>gt</c>
+              <c>greater than</c>
+              <c>If the attribute value is greater than operator value, there is
+                a match. The actual comparison is dependent on the attribute
+                type. For string attribute types, this is a lexicographical
+                comparison and for DateTime types, it is a chronological
+                comparison.
+              </c>
+
+              <c>ge</c>
+              <c>greater than or equal</c>
+              <c>If the attribute value is greater than or equal to the operator
+                value, there is a match. The actual comparison is dependent on
+                the attribute type. For string attribute types, this is a
+                lexicographical comparison and for DateTime types, it is a
+                chronological comparison.
+              </c>
+
+              <c>lt</c>
+              <c>less than</c>
+              <c>If the attribute value is less than operator value, there is a
+                match. The actual comparison is dependent on the attribute type.
+                For string attribute types, this is a lexicographical comparison
+                and for DateTime types, it is a chronological comparison.
+              </c>
+
+              <c>lte</c>
+              <c>less than or equal</c>
+              <c>If the attribute value is less than or equal to the operator
+                value, there is a match. The actual comparison is dependent on
+                the attribute type. For string attribute types, this is a
+                lexicographical comparison and for DateTime types, it is a
+                chronological comparison.
+              </c>
+
+            </texttable>
+
+            <texttable anchor='logical-operator-table' title="Logical
+               Operators" alight='left'>
+              <ttcol align='left'>Operator</ttcol>
+              <ttcol align='left'>Description</ttcol>
+              <ttcol align='left'>Behavior</ttcol>
+              <c>and</c>
+              <c>Logical And</c>
+              <c>The filter is only a match if both expressions evaluate to
+                true.
+              </c>
+              <c>or</c>
+              <c>Logical or</c>
+              <c>The filter is a match if either expression evaluates to true.
+              </c>
+            </texttable>
+            <texttable anchor='grouping-operator-table' title="Grouping
+               Operators">
+              <ttcol align='left'>Operator</ttcol>
+              <ttcol align='left'>Description</ttcol>
+              <ttcol align='left'>Behavior</ttcol>
+              <c>()</c>
+              <c>Precedence grouping.</c>
+              <c>Filter expressions are evaluated from left to right unless the
+                expression is enclosed in brackets.
+              </c>
+            </texttable>
+            <t>
+              If the specified attribute in a filter expression is a Plural
+              attribute, the Resource MUST match if any of the instances of the
+              given attribute match the specified criterion (e.g. if a User has
+              multiple emails values, only one has to match for the entire User
+              to match). For complex attributes, the fully qualified
+              Sub-Attribute MUST be specified in the expression using the '.'
+              character as separator between the attribute name and the
+              Sub-Attribute name. For example, to filter by userName the
+              parameter value is userName and to filter by first name, the
+              parameter value is name.givenName.
+            </t>
+
+            <t>Providers MAY support additional filter operations if they
+              choose. Providers MUST decline to filter results if the specified
+              filter operation is not recognized and return a HTTP 400 error
+              with an appropriate human parseable response. For example, if a
+              Consumer specified an unsupported operator named 'regex' the
+              Service Provider should specify an error response description
+              identyfying the Consumer error; e.g., 'The operator 'regex' is not
+              supported.'
+            </t>
+
+            <t>
+              String type attributes are case insensitive by default unless the
+              attribute type is defined as a caseExact string. Attribute
+              operators ‘eq’, ‘co’, and ‘sw’ MUST perform caseIgnore matching
+              for all string attributes unless the attribute is defined as
+              caseExact. By default all string attributes are caseIgnore.
+            </t>
+
+            <t>Examples:</t>
+
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+              <artwork height="" name="" width="" type="" alt="" align="left"
+                       xml:space="preserve"><![CDATA[
+
+filter=userName eq 'bjensen'
+
+filter=userName co 'jensen'
+
+filter=userName sw 'J'
+
+filter=title pr
+
+filter=meta.lastModified gt '2011-05-13T04:42:34Z'
+
+filter=meta.lastModified ge '2011-05-13T04:42:34Z'
+
+filter=meta.lastModified lt '2011-05-13T04:42:34Z'
+
+filter=meta.lastModified le '2011-05-13T04:42:34Z'
+
+filter=title pr and userType eq 'Employee'
+
+filter=title pr or userType eq 'Intern'
+
+filter=userType eq 'Employee' and (email co 'example.com' or email
+co = 'example.org')
+              ]]></artwork>
+            </figure>
           </section>
 
           <section title="Sorting">
-            <t>Sorting allows requests to specify the order in which Resources
-              are returned.
+            <t>Sort is OPTIONAL. Sorting allows Consumers to specify the order
+              in which Resources are returned by specifying a combination of
+              sortBy and sortOrder URL parameters.
             </t>
-
             <list style="hanging">
               <t hangText="sortBy:">
-                Specifies the attribute name whose value SHALL be used to order
-                the returned Resources. The sort order is determine by the
-                sortOrder parameter. If sortBy is a Singular Attribute, users
-                are sorted according to that attribute's value; if it's a Plural
-                Attribute, Resources are sorted by the Value (or Major Value, if
-                it's a Complex Attribute) of the attribute marked with
-                "primary": "true", if any, or else the first value in the list,
-                if any, or else they are sorted last if the given User has no
-                data for the given attribute.
+                The sortBy parameter specifies the attribute whose value SHALL
+                be used to order the returned responses. If the sortBy attribute
+                corresponds to a Singular Attribute, Resources are sorted
+                according to that attribute's value; if it's a Plural Attribute,
+                Resources are sorted by the value of the primary attribute, if
+                any, or else the first value in the list, if any. If the
+                attribute is complex the attribute name must be a path to a
+                Sub-Attribute; e.g., sortBy=name.givenName. For all attribute
+                types, if there is no data for the specified sortBy value they
+                are sorted via the 'sortOrder' parameter; i.e., they are ordered
+                first if ascending and last if descending.
               </t>
-
               <t hangText="sortOrder:">
                 The order in which the sortBy parameter is applied. Allowed
-                values are ascending and descending. If a value for sortBy is
-                provided and no sortOrder is specifies, the sortOrder SHALL
+                values are "ascending" and "descending". If a value for sortBy
+                is provided and no sortOrder is specified, the sortOrder SHALL
                 default to ascending. Sort order is expected to be
-                case-insensitive Unicode alphabetic sort order, with no specific
-                locale implied.
+                case-insensitive, Unicode alphabetic sort order, with no
+                specific locale implied.
               </t>
             </list>
           </section>
 
           <section title="Pagination">
-            <t>The pagination parameters can be used together to "page through"
-              a large number of results in manageable chunks
+            <t>Pagination parameters can be used together to "page through"
+              large numbers of Resources so as not to overwhelm the Consumer or
+              Service Provider. Pagination is not session based hence Consumers
+              SHOULD never assume repeatable results. For example, a request for
+              a list of 10 Resources starting with index 0 may return different
+              results when repeated as the third Resource could be deleted
+              in-between requests.
             </t>
 
             <list style="hanging">
               <t hangText="startIndex:">
                 Specifies the offset of the first result to be returned with
-                respect to the list of Users that would be returned if no
+                respect to the list of Resources that would be returned if no
                 startIndex were provided. For instance, if in a given request 10
-                Users would normally be provided, if startIndex is 7 and no
+                Users would normally be provided, the startIndex is 7 and no
                 count is specified, then only the last 3 Users in that list
-                would be returned (Users are zero-indexed). If startIndex is
-                greater than or equal to the total number of results that would
-                be returned, no Users are returned. Value MUST be a non-negative
-                integer and defaults to 0 if no value is specified.
+                would be returned (Resources are zero-indexed). If the
+                startIndex is greater than or equal to the total number of
+                results that would be returned, no Resources are returned. The
+                value MUST be a non-negative integer and defaults to 0 if no
+                value is specified.
               </t>
 
               <t hangText="count:">
-                If non-zero, specifies the maximum number of Users the Consumer
-                would like the Provider to return at a time. Value MUST be a
-                non-negative integer and defaults to 0 if no value is specified.
-                A count of 0 means that is up to the Provider to determine how
-                many Users to return by default (some Providers may return all
-                Users by default; others may return a fixed default number like
-                10). Providers SHOULD honor a very large count value, and SHOULD
-                support returning all Users at once when presented with a count
-                request that is larger than the number of Users the user has,
-                but Providers MAY choose to never return more than a
-                Provider-determined maximum number of Users per request, if
-                returning all Users is too burdensome. In all cases, at most
-                count Users SHALL be returned, starting at startIndex and
-                counting up from there. In each of these cases, Providers MUST
-                indicate the total number of Users they chose to return in the
-                response using the itemsPerPage response element.
+                If non-zero, specifies the maximum number of Resources the
+                Consumer would like the Provider to return at a time. The value
+                MUST be a non-negative integer and defaults to 0 if no value is
+                specified. A count of 0 means that is up to the Provider to
+                determine how many Resources to return by default (some
+                Providers may return all Resources by default; others may return
+                a fixed default number). Providers SHOULD honor a very large
+                count value, and SHOULD support returning all Resources at once
+                when presented with a count request that is larger than the
+                number of Resources the user has, but Providers MAY choose to
+                never return more than a Provider-determined maximum number of
+                Resources per request, if returning all Resources is too
+                burdensome. In all cases, at most count Users SHALL be returned,
+                starting at startIndex and counting up from there. In each of
+                these cases, Providers MUST indicate the total number of Users
+                they chose to return in the response using the itemsPerPage
+                response element.  TBD itemsPerPage
               </t>
             </list>
             <t>
               For instance, on an initial query, specifying startIndex=0&amp;count=10
               will return only the first 10 results. The total number of
               possible results is indicated by the totalResults attribute of
-              results, so the client knows how many "pages" of results exist. A
+              results, so the client knows how many Resources match the request. A
               subsequent query of startIndex=10&amp;count=10 will return the
               next 10 results, and so on.
             </t>
@@ -755,41 +791,41 @@ Content-Type: application/xml
             successful PUT operation returns a 200 OK response code and the
             entire Resource within the response body.
 
-            For example:
+            Example:
           </t>
           <figure height="" suppress-title="false" width="" alt="" title=""
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PUT /User/uid=bjensen,ou=People,dc=example,dc=com
+PUT /User/uid=bjensen,dc=example,dc=com
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
 ETag: "a330bc54f0671c9"
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <userName>bjensen@example.com</userName>
-    <externalId>701984</externalId>
-    <name>
-        <formatted>Ms. Babs J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-        <middleName>Jane</middleName>
-    </name>
-    <emails>
-        <email>
-            <value>bjensen@example.com</value>
-            <primary>true</primary>
-            <type>work</type>
-        </email>
-        <email>
-            <value>bjensen_other_address@example.com</value>
-            <type>other</type>
-        </email>
-    </emails>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "userName":"bjensen",
+  "externalId":"bjensen",
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara",
+    "middleName":"Jane"
+
+  },
+  "emails":[
+    {
+        "value":"bjensen@example.com"
+    },
+    {
+        "value":"babs@jensen.org"
+    }
+  ]
+}
+
+
                        ]]></artwork>
           </figure>
           <t>
@@ -801,42 +837,37 @@ ETag: "a330bc54f0671c9"
                      xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/xml
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: "b431af54f0671a2"
+Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "userName":"bjensen",
+  "externalId":"bjensen",
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara",
+    "middleName":"Jane"
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <meta>
-        <created>2010-01-23T04:56:22Z</created>
-        <lastModified>2011-06-27T04:56:22Z</lastModified>
-        <location>
-            http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
-        </location>
-        <version>b431af54f0671a2</version>
-    </meta>
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <userName>bjensen@example.com</userName>
-    <externalId>701984</externalId>
-    <name>
-        <formatted>Ms. Babs J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-        <middleName>Jane</middleName>
-    </name>
-    <emails>
-        <email>
-            <value>bjensen@example.com</value>
-            <primary>true</primary>
-            <type>work</type>
-        </email>
-        <email>
-            <value>babs@example.com</value>
-            <type>other</type>
-        </email>
-    </emails>
-</scim:User>
-
+  },
+  "emails":[
+    {
+        "value":"bjensen@example.com"
+    },
+    {
+        "value":"babs@jensen.org"
+    }
+  ],
+  "meta": {
+    "created":"2011-08-08T04:56:22Z",
+    "lastModified":"2011-08-08T08:00:12Z",
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "version":"b431af54f0671a2"
+  }
+}
                ]]></artwork>
           </figure>
         </section>
@@ -868,7 +899,7 @@ ETag: "b431af54f0671a2"
                    xml:space="preserve">
             <![CDATA[
 
-DELETE /User/uid=bjensen,ou=People,dc=example,dc=com
+DELETE /User/uid=bjensen,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
 ETag: "c310cd84f0281b7"
@@ -894,7 +925,7 @@ HTTP/1.1 200 OK
                    xml:space="preserve">
             <![CDATA[
 
-GET /User/uid=bjensen,ou=People,dc=example,dc=com
+GET /User/uid=bjensen,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
                                       ]]></artwork>
@@ -908,16 +939,14 @@ Authorization: Bearer h480djs93hd8
             <![CDATA[
 HTTP/1.1 404 NOT FOUND
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
-    <errors>
-        <error>
-            <description>User 'uid=bjensen,ou=People,dc=example,dc=com' not found</description>
-            <code>404</code>
-            <uri>http://example.com/errors/404</uri>
-        </error>
-    </errors>
-</scim:Response>
+{
+  "Errors":[
+    {
+      "description":"Resource uid=bjensen,dc=example,dc=com not found",
+      "code":"404"
+    }
+  ]
+}
 
             ]]></artwork>
         </figure>
@@ -931,8 +960,8 @@ HTTP/1.1 404 NOT FOUND
           Since a password is a facet of the User the User endpoint is
           overloaded; i.e., /User/{id}/password. The consumer MUST specify the
           attribute 'password' in the request body and MUST not specify any
-          other attributes. If successful the Service Provider MUST return a 200
-          OK response code and no content within the response body.
+          other attributes. If successful the Service Provider MUST return a 204
+          response code and no content within the response body.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -940,14 +969,14 @@ HTTP/1.1 404 NOT FOUND
                    xml:space="preserve">
             <![CDATA[
 
-PATCH /User/uid=bjensen,ou=People,dc=example,dc=com/password
+PATCH /User/uid=bjensen,dc=example,dc=com/password
 Host: example.com
 Authorization: Bearer h480djs93hd8
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-  <password>t1meMa$heen</password>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "password":"t1meMa$heen",
+}
 
 ]]></artwork>
         </figure>
@@ -958,7 +987,7 @@ Authorization: Bearer h480djs93hd8
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve">
             <![CDATA[
-HTTP/1.1 200 OK
+HTTP/1.1 204 OK
             ]]></artwork>
         </figure>
       </section>
@@ -1062,10 +1091,10 @@ TODO: REFERENCE NORMATIVE XSD SCHEMA
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve">
               <![CDATA[
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.json
+GET /User/uid=bjensen,dc=example,dc=com.json
 Host: example.com
 
-GET /User/3f62ce30-dcd6-4dd7-abfe-2352a76f9978.xml
+GET /User/uid=bjensen,dc=example,dc=com.xml
 Host: example.com
             ]]></artwork>
           </figure>
@@ -1149,15 +1178,15 @@ Host: example.com
           Resource attribute names (e.g. userName, name, emails). Extended
           schema attribute names must be prefixed with the attribute name's
           fully qualified URL or URN separated by a '/' or ':' respectively; e
-          .g., 'http://hr.example.com/age'.
+          .g., 'https://hr.example.com/age'.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
-GET /User/uid=bjensen ou=people,dc=example,dc=com?attributes=displayName
+GET /User/uid=bjensen,dc=example,dc=com?attributes=displayName
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
 
                     ]]></artwork>
@@ -1170,15 +1199,19 @@ Authorization: Bearer h480djs93hd8
                    xml:space="preserve"><![CDATA[
 
 HTTP/1.1 200 OK
-Content-Type: application/xml
-Location: http://example.com/User/uid=bjensen,ou=People,dc=example,dc=com
+Content-Type: application/json
+Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
 ETag: "a330bc54f0671c9"
 
-<?xml version="1.0" encoding="UTF-8"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <id>uid=bjensen,ou=People,dc=example,dc=com</id>
-    <displayName>Ms. Babs J Jensen III</displayName>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "meta":{
+    "created":"2011-08-01T18:29:49.793Z",
+    "lastModified":"2011-08-01T18:29:49.793Z",
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+  }
+}
 
                         ]]></artwork>
         </figure>
@@ -1248,17 +1281,16 @@ ETag: "a330bc54f0671c9"
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:Response xmlns:scim="urn:scim:schemas:core:1.0">
-    <errors>
-        <error>
-            <description>User 'babs' not found</description>
-            <code>404</code>
-            <uri>http://example.com/errors/404</uri>
-        </error>
-    </errors>
-</scim:Response>
+HTTP/1.1 404 NOT FOUND
 
+{
+  "Errors":[
+    {
+      "description":"Resource uid=babs not found",
+      "code":"404"
+    }
+  ]
+}
               ]]></artwork>
         </figure>
       </section>
@@ -1269,13 +1301,13 @@ ETag: "a330bc54f0671c9"
           target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19">
           HTTP ETags</eref>. Service providers MAY support both weak and strong
           ETags as the preferred mechanism for performing conditional retrievals
-          and ensuring consumers do not inadvertently overwrite each others
+          and ensuring Consumers do not inadvertently overwrite each others
           changes, respectively. When supported SCIM ETags MUST be specified as
           an HTTP header and SHOULD be specified as an attribute within a
           Resource's 'meta' structure.
         </t>
 
-        <t>The following example</t>
+        <t>Example</t>
 
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -1283,19 +1315,20 @@ ETag: "a330bc54f0671c9"
                    xml:space="preserve"><![CDATA[
 POST /User  HTTP/1.1
 Host: example.com
-Content-Type:  application/xml
+Content-Type:  application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <userName>bjensen</userName>
-    <name>
-        <formatted>Ms. Barbara J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-    </name>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "userName":"bjensen",
+  "externalId":"bjensen",
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara"
+  }
+}
                         ]]></artwork>
         </figure>
 
@@ -1308,25 +1341,25 @@ Content-Length: ...
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
-Content-Type: application/xml
-Location: http://example.com/User/uid=user.0,ou=People,dc=example,dc=com
+Content-Type: application/json
+Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
 ETag: "e180ee84f0671b1"
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<scim:User xmlns:scim="urn:scim:schemas:core:1.0">
-    <id>uid=bjensen,ou=people,dc=example,dc=com</id>
-    <meta>
-        <created>2010-03-25T15:11:18Z"</created>
-        <location>http://example.com/User/uid=bjensen,ou=people,dc=example,dc=com</location>
-        <version>e180ee84f0671b1</version>
-    </meta>
-    <userName>bjensen</userName>
-    <name>
-        <formatted>Ms. Barbara J Jensen III</formatted>
-        <familyName>Jensen</familyName>
-        <givenName>Barbara</givenName>
-    </name>
-</scim:User>
+{
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"uid=bjensen,dc=example,dc=com",
+  "meta":{
+    "created":"2011-08-01T21:32:44.882Z",
+    "lastModified":"2011-08-01T21:32:44.882Z",
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+  },
+  "name":{
+    "formatted":"Ms. Barbara J Jensen III",
+    "familyName":"Jensen",
+    "givenName":"Barbara"
+  },
+  "userName":"bjensen"
+}
                         ]]></artwork>
         </figure>
         <t>With the returned ETag, Consumers can choose to retrieve the Resource
@@ -1347,9 +1380,9 @@ ETag: "e180ee84f0671b1"
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
-GET /User/uid=bjensen,ou=people,dc=example,dc=com?attributes=displayName
+GET /User/uid=bjensen,dc=example,dc=com?attributes=displayName
 Host: example.com
-Accept: application/xml
+Accept: application/json
 Authorization: Bearer h480djs93hd8
 If-None-Match: "e180ee84f0671b1"
 
@@ -1360,7 +1393,6 @@ If-None-Match: "e180ee84f0671b1"
           If the Resource has not changed the Service Provider simply returns an
           empty body with a 304 "Not Modified" response code.
         </t>
-
         <t>
           Similarly, consumers may supply an
           <eref
@@ -1393,7 +1425,7 @@ If-None-Match: "e180ee84f0671b1"
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve">
             <![CDATA[
-POST /User/uid=bjensen,ou=people,dc=example,dc=com
+POST /User/uid=bjensen,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 ]]></artwork>
         </figure>
@@ -1406,9 +1438,5 @@ X-HTTP-Method-Override: DELETE
         </eref>
       </t>
     </section>
-
   </middle>
-
-  <back>
-  </back>
 </rfc>
