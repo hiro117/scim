@@ -484,7 +484,7 @@ Content-Type: application/json
   ]
 }                  ]]></artwork>
           </figure>
-          <section title="Filtering is OPTIONAL">
+          <section title="Filtering">
             <t>
               Consumers may request a subset of Resources by specifying the
               'filter' URL query parameter containing a filter expression. When
