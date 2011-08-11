@@ -235,8 +235,8 @@
             be unique across the Service Provider's entire set of resources.
             It MUST be a stable, non-reassignable identifier that does not
             change when the same resource is returned in subsequent requests.
-            The value of the id attribute is always issued be the Service
-            Provider and can never be specified by the Service Consumer.
+            The value of the id attribute is always issued by the Service
+            Provider and MUST never be specified by the Service Consumer.
             REQUIRED.</t>
 
             <t hangText="meta">A complex type containing metadata about the
@@ -272,17 +272,15 @@
 
         <t>
           <list style="hanging">
-            <t hangText="schemas">The schemas attribute is an array of string
+            <t hangText="schemas">The schemas attribute is an array of strings
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
-            that representation. Each string value must be a unique URI. This
-            specification defines URIS for Users, Groups, and some standard
+            that representation. Each string value must be a unique URN. This
+            specification defines URNs for User, Group, and some standard
             extensions. All representations of SCIM schema MUST include a
-            non-zero value array with a value of the URIs supported by that
-            representation Duplicate values MUST NOT be included. Ordering on
-            the array is ignored has no impact on behavior. (NOTE - is this
-            right? It varies from XML schema which allows the mix-ins to be
-            typed) REQUIRED where applicable.</t>
+            non-zero value array with value(s) of the URNs supported by that
+            representation.  Duplicate values MUST NOT be included.  Value
+            order is not specified and MUST not impact behavior. REQUIRED.</t>
           </list>
         </t>
       </section>
@@ -290,7 +288,7 @@
 
     <section title="SCIM User Schema">
       <t>SCIM provides a schema for representing users, identified using the
-      following URI: 'urn:scim:schemas:core:user:1.0' ( Note: we're currently
+      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
       using an un-registered urn while in draft form). The following
       attributes are defined in addition to those attributes defined in Core
       SCIM Schema:</t>
@@ -392,9 +390,11 @@
             format, numerical representations, etc. OPTIONAL. TODO - what ISO
             code list should we use here?</t>
 
-            <t hangText="utcOffset">The offset from UTC of the Users's default
-            time zone. The value MUST conform to the offset portion of
-            xs:dateTime, e.g. -08:00. OPTIONAL.</t>
+            <t hangText="timezone">The User's time zone in the public-domain
+              time zone database format; e.g.,'America/Denver'. Valid values
+              and details at http://cs .ucla.edu/~eggert/tz/tz-link.htm.
+              OPTIONAL.
+            </t>
           </list>
         </t>
       </section>
@@ -462,17 +462,36 @@
               </list></t>
 
             <t hangText="memberOf">A list of groups that the user belongs to.
-            The values are meant to enable expression of common group or role
-            based access control models, although no explicit authorization
-            model is defined. It is intended that the semantics of group
-            membership and any behavior or authorization granted as a result
-            of membership are defined by the Service Provider and considered
-            out of scope for this specification. This value has NO canonical
-            types and removes the standard canonical types. If the SCIM
-            Service Provider exposes a Group resources, the value MUST be the
-            "id" attribute of the corresponding Group resources to which the
-            user belongs. TODO - do we need to provider a human readable name
-            here?</t>
+              The values are meant to enable expression of common group or role
+              based access control models, although no explicit authorization
+              model is defined. It is intended that the semantics of group
+              membership and any behavior or authorization granted as a result
+              of membership are defined by the Service Provider are considered
+              out of scope for this specification. This value has NO canonical
+              types and removes the standard canonical types. If the SCIM
+              Service Provider exposes a Group resource, the value MUST be the
+              "id" attribute of the corresponding Group resources to which the
+              user belongs. TODO - do we need to provider a human readable name
+              here?
+            </t>
+
+            <t hangText="entitlement">A list of entitlements for the User that
+              represent a thing the User has. That is, an entitlement is an
+              additional right to a thing, object or service. No vocabulary or
+              syntax is specified and Service Providers/Consumers are expected
+              to encode sufficient information in the value so as to accurately
+              and without ambiguity determine what the User has access to. This
+              value has NO canonical types though type may be useful as a means
+              to scope entitlements. OPTIONAL.
+            </t>
+
+            <t hangText="role">A list of roles for the User that collectively
+              represent who the User is; e.g., 'Student', "Faculty". No
+              vocabulary or syntax is specified though it is expected that a
+              role value is a string or label representing a collection of
+              entitlements. OPTIONAL.
+            </t>
+
           </list>
         </t>
       </section>
@@ -521,7 +540,7 @@
 
     <section title="SCIM Group Schema">
       <t>SCIM provides a schema for representing groups, identified using the
-      following URI: 'urn:scim:schemas:core:group:1.0' ( Note: we're currently
+      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
       using an un-registered urn while in draft form).</t>
 
       <t>Group resources are meant to enable expression of common group or
@@ -541,7 +560,7 @@
 
       <t>The following Plural Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="member">A list of memebers of the group. Canonical Type
+          <t hangText="member">A list of members of the group. Canonical Type
           "user" and "group". The value must be the "id" of a SCIM resource,
           either a user, or a group. The intention of the group type is to
           allow the Service Provider to support nested groups. REQUIRED.</t>
@@ -558,7 +577,7 @@
         <artwork><![CDATA[
 
 	{ 
-	    "schemas": ["urn:scim:schemas:core:user:1.0"], 
+	    "schemas": ["urn:scim:schemas:core:1.0"],
 	    "id": "005D0000001Az1u", 
 	    "userName": "bjensen@example.com"
 	}			
@@ -573,7 +592,7 @@
         <artwork><![CDATA[
 
 	{ 
-	    "schemas": ["urn:scim:schemas:core:user:1.0"], 
+	    "schemas": ["urn:scim:schemas:core:1.0"],
 	    "id": "005D0000001Az1u", 
 	    "externalId": "701984", 
 	    "userName": "bjensen@example.com",
@@ -650,7 +669,7 @@
 	    "title": "Tour Guide",
 	    "preferredLanguage": "en_US",
 	    "locale": "en_US",
-	    "utcOffset": "-08:00",
+	    "timezone": "America/Denver",
 	    "memberOf": [
 	        {
 	          "display": "Tour Guides",
@@ -682,7 +701,7 @@
         <artwork><![CDATA[
 
 		{ 
-		    "schemas": ["urn:scim:schemas:core:user:1.0", "urn:scim:schemas:extension:user:enterprise:1.0"], 
+		    "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:enterprise:1.0"],
 		    "id": "005D0000001Az1u", 
 		    "externalId": "701984", 
 		    "userName": "bjensen@example.com",
@@ -755,20 +774,14 @@
 		          "type": "thumbnail"
 		        }
 		    ],
-		    "employeeNumber": "701984",
 		    "userType": "Employee",
 		    "title": "Tour Guide",
 		    "manager": {
-				"displayName": "Mandy Pepperidge",
-				"managerId": "005D0000001AQRE"
+				"displayName": "Mandy Pepperidge"
 			},
 		    "preferredLanguage": "en_US",
 		    "locale": "en_US",
-		    "utcOffset": "-08:00",
-		    "costCenter": "4130",
-		    "organization": "Universal Studios",
-		    "division": "Theme Park",
-		    "department": "Tour Operations",
+		    "timezone": "America/Denver",
 		    "memberOf": [
 		        {
 		          "display": "Tour Guides",
@@ -784,6 +797,17 @@
 		          "value": "00300000005N98YT1"
 		        }
 		    ],
+		    "urn:scim:schemas:extension:enterprise:1.0": {
+		        "employeeNumber": "701984",
+            "costCenter": "4130",
+		        "organization": "Universal Studios",
+		        "division": "Theme Park",
+		        "department": "Tour Operations",
+		        "manager": {
+    				    "managerId": "005D0000001AQRE",
+    				    "displayName": "John Smith"
+		        }
+		    },
 		    "meta": {
 		        "created": "2010-01-23T04:56:22Z",
 		        "lastModified": "2011-05-13T04:42:34Z"
@@ -800,9 +824,9 @@
         <artwork><![CDATA[
 
 	{ 
-	    "schemas": ["urn:scim:schemas:core:group:1.0"], 
+	    "schemas": ["urn:scim:schemas:core:1.0"],
 	    "id": "00300000005N98YT1", 
-		"displayName": "Tour Guides",
+		  "displayName": "Tour Guides",
 	    "members": [
 	        {
 	          "display": "Babs Jensen",
@@ -892,7 +916,7 @@
 	    <title>Tour Guide</title>
 	    <preferredLanguage>en_US</preferredLanguage>
 	    <locale>en_US</locale>
-	    <utcOffset>-08:00</utcOffset>
+	    <timezone>America/Denver</timezone>
 	    <groups>
 	        <group primary="true" display="Tour Guides">00300000005N2Y6AA</group>
 	        <group display="Employees">00300000005N34H78</group>
@@ -913,7 +937,7 @@
 
         <artwork><![CDATA[
 
-		<SCIM xmlns="urn:scim:schemas:core:user:1.0"  xmlns:enterprise="urn:scim:schemas:extension:user:enterprise:1.0">
+		<SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0">
 		    <id>005D0000001Az1u</id>
 		    <externalId>701984</externalId>
 		    <userName>bjensen@example.com</userName>
@@ -966,7 +990,7 @@
 		    <title>Tour Guide</title>
 		    <preferredLanguage>en_US</preferredLanguage>
 		    <locale>en_US</locale>
-		    <utcOffset>-08:00</utcOffset>
+		    <timezone>America/Denver</timezone>
 		    <groups>
 		        <group primary="true" display="Tour Guides">00300000005N2Y6AA</group>
 		        <group display="Employees">00300000005N34H78</group>
@@ -992,7 +1016,7 @@
 
         <artwork><![CDATA[
 
-	<SCIM xmlns="urn:scim:schemas:core:group:1.0">
+	<SCIM xmlns="urn:scim:schemas:core:1.0">
 	    <id>00300000005N98YT1</id>
 		<displayName>Tour Guides</displayName>
 	    <members>
@@ -1004,24 +1028,6 @@
 ]]></artwork>
       </section>
     </section>
-
-    <section anchor="TODO" title="TODO">
-      <t>The following are outstanding work items</t>
-
-      <t>Macro level issues<list style="symbols">
-          <t>How do we deal with PUT/PATCH operations against Manager where
-          there is an attempt to update the Name. This should be disallowed,
-          but need the right model for this.</t>
-
-          <t>Clarify language, use-cases, and usage models around externalId.
-          </t>
-        </list></t>
-
-      <t />
-
-      <t />
-    </section>
-
     <appendix title="Acknowledgements">
       <t>The SCIM Community would like to thank the following people for the
       work they've done in the research, formulation, drafting, editing, and
