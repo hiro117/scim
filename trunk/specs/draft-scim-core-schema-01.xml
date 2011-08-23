@@ -118,7 +118,7 @@
 
     <section anchor="schema_structure" title="SCIM Schema Structure">
       <t>SCIM schema provides a minimal core schema for representing users and
-      group, encompassing common attributes found in many existing deployments
+      groups, encompassing common attributes found in many existing deployments
       and schemas.</t>
 
       <t>Each attribute is defined as either a Singular Attribute, in which
@@ -129,7 +129,7 @@
       expressing schemas such as JSON. This attribute allows introspection of
       the supported schema version for a SCIM representation as well any
       schema extensions supported by that representation. The 'schemas'
-      attribute is an array of strings, and values must by URIs designated by
+      attribute is an array of strings, and values must by URNs designated by
       the corresponding schema definition.</t>
 
       <t>SCIM information is formatted using labeled attributes with either
@@ -158,10 +158,22 @@
           meta-data.</t>
 
           <t hangText="Boolean">A special case of a Simple Attribute with two
-          legal values: true and false. Values are case-sensitive..</t>
+          legal values: true and false. Values are case-sensitive.</t>
 
           <t hangText="DateTime">The attribute value MUST be a valid
-          xd:dateTime (e.g. 2008-01-23T04:56:22Z)</t>
+          xsd:dateTime (e.g. 2008-01-23T04:56:22Z) values as specified in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+               section 3.2.7 of the XML Schema Datatypes Specification.
+              </eref>.
+          </t>
+
+          <t hangText="Binary">The attribute value MUST be encoded as a valid
+          xsd:base64Binary value as specified in <eref target="http://www.w3.org/TR/xmlschema-2/#base64Binary"> section 3.2.16 of the XML Schema
+              Datatypes Specification.</eref>.  No binary attributes
+            are specified in the core schema, however,
+            extended schemas may opt to include images,
+            digital signatures and the like.
+          </t>
         </list>
       </t>
 
@@ -392,7 +404,9 @@
 
             <t hangText="timezone">The User's time zone in the public-domain
               time zone database format; e.g.,'America/Denver'. Valid values
-              and details at http://cs .ucla.edu/~eggert/tz/tz-link.htm.
+              and details at  <eref target="http://cs.ucla.edu/~eggert/tz/tz-link.htm">
+               http://cs.ucla.edu/~eggert/tz/tz-link.htm
+              </eref>.
               OPTIONAL.
             </t>
           </list>
@@ -472,10 +486,10 @@
               Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
               user belongs. TODO - do we need to provider a human readable name
-              here?
+              here?  OPTIONAL.
             </t>
 
-            <t hangText="entitlement">A list of entitlements for the User that
+            <t hangText="entitlements">A list of entitlements for the User that
               represent a thing the User has. That is, an entitlement is an
               additional right to a thing, object or service. No vocabulary or
               syntax is specified and Service Providers/Consumers are expected
@@ -485,11 +499,12 @@
               to scope entitlements. OPTIONAL.
             </t>
 
-            <t hangText="role">A list of roles for the User that collectively
+            <t hangText="roles">A list of roles for the User that collectively
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
               role value is a string or label representing a collection of
-              entitlements. OPTIONAL.
+              entitlements.  This value has NO canonical types and removes the
+              standard canonical types.  OPTIONAL.
             </t>
 
           </list>

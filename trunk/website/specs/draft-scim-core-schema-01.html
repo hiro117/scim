@@ -281,7 +281,7 @@ Overview</h3>
 SCIM Schema Structure</h3>
 
 <p>SCIM schema provides a minimal core schema for representing users and
-      group, encompassing common attributes found in many existing deployments
+      groups, encompassing common attributes found in many existing deployments
       and schemas.
 </p>
 <p>Each attribute is defined as either a Singular Attribute, in which
@@ -292,7 +292,7 @@ SCIM Schema Structure</h3>
       expressing schemas such as JSON. This attribute allows introspection of
       the supported schema version for a SCIM representation as well any
       schema extensions supported by that representation. The 'schemas'
-      attribute is an array of strings, and values must by URIs designated by
+      attribute is an array of strings, and values must by URNs designated by
       the corresponding schema definition.
 </p>
 <p>SCIM information is formatted using labeled attributes with either
@@ -325,11 +325,22 @@ SCIM Schema Structure</h3>
 </dd>
 <dt>Boolean</dt>
 <dd>A special case of a Simple Attribute with two
-          legal values: true and false. Values are case-sensitive..
+          legal values: true and false. Values are case-sensitive.
 </dd>
 <dt>DateTime</dt>
 <dd>The attribute value MUST be a valid
-          xd:dateTime (e.g. 2008-01-23T04:56:22Z)
+          xsd:dateTime (e.g. 2008-01-23T04:56:22Z) values as specified in
+            <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7 of the XML Schema Datatypes Specification.</a>.
+          
+</dd>
+<dt>Binary</dt>
+<dd>The attribute value MUST be encoded as a valid
+          xsd:base64Binary value as specified in <a href='http://www.w3.org/TR/xmlschema-2/#base64Binary'>section 3.2.16 of the XML Schema
+              Datatypes Specification.</a>.  No binary attributes
+            are specified in the core schema, however,
+            extended schemas may opt to include images,
+            digital signatures and the like.
+          
 </dd>
 </dl></blockquote><p>
       
@@ -616,7 +627,7 @@ Singular Attributes</h3>
 <dt>timezone</dt>
 <dd>The User's time zone in the public-domain
               time zone database format; e.g.,'America/Denver'. Valid values
-              and details at http://cs.ucla.edu/~eggert/tz/tz-link.htm.
+              and details at  <a href='http://cs.ucla.edu/~eggert/tz/tz-link.htm'>http://cs.ucla.edu/~eggert/tz/tz-link.htm</a>.
               OPTIONAL.
             
 </dd>
@@ -718,7 +729,7 @@ Plural Attributes</h3>
               here?  OPTIONAL.
             
 </dd>
-<dt>entitlement</dt>
+<dt>entitlements</dt>
 <dd>A list of entitlements for the User that
               represent a thing the User has. That is, an entitlement is an
               additional right to a thing, object or service. No vocabulary or
@@ -729,12 +740,13 @@ Plural Attributes</h3>
               to scope entitlements. OPTIONAL.
             
 </dd>
-<dt>role</dt>
+<dt>roles</dt>
 <dd>A list of roles for the User that collectively
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
               role value is a string or label representing a collection of
-              entitlements. OPTIONAL.
+              entitlements.  This value has NO canonical types and removes the
+              standard canonical types.  OPTIONAL.
             
 </dd>
 </dl></blockquote><p>
@@ -1074,15 +1086,15 @@ Enterprise User Extension Representation</h3>
 		        }
 		    ],
 		    "urn:scim:schemas:extension:enterprise:1.0": {
-                        "employeeNumber":"701984",
-                        "costCenter":"4130",
-                        "organization": "Universal Studios",
-                        "division": "Theme Park",
-                        "department": "Tour Operations",
-                        "manager": {
-                            "managerId": "005D0000001AQRE",
-                            "displayName": "John Smith"
-                        }
+		        "employeeNumber": "701984",
+            "costCenter": "4130",
+		        "organization": "Universal Studios",
+		        "division": "Theme Park",
+		        "department": "Tour Operations",
+		        "manager": {
+    				    "managerId": "005D0000001AQRE",
+    				    "displayName": "John Smith"
+		        }
 		    },
 		    "meta": {
 		        "created": "2010-01-23T04:56:22Z",
