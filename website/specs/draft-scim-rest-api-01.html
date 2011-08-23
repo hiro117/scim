@@ -166,9 +166,6 @@
         documents to provide patterns for exchanging this schema using standard
         protocols. In essence, make it fast, cheap, and easy to move users in
         to, out of, and around the cloud.
-
-        This document provides a REST API for exchanging User and User related
-        resources via JSON and/or XML
       
 </p><a name="toc"></a><br /><hr />
 <h3>Table of Contents</h3>
@@ -207,10 +204,6 @@ Deleting Resources<br />
 Change password<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#schemas">4.6.</a>&nbsp;
 Retrieving Service Provider Schema<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-schema">4.6.1.</a>&nbsp;
-Retrieving a specific Schema<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-schemas">4.6.2.</a>&nbsp;
-Retrieving all Service Provider supported Schemas<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.7.</a>&nbsp;
 Data Input/Output Formats<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.8.</a>&nbsp;
@@ -245,8 +238,8 @@ Introduction and Overview</h3>
 Intended Audience</h3>
 
 <p>
-          This document is intended as a guide to SCIM API usage for both user
-          identity service providers and consumers.
+          This document is intended as a guide to SCIM API usage for both
+          identity Service Providers and Consumers.
         
 </p>
 <a name="notat"></a><br /><hr />
@@ -371,7 +364,7 @@ Security Considerations</h3>
 
 <p>
         The SCIM Protocol is based on HTTP and thus subject to the security
-        considerations found in Section 15 of <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
+        considerations found in Section 15 of<a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
 
         In recognition that SCIM Resources; e.g., User and Group, contain
         sensitive information Consumers and Service Providers SHOULD require an
@@ -467,26 +460,6 @@ API</h3>
           <a class='info' href='#change-password'>PATCH<span> (</span><span class='info'>Change password</span><span>)</span></a>
         </td>
 <td align="left">Change a User's password</td>
-</tr>
-<tr>
-<td align="left">User Schema</td>
-<td align="left">
-          /Schema
-        </td>
-<td align="left">
-          <a class='info' href='#get-schema'>GET<span> (</span><span class='info'>Retrieving a specific Schema</span><span>)</span></a>
-        </td>
-<td align="left">Retrieve a specified User schema</td>
-</tr>
-<tr>
-<td align="left">User Schemas</td>
-<td align="left">
-          /Schemas
-        </td>
-<td align="left">
-          <a class='info' href='#get-schemas'>GET<span> (</span><span class='info'>Retrieving all Service Provider supported Schemas</span><span>)</span></a>
-        </td>
-<td align="left">Retrieve all Service Provider supported schemas</td>
 </tr>
 </table>
 <br clear="all" />
@@ -684,17 +657,13 @@ Content-Type: application/json
 Filtering</h3>
 
 <p>
-              Consumers may request a subset of Resources by specifying the
-              'filter' URL query parameter containing a filter expression. When
-              specified only those Resources matching the filter expression
-              SHALL be returned.
-            
-</p>
-<p>
-              The expression language that is used in the filter parameter
-              supports references to attributes and literals. The literal values
-              can be strings enclosed in single quotes, numbers and Boolean
-              values (true or false).
+              Filtering is OPTIONAL. Consumers may request a subset of Resources
+              by specifying the 'filter' URL query parameter containing a filter
+              expression. When specified only those Resources matching the
+              filter expression SHALL be returned. The expression language that
+              is used in the filter parameter supports references to attributes
+              and literals. The literal values can be strings enclosed in single
+              quotes, numbers and Boolean values; i.e., true or false.
             
 </p>
 <p>
@@ -854,7 +823,7 @@ filter=Username eq 'john'
               with an appropriate human parseable response. For example, if a
               Consumer specified an unsupported operator named 'regex' the
               Service Provider should specify an error response description
-              identyfying the Consumer error; e.g., 'The operator 'regex' is not
+              identifying the Consumer error; e.g., 'The operator 'regex' is not
               supported.'
             
 </p>
@@ -938,55 +907,99 @@ Pagination</h3>
               large numbers of Resources so as not to overwhelm the Consumer or
               Service Provider. Pagination is not session based hence Consumers
               SHOULD never assume repeatable results. For example, a request for
-              a list of 10 Resources starting with index 0 may return different
-              results when repeated as the third Resource could be deleted
-              in-between requests.
+              a list of 10 Resources beginning with a startIndex of 1 may return
+              different results when repeated as a Resource in the original
+              result could be deleted or new ones could be added in-between
+              requests. Pagination parameters and general behavior are derived
+              from the
+              <a href='http://www.opensearch.org/Specifications/OpenSearch/1.1'>OpenSearch Protocol</a>.
             
 </p>
-<blockquote class="text"><dl>
-<dt>startIndex:</dt>
-<dd>
-                Specifies the offset of the first result to be returned with
-                respect to the list of Resources that would be returned if no
-                startIndex were provided. For instance, if in a given request 10
-                Users would normally be provided, the startIndex is 7 and no
-                count is specified, then only the last 3 Users in that list
-                would be returned (Resources are zero-indexed). If the
-                startIndex is greater than or equal to the total number of
-                results that would be returned, no Resources are returned. The
-                value MUST be a non-negative integer and defaults to 0 if no
-                value is specified.
-              
-</dd>
-<dt>count:</dt>
-<dd>
-                If non-zero, specifies the maximum number of Resources the
-                Consumer would like the Provider to return at a time. The value
-                MUST be a non-negative integer and defaults to 0 if no value is
-                specified. A count of 0 means that is up to the Provider to
-                determine how many Resources to return by default (some
-                Providers may return all Resources by default; others may return
-                a fixed default number). Providers SHOULD honor a very large
-                count value, and SHOULD support returning all Resources at once
-                when presented with a count request that is larger than the
-                number of Resources the user has, but Providers MAY choose to
-                never return more than a Provider-determined maximum number of
-                Resources per request, if returning all Resources is too
-                burdensome. In all cases, at most count Users SHALL be returned,
-                starting at startIndex and counting up from there. In each of
-                these cases, Providers MUST indicate the total number of Users
-                they chose to return in the response using the itemsPerPage
-                response element.  TBD itemsPerPage
-              
-</dd>
-</dl></blockquote>
+<p>The following table describes the URL pagination parameters.
+            
+</p><br /><hr class="insert" />
+<a name="consumer-pagination-options-table"></a>
+<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
+<col align="left"><col align="left"><col align="left">
+<tr><th align="left">Parameter</th><th align="left">Description</th><th align="left">Default</th></tr>
+<tr>
+<td align="left">startIndex</td>
+<td align="left">The 1-based index of the first search result.
+              </td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">Non-negative Integer. Specifies the desired maximum number of
+                search results per page; e.g., 10.
+              </td>
+<td align="left">None. When specified the Service Provider MUST not return more
+                results than specified though MAY return fewer results. If
+                unspecified, the maximum number of results is set by the Service
+                Provider.
+              </td>
+</tr>
+</table>
+<br clear="all" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 5: Pagination Request parameters&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+
+<p>The following table describes the query response pagination
+              attributes specified by the Service Provider.
+            
+</p><br /><hr class="insert" />
+<a name="response-pagination-options-table"></a>
+<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
+<col align="left"><col align="left">
+<tr><th align="left">Element</th><th align="left">Description</th></tr>
+<tr>
+<td align="left">itemsPerPage</td>
+<td align="left">Non-negative Integer. Specifies the number of search results
+                returned in a query response page; e.g., 10.
+              </td>
+</tr>
+<tr>
+<td align="left">totalResults</td>
+<td align="left">Non-negative Integer. Specifies the total number of results
+                matching the Consumer query; e.g., 1000.
+              </td>
+</tr>
+<tr>
+<td align="left">startIndex</td>
+<td align="left">The 1-based index of the first result in the current set of
+                search results; e.g., 1.
+              </td>
+</tr>
+</table>
+<br clear="all" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 6: Pagination Response Elements&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+
 <p>
-              For instance, on an initial query, specifying startIndex=0&amp;count=10
-              will return only the first 10 results. The total number of
-              possible results is indicated by the totalResults attribute of
-              results, so the client knows how many Resources match the request. A
-              subsequent query of startIndex=10&amp;count=10 will return the
-              next 10 results, and so on.
+              For example, to retrieve the first 10 Users set the startIndex to
+              1 and the count to 10.
+
+              </p>
+<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+GET /Users?startIndex=1&amp;count=10
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+</pre></div><p>
+
+
+              </p>
+<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+{
+  "totalResults":100,"itemsPerPage":10,"startIndex":1,
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "Resources":[{
+    ...
+  }]
+}
+</pre></div><p>
+
+              Given the example above, to continue paging set the startIndex to
+              11 and re-fetch; i.e., /Users?startIndex=11&amp;count=10
             
 </p>
 <a name="anchor5"></a><br /><hr />
@@ -1179,63 +1192,8 @@ HTTP/1.1 204 OK
 <a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
 Retrieving Service Provider Schema</h3>
 
-<p>Service Providers MUST support the core schema and MAY support
-          additional schemas.
-        
+<p>TBD
 </p>
-<a name="get-schema"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.6.1"></a><h3>4.6.1.&nbsp;
-Retrieving a specific Schema</h3>
-
-<p>To retrieve schema send a GET request to /Schema/{resource}/{schema
-            urn}.
-
-            Consumers request the core User schema by omitting the schema URN;
-            e.g.,/Schema/User/ or specifying the core schema URN; e.g.,
-            /Schema/User/urn:scim:schemas:core:1.0. Similarly, Consumers request
-            the core Group schema via e.g.,/Schema/Group/ or specifying the core
-            schema URN; e.g., /Schema/Group/urn:scim:schemas:core:1.0.
-
-            The below example retrieves the core User schema.
-          
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-GET /Schema/User
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-TBD
-
-</pre></div>
-<a name="get-schemas"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.6.2"></a><h3>4.6.2.&nbsp;
-Retrieving all Service Provider supported Schemas</h3>
-
-<p>Consumers may request all supported schemas for a given resource
-            via /Schemas/{resource}
-
-            For example:
-          
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-GET /Schemas/User
-Host: example.com
-Accept: application/xml
-Authorization: Bearer h480djs93hd8
-</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-TODO: REFERENCE NORMATIVE XSD SCHEMA
-
-</pre></div>
 <a name="io-format"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
@@ -1327,8 +1285,9 @@ Additional retrieval query parameters</h3>
           The query parameter attributes value is a comma separated list of
           Resource attribute names (e.g. userName, name, emails). Extended
           schema attribute names must be prefixed with the attribute name's
-          fully qualified URL or URN separated by a '/' or ':' respectively; e
-          .g., 'https://hr.example.com/age'.
+          fully qualified URN separated by a colon (':'). For example, an
+          extended schema name-spaced as 'urn:hr:schemas:user with the simple
+          attribute 'age' is fully encoded as 'urn:hr:schemas:user:age'.
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 GET /User/uid=bjensen,dc=example,dc=com?attributes=displayName
@@ -1427,7 +1386,7 @@ HTTP Response Codes</h3>
 </tr>
 </table>
 <br clear="all" />
-<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 5: Defined error cases&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 7: Defined error cases&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>Error example in response to a non-existent GET request.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
