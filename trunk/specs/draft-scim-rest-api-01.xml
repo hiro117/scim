@@ -29,6 +29,12 @@
         <email>morteza.ansari@webex.com</email>
       </address>
     </author>
+    <author initials="K.G." surname="Grizzle" fullname="Kelly Grizzle">
+      <organization abbrev="SailPoint">SailPoint</organization>
+      <address>
+        <email>kelly.grizzle@sailpoint.com</email>
+      </address>
+    </author>
 
     <date month="May" year="2011"/>
     <keyword>SCIM</keyword>
@@ -907,13 +913,421 @@ Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
         <section title="Modifying with PATCH" anchor="edit-resource-with-patch"
                  toc="default">
           <t>PATCH enables consumers to send only those attributes requiring
-            modification reducing network and processing overhead. Attributes
-            may be deleted, replaced or added in a single request.
-
-            TBD.
-
+            modification, reducing network and processing overhead. Attributes
+            may be deleted, replaced, merged, or added in a single request.
           </t>
 
+          <t>The body of a PATCH request MUST contain a partial Resource with
+            the desired modifications.  The server MUST return either a 200 OK
+            response code and the entire Resource (subject to the "attributes"
+            query parameter - see <xref target="addtl-retrieval-query-params"
+            format="default">Additional Retrieval Query Parameters</xref>)
+            within the response body, or a 204 No Content response code and the
+            appropriate response headers for a successful PATCH request.  The
+            server MUST return a 200 OK if the "attributes" parameter is
+            specified on the request.
+          </t>
+
+          <t>The server MUST process a PATCH request by first removing any
+            attributes specified in the meta.attributes Sub-Attribute (if
+            present) and then merging the attributes in the PATCH request body
+            into the Resource.
+          </t>
+
+          <t>The meta.attributes Sub-Attribute MAY contain a list of attributes
+            to be removed from the Resource.  If the PATCH request body contains
+            an attribute that is present in the meta.attributes list, the
+            attribute on the Resource is replaced with the value from the PATCH
+            body.  If the attribute is complex the attribute name must be a path
+            to a Sub-Attribute; e.g., name.givenName.  Extended schema attribute
+            names must be prefixed with the attribute name's fully qualified URN
+            separated by a colon (':'). For example, an extended schema
+            name-spaced as 'urn:hr:schemas:user' with the simple attribute 'age'
+            is fully encoded as 'urn:hr:schemas:user:age'.
+          </t>
+
+          <t>Attributes that exist in the PATCH request body but not in the
+            meta.attributes Sub-Attribute will be either be updated or added to
+            the Resource according to the following rules.
+          </t>
+
+          <list style="hanging">
+            <t hangText="Singular attributes:">
+              Singular attributes in the PATCH request body replace the
+              attribute on the Resource.
+            </t>
+            <t hangText="Complex attributes:">
+              Complex Sub-Attribute values in the PATCH request body are merged
+              into the complex attribute on the Resource.
+            </t>
+            <t hangText="Plural attributes:">
+              Plural attributes in the PATCH request body are added to the
+              plural attribute on the Resource if the value does not yet exist
+              or are merged into the matching plural value on the Resource if
+              the value already exists.  Plural attribute values are matched by
+              comparing the value Sub-Attribute from the PATCH request body to
+              the value Sub-Attribute of the Resource.  Plural attributes that
+              do not have a value Sub-Attribute (for example, addresses) cannot
+              be matched for the purposes of partially updating an an existing
+              value.  These must be deleted then added.  Similarly, plural
+              attributes that do not have unique value Sub-Attributes must be
+              deleted then added.
+            </t>
+          </list>
+
+          <t>Individual plural values can be removed from a Resource by
+            including an "operation" Sub-Attribute with the value "delete" on
+            the plural attribute value in the PATCH request body.  As with
+            adding/updating plural attribute values, the plural value to delete
+            is determined by comparing the value Sub-Attribute from the PATCH
+            request body to the value Sub-Attribute of the Resource.
+            Additionally, plural attributes that do not have a value
+            Sub-Attribute (or that have a non-unique value Sub-Attribute) are
+            matched by comparing all Sub-Attribute values from the PATCH request
+            body to the Sub-Attribute values of the Resource. A delete operation
+            is ignored if the plural attribute's name is in the meta.attributes
+            list.  The server MAY return a HTTP 400 error with an appropriate
+            human readable response if the requested plural value to delete does
+            not match a unique value on the Resource.
+          </t>
+
+          <t>The following example shows how to add a member to a group:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The "display" Sub-Attribute in this request is optional since the
+            value attribute uniquely identifies the user to be added.  If the
+            user was already a member of this group, no changes should be made
+            to the Resource and a success response should be returned.  The
+            server responds with either the entire updated Group or no response
+            body:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+HTTP/1.1 204 No Content
+Authorization: Bearer h480djs93hd8
+ETag: "b431af54f0671a2"
+Location: "https://example.com/v1/Group/cn=group1,dc=example,dc=com"
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to remove a member from a group.
+            As with the previous example, the "display" Sub-Attribute is
+            optional.  If the user was not a member of this group, no changes
+            should be made to the Resource and a success response should be
+            returned.
+          </t>
+
+          <t>Note that server responses have been omitted for the rest of the
+            PATCH examples.
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+      "operation": "delete"
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to remove all members from a
+            group:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "members"
+    ]
+  }
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to replace all of the members of a
+            group with a different members list:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "members"
+    ]
+  },
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+    },
+    {
+      "display": "James Smith",
+      "value": "uid=jsmith,dc=example,dc=com"
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to add a member to and remove a
+           member from a Group in a single request:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+      "operation": "delete"
+    },
+    {
+      "display": "James Smith",
+      "value": "uid=jsmith,dc=example,dc=com"
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to change a User's primary email.
+            If the User already has the email address, it is made the primary
+            address and the current primary address (if present) is made
+            non-primary.  If the User does not already have the email address,
+            it is added and made the primary address.
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "emails": [
+    {
+      "value": "bjensen@example.com",
+      "primary": true
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to change a User's address.  Since
+            address does not have a value Sub-Attribute, the existing address
+            must be removed and the modified address added.
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "addresses": [
+    {
+      "type": "work",
+      "streetAddress": "100 Universal City Plaza",
+      "locality": "Hollywood",
+      "region": "CA",
+      "postalCode": "91608",
+      "country": "USA",
+      "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+      "primary": true
+      "operation": "delete"
+    },
+    {
+      "type": "work",
+      "streetAddress": "911 Universal City Plaza",
+      "locality": "Hollywood",
+      "region": "CA",
+      "postalCode": "91608",
+      "country": "USA",
+      "formatted": "911 Universal City Plaza\nHollywood, CA 91608 USA",
+      "primary": true
+    }
+  ]
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to change a User's nickname:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "nickName": "Barbie"
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to remove a User's nickname:
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "nickName"
+    ]
+  }
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to change a User's familyName.
+           This only updates the familyName and formatted on the "name" complex
+           attribute. Any other name Sub-Attributes on the Resource remain
+           unchanged.
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "name": {
+    "formatted": "Ms. Barbara J Jensen III",
+    "familyName": "Jensen"
+  }
+}
+            ]]></artwork>
+          </figure>
+
+          <t>The following example shows how to remove a complex Sub-Attribute
+           and an extended schema attribute from a User.
+          </t>
+
+          <figure height="" suppress-title="false" width="" alt="" title=""
+                  align="left">
+            <artwork height="" name="" width="" type="" alt="" align="left"
+                     xml:space="preserve"><![CDATA[
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "name.formatted",
+      "urn:hr:schemas:user:age"
+    ]
+  }
+}
+            ]]></artwork>
+          </figure>
 
         </section>
       </section>
@@ -1118,7 +1532,8 @@ Host: example.com
         </figure>
       </section>
 
-      <section title="Additional retrieval query parameters" toc="default">
+      <section title="Additional retrieval query parameters"
+               anchor="addtl-retrieval-query-params" toc="default">
         <t>
           Consumers MAY request a partial Resource representation on any
           operation that returns a Resource within the response by specifying
@@ -1158,7 +1573,6 @@ ETag: "a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",

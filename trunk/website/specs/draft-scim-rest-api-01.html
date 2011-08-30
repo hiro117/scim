@@ -148,6 +148,8 @@
 <tr><td class="header">&nbsp;</td><td class="header">SalesForce</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">M. Ansari</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Cisco</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">K. Grizzle</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">SailPoint</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">May 2011</td></tr>
 </table></td></tr></table>
 <h1><br />SCIM PROTOCOL</h1>
@@ -206,15 +208,15 @@ Change password<br />
 Retrieving Service Provider Schema<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.7.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.8.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.9.</a>&nbsp;
 HTTP Response Codes<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.10.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">4.11.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.11.</a>&nbsp;
 HTTP Method Overloading<br />
-<a href="#anchor9">5.</a>&nbsp;
+<a href="#anchor8">5.</a>&nbsp;
 Acknowledgments<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
@@ -1105,13 +1107,354 @@ Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
 Modifying with PATCH</h3>
 
 <p>PATCH enables consumers to send only those attributes requiring
-            modification reducing network and processing overhead. Attributes
-            may be deleted, replaced or added in a single request.
-
-            TBD.
-
+            modification, reducing network and processing overhead. Attributes
+            may be deleted, replaced, merged, or added in a single request.
           
 </p>
+<p>The body of a PATCH request MUST contain a partial Resource with
+            the desired modifications.  The server MUST return either a 200 OK
+            response code and the entire Resource (subject to the "attributes"
+            query parameter - see <a class='info' href='#addtl-retrieval-query-params'>Additional Retrieval Query Parameters<span> (</span><span class='info'>Additional retrieval query parameters</span><span>)</span></a>)
+            within the response body, or a 204 No Content response code and the
+            appropriate response headers for a successful PATCH request.  The
+            server MUST return a 200 OK if the "attributes" parameter is
+            specified on the request.
+          
+</p>
+<p>The server MUST process a PATCH request by first removing any
+            attributes specified in the meta.attributes Sub-Attribute (if
+            present) and then merging the attributes in the PATCH request body
+            into the Resource.
+          
+</p>
+<p>The meta.attributes Sub-Attribute MAY contain a list of attributes
+            to be removed from the Resource.  If the PATCH request body contains
+            an attribute that is present in the meta.attributes list, the
+            attribute on the Resource is replaced with the value from the PATCH
+            body.  If the attribute is complex the attribute name must be a path
+            to a Sub-Attribute; e.g., name.givenName.  Extended schema attribute
+            names must be prefixed with the attribute name's fully qualified URN
+            separated by a colon (':'). For example, an extended schema
+            name-spaced as 'urn:hr:schemas:user' with the simple attribute 'age'
+            is fully encoded as 'urn:hr:schemas:user:age'.
+          
+</p>
+<p>Attributes that exist in the PATCH request body but not in the
+            meta.attributes Sub-Attribute will be either be updated or added to
+            the Resource according to the following rules.
+          
+</p>
+<blockquote class="text"><dl>
+<dt>Singular attributes:</dt>
+<dd>
+              Singular attributes in the PATCH request body replace the
+              attribute on the Resource.
+            
+</dd>
+<dt>Complex attributes:</dt>
+<dd>
+              Complex Sub-Attribute values in the PATCH request body are merged
+              into the complex attribute on the Resource.
+            
+</dd>
+<dt>Plural attributes:</dt>
+<dd>
+              Plural attributes in the PATCH request body are added to the
+              plural attribute on the Resource if the value does not yet exist
+              or are merged into the matching plural value on the Resource if
+              the value already exists.  Plural attribute values are matched by
+              comparing the value Sub-Attribute from the PATCH request body to
+              the value Sub-Attribute of the Resource.  Plural attributes that
+              do not have a value Sub-Attribute (for example, addresses) cannot
+              be matched for the purposes of partially updating an an existing
+              value.  These must be deleted then added.  Similarly, plural
+              attributes that do not have unique value Sub-Attributes must be
+              deleted then added.
+            
+</dd>
+</dl></blockquote>
+<p>Individual plural values can be removed from a Resource by
+            including an "operation" Sub-Attribute with the value "delete" on
+            the plural attribute value in the PATCH request body.  As with
+            adding/updating plural attribute values, the plural value to delete
+            is determined by comparing the value Sub-Attribute from the PATCH
+            request body to the value Sub-Attribute of the Resource.
+            Additionally, plural attributes that do not have a value
+            Sub-Attribute (or that have a non-unique value Sub-Attribute) are
+            matched by comparing all Sub-Attribute values from the PATCH request
+            body to the Sub-Attribute values of the Resource. A delete operation
+            is ignored if the plural attribute's name is in the meta.attributes
+            list.  The server MAY return a HTTP 400 error with an appropriate
+            human readable response if the requested plural value to delete does
+            not match a unique value on the Resource.
+          
+</p>
+<p>The following example shows how to add a member to a group:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+    }
+  ]
+}
+</pre></div>
+<p>The "display" Sub-Attribute in this request is optional since the
+            value attribute uniquely identifies the user to be added.  If the
+            user was already a member of this group, no changes should be made
+            to the Resource and a success response should be returned.  The
+            server responds with either the entire updated Group or no response
+            body:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+HTTP/1.1 204 No Content
+Authorization: Bearer h480djs93hd8
+ETag: "b431af54f0671a2"
+Location: "https://example.com/v1/Group/cn=group1,dc=example,dc=com"
+</pre></div>
+<p>The following example shows how to remove a member from a group.
+            As with the previous example, the "display" Sub-Attribute is
+            optional.  If the user was not a member of this group, no changes
+            should be made to the Resource and a success response should be
+            returned.
+          
+</p>
+<p>Note that server responses have been omitted for the rest of the
+            PATCH examples.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+      "operation": "delete"
+    }
+  ]
+}
+</pre></div>
+<p>The following example shows how to remove all members from a
+            group:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "members"
+    ]
+  }
+}
+</pre></div>
+<p>The following example shows how to replace all of the members of a
+            group with a different members list:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "members"
+    ]
+  },
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+    },
+    {
+      "display": "James Smith",
+      "value": "uid=jsmith,dc=example,dc=com"
+    }
+  ]
+}
+</pre></div>
+<p>The following example shows how to add a member to and remove a
+           member from a Group in a single request:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /Group/cn=group1,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "members": [
+    {
+      "display": "Babs Jensen",
+      "value": "uid=bjensen,dc=example,dc=com"
+      "operation": "delete"
+    },
+    {
+      "display": "James Smith",
+      "value": "uid=jsmith,dc=example,dc=com"
+    }
+  ]
+}
+</pre></div>
+<p>The following example shows how to change a User's primary email.
+            If the User already has the email address, it is made the primary
+            address and the current primary address (if present) is made
+            non-primary.  If the User does not already have the email address,
+            it is added and made the primary address.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "emails": [
+    {
+      "value": "bjensen@example.com",
+      "primary": true
+    }
+  ]
+}
+</pre></div>
+<p>The following example shows how to change a User's address.  Since
+            address does not have a value Sub-Attribute, the existing address
+            must be removed and the modified address added.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "addresses": [
+    {
+      "type": "work",
+      "streetAddress": "100 Universal City Plaza",
+      "locality": "Hollywood",
+      "region": "CA",
+      "postalCode": "91608",
+      "country": "USA",
+      "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+      "primary": true
+      "operation": "delete"
+    },
+    {
+      "type": "work",
+      "streetAddress": "911 Universal City Plaza",
+      "locality": "Hollywood",
+      "region": "CA",
+      "postalCode": "91608",
+      "country": "USA",
+      "formatted": "911 Universal City Plaza\nHollywood, CA 91608 USA",
+      "primary": true
+    }
+  ]
+}
+</pre></div>
+<p>The following example shows how to change a User's nickname:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "nickName": "Barbie"
+}
+</pre></div>
+<p>The following example shows how to remove a User's nickname:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "nickName"
+    ]
+  }
+}
+</pre></div>
+<p>The following example shows how to change a User's familyName.
+           This only updates the familyName and formatted on the "name" complex
+           attribute. Any other name Sub-Attributes on the Resource remain
+           unchanged.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "name": {
+    "formatted": "Ms. Barbara J Jensen III",
+    "familyName": "Jensen"
+  }
+}
+</pre></div>
+<p>The following example shows how to remove a complex Sub-Attribute
+           and an extended schema attribute from a User.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+PATCH /User/uid=bjensen,dc=example,dc=com
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+ETag: "a330bc54f0671c9"
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "meta": {
+    "attributes": [
+      "name.formatted",
+      "urn:hr:schemas:user:age"
+    ]
+  }
+}
+</pre></div>
 <a name="delete-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
@@ -1270,7 +1613,7 @@ Host: example.com
   &lt;subattribute2&gt;value2&lt;/subattribute2&gt;
 &lt;/attribute&gt;
 </pre></div>
-<a name="anchor6"></a><br /><hr />
+<a name="addtl-retrieval-query-params"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
 Additional retrieval query parameters</h3>
@@ -1306,7 +1649,6 @@ ETag: "a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
@@ -1315,7 +1657,7 @@ ETag: "a330bc54f0671c9"
 }
 
 </pre></div>
-<a name="anchor7"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
 HTTP Response Codes</h3>
@@ -1499,7 +1841,7 @@ If-None-Match: "e180ee84f0671b1"
           in lieu of an ETag header.
         
 </p>
-<a name="anchor8"></a><br /><hr />
+<a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
 HTTP Method Overloading</h3>
@@ -1514,7 +1856,7 @@ HTTP Method Overloading</h3>
 POST /User/uid=bjensen,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 </pre></div>
-<a name="anchor9"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
 Acknowledgments</h3>
@@ -1547,5 +1889,12 @@ Acknowledgments</h3>
 <td class="author-text">Cisco</td></tr>
 <tr><td class="author" align="right">Email:&nbsp;</td>
 <td class="author-text"><a href="mailto:morteza.ansari@webex.com">morteza.ansari@webex.com</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Kelly Grizzle</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">SailPoint</td></tr>
+<tr><td class="author" align="right">Email:&nbsp;</td>
+<td class="author-text"><a href="mailto:kelly.grizzle@sailpoint.com">kelly.grizzle@sailpoint.com</a></td></tr>
 </table>
 </body></html>
