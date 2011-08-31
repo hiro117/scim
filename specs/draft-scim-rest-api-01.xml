@@ -709,7 +709,7 @@ co = 'example.org')
                 as a caseExact string. sortOrder MUST sort according to the
                 attribute type; i.e., for caseIgnore attributes, sort the result
                 using case insensitive, Unicode alphabetic sort
-                order, with no specific locale implied and for caseIgnore
+                order, with no specific locale implied and for caseExact
                 attribute types, sort the result using case sensitive,
                 Unicode alphabetic sort order.
               </t>
