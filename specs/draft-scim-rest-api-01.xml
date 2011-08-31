@@ -580,7 +580,7 @@ filter=Username eq 'john'
                 and for DateTime types, it is a chronological comparison.
               </c>
 
-              <c>lt</c>
+              <c>le</c>
               <c>less than or equal</c>
               <c>If the attribute value is less than or equal to the operator
                 value, there is a match. The actual comparison is dependent on
