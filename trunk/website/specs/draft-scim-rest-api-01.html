@@ -754,7 +754,7 @@ filter=Username eq 'john'
               </td>
 </tr>
 <tr>
-<td align="left">lte</td>
+<td align="left">lt</td>
 <td align="left">less than or equal</td>
 <td align="left">If the attribute value is less than or equal to the operator
                 value, there is a match. The actual comparison is dependent on
@@ -894,9 +894,14 @@ Sorting</h3>
                 The order in which the sortBy parameter is applied. Allowed
                 values are "ascending" and "descending". If a value for sortBy
                 is provided and no sortOrder is specified, the sortOrder SHALL
-                default to ascending. Sort order is expected to be
-                case-insensitive, Unicode alphabetic sort order, with no
-                specific locale implied.
+                default to ascending.  String type attributes are case
+                insensitive by default unless the attribute type is defined
+                as a caseExact string. sortOrder MUST sort according to the
+                attribute type; i.e., for caseIgnore attributes, sort the result
+                using case insensitive, Unicode alphabetic sort
+                order, with no specific locale implied and for caseIgnore
+                attribute types, sort the result using case sensitive,
+                Unicode alphabetic sort order.
               
 </dd>
 </dl></blockquote>
