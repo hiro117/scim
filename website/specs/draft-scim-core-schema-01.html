@@ -162,7 +162,7 @@
       easier. The specification suite seeks to build upon experience with
       existing schemas and deployments, placing specific emphasis on
       simplicity of development and integration, while applying existing
-      authentication, authorization, and privacy models. It's intent is to
+      authentication, authorization, and privacy models. Its intent is to
       reduce the cost and complexity of user management operations by
       providing a common user schema and extension model, as well as binding
       documents to provide patterns for exchanging this schema using standard
@@ -170,7 +170,7 @@
       to, out of, and around the cloud.
 </p>
 <p>This document provides a platform neutral schema and extension model
-      for representing users and groups. This schemas is intended for exchange
+      for representing users and groups. This schema is intended for exchange
       and use with cloud service providers. Standard serializations of that
       schema using JSON and XML are also provided.
 </p><a name="toc"></a><br /><hr />
@@ -292,7 +292,7 @@ SCIM Schema Structure</h3>
       expressing schemas such as JSON. This attribute allows introspection of
       the supported schema version for a SCIM representation as well any
       schema extensions supported by that representation. The 'schemas'
-      attribute is an array of strings, and values must by URNs designated by
+      attribute is an array of strings, and values must be URNs designated by
       the corresponding schema definition.
 </p>
 <p>SCIM information is formatted using labeled attributes with either
@@ -311,7 +311,7 @@ SCIM Schema Structure</h3>
 <dd>A single string attribute which MAY specify a
           REQUIRED data format or allow any string. A simple attribute MAY
           contain Canonical Values specified, in which case Service Providers
-          SHOULD try to conform to those values if appropriate, but MAY
+          SHOULD conform to those values if appropriate, but MAY
           provide alternate string values to represent additional values.
 </dd>
 <dt>Complex</dt>
@@ -329,17 +329,17 @@ SCIM Schema Structure</h3>
 </dd>
 <dt>DateTime</dt>
 <dd>The attribute value MUST be a valid
-          xsd:dateTime (e.g. 2008-01-23T04:56:22Z) values as specified in
-            <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7 of the XML Schema Datatypes Specification.</a>.
+          xsd:dateTime (e.g. 2008-01-23T04:56:22Z) value as specified in
+            <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7 of the XML Schema Datatypes Specification</a>.
           
 </dd>
 <dt>Binary</dt>
 <dd>The attribute value MUST be encoded as a valid
           xsd:base64Binary value as specified in <a href='http://www.w3.org/TR/xmlschema-2/#base64Binary'>section 3.2.16 of the XML Schema
-              Datatypes Specification.</a>.  No binary attributes
+              Datatypes Specification</a>.  No binary attributes
             are specified in the core schema, however,
             extended schemas may opt to include images,
-            digital signatures and the like.
+            digital signatures, and the like.
           
 </dd>
 </dl></blockquote><p>
@@ -353,7 +353,7 @@ SCIM Schema Structure</h3>
 <blockquote class="text"><dl>
 <dt>value</dt>
 <dd>The primary value of this attribute, e.g. the
-          actual e-mail address, phone number, id, URL, etc. Each non-empty
+          actual e-mail address, phone number, ID, URL, etc. Each non-empty
           Plural Attribute value MUST contain at least the value
           sub-attribute, but all other sub-attributes are optional.
           REQUIRED.
@@ -376,7 +376,7 @@ SCIM Schema Structure</h3>
 </dd>
 <dt>display</dt>
 <dd>A human readable name, primarily used for
-          display purposes where the value is an iopaque or complex type such
+          display purposes where the value is an opaque or complex type such
           as an id. OPTIONAL
 </dd>
 </dl></blockquote><p>When returning Plural Attributes, Service Providers SHOULD
@@ -394,17 +394,17 @@ Schema Extension Model</h3>
 
 <p>SCIM schema follows an object extension model similar to
       ObjectClasses used in LDAP. Unlike LDAP there is no inheritance model;
-      all extensions additive. ( similar to auxiliary objectClasses ) Each
+      all extensions are additive (similar to <a href='http://tools.ietf.org/html/rfc4512'>LDAP Auxiliary Object Classes</a>). Each
       value indicates additive schema that may exist in a SCIM representation
       as specified by extensions not defined in this suite. Each schema
       extension must identify a canonical URI used to identify the extension.
-      Schema Extensions MUST follow the rules of singular and plural attribute
-      structured defined in this core schema specification. Schema extensions
+      Schema Extensions MUST follow the rules of Singular and Plural Attribute
+      structures defined in this core schema specification. Schema extensions
       MUST NOT override or redefine any schema defined in this core
       specification. For representations that support expressing schema, the
       native convention MUST be used (For instance, XML Namespace). When the
-      the 'schemas' attribute is being used ( as defined in Section N),
-      additional URIs MUST be specified in the 'schemas' attribute array.
+      the "schemas" attribute is being used (as defined in Section 5.2),
+      additional URIs MUST be specified in the "schemas" attribute array.
 </p>
 <a name="schema"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -416,23 +416,23 @@ SCIM Core Schema</h3>
 <a name="rfc.section.5.1"></a><h3>5.1.&nbsp;
 Common Schema Attributes</h3>
 
-<p>Each resource represented by SCIM (Users, Groups, etc.) implicitly
+<p>Each SCIM Resource (Users, Groups, etc.) implicitly
         includes the following common attributes. These common attributes MUST
-        be included in all SCIM resources, including any new resource types
+        be included in all Resources, including any new Resource types
         that may be defined. It it not necessary to designate support for Core
-        Schema with a value in the "schemas" attributes ( defined in the next
-        section ), as inclusion is implicit and mandatory
+        Schema with a value in the "schemas" attributes (defined in the next
+        section), as inclusion is implicit and mandatory.
 </p>
 <p>
           </p>
 <blockquote class="text"><dl>
 <dt>id</dt>
-<dd>Unique identifier for the SCIM resource as
+<dd>Unique identifier for the SCIM Resource as
             defined by the Service Provider. Each representation of the
-            resource MUST include a non-empty id value. This identifier MUST
-            be unique across the Service Provider's entire set of resources.
+            Resource MUST include a non-empty id value. This identifier MUST
+            be unique across the Service Provider's entire set of Resources.
             It MUST be a stable, non-reassignable identifier that does not
-            change when the same resource is returned in subsequent requests.
+            change when the same Resource is returned in subsequent requests.
             The value of the id attribute is always issued by the Service
             Provider and MUST never be specified by the Service Consumer.
             REQUIRED.
@@ -442,14 +442,14 @@ Common Schema Attributes</h3>
             resource. OPTIONAL.
 <blockquote class="text"><dl>
 <dt>created</dt>
-<dd>The DateTime the User was first added to
+<dd>The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
                 OPTIONAL.
 </dd>
 <dt>lastModified</dt>
 <dd>The most recent DateTime the
-                details of this User were updated at the Service Provider. If
-                this User has never been modified since its initial creation,
+                details of this Resource were updated at the Service Provider. If
+                this Resource has never been modified since its initial creation,
                 the value MUST be the same as the value of created. The
                 attribute MUST be a DateTime. OPTIONAL.
 </dd>
@@ -464,8 +464,8 @@ Common Schema Attributes</h3>
 &quot;schemas&quot; Attribute</h3>
 
 <p>SCIM supports resources of different types, with extensible
-        schemas. Each resources and/or extension must indicate using fully
-        qualified URIs
+        schemas. Each resource MUST be indicated using fully
+        qualified URNs
 </p>
 <p>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -473,7 +473,7 @@ Common Schema Attributes</h3>
         should be used.
 </p>
 <p>When a representation does not explicitly provide support for
-        indicating a schema, such as JSON, a 'schemas' attribute is used to
+        indicating a schema, such as JSON, a "schemas" attribute is used to
         indicate the version of SCIM schema as well as any schema
         extensions.
 </p>
@@ -499,8 +499,8 @@ Common Schema Attributes</h3>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 SCIM User Schema</h3>
 
-<p>SCIM provides a schema for representing users, identified using the
-      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
+<p>SCIM provides a schema for representing Users, identified using the
+      following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
       using an un-registered urn while in draft form). The following
       attributes are defined in addition to those attributes defined in Core
       SCIM Schema:
@@ -517,18 +517,18 @@ Singular Attributes</h3>
 <dd>Unique identifier for the User, typically
             used by the user to directly authenticate to the service provider.
             Often displayed to the user as their unique identifier within the
-            system ( as opposed to id or externalId, which are generally
-            opaque and not user-friendly identifiers ) Each User MUST include
+            system (as opposed to id or externalId, which are generally
+            opaque and not user-friendly identifiers). Each User MUST include
             a non-empty userName value. This identifier MUST be unique across
             the Service Consumer's entire set of Users. It MUST be a stable ID
-            that does not change when the same user is returned in subsequent
+            that does not change when the same User is returned in subsequent
             requests. REQUIRED.
 </dd>
 <dt>externalId</dt>
 <dd>Unique identifier for the User as defined
             by the Service Consumer. The externalId may simplify
             identification of the User between Service Consumer and Service
-            provider by allowing the consumer to refer to the User with it's
+            provider by allowing the consumer to refer to the User with its
             own identifier, obviating the need to store a local mapping
             between the local identifier of the user and the identifier used
             by the Service Provider. Each User MAY include a non-empty
@@ -537,12 +537,12 @@ Singular Attributes</h3>
             Service Provider. This identifier MUST be unique across the
             Service Consumer's entire set of Users. It MUST be a stable,
             non-reassignable identifier that does not change when the same
-            user is returned in subsequent requests. The Service Provider MUST
+            User is returned in subsequent requests. The Service Provider MUST
             always interpret the externalId as scoped to the Service
             Consumer's tenant. OPTIONAL.
 </dd>
 <dt>name</dt>
-<dd>The components of the user's real name.
+<dd>The components of the User's real name.
             Providers MAY return just the full name as a single string in the
             formatted sub-attribute, or they MAY return just the individual
             component attributes using the other sub-attributes, or they MAY
@@ -553,32 +553,32 @@ Singular Attributes</h3>
 <dt>formatted</dt>
 <dd>The full name, including all middle
                 names, titles, and suffixes as appropriate, formatted for
-                display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL.
+                display (e.g. Ms. Barbara Jane Jensen, III.). OPTIONAL.
 </dd>
 <dt>familyName</dt>
 <dd>The family name of the User, or "Last
                 Name" in most Western languages (e.g. Jensen given the full
-                name Ms. Barbara J Jensen, III.). OPTIONAL.
+                name Ms. Barbara Jane Jensen, III.). OPTIONAL.
 </dd>
 <dt>givenName</dt>
 <dd>The given name of the User, or "First
                 Name" in most Western languages (e.g. Barbara given the full
-                name Ms. Barbara J Jensen, III.). OPTIONAL.
+                name Ms. Barbara Jane Jensen, III.). OPTIONAL.
 </dd>
 <dt>middleName</dt>
 <dd>The middle name(s) of the User (e.g.
-                Robert given the full name Ms. Barbara J Jensen, III.).
+                Robert given the full name Ms. Barbara Jane Jensen, III.).
                 OPTIONAL.
 </dd>
 <dt>honorificPrefix</dt>
 <dd>The honorific prefix(es) of the
                 User, or "Title" in most Western languages (e.g. Ms. given the
-                full name Ms. Barbara J Jensen, III.). OPTIONAL.
+                full name Ms. Barbara Jane Jensen, III.). OPTIONAL.
 </dd>
 <dt>honorificSuffix</dt>
-<dd>The honorifix suffix(es) of the
+<dd>The honorific suffix(es) of the
                 User, or "Suffix" in most Western languages (e.g. III. given
-                the full name Ms. Barbara J Jensen, III.). OPTIONAL.
+                the full name Ms. Barbara Jane Jensen, III.). OPTIONAL.
 </dd>
 </dl></blockquote>
 </dd>
@@ -639,49 +639,47 @@ Singular Attributes</h3>
 <a name="rfc.section.6.2"></a><h3>6.2.&nbsp;
 Plural Attributes</h3>
 
-<p>The following plural attributes are defined:
+<p>The following Plural Attributes are defined:
 </p>
 <p>
           </p>
 <blockquote class="text"><dl>
 <dt>emails</dt>
-<dd>E-mail addresses for the user. The value
+<dd>E-mail addresses for the User. The value
             SHOULD be canonicalized by the Service Provider, e.g.
             bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type
             values of work, home, and other. OPTIONAL.
 </dd>
 <dt>phoneNumbers</dt>
-<dd>Phone numbers for the user. No
+<dd>Phone numbers for the User. No
             canonical value is assumed here. Canonical Type values of work,
             home, mobile, fax, pager and other. OPTIONAL.
 </dd>
 <dt>ims</dt>
-<dd>Instant messaging address for the user. No
+<dd>Instant messaging address for the User. No
             official canonicalization rules exist for all instant messaging
-            addresses, but Service Providers SHOULD remove all whitespace and
-            convert the address to lowercase, if this is appropriate for the
-            service this IM address is used for. Instead of the standard
+            addresses, but Service Providers SHOULD, when appropriate, remove all whitespace and
+            convert the address to lowercase. Instead of the standard
             Canonical Values for type, this attribute defines the following
             Canonical Values to represent currently popular IM services: aim,
             gtalk, icq, xmpp, msn, skype, qq, and yahoo. OPTIONAL.
 </dd>
 <dt>photos</dt>
-<dd>URL of a photo of the user. The value SHOULD
-            be a canonicalized URL, and MUST point to an actual image file
+<dd>URL of a photo of the User. The value SHOULD
+            be a canonicalized URL, and MUST point to an image file
             (e.g. a GIF, JPEG, or PNG image file) rather than to a web page
             containing an image. Service Providers MAY return the same image
             at different sizes, though it is recognized that no standard for
             describing images of various sizes currently exists. Note that
             this attribute SHOULD NOT be used to send down arbitrary photos
-            taken by this user, but specifically profile photos of the user
-            suitable for display when describing the user. Instead of the
+            taken by this User, but specifically profile photos of the User
+            suitable for display when describing the User. Instead of the
             standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent popular photo sizes:
             photo, thumbnail. OPTIONAL.
 </dd>
 <dt>addresses</dt>
-<dd>A physical mailing address for this User,
-            as described in (address Element). Canonical Type Values of work,
+<dd>A physical mailing address for this User. Canonical Type Values of work,
             home, and other. The value attribute is a complex type with the
             following sub-attributes. OPTIONAL 
 <blockquote class="text"><dl>
@@ -692,7 +690,7 @@ Plural Attributes</h3>
 </dd>
 <dt>streetAddress</dt>
 <dd>The full street address component,
-                which may include house number, street name, PO BOX, and
+                which may include house number, street name, P.O. box, and
                 multi-line extended street address information. This attribute
                 MAY contain newlines. OPTIONAL
 </dd>
@@ -714,7 +712,7 @@ Plural Attributes</h3>
 </dd>
 </dl></blockquote>
 </dd>
-<dt>memberOf</dt>
+<dt>groups</dt>
 <dd>A list of groups that the user belongs to.
               The values are meant to enable expression of common group or role
               based access control models, although no explicit authorization
@@ -759,7 +757,7 @@ SCIM Enterprise User Schema Extension</h3>
 
 <p>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
-      enterprise. The enterprise user extention is identified using the
+      enterprise. The enterprise user extension is identified using the
       following URI: 'urn:scim:schemas:extension:user:enterprise:1.0' ( Note:
       we're currently using an un-registered urn while in draft form).
 </p>
@@ -771,7 +769,7 @@ SCIM Enterprise User Schema Extension</h3>
 <dt>employeeNumber</dt>
 <dd>Numeric or alphanumeric identifier
           assigned to a person, typically based on order of hire or
-          association with an organization. Single valued. OPTIONAL.
+          association with an organization. OPTIONAL.
 </dd>
 <dt>costCenter</dt>
 <dd>Identifies the name of a cost center.
@@ -790,9 +788,9 @@ SCIM Enterprise User Schema Extension</h3>
           OPTIONAL.
 </dd>
 <dt>manager</dt>
-<dd>The user's manager. A complex type that
+<dd>The User's manager. A complex type that
           optionally allows Service Providers to represent organizational
-          hierarchy by referencing the "id" attribute of another user.
+          hierarchy by referencing the "id" attribute of another User.
           OPTIONAL
 <blockquote class="text"><dl>
 <dt>managerId</dt>
@@ -800,8 +798,8 @@ SCIM Enterprise User Schema Extension</h3>
               the User's manager. OPTIONAL.
 </dd>
 <dt>displayName</dt>
-<dd>The displayName of the User's manager.
-              OPTIONAL.
+<dd>The displayName of the
+                User's manager.  READ-ONLY and OPTIONAL.
 </dd>
 </dl></blockquote>
 </dd>
@@ -817,18 +815,18 @@ SCIM Group Schema</h3>
       following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
       using an un-registered urn while in draft form).
 </p>
-<p>Group resources are meant to enable expression of common group or
+<p>Group resources are meant to enable expression of common Group or
       role based access control models, although no explicit authorization
       model is defined. It is intended that the semantics of group membership
       and any behavior or authorization granted as a result of membership are
-      defined by the Service Provider and considered out of scope for this
+      defined by the Service Provider are considered out of scope for this
       specification.
 </p>
 <p>The following Singular Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
 <dt>displayName</dt>
-<dd>A human readable name for the group.
+<dd>A human readable name for the Group.
           OPTIONAL.
 </dd>
 </dl></blockquote>
@@ -838,11 +836,11 @@ SCIM Group Schema</h3>
 <p>The following Plural Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
-<dt>member</dt>
-<dd>A list of members of the group. Canonical Type
-          "user" and "group". The value must be the "id" of a SCIM resource,
-          either a user, or a group. The intention of the group type is to
-          allow the Service Provider to support nested groups. REQUIRED.
+<dt>members</dt>
+<dd>A list of members of the Group. Canonical Type
+          "User" and "Group". The value must be the "id" of a SCIM resource,
+          either a User, or a Group. The intention of the Group type is to
+          allow the Service Provider to support nested Groups. REQUIRED.
 </dd>
 </dl></blockquote>
 
@@ -859,7 +857,7 @@ JSON Representation</h3>
 Minimal User Representation</h3>
 
 <p>The following is a non-normative example of the minimal required
-        SCIM representation in JSON
+        SCIM representation in JSON format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -875,7 +873,7 @@ Minimal User Representation</h3>
 Full User Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        SCIM representation in JSON
+        SCIM representation in JSON format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -957,7 +955,7 @@ Full User Representation</h3>
 	    "preferredLanguage": "en_US",
 	    "locale": "en_US",
 	    "timezone": "America/Denver",
-	    "memberOf": [
+	    "groups": [
 	        {
 	          "display": "Tour Guides",
 	          "value": "00300000005N2Y6AA",
@@ -985,7 +983,7 @@ Full User Representation</h3>
 Enterprise User Extension Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        user using the enterprise user extension in JSON
+        User using the enterprise User extension in JSON format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 		{
@@ -1070,7 +1068,7 @@ Enterprise User Extension Representation</h3>
 		    "preferredLanguage": "en_US",
 		    "locale": "en_US",
 		    "timezone": "America/Denver",
-		    "memberOf": [
+		    "groups": [
 		        {
 		          "display": "Tour Guides",
 		          "value": "00300000005N2Y6AA",
@@ -1109,7 +1107,7 @@ Enterprise User Extension Representation</h3>
 Group Representation</h3>
 
 <p>The following is a non-normative example of SCIM Group
-        representation
+        representation in JSON format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	{
@@ -1140,7 +1138,7 @@ XML Representation</h3>
 Minimal Representation</h3>
 
 <p>The following is a non-normative example of the minimal required
-        SCIM User representation in XML
+        SCIM User representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
@@ -1155,7 +1153,7 @@ Minimal Representation</h3>
 Full Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        SCIM representation in XML
+        SCIM representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
@@ -1229,7 +1227,7 @@ Full Representation</h3>
 Enterprise User Extension Representation</h3>
 
 <p>The following is a non-normative example of the fully populated
-        user using the enterprise user extension in XML
+        User using the enterprise User extension in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 		&lt;SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0"&gt;
@@ -1308,8 +1306,8 @@ Enterprise User Extension Representation</h3>
 <a name="rfc.section.10.4"></a><h3>10.4.&nbsp;
 Group Representation</h3>
 
-<p>The following is a non-normative example of SCIM Group
-        representation
+<p>The following is a non-normative example of a SCIM Group
+        representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
