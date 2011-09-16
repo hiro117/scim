@@ -86,8 +86,7 @@
           For purposes of readability examples are not URL encoded. Implementers
           MUST percent encode URLs as described in
           <eref
-            target="http://tools.ietf.org/html/rfc3986#section-2
-          .1">RFC3896 2.1
+            target="http://tools.ietf.org/html/rfc3986#section-2.1">RFC3896 2.1
           </eref>
         </t>
       </section>
@@ -136,9 +135,8 @@
         implemented in such a way that new authentication schemes can be
         deployed. Implementers SHOULD support existing
         authentication/authorization schemes. In particular,
-        <eref target="http://tools
-        .ietf.org/html/draft-ietf-oauth-v2-16">
-          OAuth2
+        <eref target="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08">
+          OAuth2 Bearer Token
         </eref>
         is RECOMMENDED. Appropriate security considerations of the selected
         authentication and authorization schemes SHOULD be taken.
@@ -146,7 +144,7 @@
         Because this protocol uses HTTP response status codes as the primary
         means of reporting the result of a request, servers are advised to
         respond to unauthorized or unauthenticated requests using the 401
-        response code in accordance with section 10.4.2 of<eref
+        response code in accordance with section 10.4.2 of <eref
         target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">
         RFC2616
       </eref>.
@@ -174,7 +172,7 @@
     <section title="Security Considerations" anchor="Security" toc="default">
       <t>
         The SCIM Protocol is based on HTTP and thus subject to the security
-        considerations found in Section 15 of<eref
+        considerations found in Section 15 of <eref
         target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
         RFC2616
       </eref>.
@@ -188,10 +186,12 @@
     <section title="API" anchor="api">
       <t>
         The SCIM protocol specifies well known endpoints and operations for
-        managing User, Group and Password resources via standard HTTP methods:
+        managing User, Group, and Password resources as well as their
+        associated schemas via standard HTTP methods:
       </t>
       <list style="hanging">
-        <t hangText="GET">Retrieves a complete or partial Resource
+        <t hangText="GET">Retrieves a complete or partial Resource or
+          Resource Schema
         </t>
         <t hangText="POST">Creates a new Resource
         </t>
@@ -237,7 +237,6 @@
           <xref target="delete-resource" format="default">DELETE</xref>
         </c>
         <c>Read/Modify Groups</c>
-
         <c>
           User Query/Listing
         </c>
@@ -256,23 +255,14 @@
         </c>
         <c>Change a User's password</c>
 
-        <!--<c>Resource Schema</c>-->
-        <!--<c>-->
-          <!--/Schema-->
-        <!--</c>-->
-        <!--<c>-->
-          <!--<xref target="get-schema" format="default">GET</xref>-->
-        <!--</c>-->
-        <!--<c>Retrieve a specific schema</c>-->
-
-        <!--<c>Resource Schemas</c>-->
-        <!--<c>-->
-          <!--/Schemas-->
-        <!--</c>-->
-        <!--<c>-->
-          <!--<xref target="get-schemas" format="default">GET</xref>-->
-        <!--</c>-->
-        <!--<c>Retrieve all Service Provider supported schemas</c>-->
+        <c>Resource Schema</c>
+        <c>
+          /schema/{Resource Name}
+        </c>
+        <c>
+          <xref target="get-schema" format="default">GET</xref>
+        </c>
+        <c>Retrieve a Resource schema</c>
       </texttable>
 
       <t>
@@ -675,8 +665,8 @@ filter=title pr and userType eq 'Employee'
 
 filter=title pr or userType eq 'Intern'
 
-filter=userType eq 'Employee' and (email co 'example.com' or email
-co = 'example.org')
+filter=userType eq 'Employee' and (emails co 'example.com' or emails
+co 'example.org')
               ]]></artwork>
             </figure>
           </section>
@@ -1443,13 +1433,257 @@ HTTP/1.1 204 OK
         </figure>
       </section>
 
-      <section title="Retrieving Service Provider Schema" anchor="schemas"
-               toc="default">
-        <t>TBD</t>
+        <section title="Retrieving Resource Schema" anchor="get-schema"
+                 toc="default">
+            <t>The Resource schema endpoints enable Consumers to retrieve core and
+                extended Resource meta-data providing Consumer implementers with
+                sufficient information to perform Resource discovery.
+            </t>
+            <t>
+                Consumers may retrieve all Service Provider supported Resources via a
+                GET request to the endpoint /schemas. Service Providers MUST return
+                all core and extended Resources within the response.
+                The complete set of Resource schema attributes and associated usage is
+                specified in the table below.
+            </t>
+            <texttable anchor='resource-schema-table' title="Resource Schema Attributes" alight='left'>
+                <ttcol align='left'>Attribute</ttcol>
+                <ttcol align='left'>Is Required</ttcol>
+                <ttcol align='left'>Default value when omitted</ttcol>
+                <ttcol align='left'>Description</ttcol>
+                <c>name</c>
+                <c>true</c>
+                <c>N/A</c>
+                <c>The Resource name. When applicable Service Providers MUST specify
+                    the name specified in the core schema specification.</c>
 
-      </section>
+                <c>description</c>
+                <c>true</c>
+                <c>N/A</c>
+                <c>The Resource's human readable description. When applicable Service
+                    Providers MUST specify the description specified in the core schema
+                    specification.</c>
 
+                <c>schema</c>
+                <c>false</c>
+                <c>urn:scim:schemas:core:1.0</c>
+                <c>The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.</c>
 
+                <c>queryEndpoint</c>
+                <c>false</c>
+                <c>/{name} (if core schema) or /{schema}:{name} (if an extended Resource)</c>
+                <c>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /User</c>
+            </texttable>
+
+            <t>
+                An example request returning core Resources as well as a single
+                extended Resource, 'Machine':
+            </t>
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                    <![CDATA[
+GET /schemas
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+            ]]></artwork>
+            </figure>
+            Returns:
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                    <![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/schemas
+{
+  "resources":[
+    {
+      "name":"User",
+      "description":"TBD",
+      "schema":"urn:scim:schemas:core:1.0"
+    },
+    {
+      "name":"Group",
+      "description":"TBD",
+      "schema":"urn:scim:schemas:core:1.0"
+    },
+    {
+      "name":"Machine",
+      "description":"An extended Resource",
+      "schema":"urn:virtual:schemas",
+      "queryEndpoint":"/urn:virtual:schemas:Machines"
+    }
+  ]
+}
+ ]]></artwork>
+            </figure>
+
+            <t>
+                To retrieve a Resource schema, Consumers send a GET request
+                to /schema/{Resource Path}; e.g.,
+                /schema/User. If the Resource exists the Service Provider MUST
+                return the schema in the body of the response with a 200 status
+                code or, if non-existent, a 404 status code. If a core
+                Resource; e.g., User is extended the Service
+                Provider must return the core Resource and all extended
+                attributes. To avoid namespace collisions Resource extensions
+                must be fully qualified by prefixing the Resource name with the
+                associated schema URN; e.g., the Resource 'Machine' declared in
+                the namespace 'urn:virtual:schemas' is represented as
+                'urn:virtual:schemas:Machine'.
+            </t>
+
+            <t>Some schema attributes may be omitted and are context sensitive.
+                The complete set of schema attributes and associated usage is
+                specified in the table below.
+            </t>
+            <texttable anchor='schema-attribute-table' title="Schema Attributes"
+                       alight='left'>
+                <ttcol align='left'>Attribute</ttcol>
+                <ttcol align='left'>Applicability</ttcol>
+                <ttcol align='left'>Is Required</ttcol>
+                <ttcol align='left'>Default value when omitted</ttcol>
+                <ttcol align='left'>Description</ttcol>
+                <c>name</c>
+                <c>all</c>
+                <c>true</c>
+                <c>N/A</c>
+                <c>The attribute's name.</c>
+
+                <c>type</c>
+                <c>all</c>
+                <c>false</c>
+                <c>string</c>
+                <c>The attribute's data type; e.g., string.</c>
+
+                <c>plural</c>
+                <c>Specify only if plural</c>
+                <c>false</c>
+                <c>false</c>
+                <c>Specifies if the attribute is a plural.</c>
+
+                <c>description</c>
+                <c>all</c>
+                <c>true</c>
+                <c>N/A</c>
+                <c>The attribute's human readable description. When applicable Service
+                    Providers MUST specify the description specified in the core schema
+                    specification.
+                </c>
+
+                <c>schema</c>
+                <c>all</c>
+                <c>false</c>
+                <c>urn:scim:schemas:core:1.0</c>
+                <c>The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.</c>
+
+                <c>readOnly</c>
+                <c>all</c>
+                <c>false</c>
+                <c>false</c>
+                <c>Specifies if the attribute is mutable.</c>
+
+                <c>required</c>
+                <c>all</c>
+                <c>false</c>
+                <c>false</c>
+                <c>Specifies if the attribute is required.</c>
+
+                <c>caseExact</c>
+                <c>Specify only if the attribute type is a string.</c>
+                <c>false</c>
+                <c>false</c>
+                <c>Specifies if the string attribute is case sensitive.</c>
+
+                <c>subAttributes</c>
+                <c>Specify only if the attribute is complex. If specified sub
+                    attributes MUST also be specified.
+                </c>
+                <c>false</c>
+                <c>N/A</c>
+                <c>An array specifying the contained attributes.</c>
+
+                <c>pluralTypes</c>
+                <c>Specify only if the attribute is a Plural.</c>
+                <c>false</c>
+                <c>N/A</c>
+                <c>An array specifying the canonical type values. When applicable
+                    Service Providers MUST specify the canonical types specified in
+                    the core schema specification.
+                </c>
+            </texttable>
+
+            <t>A truncated, simple example using the core User extended with a single, extended attribute 'age':</t>
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                    <![CDATA[
+GET /schema/User/
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+            ]]></artwork>
+            </figure>
+            Returns (Response is truncated):
+
+            <figure height="" suppress-title="false" width="" alt="" title=""
+                    align="left">
+                <artwork height="" name="" width="" type="" alt="" align="left"
+                         xml:space="preserve">
+                    <![CDATA[
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/schema/User
+{
+  "attributes":[
+    {
+      "name":"id",
+      "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a
+      non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable
+      identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the
+      Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
+      "readOnly":true
+    },
+    {
+      "name":"name",
+      "type":"complex",
+      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or
+       they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they
+        SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
+      "subAttributes":[
+        {
+          "name":"formatted",
+          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL."
+        }
+      ]
+    },
+    {
+      "name":"emails",
+      "type":"string",
+      "plural":true,
+      "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of
+      bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+      "pluralTypes":["work","home","other"]
+    },
+    {
+      "name":"age",
+      "description":"The numeric user age. OPTIONAL.",
+      "schema":"urn:hr:schemas:user"
+    },
+
+  ]
+}
+ ]]></artwork>
+            </figure>
+
+        </section>
       <section title="Data Input/Output Formats" anchor="io-format">
         <t>
           Consumers SHOULD specify the format in which the data is submitted and
