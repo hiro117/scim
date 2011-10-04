@@ -204,7 +204,12 @@
 
           <t hangText="display">A human readable name, primarily used for
           display purposes where the value is an opaque or complex type such
-          as an id. OPTIONAL</t>
+          as an id. READ-ONLY and OPTIONAL.</t>
+
+          <t hangText="operation">The operation to perform on the plural
+          attribute during a PATCH request.  The only valid value is "delete",
+          which signifies that the attribute should be removed from the
+          Resource. OPTIONAL.</t>
         </list>When returning Plural Attributes, Service Providers SHOULD
       canonicalize the value returned, if appropriate (e.g. for e-mail
       addresses and URLs). Providers MAY return the same value more than once
@@ -255,13 +260,24 @@
             resource. OPTIONAL.<list style="hanging">
                 <t hangText="created">The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
-                OPTIONAL.</t>
+                READ-ONLY and OPTIONAL.</t>
 
                 <t hangText="lastModified">The most recent DateTime the
                 details of this Resource were updated at the Service Provider. If
                 this Resource has never been modified since its initial creation,
                 the value MUST be the same as the value of created. The
-                attribute MUST be a DateTime. OPTIONAL.</t>
+                attribute MUST be a DateTime. READ-ONLY and OPTIONAL.</t>
+
+                <t hangText="location">The URI of the Resource being
+                returned. This value MUST be the same as the Location HTTP
+                response header.  READ-ONLY and OPTIONAL.</t>
+
+                <t hangText="version">The version of the Resource being
+                returned. This value must be the same as the ETag HTTP response
+                header. READ-ONLY and OPTIONAL.</t>
+
+                <t hangText="attributes">The names of the attributes to from the
+                Resource during a PATCH operation. OPTIONAL.</t>
               </list></t>
           </list>
         </t>
@@ -483,8 +499,9 @@
               types and removes the standard canonical types. If the SCIM
               Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
-              user belongs. TODO - do we need to provider a human readable name
-              here?  OPTIONAL.
+              user belongs. This attribute is read-only, and group membership
+              changes MUST happen through the Group Resource. READ-ONLY and
+              OPTIONAL.
             </t>
 
             <t hangText="entitlements">A list of entitlements for the User that
@@ -574,9 +591,10 @@
       <t>The following Plural Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
           <t hangText="members">A list of members of the Group. Canonical Type
-          "User" and "Group". The value must be the "id" of a SCIM resource,
-          either a User, or a Group. The intention of the Group type is to
-          allow the Service Provider to support nested Groups. REQUIRED.</t>
+          "User" and "Group" are READ-ONLY. The value must be the "id" of a SCIM
+          resource, either a User, or a Group. The intention of the Group type
+          is to allow the Service Provider to support nested Groups.
+          REQUIRED.</t>
         </list></t>
 
       <t />
@@ -789,9 +807,6 @@
 		    ],
 		    "userType": "Employee",
 		    "title": "Tour Guide",
-		    "manager": {
-				"displayName": "Mandy Pepperidge"
-			},
 		    "preferredLanguage": "en_US",
 		    "locale": "en_US",
 		    "timezone": "America/Denver",
@@ -812,13 +827,13 @@
 		    ],
 		    "urn:scim:schemas:extension:enterprise:1.0": {
 		        "employeeNumber": "701984",
-            "costCenter": "4130",
+		        "costCenter": "4130",
 		        "organization": "Universal Studios",
 		        "division": "Theme Park",
 		        "department": "Tour Operations",
 		        "manager": {
-    				    "managerId": "005D0000001AQRE",
-    				    "displayName": "John Smith"
+		            "managerId": "005D0000001AQRE",
+		            "displayName": "John Smith"
 		        }
 		    },
 		    "meta": {
@@ -839,15 +854,17 @@
 	{ 
 	    "schemas": ["urn:scim:schemas:core:1.0"],
 	    "id": "00300000005N98YT1", 
-		  "displayName": "Tour Guides",
+	    "displayName": "Tour Guides",
 	    "members": [
 	        {
 	          "display": "Babs Jensen",
 	          "value": "005D0000001Az1u",
+	          "type": "User"
 	        },
 	        {
 	          "display": "Mandy Pepperidge",
-	          "value": "005D0000001AQRE"
+	          "value": "005D0000001AQRE",
+	          "type": "User"
 	        }
 	    ]
 	}	
@@ -1031,7 +1048,7 @@
 
 	<SCIM xmlns="urn:scim:schemas:core:1.0">
 	    <id>00300000005N98YT1</id>
-		<displayName>Tour Guides</displayName>
+	    <displayName>Tour Guides</displayName>
 	    <members>
 	    	<member display="Babs Jensen">005D0000001Az1u</familyName>
 	    	<member display="Mandy Pepperidge">005D0000001AQRE</givenName>
@@ -1051,8 +1068,6 @@
           <t>Chuck Mortimore (cmortimore@salesforce.com) &lt;editor&gt;</t>
 
           <t>Patrick Harding (pharding@pingidentity.com) &lt;author&gt;</t>
-
-          <t>Paul Madsen (pmadsen@pingidentity.com) &lt;author&gt;</t>
 
           <t>Paul Madsen (pmadsen@pingidentity.com) &lt;author&gt;</t>
 
