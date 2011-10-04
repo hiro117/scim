@@ -377,7 +377,13 @@ SCIM Schema Structure</h3>
 <dt>display</dt>
 <dd>A human readable name, primarily used for
           display purposes where the value is an opaque or complex type such
-          as an id. OPTIONAL
+          as an id. READ-ONLY and OPTIONAL.
+</dd>
+<dt>operation</dt>
+<dd>The operation to perform on the plural
+          attribute during a PATCH request.  The only valid value is "delete",
+          which signifies that the attribute should be removed from the
+          Resource. OPTIONAL.
 </dd>
 </dl></blockquote><p>When returning Plural Attributes, Service Providers SHOULD
       canonicalize the value returned, if appropriate (e.g. for e-mail
@@ -444,14 +450,28 @@ Common Schema Attributes</h3>
 <dt>created</dt>
 <dd>The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
-                OPTIONAL.
+                READ-ONLY and OPTIONAL.
 </dd>
 <dt>lastModified</dt>
 <dd>The most recent DateTime the
                 details of this Resource were updated at the Service Provider. If
                 this Resource has never been modified since its initial creation,
                 the value MUST be the same as the value of created. The
-                attribute MUST be a DateTime. OPTIONAL.
+                attribute MUST be a DateTime. READ-ONLY and OPTIONAL.
+</dd>
+<dt>location</dt>
+<dd>The URI of the Resource being
+                returned. This value MUST be the same as the Location HTTP
+                response header.  READ-ONLY and OPTIONAL.
+</dd>
+<dt>version</dt>
+<dd>The version of the Resource being
+                returned. This value must be the same as the ETag HTTP response
+                header. READ-ONLY and OPTIONAL.
+</dd>
+<dt>attributes</dt>
+<dd>The names of the attributes to from the
+                Resource during a PATCH operation. OPTIONAL.
 </dd>
 </dl></blockquote>
 </dd>
@@ -723,8 +743,9 @@ Plural Attributes</h3>
               types and removes the standard canonical types. If the SCIM
               Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
-              user belongs. TODO - do we need to provider a human readable name
-              here?  OPTIONAL.
+              user belongs. This attribute is read-only, and group membership
+              changes MUST happen through the Group Resource. READ-ONLY and
+              OPTIONAL.
             
 </dd>
 <dt>entitlements</dt>
@@ -838,9 +859,10 @@ SCIM Group Schema</h3>
 <blockquote class="text"><dl>
 <dt>members</dt>
 <dd>A list of members of the Group. Canonical Type
-          "User" and "Group". The value must be the "id" of a SCIM resource,
-          either a User, or a Group. The intention of the Group type is to
-          allow the Service Provider to support nested Groups. REQUIRED.
+          "User" and "Group" are READ-ONLY. The value must be the "id" of a SCIM
+          resource, either a User, or a Group. The intention of the Group type
+          is to allow the Service Provider to support nested Groups.
+          REQUIRED.
 </dd>
 </dl></blockquote>
 
@@ -1062,9 +1084,6 @@ Enterprise User Extension Representation</h3>
 		    ],
 		    "userType": "Employee",
 		    "title": "Tour Guide",
-		    "manager": {
-				"displayName": "Mandy Pepperidge"
-			},
 		    "preferredLanguage": "en_US",
 		    "locale": "en_US",
 		    "timezone": "America/Denver",
@@ -1085,13 +1104,13 @@ Enterprise User Extension Representation</h3>
 		    ],
 		    "urn:scim:schemas:extension:enterprise:1.0": {
 		        "employeeNumber": "701984",
-            "costCenter": "4130",
+		        "costCenter": "4130",
 		        "organization": "Universal Studios",
 		        "division": "Theme Park",
 		        "department": "Tour Operations",
 		        "manager": {
-    				    "managerId": "005D0000001AQRE",
-    				    "displayName": "John Smith"
+		            "managerId": "005D0000001AQRE",
+		            "displayName": "John Smith"
 		        }
 		    },
 		    "meta": {
@@ -1113,15 +1132,17 @@ Group Representation</h3>
 	{
 	    "schemas": ["urn:scim:schemas:core:1.0"],
 	    "id": "00300000005N98YT1",
-		  "displayName": "Tour Guides",
+	    "displayName": "Tour Guides",
 	    "members": [
 	        {
 	          "display": "Babs Jensen",
 	          "value": "005D0000001Az1u",
+	          "type": "User"
 	        },
 	        {
 	          "display": "Mandy Pepperidge",
-	          "value": "005D0000001AQRE"
+	          "value": "005D0000001AQRE",
+	          "type": "User"
 	        }
 	    ]
 	}
@@ -1312,7 +1333,7 @@ Group Representation</h3>
 
 	&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
 	    &lt;id&gt;00300000005N98YT1&lt;/id&gt;
-		&lt;displayName&gt;Tour Guides&lt;/displayName&gt;
+	    &lt;displayName&gt;Tour Guides&lt;/displayName&gt;
 	    &lt;members&gt;
 	    	&lt;member display="Babs Jensen"&gt;005D0000001Az1u&lt;/familyName&gt;
 	    	&lt;member display="Mandy Pepperidge"&gt;005D0000001AQRE&lt;/givenName&gt;
@@ -1335,8 +1356,6 @@ Acknowledgements</h3>
 <p>Chuck Mortimore (cmortimore@salesforce.com) &lt;editor&gt;
 </p>
 <p>Patrick Harding (pharding@pingidentity.com) &lt;author&gt;
-</p>
-<p>Paul Madsen (pmadsen@pingidentity.com) &lt;author&gt;
 </p>
 <p>Paul Madsen (pmadsen@pingidentity.com) &lt;author&gt;
 </p>
