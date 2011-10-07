@@ -59,9 +59,9 @@
   <middle>
     <section title="Introduction and Overview" anchor="intro" toc="default">
       <t>The SCIM Protocol is an application-level, REST protocol for
-        provisioning and managing user identity on the web. The protocol
-        supports creating, editing, deleting, querying and retrieving Users and
-        Groups as well as simple password change requests.
+        provisioning and managing identity data on the web. The protocol
+        supports creation, modification, retrieval, and discovery of core identity Resources; i.e., Users and Groups,
+        custom Resource extensions, and a simple password change operation.
       </t>
 
       <section title="Intended Audience" toc="default">
@@ -96,7 +96,7 @@
             identity information via the SCIM protocol.
           </t>
           <t hangText="Consumer:">A website or application that uses the SCIM
-            protocol to manage identity managed by the Service Provider.
+            protocol to manage identity maintained by the Service Provider.
           </t>
           <t hangText="Base URL:">The SCIM REST API is always relative to a Base
             URL for the API. The Base URL MUST NOT contain a query string, as
@@ -218,7 +218,7 @@
           <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
           <xref target="delete-resource" format="default">DELETE</xref>
         </c>
-        <c>Read/Modify Users</c>
+        <c>Retrieve/Modify Users</c>
 
         <c>
           User Query/Listing
@@ -236,7 +236,7 @@
           <xref target="edit-resource-with-patch" format="default">PATCH</xref>,
           <xref target="delete-resource" format="default">DELETE</xref>
         </c>
-        <c>Read/Modify Groups</c>
+        <c>Retrieve/Modify Groups</c>
         <c>
           User Query/Listing
         </c>
@@ -246,7 +246,7 @@
         </c>
         <c>Retrieve Group(s) via ad hoc queries</c>
 
-        <c>Change User Password</c>
+        <c>User Password</c>
         <c>
           /User/{userId}/password
         </c>
@@ -255,14 +255,32 @@
         </c>
         <c>Change a User's password</c>
 
+        <c>Service Provider Configuration</c>
+        <c>
+          /ServiceProviderConfig
+        </c>
+        <c>
+          <xref target="get-resource" format="default">GET</xref>
+        </c>
+        <c>Retrieve the Service Provider's Configuration</c>
+
         <c>Resource Schema</c>
         <c>
-          /schema/{Resource Name}
+          /Schema
         </c>
         <c>
-          <xref target="get-schema" format="default">GET</xref>
+          <xref target="get-resource" format="default">GET</xref>
         </c>
-        <c>Retrieve a Resource schema</c>
+        <c>Retrieve a Resource's Schema</c>
+
+        <c>Resource Schema Query/Listing</c>
+          <c>
+            /Schemas
+          </c>
+          <c>
+            <xref target="query-resources" format="default">GET</xref>
+          </c>
+        <c>Retrieve Resource Schema(s) via ad hoc queries</c>
       </texttable>
 
       <t>
@@ -1432,258 +1450,6 @@ HTTP/1.1 204 OK
             ]]></artwork>
         </figure>
       </section>
-
-        <section title="Retrieving Resource Schema" anchor="get-schema"
-                 toc="default">
-            <t>The Resource schema endpoints enable Consumers to retrieve core and
-                extended Resource meta-data providing Consumer implementers with
-                sufficient information to perform Resource discovery.
-            </t>
-            <t>
-                Consumers may retrieve all Service Provider supported Resources via a
-                GET request to the endpoint /schemas. Service Providers MUST return
-                all core and extended Resources within the response.
-                The complete set of Resource schema attributes and associated usage is
-                specified in the table below.
-            </t>
-            <texttable anchor='resource-schema-table' title="Resource Schema Attributes" alight='left'>
-                <ttcol align='left'>Attribute</ttcol>
-                <ttcol align='left'>Is Required</ttcol>
-                <ttcol align='left'>Default value when omitted</ttcol>
-                <ttcol align='left'>Description</ttcol>
-                <c>name</c>
-                <c>true</c>
-                <c>N/A</c>
-                <c>The Resource name. When applicable Service Providers MUST specify
-                    the name specified in the core schema specification.</c>
-
-                <c>description</c>
-                <c>true</c>
-                <c>N/A</c>
-                <c>The Resource's human readable description. When applicable Service
-                    Providers MUST specify the description specified in the core schema
-                    specification.</c>
-
-                <c>schema</c>
-                <c>false</c>
-                <c>urn:scim:schemas:core:1.0</c>
-                <c>The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.</c>
-
-                <c>queryEndpoint</c>
-                <c>false</c>
-                <c>/{name} (if core schema) or /{schema}:{name} (if an extended Resource)</c>
-                <c>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /User</c>
-            </texttable>
-
-            <t>
-                An example request returning core Resources as well as a single
-                extended Resource, 'Machine':
-            </t>
-            <figure height="" suppress-title="false" width="" alt="" title=""
-                    align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                    <![CDATA[
-GET /schemas
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-            ]]></artwork>
-            </figure>
-            Returns:
-            <figure height="" suppress-title="false" width="" alt="" title=""
-                    align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                    <![CDATA[
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-Location: https://example.com/schemas
-{
-  "resources":[
-    {
-      "name":"User",
-      "description":"TBD",
-      "schema":"urn:scim:schemas:core:1.0"
-    },
-    {
-      "name":"Group",
-      "description":"TBD",
-      "schema":"urn:scim:schemas:core:1.0"
-    },
-    {
-      "name":"Machine",
-      "description":"An extended Resource",
-      "schema":"urn:virtual:schemas",
-      "queryEndpoint":"/urn:virtual:schemas:Machines"
-    }
-  ]
-}
- ]]></artwork>
-            </figure>
-
-            <t>
-                To retrieve a Resource schema, Consumers send a GET request
-                to /schema/{Resource Path}; e.g.,
-                /schema/User. If the Resource exists the Service Provider MUST
-                return the schema in the body of the response with a 200 status
-                code or, if non-existent, a 404 status code. If a core
-                Resource; e.g., User is extended the Service
-                Provider must return the core Resource and all extended
-                attributes. To avoid namespace collisions Resource extensions
-                must be fully qualified by prefixing the Resource name with the
-                associated schema URN; e.g., the Resource 'Machine' declared in
-                the namespace 'urn:virtual:schemas' is represented as
-                'urn:virtual:schemas:Machine'.
-            </t>
-
-            <t>Some schema attributes may be omitted and are context sensitive.
-                The complete set of schema attributes and associated usage is
-                specified in the table below.
-            </t>
-            <texttable anchor='schema-attribute-table' title="Schema Attributes"
-                       alight='left'>
-                <ttcol align='left'>Attribute</ttcol>
-                <ttcol align='left'>Applicability</ttcol>
-                <ttcol align='left'>Is Required</ttcol>
-                <ttcol align='left'>Default value when omitted</ttcol>
-                <ttcol align='left'>Description</ttcol>
-                <c>name</c>
-                <c>all</c>
-                <c>true</c>
-                <c>N/A</c>
-                <c>The attribute's name.</c>
-
-                <c>type</c>
-                <c>all</c>
-                <c>false</c>
-                <c>string</c>
-                <c>The attribute's data type; e.g., string.</c>
-
-                <c>plural</c>
-                <c>Specify only if plural</c>
-                <c>false</c>
-                <c>false</c>
-                <c>Specifies if the attribute is a plural.</c>
-
-                <c>description</c>
-                <c>all</c>
-                <c>true</c>
-                <c>N/A</c>
-                <c>The attribute's human readable description. When applicable Service
-                    Providers MUST specify the description specified in the core schema
-                    specification.
-                </c>
-
-                <c>schema</c>
-                <c>all</c>
-                <c>false</c>
-                <c>urn:scim:schemas:core:1.0</c>
-                <c>The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.</c>
-
-                <c>readOnly</c>
-                <c>all</c>
-                <c>false</c>
-                <c>false</c>
-                <c>Specifies if the attribute is mutable.</c>
-
-                <c>required</c>
-                <c>all</c>
-                <c>false</c>
-                <c>false</c>
-                <c>Specifies if the attribute is required.</c>
-
-                <c>caseExact</c>
-                <c>Specify only if the attribute type is a string.</c>
-                <c>false</c>
-                <c>false</c>
-                <c>Specifies if the string attribute is case sensitive.</c>
-
-                <c>subAttributes</c>
-                <c>Specify only if the attribute is complex. If specified sub
-                    attributes MUST also be specified.
-                </c>
-                <c>false</c>
-                <c>N/A</c>
-                <c>An array specifying the contained attributes.</c>
-
-                <c>pluralTypes</c>
-                <c>Specify only if the attribute is a Plural.</c>
-                <c>false</c>
-                <c>N/A</c>
-                <c>An array specifying the canonical type values. When applicable
-                    Service Providers MUST specify the canonical types specified in
-                    the core schema specification.
-                </c>
-            </texttable>
-
-            <t>A truncated, simple example using the core User extended with a single, extended attribute 'age':</t>
-            <figure height="" suppress-title="false" width="" alt="" title=""
-                    align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                    <![CDATA[
-GET /schema/User/
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-            ]]></artwork>
-            </figure>
-            Returns (Response is truncated):
-
-            <figure height="" suppress-title="false" width="" alt="" title=""
-                    align="left">
-                <artwork height="" name="" width="" type="" alt="" align="left"
-                         xml:space="preserve">
-                    <![CDATA[
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-Location: https://example.com/v1/schema/User
-{
-  "attributes":[
-    {
-      "name":"id",
-      "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a
-      non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable
-      identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the
-      Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
-      "readOnly":true
-    },
-    {
-      "name":"name",
-      "type":"complex",
-      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or
-       they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they
-        SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
-      "subAttributes":[
-        {
-          "name":"formatted",
-          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL."
-        }
-      ]
-    },
-    {
-      "name":"emails",
-      "type":"string",
-      "plural":true,
-      "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of
-      bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
-      "pluralTypes":["work","home","other"]
-    },
-    {
-      "name":"age",
-      "description":"The numeric user age. OPTIONAL.",
-      "schema":"urn:hr:schemas:user"
-    },
-
-  ]
-}
- ]]></artwork>
-            </figure>
-
-        </section>
       <section title="Data Input/Output Formats" anchor="io-format">
         <t>
           Consumers SHOULD specify the format in which the data is submitted and
