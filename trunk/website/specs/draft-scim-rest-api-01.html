@@ -204,17 +204,15 @@ Modifying with PATCH<br />
 Deleting Resources<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#change-password">4.5.</a>&nbsp;
 Change password<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-schema">4.6.</a>&nbsp;
-Retrieving Resource Schema<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.7.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.6.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.7.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.8.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.9.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.11.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.10.</a>&nbsp;
 HTTP Method Overloading<br />
 <a href="#anchor8">5.</a>&nbsp;
 Acknowledgments<br />
@@ -229,9 +227,9 @@ Authors' Addresses<br />
 Introduction and Overview</h3>
 
 <p>The SCIM Protocol is an application-level, REST protocol for
-        provisioning and managing user identity on the web. The protocol
-        supports creating, editing, deleting, querying and retrieving Users and
-        Groups as well as simple password change requests.
+        provisioning and managing identity data on the web. The protocol
+        supports creation, modification, retrieval, and discovery of core identity Resources; i.e., Users and Groups,
+        custom Resource extensions, and a simple password change operation.
       
 </p>
 <a name="anchor1"></a><br /><hr />
@@ -279,7 +277,7 @@ Definitions</h3>
 </dd>
 <dt>Consumer:</dt>
 <dd>A website or application that uses the SCIM
-            protocol to manage identity managed by the Service Provider.
+            protocol to manage identity maintained by the Service Provider.
           
 </dd>
 <dt>Base URL:</dt>
@@ -420,7 +418,7 @@ API</h3>
           <a class='info' href='#edit-resource-with-patch'>PATCH<span> (</span><span class='info'>Modifying with PATCH</span><span>)</span></a>,
           <a class='info' href='#delete-resource'>DELETE<span> (</span><span class='info'>Deleting Resources</span><span>)</span></a>
         </td>
-<td align="left">Read/Modify Users</td>
+<td align="left">Retrieve/Modify Users</td>
 </tr>
 <tr>
 <td align="left">
@@ -441,7 +439,7 @@ API</h3>
           <a class='info' href='#edit-resource-with-patch'>PATCH<span> (</span><span class='info'>Modifying with PATCH</span><span>)</span></a>,
           <a class='info' href='#delete-resource'>DELETE<span> (</span><span class='info'>Deleting Resources</span><span>)</span></a>
         </td>
-<td align="left">Read/Modify Groups</td>
+<td align="left">Retrieve/Modify Groups</td>
 </tr>
 <tr>
 <td align="left">
@@ -454,7 +452,7 @@ API</h3>
 <td align="left">Retrieve Group(s) via ad hoc queries</td>
 </tr>
 <tr>
-<td align="left">Change User Password</td>
+<td align="left">User Password</td>
 <td align="left">
           /User/{userId}/password
         </td>
@@ -464,14 +462,34 @@ API</h3>
 <td align="left">Change a User's password</td>
 </tr>
 <tr>
+<td align="left">Service Provider Configuration</td>
+<td align="left">
+          /ServiceProviderConfig
+        </td>
+<td align="left">
+          <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>
+        </td>
+<td align="left">Retrieve the Service Provider's Configuration</td>
+</tr>
+<tr>
 <td align="left">Resource Schema</td>
 <td align="left">
-          /schema/{Resource Name}
+          /Schema
         </td>
 <td align="left">
-          <a class='info' href='#get-schema'>GET<span> (</span><span class='info'>Retrieving Resource Schema</span><span>)</span></a>
+          <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>
         </td>
-<td align="left">Retrieve a Resource schema</td>
+<td align="left">Retrieve a Resource's Schema</td>
+</tr>
+<tr>
+<td align="left">Resource Schema Query/Listing</td>
+<td align="left">
+            /Schemas
+          </td>
+<td align="left">
+            <a class='info' href='#query-resources'>GET<span> (</span><span class='info'>List/Query Resources</span><span>)</span></a>
+          </td>
+<td align="left">Retrieve Resource Schema(s) via ad hoc queries</td>
 </tr>
 </table>
 <br clear="all" />
@@ -1545,258 +1563,9 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 204 OK
 </pre></div>
-<a name="get-schema"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
-Retrieving Resource Schema</h3>
-
-<p>The Resource schema endpoints enable Consumers to retrieve core and
-                extended Resource meta-data providing Consumer implementers with
-                sufficient information to perform Resource discovery.
-            
-</p>
-<p>
-                Consumers may retrieve all Service Provider supported Resources via a
-                GET request to the endpoint /schemas. Service Providers MUST return
-                all core and extended Resources within the response.
-                The complete set of Resource schema attributes and associated usage is
-                specified in the table below.
-            
-</p><br /><hr class="insert" />
-<a name="resource-schema-table"></a>
-<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
-<col align="left"><col align="left"><col align="left"><col align="left">
-<tr><th align="left">Attribute</th><th align="left">Is Required</th><th align="left">Default value when omitted</th><th align="left">Description</th></tr>
-<tr>
-<td align="left">name</td>
-<td align="left">true</td>
-<td align="left">N/A</td>
-<td align="left">The Resource name. When applicable Service Providers MUST specify
-                    the name specified in the core schema specification.</td>
-</tr>
-<tr>
-<td align="left">description</td>
-<td align="left">true</td>
-<td align="left">N/A</td>
-<td align="left">The Resource's human readable description. When applicable Service
-                    Providers MUST specify the description specified in the core schema
-                    specification.</td>
-</tr>
-<tr>
-<td align="left">schema</td>
-<td align="left">false</td>
-<td align="left">urn:scim:schemas:core:1.0</td>
-<td align="left">The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.</td>
-</tr>
-<tr>
-<td align="left">queryEndpoint</td>
-<td align="left">false</td>
-<td align="left">/{name} (if core schema) or /{schema}:{name} (if an extended Resource)</td>
-<td align="left">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /User</td>
-</tr>
-</table>
-<br clear="all" />
-<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 7: Resource Schema Attributes&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
-
-<p>
-                An example request returning core Resources as well as a single
-                extended Resource, 'Machine':
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-GET /schemas
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-Location: https://example.com/schemas
-{
-  "resources":[
-    {
-      "name":"User",
-      "description":"TBD",
-      "schema":"urn:scim:schemas:core:1.0"
-    },
-    {
-      "name":"Group",
-      "description":"TBD",
-      "schema":"urn:scim:schemas:core:1.0"
-    },
-    {
-      "name":"Machine",
-      "description":"An extended Resource",
-      "schema":"urn:virtual:schemas",
-      "queryEndpoint":"/urn:virtual:schemas:Machines"
-    }
-  ]
-}
-</pre></div>
-<p>
-                To retrieve a Resource schema, Consumers send a GET request
-                to /schema/{Resource Path}; e.g.,
-                /schema/User. If the Resource exists the Service Provider MUST
-                return the schema in the body of the response with a 200 status
-                code or, if non-existent, a 404 status code. If a core
-                Resource; e.g., User is extended the Service
-                Provider must return the core Resource and all extended
-                attributes. To avoid namespace collisions Resource extensions
-                must be fully qualified by prefixing the Resource name with the
-                associated schema URN; e.g., the Resource 'Machine' declared in
-                the namespace 'urn:virtual:schemas' is represented as
-                'urn:virtual:schemas:Machine'.
-            
-</p>
-<p>Some schema attributes may be omitted and are context sensitive.
-                The complete set of schema attributes and associated usage is
-                specified in the table below.
-            
-</p><br /><hr class="insert" />
-<a name="schema-attribute-table"></a>
-<table class="full" align="center" border="0" cellpadding="2" cellspacing="2">
-<col align="left"><col align="left"><col align="left"><col align="left"><col align="left">
-<tr><th align="left">Attribute</th><th align="left">Applicability</th><th align="left">Is Required</th><th align="left">Default value when omitted</th><th align="left">Description</th></tr>
-<tr>
-<td align="left">name</td>
-<td align="left">all</td>
-<td align="left">true</td>
-<td align="left">N/A</td>
-<td align="left">The attribute's name.</td>
-</tr>
-<tr>
-<td align="left">type</td>
-<td align="left">all</td>
-<td align="left">false</td>
-<td align="left">string</td>
-<td align="left">The attribute's data type; e.g., string.</td>
-</tr>
-<tr>
-<td align="left">plural</td>
-<td align="left">Specify only if plural</td>
-<td align="left">false</td>
-<td align="left">false</td>
-<td align="left">Specifies if the attribute is a plural.</td>
-</tr>
-<tr>
-<td align="left">description</td>
-<td align="left">all</td>
-<td align="left">true</td>
-<td align="left">N/A</td>
-<td align="left">The attribute's human readable description. When applicable Service
-                    Providers MUST specify the description specified in the core schema
-                    specification.
-                </td>
-</tr>
-<tr>
-<td align="left">schema</td>
-<td align="left">all</td>
-<td align="left">false</td>
-<td align="left">urn:scim:schemas:core:1.0</td>
-<td align="left">The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.</td>
-</tr>
-<tr>
-<td align="left">readOnly</td>
-<td align="left">all</td>
-<td align="left">false</td>
-<td align="left">false</td>
-<td align="left">Specifies if the attribute is mutable.</td>
-</tr>
-<tr>
-<td align="left">required</td>
-<td align="left">all</td>
-<td align="left">false</td>
-<td align="left">false</td>
-<td align="left">Specifies if the attribute is required.</td>
-</tr>
-<tr>
-<td align="left">caseExact</td>
-<td align="left">Specify only if the attribute type is a string.</td>
-<td align="left">false</td>
-<td align="left">false</td>
-<td align="left">Specifies if the string attribute is case sensitive.</td>
-</tr>
-<tr>
-<td align="left">subAttributes</td>
-<td align="left">Specify only if the attribute is complex. If specified sub
-                    attributes MUST also be specified.
-                </td>
-<td align="left">false</td>
-<td align="left">N/A</td>
-<td align="left">An array specifying the contained attributes.</td>
-</tr>
-<tr>
-<td align="left">pluralTypes</td>
-<td align="left">Specify only if the attribute is a Plural.</td>
-<td align="left">false</td>
-<td align="left">N/A</td>
-<td align="left">An array specifying the canonical type values. When applicable
-                    Service Providers MUST specify the canonical types specified in
-                    the core schema specification.
-                </td>
-</tr>
-</table>
-<br clear="all" />
-<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 8: Schema Attributes&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
-
-<p>A truncated, simple example using the core User extended with a single, extended attribute 'age':
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-GET /schema/User/
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-Location: https://example.com/v1/schema/User
-{
-  "attributes":[
-    {
-      "name":"id",
-      "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a
-      non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable
-      identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the
-      Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
-      "readOnly":true
-    },
-    {
-      "name":"name",
-      "type":"complex",
-      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or
-       they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they
-        SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
-      "subAttributes":[
-        {
-          "name":"formatted",
-          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL."
-        }
-      ]
-    },
-    {
-      "name":"emails",
-      "type":"string",
-      "plural":true,
-      "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of
-      bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
-      "pluralTypes":["work","home","other"]
-    },
-    {
-      "name":"age",
-      "description":"The numeric user age. OPTIONAL.",
-      "schema":"urn:hr:schemas:user"
-    },
-
-  ]
-}
-</pre></div>
 <a name="io-format"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
+<a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
 Data Input/Output Formats</h3>
 
 <p>
@@ -1872,7 +1641,7 @@ Host: example.com
 </pre></div>
 <a name="addtl-retrieval-query-params"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+<a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
 Additional retrieval query parameters</h3>
 
 <p>
@@ -1916,7 +1685,7 @@ ETag: "a330bc54f0671c9"
 </pre></div>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
+<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
@@ -1985,7 +1754,7 @@ HTTP Response Codes</h3>
 </tr>
 </table>
 <br clear="all" />
-<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 9: Defined error cases&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+<table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 7: Defined error cases&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>Error example in response to a non-existent GET request.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -2003,7 +1772,7 @@ HTTP/1.1 404 NOT FOUND
 </pre></div>
 <a name="etags"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
+<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
 Versioning Resources</h3>
 
 <p>
@@ -2100,7 +1869,7 @@ If-None-Match: "e180ee84f0671b1"
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
+<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT,
