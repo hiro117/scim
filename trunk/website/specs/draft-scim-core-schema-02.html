@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en"><head><title>Draft: Simple Cloud Identity Management: Core
-    Schema 1.0 - draft 1</title>
+    Schema 1.0 - draft 2</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="Simple Cloud Identity Management: Core
-    Schema 1.0 - draft 1">
+    Schema 1.0 - draft 2">
 <meta name="generator" content="xml2rfc v1.36 (http://xml.resource.org/)">
 <style type='text/css'><!--
         body {
@@ -150,7 +150,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Ping</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">J. Smarr</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">June 13, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 7, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />Simple Cloud Identity Management: Core
     Schema 1.0 - draft 2</h1>
@@ -339,7 +339,7 @@ SCIM Schema Structure</h3>
 <dd>The attribute value MUST be a valid
           xsd:dateTime (e.g. 2008-01-23T04:56:22Z) value as specified in
             <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7 of the XML Schema Datatypes Specification</a>.
-
+          
 </dd>
 <dt>Binary</dt>
 <dd>The attribute value MUST be encoded as a valid
@@ -348,10 +348,10 @@ SCIM Schema Structure</h3>
             are specified in the core schema, however,
             extended schemas may opt to include images,
             digital signatures, and the like.
-
+          
 </dd>
 </dl></blockquote><p>
-
+      
 </p>
 <p>Plural Attributes allow for lists of attributes using a special
       complex type. All Plural Attributes, unless otherwise specified, have
@@ -498,7 +498,7 @@ Common Schema Attributes</h3>
 </dl></blockquote>
 </dd>
 </dl></blockquote><p>
-
+        
 </p>
 <a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -534,7 +534,7 @@ Common Schema Attributes</h3>
             order is not specified and MUST not impact behavior. REQUIRED.
 </dd>
 </dl></blockquote><p>
-
+        
 </p>
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -654,7 +654,7 @@ Singular Attributes</h3>
               time zone database format; e.g.,'America/Denver'. Valid values
               and details at  <a href='http://cs.ucla.edu/~eggert/tz/tz-link.htm'>http://cs.ucla.edu/~eggert/tz/tz-link.htm</a>.
               OPTIONAL.
-
+            
 </dd>
 <dt>active</dt>
 <dd>A Boolean value indicating the User's administrative status. The definitive meaning of
@@ -662,7 +662,7 @@ Singular Attributes</h3>
                 example, able to login while a value of false implies the User's account has been suspended.  OPTIONAL.
 </dd>
 </dl></blockquote><p>
-
+        
 </p>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -711,7 +711,7 @@ Plural Attributes</h3>
 <dt>addresses</dt>
 <dd>A physical mailing address for this User. Canonical Type Values of work,
             home, and other. The value attribute is a complex type with the
-            following sub-attributes. OPTIONAL
+            following sub-attributes. OPTIONAL 
 <blockquote class="text"><dl>
 <dt>formatted</dt>
 <dd>The full mailing address, formatted
@@ -741,10 +741,10 @@ Plural Attributes</h3>
                   When specified the value MUST be in
                     <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 alpha 2 "short" code format</a>; e.g., the United States and Sweden are "US" and "SE",
                   respectively.  OPTIONAL.
-
+                
 </dd>
 </dl></blockquote>
-
+            
 </dd>
 <dt>groups</dt>
 <dd>A list of groups that the user belongs to.
@@ -758,7 +758,7 @@ Plural Attributes</h3>
               Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
               user belongs.  OPTIONAL.
-
+            
 </dd>
 <dt>entitlements</dt>
 <dd>A list of entitlements for the User that
@@ -769,7 +769,7 @@ Plural Attributes</h3>
               and without ambiguity determine what the User has access to. This
               value has NO canonical types though type may be useful as a means
               to scope entitlements. OPTIONAL.
-
+            
 </dd>
 <dt>roles</dt>
 <dd>A list of roles for the User that collectively
@@ -778,10 +778,10 @@ Plural Attributes</h3>
               role value is a string or label representing a collection of
               entitlements.  This value has NO canonical types and removes the
               standard canonical types.  OPTIONAL.
-
+            
 </dd>
 </dl></blockquote><p>
-
+        
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -837,7 +837,7 @@ SCIM Enterprise User Schema Extension</h3>
 </dl></blockquote>
 </dd>
 </dl></blockquote><p>
-
+      
 </p>
 <a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -873,7 +873,7 @@ SCIM Group Schema</h3>
 <dd>A list of members of the Group. Canonical Type "User" and "Group" are READ-ONLY. The
               value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
               to allow the Service Provider to support nested Groups. REQUIRED.
-
+          
 </dd>
 </dl></blockquote>
 
@@ -890,7 +890,7 @@ Service Provider Configuration Schema</h3>
 </p>
 <p>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
-
+      
 </p>
 <p>The following Singular Attributes are defined in addition to the common attributes defined in Core Schema:
           </p>
@@ -901,39 +901,39 @@ Service Provider Configuration Schema</h3>
 </dd>
 <dt>patch</dt>
 <dd>A complex type that specifies PATCH configuration options.  REQUIRED.
-
+                
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-
+            
 </dd>
 <dt>bulk</dt>
 <dd>A complex type that specifies BULK configuration options.  REQUIRED.
-
+                
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-
+                
 <blockquote class="text"><dl>
-<dt>maxResources</dt>
-<dd>An integer value specifying the maximum number of Resources. REQUIRED.
+<dt>maxOperations</dt>
+<dd>An integer value specifying the maximum number of operations. REQUIRED.
 </dd>
 </dl></blockquote>
-
+                
 <blockquote class="text"><dl>
 <dt>maxPayloadSize</dt>
-<dd>An integer value specifying the maximum payload size. REQUIRED.
+<dd>An integer value specifying the maximum payload size in bytes. REQUIRED.
 </dd>
 </dl></blockquote>
-
+            
 </dd>
 <dt>filter</dt>
 <dd>A complex type that specifies FILTER options.  REQUIRED.
-
+                  
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
@@ -942,40 +942,40 @@ Service Provider Configuration Schema</h3>
 <dd>Integer value specifying the maximum number of Resources returned in a response. REQUIRED.
 </dd>
 </dl></blockquote>
-
+              
 </dd>
 <dt>changePassword</dt>
 <dd>A complex type that specifies Change Password configuration options.  REQUIRED.
-
+                  
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-
+              
 </dd>
 <dt>sort</dt>
 <dd>A complex type that specifies Sort configuration options.  REQUIRED.
-
+                  
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether sorting is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-
+              
 </dd>
 <dt>etag</dt>
 <dd>A complex type that specifies Etag configuration options.  REQUIRED.
-
+                  
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-
+              
 </dd>
 </dl></blockquote><p>
-
+      
 </p>
 <p>The following Plural Attribute is defined in addition to the common attributes defined in Core Schema:
         </p>
@@ -985,7 +985,7 @@ Service Provider Configuration Schema</h3>
             properties.  Instead of the standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent common schemes: OAuth, OAuth2, HttpBasic, and HttpDigest.
             REQUIRED.
-
+            
 <blockquote class="text"><dl>
 <dt>name</dt>
 <dd>The common authentication scheme name; e.g., HTTP Basic. REQUIRED.
@@ -996,18 +996,18 @@ Service Provider Configuration Schema</h3>
 <dt>specUrl</dt>
 <dd>A HTTP addressable URL pointing to the Authentication Scheme's
                 specification.  OPTIONAL.
-
+              
 </dd>
 <dt>documentationUrl</dt>
 <dd>A HTTP addressable URL pointing to the Authentication Scheme's
                 usage documentation. OPTIONAL.
-
+              
 </dd>
 </dl></blockquote>
-
+          
 </dd>
 </dl></blockquote><p>
-
+      
 </p>
 <a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -1018,7 +1018,7 @@ Resource Schema</h3>
            are READ-ONLY and identified using the following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
            using an un-registered urn while in draft form).  Unlike other core Resources the schema Resource MAY contain
            a complex object within a Sub-Attribute.
-
+        
 </p>
 <p>The following Singular Attributes are defined in addition to the common attributes defined in SCIM Core Schema:
           </p>
@@ -1036,7 +1036,7 @@ Resource Schema</h3>
 <dd>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.
 </dd>
 </dl></blockquote><p>
-
+        
 </p>
 <p>The following Plural Attribute is defined in addition to the common attributes defined in SCIM Core Schema:
               </p>
@@ -1044,7 +1044,7 @@ Resource Schema</h3>
 <dt>attributes</dt>
 <dd>A complex type that specifies the set of associated Resource attributes.
                       REQUIRED.
-
+                      
 <blockquote class="text"><dl>
 <dt>name</dt>
 <dd>The attribute's name. REQUIRED.
@@ -1059,26 +1059,26 @@ Resource Schema</h3>
 <dd>The attribute's human readable description. When applicable Service
                               Providers MUST specify the description specified in the core schema specification.
                               REQUIRED.
-
+                          
 </dd>
 <dt>schema</dt>
 <dd>The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.
                               REQUIRED.
-
+                          
 </dd>
 <dt>readOnly</dt>
 <dd>A Boolean value that specifies if the attribute is mutable. REQUIRED.
-
+                          
 </dd>
 <dt>required</dt>
 <dd>A Boolean value that specifies if the attribute is required. REQUIRED.
-
+                          
 </dd>
 <dt>caseExact</dt>
 <dd>A Boolean value that specifies if the string attribute is case
                               sensitive.
                               REQUIRED.
-
+                          
 </dd>
 <dt></dt>
 <dd>
@@ -1086,11 +1086,11 @@ Resource Schema</h3>
 <dt></dt>
 <dd>The following Plural Attributes are defined. There are no canonical type values defined
                             and the primary value serves no useful purpose.
-
+                            
 <blockquote class="text"><dl>
 <dt>subAttributes</dt>
 <dd>A list specifying the contained attributes. OPTIONAL.
-
+                                
 <blockquote class="text"><dl>
 <dt>name</dt>
 <dd>The attribute's name. REQUIRED.
@@ -1102,40 +1102,40 @@ Resource Schema</h3>
 <dd>The attribute's human readable description. When
                                     applicable Service Providers MUST specify the description specified in the core
                                     schema specification. REQUIRED.
-
+                                  
 </dd>
 <dt>readOnly</dt>
 <dd>A Boolean value that specifies if the attribute is mutable.
                                     REQUIRED.
-
+                                  
 </dd>
 <dt>required</dt>
 <dd>A Boolean value that specifies if the attribute is required.
                                     REQUIRED.
-
+                                  
 </dd>
 <dt>caseExact</dt>
 <dd>A Boolean value that specifies if the string attribute
                                     is case sensitive. REQUIRED.
-
+                                  
 </dd>
 </dl></blockquote>
-
+                              
 </dd>
 <dt>pluralTypes</dt>
 <dd>A list of canonical type values. When
                                 applicable Service Providers MUST specify the canonical types specified in the
                                 core schema specification; e.g.,"work","home". OPTIONAL.
-
+                              
 </dd>
 </dl></blockquote>
-
+                          
 </dd>
 </dl></blockquote>
-
+                  
 </dd>
 </dl></blockquote><p>
-
+          
 </p>
 <a name="json_representation"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -1942,7 +1942,7 @@ Acknowledgements</h3>
 <p>...
 </p>
 </blockquote><p>
-
+      
 </p>
 <p>Special thanks to Joeseph Smarr, who's excellent work on the Portable
       Contacts Specification <a class='info' href='#PortableContacts'>[PortableContacts]<span> (</span><span class='info'>Smarr, J., &ldquo;Portable Contacts 1.0 Draft C - Schema Only,&rdquo; August&nbsp;2008.</span><span>)</span></a> provided the
