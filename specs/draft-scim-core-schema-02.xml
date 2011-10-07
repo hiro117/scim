@@ -629,10 +629,10 @@
                     <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
                 </list>
                 <list style="hanging">
-                    <t hangText="maxResources">An integer value specifying the maximum number of Resources. REQUIRED.</t>
+                    <t hangText="maxOperations">An integer value specifying the maximum number of operations. REQUIRED.</t>
                 </list>
                 <list style="hanging">
-                    <t hangText="maxPayloadSize">An integer value specifying the maximum payload size. REQUIRED.</t>
+                    <t hangText="maxPayloadSize">An integer value specifying the maximum payload size in bytes. REQUIRED.</t>
                 </list>
             </t>
               <t hangText="filter">A complex type that specifies FILTER options.  REQUIRED.
