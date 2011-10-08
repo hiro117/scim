@@ -150,6 +150,8 @@
 <tr><td class="header">&nbsp;</td><td class="header">Cisco</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">K. Grizzle</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">SailPoint</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">E. Wahlström</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">Technology Nexus</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">May 2011</td></tr>
 </table></td></tr></table>
 <h1><br />SCIM PROTOCOL</h1>
@@ -204,15 +206,17 @@ Modifying with PATCH<br />
 Deleting Resources<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#change-password">4.5.</a>&nbsp;
 Change password<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bulk-resources">4.6.</a>&nbsp;
+Bulk<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.7.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.7.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.8.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.9.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.10.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.11.</a>&nbsp;
 HTTP Method Overloading<br />
 <a href="#anchor8">5.</a>&nbsp;
 Acknowledgments<br />
@@ -491,6 +495,16 @@ API</h3>
           </td>
 <td align="left">Retrieve Resource Schema(s) via ad hoc queries</td>
 </tr>
+<tr>
+<td align="left">Bulk</td>
+<td align="left">
+          /Bulk
+        </td>
+<td align="left">
+          <a class='info' href='#bulk-resources'>POST<span> (</span><span class='info'>Bulk</span><span>)</span></a>
+        </td>
+<td align="left">Bulk modify Resources</td>
+</tr>
 </table>
 <br clear="all" />
 <table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Table 1: Defined endpoints&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
@@ -558,6 +572,7 @@ ETag: "e180ee84f0671b1"
 {
   "schemas":["urn:scim:schemas:core:1.0"],
   "id":"uid=bjensen,dc=example,dc=com",
+  "externalId":"bjensen",
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z"
@@ -1556,16 +1571,823 @@ Authorization: Bearer h480djs93hd8
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "password":"t1meMa$heen",
+  "password":"t1meMa$heen"
 }
 
 </pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 HTTP/1.1 204 OK
 </pre></div>
-<a name="io-format"></a><br /><hr />
+<a name="bulk-resources"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
+Bulk</h3>
+
+<p>
+                 Bulk is OPTIONAL. The bulk endpoint allows the Consumer to execute a 
+                 large set of Resource operations on the Service Provider in one single 
+                 HTTP request. Each operation inside a bulk job correspond to a single 
+                 HTTP request against a Resource endpoint, i.e. the /User, /Group, etc 
+                 endpoints, using one of the HTTP methods POST, PUT, PATCH or DELETE.
+             
+</p>
+<p>
+              The following Singular Attribute is defined in addition to the 
+              common attributes defined in core schema.
+            
+</p>
+<p>
+              </p>
+<blockquote class="text"><dl>
+<dt>failonerrors</dt>
+<dd>
+                 Defines the number of errors that the Service Provider should 
+                 accept before failing a bulk job. Value MUST be an integer 
+                 with a value 1 or above. OPTIONAL.
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+              The following Complex Plural Attribute is defined in addition to
+              the common attributes defined in core schema.
+            
+</p>
+<p>
+              </p>
+<blockquote class="text"><dl>
+<dt>Operations</dt>
+<dd>
+                  Defines operations within a bulk job. Each operation 
+                  correspond to a single HTTP request against a Resource 
+                  endpoint. REQUIRED.
+                  
+<blockquote class="text"><dl>
+<dt>method</dt>
+<dd>
+                      The HTTP method of the current operation. Possible values
+                      are POST, PUT, PATCH or DELETE. REQUIRED.
+                    
+</dd>
+<dt>bulkId</dt>
+<dd>
+                      Identifier of an newly created Resource, unique within a 
+                      bulk request and created by the Consumer. REQUIRED when 
+                      method is POST.
+                    
+</dd>
+<dt>version</dt>
+<dd>
+                      The current version of the Resource. If Service Provider 
+                      supports it it’s REQUIRED when method is PUT or 
+                      DELETE and MUST be returned in all successful operations,
+                      otherwise it SHOULD NOT be sent. It should also be sent 
+                      in a request and a response when method is PATCH except 
+                      when it's a change password operation.
+                    
+</dd>
+<dt>path</dt>
+<dd>
+                      The path points out the end point where the operation 
+                      should operate on. REQUIRED in a request.
+                    
+</dd>
+<dt>data</dt>
+<dd>
+                      The Resource or data that in an HTTP request against a 
+                      SCIM resource would be sent in the message body. REQUIRED
+                      in request when method is POST, PUT and PATCH.
+                    
+</dd>
+<dt>location</dt>
+<dd>
+                      The end point address to the Resource. REQUIRED in 
+                      response, SHOULD NOT be returned when a POST operation 
+                      have failed.
+                    
+</dd>
+<dt>status</dt>
+<dd>
+                      A complex type that contains information about the 
+                      success or failure of one operation within the bulk job.
+                      REQUIRED in a response.
+                    
+</dd>
+<blockquote class="text"><dl>
+<dt>code</dt>
+<dd>
+                        The the HTTP response code that would have been 
+                        returned if a a single HTTP request would have been 
+                        used. REQUIRED.
+                      
+</dd>
+<dt>description</dt>
+<dd>
+                        A human readable error message. REQUIRED when an error
+                        occurred.
+                      
+</dd>
+</dl></blockquote>
+</dl></blockquote>
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+               Each operation MUST have a method attribute that correspond to one of 
+               the HTTP methods POST, PUT, PATCH or DELETE. The attribute path MUST 
+               be sent for all operations. When creating a new Resource, i.e. the 
+               method is POST, the path MUST be the Resource type endpoint, i.e., 
+               /v1/User, /v1/Group etc, otherwise it MUST specify the Resource 
+               endpoint, for example /v1/User/uid=bjensen,dc=example,dc=com.
+            
+</p>
+<p>
+              If a bulk job is processed successfully the HTTP response code 
+              200 OK MUST be returned, otherwise an appropriate HTTP error code
+              MUST be returned.
+            
+</p>
+<p>
+              The Service Provider MUST continue performing as many changes as
+              possible and disregard partial fails. The Consumer MAY override 
+              this by sending a failonerrors attribute. The failonerrors 
+              attribute defines the number of errors that the Service Provider 
+              should accept before failing the bulk job and returning the 
+              response.
+            
+</p>
+<p>
+              To be able to reference a newly created Resource the attribute
+              bulkId MUST be used when creating new Resources. The bulkId is
+              defined and used by the Consumer and sent in a POST operation. 
+              The Service Provider MUST return the same bulkId together with 
+              the newly created Resource. The bulkId can then be used by the 
+              Consumer to map the final id of the created Resource against the 
+              bulkId.
+            
+</p>
+<p>
+              There CAN be more then one operation per Resource in each 
+              bulk job. The Service Consumer MUST take notice of the unordered
+              structure of JSON and the Service Provider can process each 
+              operation in any order. For example, if the Service Consumer 
+              sends two PUT operations in one GET request, any one of the two
+              can be executed in any order.
+            
+</p>
+<p>
+              The returned response from the Service Provider MUST include the
+              result of all processed operations. A location attribute that 
+              includes the Resources end point MUST be returned for all 
+              operations a part from a failed POST where it MUST be omitted. 
+              The status attribute, that MUST be returned, includes information
+              about the success or failure of one operation within the bulk job. 
+              The attribute status MUST includes the attribute code that holds 
+              the HTTP response code that would have been returned if a a 
+              single HTTP request would have been used. If an error occurred 
+              the status MUST also include the attribute description containing
+              a human readable description of an error. The following is an
+              example of a status inside a successful operation.
+            
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+"status": {
+  "code": "201"
+}
+</pre></div>
+<p>
+              The following is an example of a status in a failed operation.
+            
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+"status": {
+  "code": "400",
+  "description": "Request is unparseable, syntactically incorrect, or violates schema."
+}</pre></div>
+<p>
+              The following example shows how to add a user, update one user 
+              and remove one user in a single HTTP request. The failonerrors 
+              attribute is sent saying that the Service Provider should return 
+              after 1 error have been encountered instead on continuing parsing
+              the bulk job. The builkId value qwerty on the POST operation is 
+              returned in the response together with the newly created Resource
+              uid=alice,dc=example,dc=com.
+            
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas":[
+    "urn:scim:schemas:core:1.0"
+  ],
+  "failonerrors":"1",
+  "Operations":[
+    {
+      "method":"POST",
+      "path":"/User",
+      "bulkId":"qwerty",
+      "data":{
+        "schemas":[
+          "urn:scim:schemas:core:1.0"
+        ],
+        "userName":"alice"
+      }
+    },
+    {
+      "method":"PUT",
+      "path":"/User/uid=bob,dc=example,dc=com",
+      "version":"3694e05e9dff591",
+      "data":{
+        "schemas":[
+          "urn:scim:schemas:core:1.0"
+        ],
+        "id":"uid=bob,dc=example,dc=com",
+        "userName":"Bob"
+      }
+    },
+    {
+      "method":"PATCH",
+      "path":"/User/uid=dave,dc=example,dc=com",
+      "version":"edac3253e2c0ef2",
+      "data":{
+        "schemas":[
+          "urn:scim:schemas:core:1.0"
+        ],
+        "id":"uid=dave,dc=example,dc=com",
+        "userName":"Dave",
+        "meta":{
+          "attributes":[
+            "nickName"
+          ]
+        }
+      }
+    },
+    {
+      "method":"DELETE",
+      "path":"/User/uid=charlie,dc=example,dc=com",
+      "version":"0ee8add0a938e1a"
+    }
+  ]
+}</pre></div>
+<p>
+              The Service Provider returns the following response.
+            
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
+
+{
+    "schemas": [
+        "urn:scim:schemas:core:1.0"
+    ],
+    "Operations": [
+        {
+            "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+            "method": "POST",
+            "bulkId": "qwerty",
+            "version": "oY4m4wn58tkVjJxK",
+            "status": {
+                "code": "201"
+            }
+        },
+        {
+            "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com",
+            "method": "PUT",
+            "version": "huJj29dMNgu3WXPD",
+            "status": {
+                "code": "200"
+            }
+        },
+        {
+            "location": "https://example.com/v1/User/uid=dave,dc=example,dc=com",
+            "method": "PATCH",
+            "version": "huJj29dMNgu3WXPD",
+            "status": {
+                "code": "200"
+            }
+        },
+        {
+            "location": "https://example.com/v1/User/uid=charlie,dc=example,dc=com",
+            "method": "DELETE",
+            "status": {
+                "code": "200"
+            }
+        }
+    ]
+}</pre></div>
+<p>
+            The following response is returned if 1 error occurred when 
+            creating the User named Alice in the first POST operation. The
+            Service Provider stops processing the bulk job and immediately 
+            returns a response to the Consumer. Only, up until the error, 
+            successfully handled operations and the failing operation is 
+            returned to the Consumer.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/PPqzp3j5E0FkXGlQ
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "bulkId": "qwerty",
+      "status": {
+        "code": "400",
+        "description": "Request is unparseable, syntactically incorrect, or violates schema."
+      }
+    }
+  ]
+}</pre></div>
+<p>
+            If the attribute failonerrors is not sent or Service Provider have
+            not reach the limit defined by the Consumer the Service Provider 
+            continuous to process all operations. The following is an example 
+            where all operations have failed.
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "bulkId": "qwerty",
+      "status": {
+        "code": "400",
+        "description": "Request is unparseable, syntactically incorrect, or violates schema."
+      }
+    },
+    {
+      "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com",
+      "method": "PUT",
+      "status": {
+        "code": "412",
+        "description": "Failed to update as user changed on the server since you last retrieved it."
+      }
+    },
+    {
+      "location": "https://example.com/v1/User/uid=dave,dc=example,dc=com",
+      "method": "PATCH",
+      "status": {
+        "code": "412",
+        "description": "Failed to update as user changed on the server since you last retrieved it."
+      }
+    },
+    {
+      "location": "https://example.com/v1/User/uid=charlie,dc=example,dc=com",
+      "method": "DELETE",
+      "status": {
+        "code": "404",
+        "description": "Specified resource; e.g., User, does not exist."
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          The Consumer can, within one bulk job, create a new User, a new Group
+          and also add the newly created User to the newly created Group. The 
+          Consumer must then use the bulkId to reference the User instead of a 
+          the users unique id that’s not created yet. The Consumer MUST use the
+          string bulkId: appended by the referenced Users bulkId unique 
+          Resource id. If a bulkId is qwerty the string would be 
+          “bulkId:qwerty”. The Service Provider MUST replace the string 
+          “bulkId:qwerty” with the real Resource id once created.
+        
+</p>
+<p>
+          The following example creates a User with userName Alice and a Group
+          with the displayName Tour Guides. Alice is a member of the newly 
+          created Group Tour Guides.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/User",
+      "bulkId": "qwerty",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "userName": "Alice"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/Group",
+      "bulkId": "ytrewq",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "displayName": "Tour Guides",
+        "members": [
+          {
+            "type": "user",
+            "value": "bulkId:qwerty"
+          }
+        ]
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          The Service Provider returns the following response.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+      "method": "POST",
+      "bulkId": "qwerty",
+      "version": "4weymrEsh5O6cAEK",
+      "status": {
+        "code": "201"
+      }
+    },
+    {
+      "location": "https://example.com/v1/Group/cn=Tour Guides,dc=example,dc=com",
+      "method": "POST",
+      "bulkId": "ytrewq",
+      "version": "lha5bbazU3fNvfe5",
+      "status": {
+        "code": "201"
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          A request against the Group Tour Guides returns the following;
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+GET /v1/Groups?filter=id eq ‘cn=Tour Guides,dc=example,dc=com‘
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "totalResults": 1,
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Resources": [
+    {
+      "id": "ou=Tour Guides,dc=example,dc=com",
+      "displayName": "Tour Guides",
+      "meta": {
+        "location": "https://example.com/v1/Group/cn=Tour Guides,dc=example,dc=com",
+        "version": "lha5bbazU3fNvfe5"
+      },
+      "members": [
+        {
+          "value": "uid=alice,dc=example,dc=com",
+          "type": "user"
+        }
+      ]
+    }
+  ]
+}</pre></div>
+<p>
+          Extensions that includes references to other Resources MUST be 
+          handled in the same way by the Service Provider. The following 
+          example uses the bulkId in the managerId field from the enterprise
+          extension to reference to another User in the same bulk job.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/User",
+      "bulkId": "qwerty",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "userName": "Alice"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/User",
+      "bulkId": "ytrewq",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0",
+          "urn:scim:schemas:extension:enterprise:1.0"
+        ],
+        "userName": "Bob",
+        "urn:scim:schemas:extension:enterprise:1.0": {
+          "employeeNumber": "11250",
+          "manager": {
+            "managerId": "batchId:qwerty",
+            "displayName": "Alice"
+          }
+        }
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          The Service Provider MUST try to resolve circular cross references 
+          between Resources in a single bulk job but MAY stop after a failed 
+          try and instead return the status code 409 Conflict. The following 
+          example includes a cross references of two groups. Both groups 
+          reference each other.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/Group",
+      "bulkId": "qwerty",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "displayName": "Group A",
+        "members": [
+          {
+            "type": "group",
+            "value": "bulkId:ytrewq"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/Group",
+      "bulkId": "ytrewq",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "displayName": "Group B",
+        "members": [
+          {
+            "type": "group",
+            "value": "bulkId:qwerty"
+          }
+        ]
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          If the Service Provider managed to resolve the circular cross 
+          references the following is returned when later making a GET request
+          against the two Groups.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+GET /v1/Groups?filter=displayName sw ‘Group ‘
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "totalResults": 2,
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Resources": [
+    {
+      "id": "ou=Group A,dc=example,dc=com",
+      "schemas": [
+        "urn:scim:schemas:core:1.0"
+      ],
+      "displayName": "Group A",
+      "meta": {
+        "location": "https://example.com/v1/Group/ou=Group A,dc=example,dc=com",
+        "version": "mvwNGaxB5SDq074p"
+      },
+      "members": [
+        {
+          "value": "ou=GroupB,dc=example,dc=com",
+          "type": "group"
+        }
+      ]
+    },
+    {
+      "id": "ou=GroupB,dc=example,dc=com",
+      "schemas": [
+        "urn: scim: schemas: core: 1.0"
+      ],
+      "displayName": "GroupB",
+      "meta": {
+        "location": "https://example.com/v1/Group/ou=GroupB,dc=example,dc=com",
+        "version": "wGB85s2QJMjiNnuI"
+      },
+      "members": [
+        {
+          "value": "ou=GroupA,dc=example,dc=com",
+          "type": "group"
+        }
+      ]
+    }
+  ]
+}</pre></div>
+<p>
+          If the Service Provider supports the change password end point the 
+          Consumer can in one bulk job create a User and set a password on 
+          the new user.
+        
+</p>
+<p>
+          In the following example a new User is created and a password is then
+          set on the new User using the bulkId. The bulk job also change the 
+          password of the existing user Bob. 
+          
+          The Service Provider MAY process the operations in any order. The 
+          Consumer MUST take notice of the unordered handling of operations. If
+          a User is removed before the password operations is performed an 404 
+          will be returned.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/User",
+      "bulkId": "qwerty",
+      "data": {
+        "schemas": [
+          "urn:scim:schemas:core:1.0"
+        ],
+        "userName": "Alice"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/User/bulkId:qwerty/password",
+      "data": {
+        "schemas":["urn:scim:schemas:core:1.0"],
+        "password":"t1meMa$heen"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/User/uid=bob,dc=example,dc=com/password",
+      "data": {
+        "schemas":["urn:scim:schemas:core:1.0"],
+        "password":"neeh$aMem1t"
+      }
+    }
+  ]
+}</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/aWvINDpzLf5ufPqi
+
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0"
+  ],
+  "Operations": [
+    {
+      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+      "method": "POST",
+      "bulkId": "qwerty",
+      "version": "Jg8SLbDLADDDyn2w",
+      "status": {
+          "code": "201"
+      }
+    },
+    {
+      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com/password",
+      "method": "PATCH",
+      "status": {
+        "code": "204"
+      }
+    },
+    {
+      "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com/password",
+      "method": "PATCH",
+      "status": {
+        "code": "204"
+      }
+    }
+  ]
+}</pre></div>
+<p>
+          The Service Provider MUST define a limit on how many operations that
+          can be sent in one request. The Service Provider MUST also define a 
+          max payload size of a bulk request. If to many operations or if 
+          the content length is above the defined limit the Service Provider 
+          MUST return the HTTP response code 413 Request Entity Too Large. The 
+          returned response must also includes the attributes maxOperations and
+          maxPayloadSize with the limits accepted by the Service Provider.
+        
+</p>
+<p>
+          In the following example the Consumer have sent a request that 
+          exceeds the max content length of 1 megabytes defined by the 
+          Service Provider.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+POST /v1/Bulk
+Host: example.com
+Accept: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: 4294967296
+
+…</pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+HTTP/1.1 413 Request Entity Too Large
+Content-Type: application/json
+Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
+
+{
+  "maxOperations": 1000,
+  "maxPayload": 1048576
+}</pre></div>
+<a name="io-format"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
 Data Input/Output Formats</h3>
 
 <p>
@@ -1641,7 +2463,7 @@ Host: example.com
 </pre></div>
 <a name="addtl-retrieval-query-params"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
+<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
 Additional retrieval query parameters</h3>
 
 <p>
@@ -1685,7 +2507,7 @@ ETag: "a330bc54f0671c9"
 </pre></div>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
@@ -1739,6 +2561,11 @@ HTTP Response Codes</h3>
           </td>
 </tr>
 <tr>
+<td align="left">413 REQUEST ENTITY TOO LARGE</td>
+<td align="left">POST</td>
+<td align="left">{"maxOperations": 1000,"maxPayload": 1048576}</td>
+</tr>
+<tr>
 <td align="left">500 INTERNAL SERVER ERROR</td>
 <td align="left">GET,POST,PUT,PATCH,DELETE</td>
 <td align="left">An internal error. Implementers SHOULD provide descriptive
@@ -1772,7 +2599,7 @@ HTTP/1.1 404 NOT FOUND
 </pre></div>
 <a name="etags"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
+<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
 Versioning Resources</h3>
 
 <p>
@@ -1869,7 +2696,7 @@ If-None-Match: "e180ee84f0671b1"
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
+<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT,
@@ -1922,5 +2749,12 @@ Acknowledgments</h3>
 <td class="author-text">SailPoint</td></tr>
 <tr><td class="author" align="right">Email:&nbsp;</td>
 <td class="author-text"><a href="mailto:kelly.grizzle@sailpoint.com">kelly.grizzle@sailpoint.com</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Erik Wahlström</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Technology Nexus</td></tr>
+<tr><td class="author" align="right">Email:&nbsp;</td>
+<td class="author-text"><a href="mailto:erik.wahlstrom@nexussafe.com">erik.wahlstrom@nexussafe.com</a></td></tr>
 </table>
 </body></html>
