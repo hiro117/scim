@@ -447,8 +447,9 @@ Common Schema Attributes</h3>
             It MUST be a stable, non-reassignable identifier that does not
             change when the same Resource is returned in subsequent requests.
             The value of the id attribute is always issued by the Service
-            Provider and MUST never be specified by the Service Consumer.
-            REQUIRED.
+            Provider and MUST never be specified by the Service Consumer. 
+            bulkId: is a reserved keyword and MUST NOT be used in the unique
+            identifier. REQUIRED.
 </dd>
 <dt>externalId</dt>
 <dd>Unique identifier for the Resource as defined
