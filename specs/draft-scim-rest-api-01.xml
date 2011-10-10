@@ -42,7 +42,7 @@
       </address>
     </author>
 
-    <date month="May" year="2011"/>
+    <date day="10" month="October" year="2011" />
     <keyword>SCIM</keyword>
     <abstract>
       <t>
@@ -941,7 +941,7 @@ Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
 
         <section title="Modifying with PATCH" anchor="edit-resource-with-patch"
                  toc="default">
-          <t>PATCH enables consumers to send only those attributes requiring
+          <t>PATCH is OPTIONAL.  PATCH enables consumers to send only those attributes requiring
             modification, reducing network and processing overhead. Attributes
             may be deleted, replaced, merged, or added in a single request.
           </t>
@@ -1472,11 +1472,9 @@ HTTP/1.1 204 OK
                  toc="default">
 
              <t>
-                 Bulk is OPTIONAL. The bulk endpoint allows the Consumer to execute a 
-                 large set of Resource operations on the Service Provider in one single 
-                 HTTP request. Each operation inside a bulk job correspond to a single 
-                 HTTP request against a Resource endpoint, i.e. the /User, /Group, etc 
-                 endpoints, using one of the HTTP methods POST, PUT, PATCH or DELETE.
+                 Bulk is OPTIONAL. The bulk operation enables Consumers to send a potentially large collection of
+                 Resource operations in a single request.  The body of a a bulk operation contains a set of HTTP
+                 Resource operations using one of the API supported HTTP methods; i.e., POST, PUT, PATCH or DELETE.
              </t>
             <t>
               The following Singular Attribute is defined in addition to the 
@@ -1486,9 +1484,8 @@ HTTP/1.1 204 OK
             <t>
               <list style="hanging">
                 <t hangText="failonerrors">
-                 Defines the number of errors that the Service Provider should 
-                 accept before failing a bulk job. Value MUST be an integer 
-                 with a value 1 or above. OPTIONAL.
+                 An integer specifying the number of errors that the Service Provider will accept before the
+                    operation is terminated and an error response is returned. OPTIONAL.
                 </t>
               </list>
             </t>
@@ -1500,40 +1497,34 @@ HTTP/1.1 204 OK
             <t>
               <list style="hanging">
                 <t hangText="Operations">
-                  Defines operations within a bulk job. Each operation 
-                  correspond to a single HTTP request against a Resource 
+                  Defines operations within a bulk job. Each operation corresponds to a single HTTP request against a Resource
                   endpoint. REQUIRED.
                   <list style="hanging">
                     <t hangText="method">
-                      The HTTP method of the current operation. Possible values
-                      are POST, PUT, PATCH or DELETE. REQUIRED.
+                      The HTTP method of the current operation. Possible values are POST, PUT, PATCH or DELETE. REQUIRED.
                     </t>
                     <t hangText="bulkId">
-                      Identifier of an newly created Resource, unique within a 
-                      bulk request and created by the Consumer. REQUIRED when 
-                      method is POST.
+                      The transient identifier of a newly created Resource, unique within a bulk request and created by
+                        the Consumer. The bulkId serves as a surrogate Resource id enabling Consumers to uniquely
+                        identify newly created Resources in the Response and cross reference new Resources in and
+                        across operations within a bulk request.  REQUIRED when method is POST.
                     </t>
                     <t hangText="version">
-                      The current version of the Resource. If Service Provider 
-                      supports it it’s REQUIRED when method is PUT or 
-                      DELETE and MUST be returned in all successful operations,
-                      otherwise it SHOULD NOT be sent. It should also be sent 
-                      in a request and a response when method is PATCH except 
-                      when it's a change password operation.
+                      The current Resource version. Version is REQUIRED if the Service Provider supports Etags, the
+                        method is PUT or DELETE, or the method is PATCH and the request is not a change password
+                        operation.
                     </t>
                     <t hangText="path">
-                      The path points out the end point where the operation 
-                      should operate on. REQUIRED in a request.
+                      The Resource's relative path.  If the method is POST the value must specify a Resource type
+                        endpoint; e.g., /User or /Group whereas all other method values must specify the path to
+                        a specific Resource; e.g., /User/uid=bjensen,dc=example,dc=com.  REQUIRED in a request.
                     </t>
                     <t hangText="data">
-                      The Resource or data that in an HTTP request against a 
-                      SCIM resource would be sent in the message body. REQUIRED
-                      in request when method is POST, PUT and PATCH.
+                      The Resource data as it would appear for a single POST, PUT or PATCH Resource operation.
+                        REQUIRED in a request when method is POST, PUT and PATCH.
                     </t>
                     <t hangText="location">
-                      The end point address to the Resource. REQUIRED in 
-                      response, SHOULD NOT be returned when a POST operation 
-                      have failed.
+                      The Resource endpoint URL. REQUIRED in a response, except in the event of a POST failure.
                     </t>
                     <t hangText="status">
                       A complex type that contains information about the 
@@ -1542,7 +1533,7 @@ HTTP/1.1 204 OK
                     </t>
                     <list style="hanging">
                       <t hangText="code">
-                        The the HTTP response code that would have been 
+                        The HTTP response code that would have been
                         returned if a a single HTTP request would have been 
                         used. REQUIRED.
                       </t>
@@ -1555,15 +1546,6 @@ HTTP/1.1 204 OK
                 </t>
               </list>
             </t>            
-         
-            <t>
-               Each operation MUST have a method attribute that correspond to one of 
-               the HTTP methods POST, PUT, PATCH or DELETE. The attribute path MUST 
-               be sent for all operations. When creating a new Resource, i.e. the 
-               method is POST, the path MUST be the Resource type endpoint, i.e., 
-               /v1/User, /v1/Group etc, otherwise it MUST specify the Resource 
-               endpoint, for example /v1/User/uid=bjensen,dc=example,dc=com.
-            </t>
             <t>
               If a bulk job is processed successfully the HTTP response code 
               200 OK MUST be returned, otherwise an appropriate HTTP error code
@@ -1571,42 +1553,36 @@ HTTP/1.1 204 OK
             </t>
             <t>
               The Service Provider MUST continue performing as many changes as
-              possible and disregard partial fails. The Consumer MAY override 
-              this by sending a failonerrors attribute. The failonerrors 
+              possible and disregard partial failures. The Consumer MAY override
+              this behavior by specifying a value for failonerrors attribute. The failonerrors
               attribute defines the number of errors that the Service Provider 
-              should accept before failing the bulk job and returning the 
+              should accept before failing the remaining operations returning the
               response.
             </t>
             <t>
               To be able to reference a newly created Resource the attribute
-              bulkId MUST be used when creating new Resources. The bulkId is
-              defined and used by the Consumer and sent in a POST operation. 
+              bulkId MUST be specified when creating new Resources. The bulkId is
+              defined by the Consumer as a surrogate identifier in a POST operation.
               The Service Provider MUST return the same bulkId together with 
               the newly created Resource. The bulkId can then be used by the 
-              Consumer to map the final id of the created Resource against the 
-              bulkId.
+              Consumer to map the Service Provider id with the
+              bulkId of the created Resource.
             </t>
             <t>
-              There CAN be more then one operation per Resource in each 
+              There can be more then one operation per Resource in each
               bulk job. The Service Consumer MUST take notice of the unordered
-              structure of JSON and the Service Provider can process each 
-              operation in any order. For example, if the Service Consumer 
-              sends two PUT operations in one GET request, any one of the two
-              can be executed in any order.
+              structure of JSON and the Service Provider can process operation in any order.
+              For example, if the Service Consumer sends two PUT operations in one request, the outcome
+              is non-deterministic.
             </t>
             <t>
-              The returned response from the Service Provider MUST include the
-              result of all processed operations. A location attribute that 
-              includes the Resources end point MUST be returned for all 
-              operations a part from a failed POST where it MUST be omitted. 
-              The status attribute, that MUST be returned, includes information
-              about the success or failure of one operation within the bulk job. 
-              The attribute status MUST includes the attribute code that holds 
-              the HTTP response code that would have been returned if a a 
-              single HTTP request would have been used. If an error occurred 
-              the status MUST also include the attribute description containing
-              a human readable description of an error. The following is an
-              example of a status inside a successful operation.
+              The Service Provider response MUST include the result of all processed operations. A location attribute
+                that includes the Resources' end point MUST be returned for all operations excluding failed
+                POSTs. The status attribute includes information about the success or failure of one operation within
+                the bulk job.  The attribute status MUST include the code attribute that holds the HTTP response code
+                that would have been returned if a single HTTP request would have been used. If an error occurred
+                the status MUST also include the description attribute containing a human readable explanation of the
+                error.
             </t>
             <figure height="" suppress-title="false" width="" alt="" title=""
                     align="left">
@@ -1632,13 +1608,10 @@ HTTP/1.1 204 OK
 }]]></artwork>
             </figure>
             <t>
-              The following example shows how to add a user, update one user 
-              and remove one user in a single HTTP request. The failonerrors 
-              attribute is sent saying that the Service Provider should return 
-              after 1 error have been encountered instead on continuing parsing
-              the bulk job. The builkId value qwerty on the POST operation is 
-              returned in the response together with the newly created Resource
-              uid=alice,dc=example,dc=com.
+              The following example shows how to add, update, and remove a user. The failonerrors
+              attribute is set to '1' indicating the Service Provider should return
+              on the first error. The POST operation's bulkId value is set to 'qwerty' enabling the Consumer to match
+                the new User with the returned Resource id 'uid=alice,dc=example,dc=com'.
             </t>
             <figure height="" suppress-title="false" width="" alt="" title=""
                     align="left">
@@ -1758,12 +1731,9 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
 }]]></artwork>
           </figure>
           <t>
-            The following response is returned if 1 error occurred when 
-            creating the User named Alice in the first POST operation. The
-            Service Provider stops processing the bulk job and immediately 
-            returns a response to the Consumer. Only, up until the error, 
-            successfully handled operations and the failing operation is 
-            returned to the Consumer.
+            The following response is returned if an error occurred when attempting to create the User 'alice'. The
+              Service Provider stops processing the bulk operation and immediately returns a response to the Consumer.
+              The response contains the error and any successful results prior to the error.
           </t>
           <figure height="" suppress-title="false" width="" alt="" title=""
                   align="left">
@@ -1791,10 +1761,10 @@ Location: https://example.com/v1/Bulk/PPqzp3j5E0FkXGlQ
 }]]></artwork>
           </figure>
           <t>
-            If the attribute failonerrors is not sent or Service Provider have
-            not reach the limit defined by the Consumer the Service Provider 
-            continuous to process all operations. The following is an example 
-            where all operations have failed.
+            If the failonerrors attribute is not specified or the Service Provider has
+            not reached the error limit defined by the Consumer the Service Provider
+            will continue to process all operations. The following is an example
+            in which all operations failed.
           </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -1846,19 +1816,15 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
 }]]></artwork>
         </figure>
         <t>
-          The Consumer can, within one bulk job, create a new User, a new Group
-          and also add the newly created User to the newly created Group. The 
-          Consumer must then use the bulkId to reference the User instead of a 
-          the users unique id that’s not created yet. The Consumer MUST use the
-          string bulkId: appended by the referenced Users bulkId unique 
-          Resource id. If a bulkId is qwerty the string would be 
-          “bulkId:qwerty”. The Service Provider MUST replace the string 
-          “bulkId:qwerty” with the real Resource id once created.
+          The Consumer can, within one bulk operation, create a new User, a new Group and add the newly created User to
+          the newly created Group.  In order to add the new User to the Group
+          the Consumer must use the surrogate id attribute, bulkId, to reference the User. The bulkId attribute value
+          must be pre-pended with the literal "bulkId:"; e.g., if the bulkId is 'qwerty' the value is  “bulkId:qwerty”.
+          The Service Provider MUST replace the string “bulkId:qwerty” with the permanent Resource id once created.
         </t>
         <t>
-          The following example creates a User with userName Alice and a Group
-          with the displayName Tour Guides. Alice is a member of the newly 
-          created Group Tour Guides.
+          The following example creates a User with the userName 'Alice' and a Group
+          with the displayName 'Tour Guides' with Alice as a member.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -1946,7 +1912,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
 }]]></artwork>
         </figure>
         <t>
-          A request against the Group Tour Guides returns the following;
+          A request against the Group 'Tour Guides' returns the following:
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -1991,10 +1957,8 @@ Content-Type: application/json
 }]]></artwork>
         </figure>
         <t>
-          Extensions that includes references to other Resources MUST be 
-          handled in the same way by the Service Provider. The following 
-          example uses the bulkId in the managerId field from the enterprise
-          extension to reference to another User in the same bulk job.
+          Extensions that include references to other Resources MUST be handled in the same way by the Service
+          Provider. The following example uses the bulkId attribute within the enterprise extension managerId attribute.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2048,9 +2012,8 @@ Content-Length: ...
         <t>
           The Service Provider MUST try to resolve circular cross references 
           between Resources in a single bulk job but MAY stop after a failed 
-          try and instead return the status code 409 Conflict. The following 
-          example includes a cross references of two groups. Both groups 
-          reference each other.
+          attempt and instead return the status code 409 Conflict. The following
+          example exhibits the potential conflict.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2106,9 +2069,8 @@ Content-Length: ...
 }]]></artwork>
         </figure>
         <t>
-          If the Service Provider managed to resolve the circular cross 
-          references the following is returned when later making a GET request
-          against the two Groups.
+          If the Service Provider resolved the above circular references the following is returned from a subsequent
+            GET request.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2172,21 +2134,13 @@ Content-Type: application/json
   ]
 }]]></artwork>
         </figure>
-
         <t>
           If the Service Provider supports the change password end point the 
-          Consumer can in one bulk job create a User and set a password on 
-          the new user.
+          Consumer can create a new User set their password in a single bulk operation.
         </t>
         <t>
-          In the following example a new User is created and a password is then
-          set on the new User using the bulkId. The bulk job also change the 
-          password of the existing user Bob. 
-          
-          The Service Provider MAY process the operations in any order. The 
-          Consumer MUST take notice of the unordered handling of operations. If
-          a User is removed before the password operations is performed an 404 
-          will be returned.
+          In the following example an existing User's ('bob') password is reset, a new User is created, and the newly
+            created User's password is set using the surrogate id, bulkId.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2277,18 +2231,16 @@ Location: https://example.com/v1/Bulk/aWvINDpzLf5ufPqi
         </figure>
     
         <t>
-          The Service Provider MUST define a limit on how many operations that
-          can be sent in one request. The Service Provider MUST also define a 
-          max payload size of a bulk request. If to many operations or if 
-          the content length is above the defined limit the Service Provider 
+          The Service Provider MUST define a limit on how many operations
+          can be sent in one bulk request. The Service Provider MUST also define the
+          max payload size of a bulk request. If either limits are exceeded the Service Provider
           MUST return the HTTP response code 413 Request Entity Too Large. The 
-          returned response must also includes the attributes maxOperations and
+          returned response must also include the attributes maxOperations and
           maxPayloadSize with the limits accepted by the Service Provider.
         </t>
         <t>
-          In the following example the Consumer have sent a request that 
-          exceeds the max content length of 1 megabytes defined by the 
-          Service Provider.
+          In the following example the Consumer sent a request that exceeded the Service Provider's max  payload size
+            1 megabyte.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
