@@ -150,7 +150,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Ping</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">J. Smarr</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 7, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 10, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />Simple Cloud Identity Management: Core
     Schema 1.0 - draft 2</h1>
@@ -317,19 +317,15 @@ SCIM Schema Structure</h3>
 <blockquote class="text"><dl>
 <dt>Simple</dt>
 <dd>A single string attribute which MAY specify a
-          REQUIRED data format or allow any string. A simple attribute MAY
+          required data format or allow any string. A simple attribute MAY
           contain Canonical Values specified, in which case Service Providers
           SHOULD conform to those values if appropriate, but MAY
           provide alternate string values to represent additional values.
 </dd>
 <dt>Complex</dt>
-<dd>A multi-value attribute containing any
+<dd>An attribute containing any
           combination of other attributes. Complex attributes are defined by
-          listing the child attributes and their types. For most Complex
-          Attributes, the value sub-attribute contains the Major Value of that
-          attribute (i.e. the primary piece of information described by that
-          attribute), and the other attributes provide additional
-          meta-data.
+          listing the child attributes and their types.
 </dd>
 <dt>Boolean</dt>
 <dd>A special case of a Simple Attribute with two
@@ -354,21 +350,20 @@ SCIM Schema Structure</h3>
       
 </p>
 <p>Plural Attributes allow for lists of attributes using a special
-      complex type. All Plural Attributes, unless otherwise specified, have
-      the same three standard sub-attributes:
+      complex type.
 </p>
 <p></p>
 <blockquote class="text"><dl>
 <dt>value</dt>
-<dd>The primary value of this attribute, e.g. the
-          actual e-mail address, phone number, ID, URL, etc. Each non-empty
+<dd>The attribute's significant value, e.g. the
+          e-mail address, phone number, ID, URL, etc. Each non-empty
           Plural Attribute value MUST contain at least the value
           sub-attribute, but all other sub-attributes are optional.
           REQUIRED.
 </dd>
 <dt>type</dt>
 <dd>The type of attribute for this instance, usually
-          used to label the preferred function of the given resource.
+          used to label the preferred function of this instance of the Plural Attribute.
           OPTIONAL
 </dd>
 <dt>primary</dt>
@@ -389,7 +384,7 @@ SCIM Schema Structure</h3>
 </dd>
 <dt>operation</dt>
 <dd>The operation to perform on the plural attribute during a PATCH request. The only
-              valid value is "delete", which signifies that the attribute should be removed
+              valid value is "delete", which signifies that this instance of the Plural Attribute should be removed
               from the Resource. OPTIONAL.
 </dd>
 </dl></blockquote><p>When returning Plural Attributes, Service Providers SHOULD
@@ -449,7 +444,7 @@ Common Schema Attributes</h3>
             The value of the id attribute is always issued by the Service
             Provider and MUST never be specified by the Service Consumer. 
             bulkId: is a reserved keyword and MUST NOT be used in the unique
-            identifier. REQUIRED.
+            identifier. REQUIRED and READ-ONLY.
 </dd>
 <dt>externalId</dt>
 <dd>Unique identifier for the Resource as defined
@@ -508,7 +503,7 @@ Common Schema Attributes</h3>
 
 <p>SCIM supports resources of different types, with extensible
         schemas. Each resource MUST be indicated using fully
-        qualified URNs
+        qualified URNs.
 </p>
 <p>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -593,7 +588,7 @@ Singular Attributes</h3>
 </dd>
 <dt>middleName</dt>
 <dd>The middle name(s) of the User (e.g.
-                Robert given the full name Ms. Barbara Jane Jensen, III.).
+                Jane given the full name Ms. Barbara Jane Jensen, III.).
                 OPTIONAL.
 </dd>
 <dt>honorificPrefix</dt>
@@ -641,8 +636,7 @@ Singular Attributes</h3>
 <dt>preferredLanguage</dt>
 <dd>Used to indicate a User's
             preferred written or spoken language. Generally used for
-            localizing the interface presented to the user. OPTIONAL. TODO -
-            what ISO code list should we use here?
+            localizing the interface presented to the user.
 </dd>
 <dt>locale</dt>
 <dd>Used to indicate the User's default location
@@ -792,7 +786,7 @@ SCIM Enterprise User Schema Extension</h3>
 <p>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:user:enterprise:1.0' ( Note:
+      following URI: 'urn:scim:schemas:extension:enterprise:1.0' ( Note:
       we're currently using an un-registered urn while in draft form).
 </p>
 <p>The following Singular Attributes are defined:
@@ -871,7 +865,7 @@ SCIM Group Schema</h3>
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
 <dt>members</dt>
-<dd>A list of members of the Group. Canonical Type "User" and "Group" are READ-ONLY. The
+<dd>A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. The
               value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
               to allow the Service Provider to support nested Groups. REQUIRED.
           
@@ -891,6 +885,7 @@ Service Provider Configuration Schema</h3>
 </p>
 <p>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
+          All attributes are READ-ONLY.
       
 </p>
 <p>The following Singular Attributes are defined in addition to the common attributes defined in Core Schema:
@@ -1051,7 +1046,7 @@ Resource Schema</h3>
 <dd>The attribute's name. REQUIRED.
 </dd>
 <dt>type</dt>
-<dd>The attribute's data type; e.g., string. REQUIRED.
+<dd>The attribute's data type; e.g., String. REQUIRED.
 </dd>
 <dt>plural</dt>
 <dd>Specifies if the attribute is a plural. REQUIRED.
@@ -1077,12 +1072,8 @@ Resource Schema</h3>
 </dd>
 <dt>caseExact</dt>
 <dd>A Boolean value that specifies if the string attribute is case
-                              sensitive.
-                              REQUIRED.
+                              sensitive.  REQUIRED.
                           
-</dd>
-<dt></dt>
-<dd>
 </dd>
 <dt></dt>
 <dd>The following Plural Attributes are defined. There are no canonical type values defined
@@ -1097,7 +1088,7 @@ Resource Schema</h3>
 <dd>The attribute's name. REQUIRED.
 </dd>
 <dt>type</dt>
-<dd>The attribute's data type; e.g., string. REQUIRED.
+<dd>The attribute's data type; e.g., String. REQUIRED.
 </dd>
 <dt>description</dt>
 <dd>The attribute's human readable description. When
@@ -1216,9 +1207,9 @@ Full User Representation</h3>
     }
   ],
   "phoneNumbers": [
-  {
-    "value": "800-864-8377",
-    "type": "work"
+    {
+      "value": "800-864-8377",
+      "type": "work"
     },
     {
       "value": "818-123-4567",
@@ -1716,7 +1707,7 @@ Full Representation</h3>
       &lt;primary&gt;true&lt;/primary&gt;
     &lt;/address&gt;
 	&lt;address&gt;
-      &lt;formatted&gt;456 Hollywood Blvd\nHollywood, CA 91608 USA&lt;/formatted&gt;
+	  &lt;formatted&gt;456 Hollywood Blvd\nHollywood, CA 91608 USA&lt;/formatted&gt;
       &lt;streetAddress&gt;456 Hollywood Blvd&lt;/streetAddress&gt;
       &lt;locality&gt;San Francisco&lt;/locality&gt;
       &lt;region&gt;CA&lt;/region&gt;
@@ -1742,14 +1733,14 @@ Full Representation</h3>
     &lt;/im&gt;
   &lt;/ims&gt;
   &lt;photos&gt;
-  &lt;photo&gt;
-    &lt;value&gt;https://photos.example.com/profilephoto/72930000000Ccne/F&lt;/value&gt;
-    &lt;type&gt;photo&lt;/type&gt;
-   &lt;/photo&gt;
-   &lt;photo&gt;
-    &lt;value&gt;https://photos.example.com/profilephoto/72930000000Ccne/T&lt;/value&gt;
-    &lt;type&gt;thumbnail&lt;/type&gt;
-   &lt;/photo&gt;
+    &lt;photo&gt;
+      &lt;value&gt;https://photos.example.com/profilephoto/72930000000Ccne/F&lt;/value&gt;
+      &lt;type&gt;photo&lt;/type&gt;
+    &lt;/photo&gt;
+    &lt;photo&gt;
+      &lt;value&gt;https://photos.example.com/profilephoto/72930000000Ccne/T&lt;/value&gt;
+      &lt;type&gt;thumbnail&lt;/type&gt;
+    &lt;/photo&gt;
   &lt;/photos&gt;
   &lt;userType&gt;Employee&lt;/userType&gt;
   &lt;title&gt;Tour Guide&lt;/title&gt;
@@ -1911,9 +1902,9 @@ Group Representation</h3>
      &lt;display&gt;Babs Jensen&lt;/display&gt;
     &lt;/member&gt;
     &lt;member&gt;
-	  &lt;value&gt;005D0000001AQRE&lt;/value&gt;
+      &lt;value&gt;005D0000001AQRE&lt;/value&gt;
 	  &lt;display&gt;Mandy Pepperidge&lt;/display&gt;
-    &lt;/member&gt;
+	&lt;/member&gt;
   &lt;/members&gt;
 &lt;/SCIM&gt;
 

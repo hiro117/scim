@@ -53,7 +53,7 @@
       </address>
     </author>
 
-    <date day="7" month="October" year="2011" />
+    <date day="10" month="October" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
@@ -144,18 +144,14 @@
       <t>
         <list style="hanging">
           <t hangText="Simple">A single string attribute which MAY specify a
-          REQUIRED data format or allow any string. A simple attribute MAY
+          required data format or allow any string. A simple attribute MAY
           contain Canonical Values specified, in which case Service Providers
           SHOULD conform to those values if appropriate, but MAY
           provide alternate string values to represent additional values.</t>
 
-          <t hangText="Complex">A multi-value attribute containing any
+          <t hangText="Complex">An attribute containing any
           combination of other attributes. Complex attributes are defined by
-          listing the child attributes and their types. For most Complex
-          Attributes, the value sub-attribute contains the Major Value of that
-          attribute (i.e. the primary piece of information described by that
-          attribute), and the other attributes provide additional
-          meta-data.</t>
+          listing the child attributes and their types.</t>
 
           <t hangText="Boolean">A special case of a Simple Attribute with two
           legal values: true and false. Values are case-sensitive.</t>
@@ -178,18 +174,17 @@
       </t>
 
       <t>Plural Attributes allow for lists of attributes using a special
-      complex type. All Plural Attributes, unless otherwise specified, have
-      the same three standard sub-attributes:</t>
+      complex type.</t>
 
       <t><list style="hanging">
-          <t hangText="value">The primary value of this attribute, e.g. the
-          actual e-mail address, phone number, ID, URL, etc. Each non-empty
+          <t hangText="value">The attribute's significant value, e.g. the
+          e-mail address, phone number, ID, URL, etc. Each non-empty
           Plural Attribute value MUST contain at least the value
           sub-attribute, but all other sub-attributes are optional.
           REQUIRED.</t>
 
           <t hangText="type">The type of attribute for this instance, usually
-          used to label the preferred function of the given resource.
+          used to label the preferred function of this instance of the Plural Attribute.
           OPTIONAL</t>
 
           <t hangText="primary">A Boolean value indicating whether this
@@ -207,7 +202,7 @@
           as an id. READ-ONLY and OPTIONAL.</t>
 
           <t hangText="operation">The operation to perform on the plural attribute during a PATCH request. The only
-              valid value is "delete", which signifies that the attribute should be removed
+              valid value is "delete", which signifies that this instance of the Plural Attribute should be removed
               from the Resource. OPTIONAL.</t>
 
         </list>When returning Plural Attributes, Service Providers SHOULD
@@ -255,7 +250,7 @@
             The value of the id attribute is always issued by the Service
             Provider and MUST never be specified by the Service Consumer. 
             bulkId: is a reserved keyword and MUST NOT be used in the unique
-            identifier. REQUIRED.</t>
+            identifier. REQUIRED and READ-ONLY.</t>
 
          <t hangText="externalId">Unique identifier for the Resource as defined
             by the Service Consumer. The externalId may simplify
@@ -301,7 +296,7 @@
       <section title="&quot;schemas&quot; Attribute">
         <t>SCIM supports resources of different types, with extensible
         schemas. Each resource MUST be indicated using fully
-        qualified URNs</t>
+        qualified URNs.</t>
 
         <t>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -372,7 +367,7 @@
                 name Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
 
                 <t hangText="middleName">The middle name(s) of the User (e.g.
-                Robert given the full name Ms. Barbara Jane Jensen, III.).
+                Jane given the full name Ms. Barbara Jane Jensen, III.).
                 OPTIONAL.</t>
 
                 <t hangText="honorificPrefix">The honorific prefix(es) of the
@@ -411,8 +406,7 @@
 
             <t hangText="preferredLanguage">Used to indicate a User's
             preferred written or spoken language. Generally used for
-            localizing the interface presented to the user. OPTIONAL. TODO -
-            what ISO code list should we use here?</t>
+            localizing the interface presented to the user.</t>
 
             <t hangText="locale">Used to indicate the User's default location
             for purposes of localizing items such as currency, date time
@@ -538,7 +532,7 @@
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:user:enterprise:1.0' ( Note:
+      following URI: 'urn:scim:schemas:extension:enterprise:1.0' ( Note:
       we're currently using an un-registered urn while in draft form).</t>
 
       <t>The following Singular Attributes are defined:</t>
@@ -597,7 +591,7 @@
 
       <t>The following Plural Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="members">A list of members of the Group. Canonical Type "User" and "Group" are READ-ONLY. The
+          <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. The
               value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
               to allow the Service Provider to support nested Groups. REQUIRED.
           </t>
@@ -614,6 +608,7 @@
 
       <t>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
+          All attributes are READ-ONLY.
       </t>
 
       <t>The following Singular Attributes are defined in addition to the common attributes defined in Core Schema:
@@ -700,7 +695,7 @@
                       REQUIRED.
                       <list style="hanging">
                           <t hangText="name">The attribute's name. REQUIRED.</t>
-                          <t hangText="type">The attribute's data type; e.g., string. REQUIRED.</t>
+                          <t hangText="type">The attribute's data type; e.g., String. REQUIRED.</t>
                           <t hangText="plural">Specifies if the attribute is a plural. REQUIRED.</t>
                           <t hangText="description">The attribute's human readable description. When applicable Service
                               Providers MUST specify the description specified in the core schema specification.
@@ -714,17 +709,16 @@
                           <t hangText="required">A Boolean value that specifies if the attribute is required. REQUIRED.
                           </t>
                           <t hangText="caseExact">A Boolean value that specifies if the string attribute is case
-                              sensitive.
-                              REQUIRED.
+                              sensitive.  REQUIRED.
                           </t>
-                          <t/>
+
                           <t>The following Plural Attributes are defined. There are no canonical type values defined
                             and the primary value serves no useful purpose.
                             <list style="hanging">
                               <t hangText="subAttributes">A list specifying the contained attributes. OPTIONAL.
                                 <list style="hanging">
                                   <t hangText="name">The attribute's name. REQUIRED.</t>
-                                  <t hangText="type">The attribute's data type; e.g., string. REQUIRED.</t>
+                                  <t hangText="type">The attribute's data type; e.g., String. REQUIRED.</t>
                                   <t hangText="description">The attribute's human readable description. When
                                     applicable Service Providers MUST specify the description specified in the core
                                     schema specification. REQUIRED.
@@ -822,9 +816,9 @@
     }
   ],
   "phoneNumbers": [
-  {
-    "value": "800-864-8377",
-    "type": "work"
+    {
+      "value": "800-864-8377",
+      "type": "work"
     },
     {
       "value": "818-123-4567",
@@ -1313,7 +1307,7 @@
       <primary>true</primary>
     </address>
 	<address>
-      <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
+	  <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
       <streetAddress>456 Hollywood Blvd</streetAddress>
       <locality>San Francisco</locality>
       <region>CA</region>
@@ -1339,14 +1333,14 @@
     </im>
   </ims>
   <photos>
-  <photo>
-    <value>https://photos.example.com/profilephoto/72930000000Ccne/F</value>
-    <type>photo</type>
-   </photo>
-   <photo>
-    <value>https://photos.example.com/profilephoto/72930000000Ccne/T</value>
-    <type>thumbnail</type>
-   </photo>
+    <photo>
+      <value>https://photos.example.com/profilephoto/72930000000Ccne/F</value>
+      <type>photo</type>
+    </photo>
+    <photo>
+      <value>https://photos.example.com/profilephoto/72930000000Ccne/T</value>
+      <type>thumbnail</type>
+    </photo>
   </photos>
   <userType>Employee</userType>
   <title>Tour Guide</title>
@@ -1506,9 +1500,9 @@
      <display>Babs Jensen</display>
     </member>
     <member>
-	  <value>005D0000001AQRE</value>
+      <value>005D0000001AQRE</value>
 	  <display>Mandy Pepperidge</display>
-    </member>
+	</member>
   </members>
 </SCIM>
 
