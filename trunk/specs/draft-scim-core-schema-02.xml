@@ -1306,8 +1306,8 @@
       <type>work</type>
       <primary>true</primary>
     </address>
-	<address>
-	  <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
+    <address>
+      <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
       <streetAddress>456 Hollywood Blvd</streetAddress>
       <locality>San Francisco</locality>
       <region>CA</region>
@@ -1411,24 +1411,24 @@
   </emails>
   <addresses>
     <address>
-	  <formatted>100 Universal City Plaza\nHollywood, CA 91608 USA</formatted>
-	  <streetAddress>100 Universal City Plaza</streetAddress>
-	  <locality>Hollywood</locality>
-	  <region>CA</region>
-	  <postalCode>91608</postalCode>
-      <country>USA</country>
-	 <type>work</type>
-	 <primary>true</primary>
-    </address>
-	<address>
-	  <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
-	  <streetAddress>456 Hollywood Blvd</streetAddress>
-	  <locality>San Francisco</locality>
+      <formatted>100 Universal City Plaza\nHollywood, CA 91608 USA</formatted>
+      <streetAddress>100 Universal City Plaza</streetAddress>
+      <locality>Hollywood</locality>
       <region>CA</region>
       <postalCode>91608</postalCode>
       <country>USA</country>
-	 <type="home">
-	</address>
+      <type>work</type>
+      <primary>true</primary>
+    </address>
+    <address>
+      <formatted>456 Hollywood Blvd\nHollywood, CA 91608 USA</formatted>
+      <streetAddress>456 Hollywood Blvd</streetAddress>
+      <locality>San Francisco</locality>
+      <region>CA</region>
+      <postalCode>91608</postalCode>
+      <country>USA</country>
+      <type="home">
+    </address>
   </addresses>
   <phoneNumbers>
     <phoneNumber>
@@ -1442,9 +1442,9 @@
   </phoneNumbers>
   <ims>
     <im>
-     <value>someaimhandle</value>
-     <type>aim</type>
-     </im>
+      <value>someaimhandle</value>
+      <type>aim</type>
+    </im>
   </ims>
   <photos>
     <photo>
@@ -1501,8 +1501,8 @@
     </member>
     <member>
       <value>005D0000001AQRE</value>
-	  <display>Mandy Pepperidge</display>
-	</member>
+      <display>Mandy Pepperidge</display>
+    </member>
   </members>
 </SCIM>
 
