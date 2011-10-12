@@ -1600,7 +1600,7 @@ Bulk</h3>
 <p>
               </p>
 <blockquote class="text"><dl>
-<dt>failonerrors</dt>
+<dt>failOnErrors</dt>
 <dd>
                  An integer specifying the number of errors that the Service Provider will accept before the
                     operation is terminated and an error response is returned. OPTIONAL.
@@ -1698,7 +1698,7 @@ Bulk</h3>
 <p>
               The Service Provider MUST continue performing as many changes as
               possible and disregard partial failures. The Consumer MAY override
-              this behavior by specifying a value for failonerrors attribute. The failonerrors
+              this behavior by specifying a value for failOnErrors attribute. The failOnErrors
               attribute defines the number of errors that the Service Provider 
               should accept before failing the remaining operations returning the
               response.
@@ -1747,7 +1747,7 @@ Bulk</h3>
   "description": "Request is unparseable, syntactically incorrect, or violates schema."
 }</pre></div>
 <p>
-              The following example shows how to add, update, and remove a user. The failonerrors
+              The following example shows how to add, update, and remove a user. The failOnErrors
               attribute is set to '1' indicating the Service Provider should return
               on the first error. The POST operation's bulkId value is set to 'qwerty' enabling the Consumer to match
                 the new User with the returned Resource id 'uid=alice,dc=example,dc=com'.
@@ -1764,7 +1764,7 @@ Content-Length: ...
   "schemas":[
     "urn:scim:schemas:core:1.0"
   ],
-  "failonerrors":1,
+  "failOnErrors":1,
   "Operations":[
     {
       "method":"POST",
@@ -1888,7 +1888,7 @@ Location: https://example.com/v1/Bulk/PPqzp3j5E0FkXGlQ
   ]
 }</pre></div>
 <p>
-            If the failonerrors attribute is not specified or the Service Provider has
+            If the failOnErrors attribute is not specified or the Service Provider has
             not reached the error limit defined by the Consumer the Service Provider
             will continue to process all operations. The following is an example
             in which all operations failed.
