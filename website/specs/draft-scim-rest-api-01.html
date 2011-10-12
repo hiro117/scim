@@ -281,7 +281,7 @@ Definitions</h3>
 </dd>
 <dt>Consumer:</dt>
 <dd>A website or application that uses the SCIM
-            protocol to manage identity maintained by the Service Provider.
+            protocol to manage identity data maintained by the Service Provider.
           
 </dd>
 <dt>Base URL:</dt>
@@ -309,7 +309,7 @@ Definitions</h3>
 </dd>
 <dt>Complex Attribute:</dt>
 <dd>A Singular or Plural attribute whose
-            value is an object containing multiple sub-attribute attributes.
+            value is an object containing multiple sub-attributes.
           
 </dd>
 <dt>Sub-Attribute:</dt>
@@ -336,7 +336,7 @@ Authentication and Authorization</h3>
         implemented in such a way that new authentication schemes can be
         deployed. Implementers SHOULD support existing
         authentication/authorization schemes. In particular,
-        <a href='http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08'>OAuth2 Bearer Token</a>
+        <a href='http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-09'>OAuth2 Bearer Token</a>
         is RECOMMENDED. Appropriate security considerations of the selected
         authentication and authorization schemes SHOULD be taken.
 
@@ -447,7 +447,7 @@ API</h3>
 </tr>
 <tr>
 <td align="left">
-          User Query/Listing
+          Group Query/Listing
         </td>
 <td align="left">/Groups</td>
 <td align="left">
@@ -575,7 +575,9 @@ ETag: "e180ee84f0671b1"
   "externalId":"bjensen",
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
-    "lastModified":"2011-08-01T21:32:44.882Z"
+    "lastModified":"2011-08-01T21:32:44.882Z",
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "version":"e180ee84f0671b1"
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -635,7 +637,9 @@ ETag: "f250dd84f0671c3"
   "id":"uid=bjensen,dc=example,dc=com",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
-    "lastModified":"2011-08-01T18:29:49.793Z"
+    "lastModified":"2011-08-01T18:29:49.793Z",
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "version":"f250dd84f0671c3"
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -865,7 +869,7 @@ filter=Username eq 'john'
 <p>Providers MAY support additional filter operations if they
               choose. Providers MUST decline to filter results if the specified
               filter operation is not recognized and return a HTTP 400 error
-              with an appropriate human parseable response. For example, if a
+              with an appropriate human readable response. For example, if a
               Consumer specified an unsupported operator named 'regex' the
               Service Provider should specify an error response description
               identifying the Consumer error; e.g., 'The operator 'regex' is not
@@ -1118,7 +1122,6 @@ ETag: "a330bc54f0671c9"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Authorization: Bearer h480djs93hd8
 ETag: "b431af54f0671a2"
 Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
 {
@@ -1413,8 +1416,8 @@ ETag: "a330bc54f0671c9"
       "locality": "Hollywood",
       "region": "CA",
       "postalCode": "91608",
-      "country": "USA",
-      "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+      "country": "US",
+      "formatted": "100 Universal City Plaza\nHollywood, CA 91608 US",
       "primary": true
       "operation": "delete"
     },
@@ -1424,8 +1427,8 @@ ETag: "a330bc54f0671c9"
       "locality": "Hollywood",
       "region": "CA",
       "postalCode": "91608",
-      "country": "USA",
-      "formatted": "911 Universal City Plaza\nHollywood, CA 91608 USA",
+      "country": "US",
+      "formatted": "911 Universal City Plaza\nHollywood, CA 91608 US",
       "primary": true
     }
   ]
@@ -1714,14 +1717,14 @@ Bulk</h3>
 <p>
               There can be more then one operation per Resource in each
               bulk job. The Service Consumer MUST take notice of the unordered
-              structure of JSON and the Service Provider can process operation in any order.
+              structure of JSON and the Service Provider can process operations in any order.
               For example, if the Service Consumer sends two PUT operations in one request, the outcome
               is non-deterministic.
             
 </p>
 <p>
               The Service Provider response MUST include the result of all processed operations. A location attribute
-                that includes the Resources' end point MUST be returned for all operations excluding failed
+                that includes the Resource's end point MUST be returned for all operations excluding failed
                 POSTs. The status attribute includes information about the success or failure of one operation within
                 the bulk job.  The attribute status MUST include the code attribute that holds the HTTP response code
                 that would have been returned if a single HTTP request would have been used. If an error occurred
@@ -1761,7 +1764,7 @@ Content-Length: ...
   "schemas":[
     "urn:scim:schemas:core:1.0"
   ],
-  "failonerrors":"1",
+  "failonerrors":1,
   "Operations":[
     {
       "method":"POST",
@@ -2029,7 +2032,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-GET /v1/Groups?filter=id eq ‘cn=Tour Guides,dc=example,dc=com‘
+GET /v1/Group/cn=Tour Guides,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2048,6 +2051,8 @@ Content-Type: application/json
       "id": "ou=Tour Guides,dc=example,dc=com",
       "displayName": "Tour Guides",
       "meta": {
+        "created":"2011-08-01T18:29:49.793Z",
+        "lastModified":"2011-08-01T20:31:02.315Z",
         "location": "https://example.com/v1/Group/cn=Tour Guides,dc=example,dc=com",
         "version": "lha5bbazU3fNvfe5"
       },
@@ -2170,7 +2175,7 @@ Content-Length: ...
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-GET /v1/Groups?filter=displayName sw ‘Group ‘
+GET /v1/Groups?filter=displayName sw 'Group '
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2192,6 +2197,8 @@ Content-Type: application/json
       ],
       "displayName": "Group A",
       "meta": {
+        "created":"2011-08-01T18:29:49.793Z",
+        "lastModified":"2011-08-01T18:29:51.135Z",
         "location": "https://example.com/v1/Group/ou=Group A,dc=example,dc=com",
         "version": "mvwNGaxB5SDq074p"
       },
@@ -2209,6 +2216,8 @@ Content-Type: application/json
       ],
       "displayName": "GroupB",
       "meta": {
+        "created":"2011-08-01T18:29:50.873Z",
+        "lastModified":"2011-08-01T18:29:50.873Z",
         "location": "https://example.com/v1/Group/ou=GroupB,dc=example,dc=com",
         "version": "wGB85s2QJMjiNnuI"
       },
@@ -2222,7 +2231,7 @@ Content-Type: application/json
   ]
 }</pre></div>
 <p>
-          If the Service Provider supports the change password end point the 
+          If the Service Provider supports the change password endpoint the 
           Consumer can create a new User set their password in a single bulk operation.
         
 </p>
@@ -2430,11 +2439,11 @@ Additional retrieval query parameters</h3>
           Resource attribute names (e.g. userName, name, emails). Extended
           schema attribute names must be prefixed with the attribute name's
           fully qualified URN separated by a colon (':'). For example, an
-          extended schema name-spaced as 'urn:hr:schemas:user with the simple
+          extended schema name-spaced as 'urn:hr:schemas:user' with the simple
           attribute 'age' is fully encoded as 'urn:hr:schemas:user:age'.
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-GET /User/uid=bjensen,dc=example,dc=com?attributes=displayName
+GET /User/uid=bjensen,dc=example,dc=com?attributes=userName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2450,10 +2459,12 @@ ETag: "a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
+  "userName":"bjensen",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "version":"a330bc54f0671c9"
   }
 }
 
@@ -2598,7 +2609,8 @@ ETag: "e180ee84f0671b1"
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "version":"e180ee84f0671b1"
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -2608,7 +2620,7 @@ ETag: "e180ee84f0671b1"
   "userName":"bjensen"
 }
 </pre></div>
-<p>With the returned ETag, Consumers can choose to retrieve the Resource
+<p>With the returned ETag, Consumers MAY choose to retrieve the Resource
           only if the Resource has been modified. In addition, if updating,
           specifying an ETag guarantees that previous updates will not be
           overwritten. Note: Per the HTTP specification the ETag value is
@@ -2633,7 +2645,7 @@ If-None-Match: "e180ee84f0671b1"
         
 </p>
 <p>
-          Similarly, consumers may supply an
+          Similarly, consumers MAY supply an
           <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24'>If-Match</a>
           ETag header for PUT, PATCH, and DELETE operations to ensure that the
           requested operation succeeds only if the supplied ETag matches the
