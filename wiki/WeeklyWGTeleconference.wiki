@@ -1,8 +1,4 @@
-#Dial-in instructions for weekly working group meeting
-= Introduction =
-30min-1hr specification discussion, issue resolution, et al.
-
-= Details =
+=  Dial-in instructions for weekly working group meeting =
 
 Meeting Number: 341 843 003
 
