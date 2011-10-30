@@ -2422,8 +2422,101 @@ ETag: "a330bc54f0671c9"
         </figure>
 
       </section>
+      
+      
+      <section title="Attribute Notation">
+        <t>
+          The operations that sort, filters, the attributes used in PATCH and the attributes used when retrieving partial Resources all requires the Consumer to specify attributes for the Service Provider to act upon. The notation for these four are the same.
+        </t>
+        <t>
+          For simple attributes the Consumers only specifies the attribute name.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+attributes=userName
+sortBy=userName&sortOrder=ascending 
+filter=userName eq "bjensen"
+"meta": { "attributes": [userName] }
+            ]]>
+          </artwork>
+        </figure>
+        <t>
+          When specifying complex attributes the Consumer MAY specify sub-attribute for attributes and PATCH but MUST specify sub-attributes for sort and filter.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+attributes=name
+attributes=name.givenName
+sortBy=name.givenName&sortOrder=ascending 
+filter=name.givenName eq "bjensen"
+"meta": { "attributes": [name] }
+"meta": { "attributes": [name.givenName] }
+            ]]>
+          </artwork>
+        </figure>
+        <t>
+          Simple plural attributes are addressed by the attribute name in the same manner as with simple attributes.
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+attributes=emails 
+sortBy=emails&sortOrder=ascending
+filter=emails eq "bjensen@example.com"
+"meta": { "attributes": [emails] }
+            ]]>
+          </artwork>
+        </figure>
+        <t>
+          With complex plural attributes the Consumer MAY specify sub-attribute for attributes, MUST for sort and filter, and MUST NOT for PATCH .
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+ attributes=addresses 
+ attributes=addresses.country
+ sortBy=addresses.country&sortOrder=ascending 
+ filter=addresses.country eq "Sweden"
+ "meta": { "attributes": [addresses] }
+            ]]>
+          </artwork>
+        </figure>
+        <t>
+          To address an attribute in an extension the attribute name is prefixed with the full extension URN + ':', apart from that access to extension are made in the same way as to core attributes.
+        </t>
+        <t>
+          Simple attributes
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+attributes=urn:scim:schemas:extension:user:enterprise:1.0:employeeNumber
+sortBy=urn:scim:schemas:extension:user:enterprise:1.0:employeeNumber
+filter=urn:scim:schemas:extension:user:enterprise:1.0:employeeNumber eq ‘ABC123’ 
+"meta": { "attributes": [urn:scim:schemas:extension:user:enterprise:1.0:employeeNumber] }
+            ]]>
+          </artwork>
+        </figure>
+        <t>
+          Complex attributes
+        </t>
+        <figure height="" suppress-title="false" width="" alt="" title="" align="left">
+          <artwork height="" name="" width="" type="" alt="" align="left" xml:space="preserve">
+            <![CDATA[
+attributes=urn:scim:schemas:extension:user:enterprise:1.0:manager
+attributes=urn:scim:schemas:extension:user:enterprise:1.0:manager.displayName
+sortBy=urn:scim:schemas:extension:user:enterprise:1.0:manager.displayName
+filter=urn:scim:schemas:extension:user:enterprise:1.0:manager.displayName eq ‘bjensen’
+"meta": { "attributes": [urn:scim:schemas:extension:user:enterprise:1.0:manager] }
+"meta": { "attributes": [urn:scim:schemas:extension:user:enterprise:1.0:manager.displayName] }
+            ]]>
+          </artwork>
+        </figure>        
+      </section>
 
-
+      
       <section title="HTTP Response Codes">
         <t>
           The SCIM Protocol uses the response
