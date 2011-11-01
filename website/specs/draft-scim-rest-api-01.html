@@ -212,11 +212,13 @@ Bulk<br />
 Data Input/Output Formats<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.8.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#attribute-notation">4.9.</a>&nbsp;
+Attribute Notation<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.10.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.11.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.11.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.12.</a>&nbsp;
 HTTP Method Overloading<br />
 <a href="#anchor8">5.</a>&nbsp;
 Acknowledgments<br />
@@ -350,7 +352,7 @@ Authentication and Authorization</h3>
         All examples assume OAuth2; e.g.,
       
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-            GET /User/uid=bjensen,dc=example,dc=com HTTP/1.1
+            GET /Users/uid=bjensen,dc=example,dc=com HTTP/1.1
             Host: example.com
             Authorization: Bearer h480djs93hd8
 </pre></div>
@@ -379,15 +381,17 @@ Security Considerations</h3>
 API</h3>
 
 <p>
-        The SCIM protocol specifies well known endpoints and operations for
-        managing User, Group, and Password resources as well as their
-        associated schemas via standard HTTP methods:
+        The SCIM protocol specifies well known endpoints and HTTP methods for managing Resources defined in the
+        core schema; i.e., User and Group Resources correspond to /Users and /Groups respectively.  Service Providers
+        that support extended Resources SHOULD define Resource endpoints using the established convention; pluralize
+        the Resource name defined in the extended schema by appending an 's'.  Given there are cases where Resource
+        pluralization is ambiguous; e.g., a Resource named 'person' is legitimately 'persons' and 'people' Consumers
+        can discover Resource endpoints via the Schema attribute 'endpoint'.
       
 </p>
 <blockquote class="text"><dl>
 <dt>GET</dt>
-<dd>Retrieves a complete or partial Resource or
-          Resource Schema
+<dd>Retrieves a complete or partial Resource
         
 </dd>
 <dt>POST</dt>
@@ -395,12 +399,12 @@ API</h3>
         
 </dd>
 <dt>PUT</dt>
-<dd>Modifies a Resource with a complete, consumer
+<dd>Modifies a Resource with a complete, Consumer
           specified Resource (replace)
         
 </dd>
 <dt>PATCH</dt>
-<dd>Modifies a Resource with a set of consumer specified
+<dd>Modifies a Resource with a set of Consumer specified
           changes (partial update) or changes a User password
         
 </dd>
@@ -415,51 +419,31 @@ API</h3>
 <tr><th align="left">Resource</th><th align="left">Endpoint</th><th align="left">Operations</th><th align="left">Description</th></tr>
 <tr>
 <td align="left">User</td>
-<td align="left">/User</td>
-<td align="left"><a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>,
+<td align="left">/Users</td>
+<td align="left">
+          <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>,
           <a class='info' href='#create-resource'>POST<span> (</span><span class='info'>Creating Resources</span><span>)</span></a>,
           <a class='info' href='#edit-resource-with-put'>PUT<span> (</span><span class='info'>Modifying with PUT</span><span>)</span></a>,
           <a class='info' href='#edit-resource-with-patch'>PATCH<span> (</span><span class='info'>Modifying with PATCH</span><span>)</span></a>,
           <a class='info' href='#delete-resource'>DELETE<span> (</span><span class='info'>Deleting Resources</span><span>)</span></a>
         </td>
-<td align="left">Retrieve/Modify Users</td>
-</tr>
-<tr>
-<td align="left">
-          User Query/Listing
-        </td>
-<td align="left">/Users</td>
-<td align="left">
-          <a class='info' href='#query-resources'>GET<span> (</span><span class='info'>List/Query Resources</span><span>)</span></a>
-        </td>
-<td align="left">Retrieve User(s) via ad hoc queries</td>
+<td align="left">Retrieve/Add/Modify Users</td>
 </tr>
 <tr>
 <td align="left">Group</td>
-<td align="left">/Group</td>
-<td align="left"><a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>,
+<td align="left">/Groups</td>
+<td align="left">
+          <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>,
           <a class='info' href='#create-resource'>POST<span> (</span><span class='info'>Creating Resources</span><span>)</span></a>,
           <a class='info' href='#edit-resource-with-put'>PUT<span> (</span><span class='info'>Modifying with PUT</span><span>)</span></a>,
           <a class='info' href='#edit-resource-with-patch'>PATCH<span> (</span><span class='info'>Modifying with PATCH</span><span>)</span></a>,
           <a class='info' href='#delete-resource'>DELETE<span> (</span><span class='info'>Deleting Resources</span><span>)</span></a>
         </td>
-<td align="left">Retrieve/Modify Groups</td>
-</tr>
-<tr>
-<td align="left">
-          Group Query/Listing
-        </td>
-<td align="left">/Groups</td>
-<td align="left">
-          <a class='info' href='#query-resources'>GET<span> (</span><span class='info'>List/Query Resources</span><span>)</span></a>
-        </td>
-<td align="left">Retrieve Group(s) via ad hoc queries</td>
+<td align="left">Retrieve/Add/Modify Groups</td>
 </tr>
 <tr>
 <td align="left">User Password</td>
-<td align="left">
-          /User/{userId}/password
-        </td>
+<td align="left">/Users/{userId}/password</td>
 <td align="left">
           <a class='info' href='#change-password'>PATCH<span> (</span><span class='info'>Change password</span><span>)</span></a>
         </td>
@@ -467,39 +451,23 @@ API</h3>
 </tr>
 <tr>
 <td align="left">Service Provider Configuration</td>
-<td align="left">
-          /ServiceProviderConfig
-        </td>
+<td align="left">/ServiceProviderConfigs</td>
 <td align="left">
           <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>
         </td>
 <td align="left">Retrieve the Service Provider's Configuration</td>
 </tr>
 <tr>
-<td align="left">Resource Schema</td>
-<td align="left">
-          /Schema
-        </td>
+<td align="left">Schema</td>
+<td align="left">/Schemas</td>
 <td align="left">
           <a class='info' href='#get-resource'>GET<span> (</span><span class='info'>Retrieving a known Resource</span><span>)</span></a>
         </td>
 <td align="left">Retrieve a Resource's Schema</td>
 </tr>
 <tr>
-<td align="left">Resource Schema Query/Listing</td>
-<td align="left">
-            /Schemas
-          </td>
-<td align="left">
-            <a class='info' href='#query-resources'>GET<span> (</span><span class='info'>List/Query Resources</span><span>)</span></a>
-          </td>
-<td align="left">Retrieve Resource Schema(s) via ad hoc queries</td>
-</tr>
-<tr>
 <td align="left">Bulk</td>
-<td align="left">
-          /Bulk
-        </td>
+<td align="left">/Bulk</td>
 <td align="left">
           <a class='info' href='#bulk-resources'>POST<span> (</span><span class='info'>Bulk</span><span>)</span></a>
         </td>
@@ -525,7 +493,7 @@ API</h3>
 Creating Resources</h3>
 
 <p>To create new Resources, clients send POST requests to the Resource
-          endpoint; i.e., /User or /Group.
+          endpoint; i.e., /Users or /Groups.
         
 </p>
 <p>Successful Resource creation is indicated with a 201 ("Created")
@@ -541,7 +509,7 @@ Creating Resources</h3>
 </p>
 <p>Below, the client sends a POST request containing a User
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-POST /User  HTTP/1.1
+POST /Users  HTTP/1.1
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -566,7 +534,7 @@ Content-Length: ...
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
 ETag: "e180ee84f0671b1"
 
 {
@@ -576,7 +544,7 @@ ETag: "e180ee84f0671b1"
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
     "version":"e180ee84f0671b1"
   },
   "name":{
@@ -604,19 +572,19 @@ Retrieving Resources</h3>
 Retrieving a known Resource</h3>
 
 <p>To retrieve a known Resource, clients send GET requests to the
-            Resource endpoint; e.g., /User/{id} or /Group/{id}.
+            Resource endpoint; e.g., /Users/{id} or /Groups/{id}.
           
 </p>
 <p>If the Resource exists the server responds with a status code of
             200 and includes the result in the body of the response.
           
 </p>
-<p>The below example retrieves a single User via the /User endpoint.
+<p>The below example retrieves a single User via the /Users endpoint.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-GET /User/uid=bjensen,dc=example,dc=com
+GET /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -629,7 +597,7 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
 ETag: "f250dd84f0671c3"
 
 {
@@ -638,7 +606,7 @@ ETag: "f250dd84f0671c3"
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
     "version":"f250dd84f0671c3"
   },
   "name":{
@@ -856,12 +824,10 @@ filter=Username eq 'john'
 <p>
               If the specified attribute in a filter expression is a Plural
               attribute, the Resource MUST match if any of the instances of the
-              given attribute match the specified criterion (e.g. if a User has
+              given attribute match the specified criterion; e.g. if a User has
               multiple emails values, only one has to match for the entire User
-              to match). For complex attributes, the fully qualified
-              Sub-Attribute MUST be specified in the expression using the '.'
-              character as separator between the attribute name and the
-              Sub-Attribute name. For example, to filter by userName the
+              to match. For complex attributes, a fully qualified Sub-Attribute MUST be specified using standard
+              <a class='info' href='#attribute-notation'>attribute notation<span> (</span><span class='info'>Attribute Notation</span><span>)</span></a>.  For example, to filter by userName the
               parameter value is userName and to filter by first name, the
               parameter value is name.givenName.
             
@@ -930,7 +896,9 @@ Sorting</h3>
                 Resources are sorted by the value of the primary attribute, if
                 any, or else the first value in the list, if any. If the
                 attribute is complex the attribute name must be a path to a
-                Sub-Attribute; e.g., sortBy=name.givenName. For all attribute
+                Sub-Attribute in standard
+                <a class='info' href='#attribute-notation'>attribute notation<span> (</span><span class='info'>Attribute Notation</span><span>)</span></a>
+                ; e.g., sortBy=name.givenName. For all attribute
                 types, if there is no data for the specified sortBy value they
                 are sorted via the 'sortOrder' parameter; i.e., they are ordered
                 first if ascending and last if descending.
@@ -1085,7 +1053,7 @@ Modifying with PUT</h3>
             Example:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PUT /User/uid=bjensen,dc=example,dc=com
+PUT /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1123,7 +1091,7 @@ ETag: "a330bc54f0671c9"
 HTTP/1.1 200 OK
 Content-Type: application/json
 ETag: "b431af54f0671a2"
-Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
+Location:"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com"
 {
   "schemas":["urn:scim:schemas:core:1.0"],
   "id":"uid=bjensen,dc=example,dc=com",
@@ -1147,7 +1115,7 @@ Location:"https://example.com/v1/User/uid=bjensen,dc=example,dc=com"
   "meta": {
     "created":"2011-08-08T04:56:22Z",
     "lastModified":"2011-08-08T08:00:12Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
     "version":"b431af54f0671a2"
   }
 }
@@ -1183,11 +1151,8 @@ Modifying with PATCH</h3>
             an attribute that is present in the meta.attributes list, the
             attribute on the Resource is replaced with the value from the PATCH
             body.  If the attribute is complex the attribute name must be a path
-            to a Sub-Attribute; e.g., name.givenName.  Extended schema attribute
-            names must be prefixed with the attribute name's fully qualified URN
-            separated by a colon (':'). For example, an extended schema
-            name-spaced as 'urn:hr:schemas:user' with the simple attribute 'age'
-            is fully encoded as 'urn:hr:schemas:user:age'.
+            to a Sub-Attribute in standard
+            <a class='info' href='#attribute-notation'>attribute notation<span> (</span><span class='info'>Attribute Notation</span><span>)</span></a>; e.g., name.givenName.
           
 </p>
 <p>Attributes that exist in the PATCH request body but not in the
@@ -1243,7 +1208,7 @@ Modifying with PATCH</h3>
 <p>The following example shows how to add a member to a group:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /Group/cn=group1,dc=example,dc=com
+PATCH /Groups/cn=group1,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1270,7 +1235,7 @@ ETag: "a330bc54f0671c9"
 HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
 ETag: "b431af54f0671a2"
-Location: "https://example.com/v1/Group/cn=group1,dc=example,dc=com"
+Location: "https://example.com/v1/Groups/cn=group1,dc=example,dc=com"
 </pre></div>
 <p>The following example shows how to remove a member from a group.
             As with the previous example, the "display" Sub-Attribute is
@@ -1283,7 +1248,7 @@ Location: "https://example.com/v1/Group/cn=group1,dc=example,dc=com"
             PATCH examples.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /Group/cn=group1,dc=example,dc=com
+PATCH /Groups/cn=group1,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1304,7 +1269,7 @@ ETag: "a330bc54f0671c9"
             group:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /Group/cn=group1,dc=example,dc=com
+PATCH /Groups/cn=group1,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1323,7 +1288,7 @@ ETag: "a330bc54f0671c9"
             group with a different members list:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /Group/cn=group1,dc=example,dc=com
+PATCH /Groups/cn=group1,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1352,7 +1317,7 @@ ETag: "a330bc54f0671c9"
            member from a Group in a single request:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /Group/cn=group1,dc=example,dc=com
+PATCH /Groups/cn=group1,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1380,7 +1345,7 @@ ETag: "a330bc54f0671c9"
             it is added and made the primary address.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1401,7 +1366,7 @@ ETag: "a330bc54f0671c9"
             must be removed and the modified address added.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1437,7 +1402,7 @@ ETag: "a330bc54f0671c9"
 <p>The following example shows how to change a User's nickname:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1472,7 +1437,7 @@ ETag: "a330bc54f0671c9"
            unchanged.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1490,7 +1455,7 @@ ETag: "a330bc54f0671c9"
            and an extended schema attribute from a User.
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1520,7 +1485,7 @@ Deleting Resources</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-DELETE /User/uid=bjensen,dc=example,dc=com
+DELETE /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
 ETag: "c310cd84f0281b7"
@@ -1533,7 +1498,7 @@ HTTP/1.1 200 OK
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-GET /User/uid=bjensen,dc=example,dc=com
+GET /Users/uid=bjensen,dc=example,dc=com
 Host: example.com
 Authorization: Bearer h480djs93hd8
 </pre></div><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -1560,7 +1525,7 @@ Change password</h3>
           the request.
 
           Since a password is a facet of the User the User endpoint is
-          overloaded; i.e., /User/{id}/password. The consumer MUST specify the
+          overloaded; i.e., /Users/{id}/password. The consumer MUST specify the
           attribute 'password' in the request body and MUST not specify any
           other attributes. If successful the Service Provider MUST return a 204
           response code and no content within the response body.
@@ -1568,7 +1533,7 @@ Change password</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
 
-PATCH /User/uid=bjensen,dc=example,dc=com/password
+PATCH /Users/uid=bjensen,dc=example,dc=com/password
 Host: example.com
 Authorization: Bearer h480djs93hd8
 
@@ -1646,8 +1611,8 @@ Bulk</h3>
 <dt>path</dt>
 <dd>
                       The Resource's relative path.  If the method is POST the value must specify a Resource type
-                        endpoint; e.g., /User or /Group whereas all other method values must specify the path to
-                        a specific Resource; e.g., /User/uid=bjensen,dc=example,dc=com.  REQUIRED in a request.
+                        endpoint; e.g., /Users or /Groups whereas all other method values must specify the path to
+                        a specific Resource; e.g., /Users/uid=bjensen,dc=example,dc=com.  REQUIRED in a request.
                     
 </dd>
 <dt>data</dt>
@@ -1768,7 +1733,7 @@ Content-Length: ...
   "Operations":[
     {
       "method":"POST",
-      "path":"/User",
+      "path":"/Users",
       "bulkId":"qwerty",
       "data":{
         "schemas":[
@@ -1779,7 +1744,7 @@ Content-Length: ...
     },
     {
       "method":"PUT",
-      "path":"/User/uid=bob,dc=example,dc=com",
+      "path":"/Users/uid=bob,dc=example,dc=com",
       "version":"3694e05e9dff591",
       "data":{
         "schemas":[
@@ -1791,7 +1756,7 @@ Content-Length: ...
     },
     {
       "method":"PATCH",
-      "path":"/User/uid=dave,dc=example,dc=com",
+      "path":"/Users/uid=dave,dc=example,dc=com",
       "version":"edac3253e2c0ef2",
       "data":{
         "schemas":[
@@ -1808,7 +1773,7 @@ Content-Length: ...
     },
     {
       "method":"DELETE",
-      "path":"/User/uid=charlie,dc=example,dc=com",
+      "path":"/Users/uid=charlie,dc=example,dc=com",
       "version":"0ee8add0a938e1a"
     }
   ]
@@ -1828,7 +1793,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
     ],
     "Operations": [
         {
-            "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
             "method": "POST",
             "bulkId": "qwerty",
             "version": "oY4m4wn58tkVjJxK",
@@ -1837,7 +1802,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com",
             "method": "PUT",
             "version": "huJj29dMNgu3WXPD",
             "status": {
@@ -1845,7 +1810,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/User/uid=dave,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/uid=dave,dc=example,dc=com",
             "method": "PATCH",
             "version": "huJj29dMNgu3WXPD",
             "status": {
@@ -1853,7 +1818,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/User/uid=charlie,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/uid=charlie,dc=example,dc=com",
             "method": "DELETE",
             "status": {
                 "code": "200"
@@ -1913,7 +1878,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com",
       "method": "PUT",
       "status": {
         "code": "412",
@@ -1921,7 +1886,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/User/uid=dave,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/uid=dave,dc=example,dc=com",
       "method": "PATCH",
       "status": {
         "code": "412",
@@ -1929,7 +1894,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/User/uid=charlie,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/uid=charlie,dc=example,dc=com",
       "method": "DELETE",
       "status": {
         "code": "404",
@@ -1965,7 +1930,7 @@ Content-Length: ...
   "Operations": [
     {
       "method": "POST",
-      "path": "/User",
+      "path": "/Users",
       "bulkId": "qwerty",
       "data": {
         "schemas": [
@@ -1976,7 +1941,7 @@ Content-Length: ...
     },
     {
       "method": "POST",
-      "path": "/Group",
+      "path": "/Groups",
       "bulkId": "ytrewq",
       "data": {
         "schemas": [
@@ -2008,7 +1973,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
   ],
   "Operations": [
     {
-      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
       "method": "POST",
       "bulkId": "qwerty",
       "version": "4weymrEsh5O6cAEK",
@@ -2017,7 +1982,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
       }
     },
     {
-      "location": "https://example.com/v1/Group/cn=Tour Guides,dc=example,dc=com",
+      "location": "https://example.com/v1/Groups/cn=Tour Guides,dc=example,dc=com",
       "method": "POST",
       "bulkId": "ytrewq",
       "version": "lha5bbazU3fNvfe5",
@@ -2032,7 +1997,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-GET /v1/Group/cn=Tour Guides,dc=example,dc=com
+GET /v1/Groups/cn=Tour Guides,dc=example,dc=com
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2053,7 +2018,7 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T20:31:02.315Z",
-        "location": "https://example.com/v1/Group/cn=Tour Guides,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/cn=Tour Guides,dc=example,dc=com",
         "version": "lha5bbazU3fNvfe5"
       },
       "members": [
@@ -2084,7 +2049,7 @@ Content-Length: ...
   "Operations": [
     {
       "method": "POST",
-      "path": "/User",
+      "path": "/Users",
       "bulkId": "qwerty",
       "data": {
         "schemas": [
@@ -2095,7 +2060,7 @@ Content-Length: ...
     },
     {
       "method": "POST",
-      "path": "/User",
+      "path": "/Users",
       "bulkId": "ytrewq",
       "data": {
         "schemas": [
@@ -2135,7 +2100,7 @@ Content-Length: ...
   "Operations": [
     {
       "method": "POST",
-      "path": "/Group",
+      "path": "/Groups",
       "bulkId": "qwerty",
       "data": {
         "schemas": [
@@ -2152,7 +2117,7 @@ Content-Length: ...
     },
     {
       "method": "POST",
-      "path": "/Group",
+      "path": "/Groups",
       "bulkId": "ytrewq",
       "data": {
         "schemas": [
@@ -2175,7 +2140,7 @@ Content-Length: ...
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-GET /v1/Groups?filter=displayName sw 'Group '
+GET /v1/Groups?filter=displayName sw 'Group'
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2199,7 +2164,7 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T18:29:51.135Z",
-        "location": "https://example.com/v1/Group/ou=Group A,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/ou=Group A,dc=example,dc=com",
         "version": "mvwNGaxB5SDq074p"
       },
       "members": [
@@ -2212,13 +2177,13 @@ Content-Type: application/json
     {
       "id": "ou=GroupB,dc=example,dc=com",
       "schemas": [
-        "urn: scim: schemas: core: 1.0"
+        "urn:scim:schemas:core:1.0"
       ],
       "displayName": "GroupB",
       "meta": {
         "created":"2011-08-01T18:29:50.873Z",
         "lastModified":"2011-08-01T18:29:50.873Z",
-        "location": "https://example.com/v1/Group/ou=GroupB,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/ou=GroupB,dc=example,dc=com",
         "version": "wGB85s2QJMjiNnuI"
       },
       "members": [
@@ -2254,7 +2219,7 @@ Content-Length: ...
   "Operations": [
     {
       "method": "POST",
-      "path": "/User",
+      "path": "/Users",
       "bulkId": "qwerty",
       "data": {
         "schemas": [
@@ -2265,7 +2230,7 @@ Content-Length: ...
     },
     {
       "method": "PATCH",
-      "path": "/User/bulkId:qwerty/password",
+      "path": "/Users/bulkId:qwerty/password",
       "data": {
         "schemas":["urn:scim:schemas:core:1.0"],
         "password":"t1meMa$heen"
@@ -2273,7 +2238,7 @@ Content-Length: ...
     },
     {
       "method": "PATCH",
-      "path": "/User/uid=bob,dc=example,dc=com/password",
+      "path": "/Users/uid=bob,dc=example,dc=com/password",
       "data": {
         "schemas":["urn:scim:schemas:core:1.0"],
         "password":"neeh$aMem1t"
@@ -2292,7 +2257,7 @@ Location: https://example.com/v1/Bulk/aWvINDpzLf5ufPqi
   ],
   "Operations": [
     {
-      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
       "method": "POST",
       "bulkId": "qwerty",
       "version": "Jg8SLbDLADDDyn2w",
@@ -2301,14 +2266,14 @@ Location: https://example.com/v1/Bulk/aWvINDpzLf5ufPqi
       }
     },
     {
-      "location": "https://example.com/v1/User/uid=alice,dc=example,dc=com/password",
+      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com/password",
       "method": "PATCH",
       "status": {
         "code": "204"
       }
     },
     {
-      "location": "https://example.com/v1/User/uid=bob,dc=example,dc=com/password",
+      "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com/password",
       "method": "PATCH",
       "status": {
         "code": "204"
@@ -2361,10 +2326,10 @@ Data Input/Output Formats</h3>
           </p>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-GET /User/uid=bjensen,dc=example,dc=com.json
+GET /Users/uid=bjensen,dc=example,dc=com.json
 Host: example.com
 
-GET /User/uid=bjensen,dc=example,dc=com.xml
+GET /Users/uid=bjensen,dc=example,dc=com.xml
 Host: example.com
 </pre></div><p>
 
@@ -2436,14 +2401,11 @@ Additional retrieval query parameters</h3>
           the Service Providers discretion, the attributes explicitly requested.
 
           The query parameter attributes value is a comma separated list of
-          Resource attribute names (e.g. userName, name, emails). Extended
-          schema attribute names must be prefixed with the attribute name's
-          fully qualified URN separated by a colon (':'). For example, an
-          extended schema name-spaced as 'urn:hr:schemas:user' with the simple
-          attribute 'age' is fully encoded as 'urn:hr:schemas:user:age'.
+          Resource attribute names in standard,
+          <a class='info' href='#attribute-notation'>attribute notation<span> (</span><span class='info'>Attribute Notation</span><span>)</span></a> form (e.g. userName, name, emails).
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-GET /User/uid=bjensen,dc=example,dc=com?attributes=userName
+GET /Users/uid=bjensen,dc=example,dc=com?attributes=userName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2454,7 +2416,7 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
 ETag: "a330bc54f0671c9"
 
 {
@@ -2463,15 +2425,33 @@ ETag: "a330bc54f0671c9"
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
     "version":"a330bc54f0671c9"
   }
 }
 
 </pre></div>
-<a name="anchor6"></a><br /><hr />
+<a name="attribute-notation"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
+Attribute Notation</h3>
+
+<p>
+          All operations share a common scheme for referencing simple, complex (plural and singular), and extended
+          attributes.  In general, attributes are identified by prefixing the attribute name with its schema URN
+          separated by a ':' character; e.g., the core User Resource attribute 'userName' is identified as
+          'urn:scim:schemas:core:1.0:userName'.  Consumers MAY omit core attribute URN prefixes though MUST fully
+          qualify extended attributes with the associated Resource URN; e.g., the attribute 'age' defined in
+          'urn:hr:schemas:user' is fully encoded as 'urn:hr:schemas:user:age'.
+
+          A Complex attributes' Sub-attributes are referenced via nested, dot ('.') notation;
+          i.e., {urn}:{Attribute name}.{Sub-attribute name}.  For example, the fully qualified path for a User's
+          givenName is urn:scim:schemas:core:1.0:name.givenName
+        
+</p>
+<a name="anchor6"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
@@ -2563,7 +2543,7 @@ HTTP/1.1 404 NOT FOUND
 </pre></div>
 <a name="etags"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
+<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
 Versioning Resources</h3>
 
 <p>
@@ -2577,7 +2557,7 @@ Versioning Resources</h3>
 </p>
 <p>Example
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-POST /User  HTTP/1.1
+POST /Users  HTTP/1.1
 Host: example.com
 Content-Type:  application/json
 Authorization: Bearer h480djs93hd8
@@ -2600,7 +2580,7 @@ Content-Length: ...
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: https://example.com/v1/User/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
 ETag: "e180ee84f0671b1"
 
 {
@@ -2609,7 +2589,7 @@ ETag: "e180ee84f0671b1"
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
-    "location":"https://example.com/v1/User/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
     "version":"e180ee84f0671b1"
   },
   "name":{
@@ -2632,7 +2612,7 @@ ETag: "e180ee84f0671b1"
           header:
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-GET /User/uid=bjensen,dc=example,dc=com?attributes=displayName
+GET /Users/uid=bjensen,dc=example,dc=com?attributes=displayName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2661,7 +2641,7 @@ If-None-Match: "e180ee84f0671b1"
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
+<a name="rfc.section.4.12"></a><h3>4.12.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT,
@@ -2671,7 +2651,7 @@ HTTP Method Overloading</h3>
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-POST /User/uid=bjensen,dc=example,dc=com
+POST /Users/uid=bjensen,dc=example,dc=com
 X-HTTP-Method-Override: DELETE
 </pre></div>
 <a name="anchor8"></a><br /><hr />
