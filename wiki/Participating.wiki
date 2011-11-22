@@ -2,6 +2,6 @@
 
 The SCIM WG is an open, collaborative, and loosely organized group of SaaS providers, vendors and others with a vested interest in simplifying and standardizing 'identity in the cloud'.  Anyone is welcome to join the fray at anytime.  To get started simply join the conversation at http://groups.google.com/group/cloud-directory.  
 
-If you would like to contribute language to the specifications you must first sign the [http://www.openwebfoundation.org/legal/the-owf-1-0-agreements OWF CLA].  After signing post the signed CLA to the mailing list and we'll add it to the list. 
+If you would like to contribute language to the specifications you must first sign the [http://www.openwebfoundation.org/legal/the-owf-1-0-agreements OWF CLA].  After signing post the signed CLA to the [http://groups.google.com/group/cloud-directory WG alias] and we'll add it to the list. 
 
-Weekly conference calls are held to discuss issues better suited for synchronous conversations.  Feel free to join in.  The call day/time occasionally floats so check here for the latest [Wee dial-in details]. 
+Weekly conference calls are held to discuss issues better suited for synchronous conversations.  Feel free to join in.  The call day/time occasionally floats so check here for the latest [WeeklyWGTeleconference dial-in details]. 
