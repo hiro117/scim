@@ -9,6 +9,8 @@
   <xs:element name="Resource" type="tns:Resource"/>
   <xs:element name="Schema" type="tns:Schema"/>
   <xs:element name="ServiceProviderConfig" type="tns:ServiceProviderConfig"/>
+  <xs:element name="Bulk" type="tns:Bulk"/>
+  <xs:element name="Operation" type="tns:Operation"/>
 
   <xs:group name="Resources">
     <xs:sequence>
@@ -51,6 +53,49 @@
       </xs:choice>
       <xs:any namespace="##other" minOccurs="0"
               maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Bulk">
+    <xs:sequence>
+      <xs:element name="failOnErrors" type="xs:int" minOccurs="0"
+        maxOccurs="1"/>
+      <xs:element name="Operations" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Operation"
+              type="tns:Operation"
+              minOccurs="1"
+              maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="Operation">
+    <xs:sequence>
+      <xs:element name="method" type="xs:string" minOccurs="1"
+                  maxOccurs="1"/>
+      <xs:element name="bulkId" type="xs:string" minOccurs="0"
+                  maxOccurs="1"/>
+      <xs:element name="version" type="xs:string" minOccurs="0"
+                  maxOccurs="1"/>
+      <xs:element name="path" type="xs:string" minOccurs="0"
+                  maxOccurs="1"/>
+      <xs:element name="location" type="xs:string" minOccurs="0"
+                  maxOccurs="1"/>
+      <xs:element name="data" type="tns:Resource" minOccurs="0" 
+                  maxOccurs="1" />
+      <xs:element name="status" type="tns:Status" minOccurs="0" 
+                  maxOccurs="1" />
+      </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Status">
+    <xs:sequence>
+      <xs:element name="code" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
