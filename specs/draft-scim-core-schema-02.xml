@@ -53,25 +53,25 @@
       </address>
     </author>
 
-    <date day="10" month="October" year="2011" />
+    <date day="14" month="November" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
       to make managing user identity in cloud based applications and services
-      easier. The specification suite seeks to build upon experience with
+      easier. The specification suite builds upon experience with
       existing schemas and deployments, placing specific emphasis on
       simplicity of development and integration, while applying existing
       authentication, authorization, and privacy models. Its intent is to
       reduce the cost and complexity of user management operations by
       providing a common user schema and extension model, as well as binding
       documents to provide patterns for exchanging this schema using standard
-      protocols. In essence, make it fast, cheap, and easy to move users in
+      protocols. In essence, make it fast, cheap, and easy to move identity in
       to, out of, and around the cloud.</t>
 
       <t>This document provides a platform neutral schema and extension model
-      for representing users and groups. This schema is intended for exchange
-      and use with cloud service providers. Standard serializations of that
-      schema using JSON and XML are also provided.</t>
+      for representing users and groups in JSON and XML formats. This schema is intended for exchange
+      and use with cloud service providers.  Additional binding documents provide a standard REST API,
+        SAML bindings, and use cases.</t>
     </abstract>
   </front>
 
@@ -90,9 +90,9 @@
     <section anchor="overview" title="Overview">
       <t>While there are existing standards for describing and exchanging user
       information, many of these standards can be difficult to implement
-      and/or use wire protocols that do not easily traverse firewalls nor
-      easily layer onto existing web protocols. As a result, many cloud
-      providers provide their own non-standard APIs for managing users within
+      and/or use; e.g., their wire protocols do not easily traverse firewalls and/or are not easily
+      layered onto existing web protocols. As a result, many cloud
+      providers implement non-standard APIs for managing users within
       their services. This increases both the cost and complexity associated
       with organizations adopting products and services from multiple cloud
       providers as they must perform redundant integration development.
@@ -103,61 +103,47 @@
       <t>SCIM seeks to simplify this problem through a simple to implement
       specification suite that provides a common user schema and extension
       model, as well as binding documents to provide patterns for exchanging
-      this schema using standard protocols. It draws inspiration and best
+      this schema via a REST API. It draws inspiration and best
       practice, building upon existing user APIs and schemas from a wide
       variety of sources including, but not limited to, existing APIs exposed
       by cloud providers, PortableContacts, and LDAP directory services.</t>
 
       <t>This document provides a platform neutral schema and extension model
-      for representing users and groups. This schemas is intended for exchange
-      and use with cloud service providers.Standard serializations of that
-      schema using JSON and XML are also provided. Additional binding
-      documents provide a standard REST API, as well as use of SCIM schema
-      over federation protocols such as SAML and OpenID</t>
+      for representing users and groups in JSON and XML formats. This schema is intended for exchange
+      and use with cloud service providers.  Additional binding documents provide a standard REST API,
+        SAML bindings, and use cases.</t>
     </section>
 
     <section anchor="schema_structure" title="SCIM Schema Structure">
-      <t>SCIM schema provides a minimal core schema for representing users and
-      groups, encompassing common attributes found in many existing deployments
-      and schemas.</t>
+      <t>SCIM schema provides a minimal core schema for representing users and groups (resources), encompassing common
+        attributes found in many existing deployments and schemas.
+      </t>
 
-      <t>Each attribute is defined as either a Singular Attribute, in which
-      case there MUST NOT be more than one instance of that field per user, or
-      as a Plural Attribute, in which case any number of instances of that
-      attribute MAY be present per user. The only exception to this is a
-      "schemas" attribute used in representations that lack native support for
-      expressing schemas such as JSON. This attribute allows introspection of
-      the supported schema version for a SCIM representation as well any
-      schema extensions supported by that representation. The 'schemas'
-      attribute is an array of strings, and values must be URNs designated by
-      the corresponding schema definition.</t>
+      <t>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists of the
+        attributes' name and at least one simple (a primitive value; e.g., string) or complex (collection of sub-attributes)
+        value.  By definition, an attribute with more than one value is multi-valued and contains 0..n values while
+        single-valued attributes contain 0..1 values.  SCIM schema defines the data type, plurality and other distinguishing features of an
+        attribute.  Both XML and JSON formats are defined.  When marshalling or extending SCIM resources in XML
+        format implementors MUST use the normative, SCIM, XML schema (.xsd).  SCIM resources represented in a
+        schema-less format; e.g., JSON, MUST specify schema via the <xref target="schemas-attribute">"schemas" attribute</xref>.
+      </t>
 
-      <t>SCIM information is formatted using labeled attributes with either
-      structured or unstructured string data. Unless otherwise specified, all
-      attributes are optional and of type xs:string. All encoding MUST be
-      UTF-8. Each attribute label uses camelCase notation. Unless specified,
-      all attribute values MUST NOT contain any newline characters (\r or
-      \n).</t>
-
-      <t>Each attribute value consists of one of the following types:</t>
+      <t>Attribute value data types are derived from <eref target="http://www.w3.org/TR/xmlschema-2/">XML schema</eref>
+        and unless otherwise specified are optional and of type string.  All encoding MUST be UTF-8. Each attribute
+        label uses camelCase notation. Unless specified, attribute values MUST NOT contain any newline characters
+        (\r or \n).  An attribute value consists of one of the following types:</t>
 
       <t>
         <list style="hanging">
-          <t hangText="Simple">A single string attribute which MAY specify a
-          required data format or allow any string. A simple attribute MAY
-          contain Canonical Values specified, in which case Service Providers
-          SHOULD conform to those values if appropriate, but MAY
-          provide alternate string values to represent additional values.</t>
+          <t hangText="String">An attribute containing a sequence of characters as defined in
+              <eref target="http://www.w3.org/TR/xmlschema-2/#string">section 3.2.1</eref> of the XML Schema Datatypes Specification.
+            A string attribute MAY specify a required data format. Additionally, when Canonical Values are specified Service Providers
+          SHOULD conform to those values if appropriate, but MAY provide alternate string values to represent additional values.</t>
 
-          <t hangText="Complex">An attribute containing any
-          combination of other attributes. Complex attributes are defined by
-          listing the child attributes and their types.</t>
+          <t hangText="Boolean">An attribute containing the literal "true" or "false" as defined in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#boolean">section 3.2.2</eref> of the XML Schema Datatypes Specification</t>
 
-          <t hangText="Boolean">A special case of a Simple Attribute with two
-          legal values: true and false. Values are case-sensitive.</t>
-
-          <t hangText="DateTime">The attribute value MUST be a valid
-          xsd:dateTime (e.g. 2008-01-23T04:56:22Z) value as specified in
+          <t hangText="DateTime">The attribute value MUST be a valid dateTime (e.g. 2008-01-23T04:56:22Z) as specified in
             <eref target="http://www.w3.org/TR/xmlschema-2/#dateTime">
                section 3.2.7 of the XML Schema Datatypes Specification
               </eref>.
@@ -165,53 +151,58 @@
 
           <t hangText="Binary">The attribute value MUST be encoded as a valid
           xsd:base64Binary value as specified in <eref target="http://www.w3.org/TR/xmlschema-2/#base64Binary"> section 3.2.16 of the XML Schema
-              Datatypes Specification</eref>.  No binary attributes
-            are specified in the core schema, however,
-            extended schemas may opt to include images,
-            digital signatures, and the like.
+              Datatypes Specification</eref>.  No binary attributes are specified in the core schema, however,
+            extended schemas may opt to include images, digital signatures, and the like.
           </t>
+
+          <t hangText="Complex">An attribute containing any combination of other attributes. Complex attributes are defined by
+          listing the sub-attributes and their data types.</t>
         </list>
       </t>
 
-      <t>Plural Attributes allow for lists of attributes using a special
-      complex type.</t>
+      <t>Multi-valued attributes in JSON format may be encoded as an array of primitive or complex values and MAY contain
+        the following sub-attributes:</t>
+      <list style="hanging">
+          <t hangText="type">A label indicating the attribute's function; e.g., "work" or "home".</t>
 
-      <t><list style="hanging">
-          <t hangText="value">The attribute's significant value, e.g. the
-          e-mail address, phone number, ID, URL, etc. Each non-empty
-          Plural Attribute value MUST contain at least the value
-          sub-attribute, but all other sub-attributes are optional.
-          REQUIRED.</t>
+          <t hangText="primary">A Boolean value indicating the 'primary' or preferred
+          attribute value for this attribute, e.g. the preferred mailing address or primary
+          e-mail address. The primary attribute value 'true' MUST appear no more than once.</t>
 
-          <t hangText="type">The type of attribute for this instance, usually
-          used to label the preferred function of this instance of the Plural Attribute.
-          OPTIONAL</t>
+          <t hangText="display">A human readable name, primarily used for display purposes.  READ-ONLY.</t>
 
-          <t hangText="primary">A Boolean value indicating whether this
-          instance of the Plural Attribute is the primary or preferred value
-          of for this attribute, e.g. the preferred mailing address or primary
-          e-mail address. Service Providers MUST NOT mark more than one
-          instance of the same Plural Attribute as primary, and MAY choose not
-          to mark any attributes as primary, if this information is not
-          available. For efficiency, Service Providers SHOULD NOT mark all
-          non-primary attributes with primary="false", but should instead omit
-          this sub-attribute for all non-primary instances. OPTIONAL</t>
+          <t hangText="operation">The operation to perform on the multi-valued attribute during a PATCH request. The only
+              valid value is "delete", which signifies that this instance should be removed from the Resource.</t>
 
-          <t hangText="display">A human readable name, primarily used for
-          display purposes where the value is an opaque or complex type such
-          as an id. READ-ONLY and OPTIONAL.</t>
+          <t hangText="value">The attribute's significant value; e.g., the e-mail address, phone number, etc. Attributes
+        that define a "value" sub-attribute MAY be alternately represented as a collection of primitive types.  For example:</t>
 
-          <t hangText="operation">The operation to perform on the plural attribute during a PATCH request. The only
-              valid value is "delete", which signifies that this instance of the Plural Attribute should be removed
-              from the Resource. OPTIONAL.</t>
+       <artwork><![CDATA[
+{
+  "emails": [
+    {"value":"bjensen@example.com"},
+    {"value":"babs@example.com"}
+  ]
+}
+]]></artwork>
 
-        </list>When returning Plural Attributes, Service Providers SHOULD
+        <t>May also be represented as:</t>
+
+<artwork><![CDATA[
+{
+  "emails": ["bjensen@example.com","babs@example.com"]
+}
+]]>
+</artwork>
+    </list>
+
+      <t>
+      When returning multi-valued attributes, Service Providers SHOULD
       canonicalize the value returned, if appropriate (e.g. for e-mail
       addresses and URLs). Providers MAY return the same value more than once
       with different types (e.g. the same e-mail address may used for work and
       home), but SHOULD NOT return the same (type, value) combination more
-      than once per Plural Attribute, as this complicates processing by the
-      Consumer.</t>
+      than once per Attribute, as this complicates processing by the Consumer.</t>
     </section>
 
     <section title="Schema Extension Model">
@@ -219,26 +210,19 @@
       ObjectClasses used in LDAP. Unlike LDAP there is no inheritance model;
       all extensions are additive (similar to <eref target="http://tools.ietf.org/html/rfc4512">LDAP Auxiliary Object Classes</eref>). Each
       value indicates additive schema that may exist in a SCIM representation
-      as specified by extensions not defined in this suite. Each schema
-      extension must identify a canonical URI used to identify the extension.
-      Schema Extensions MUST follow the rules of Singular and Plural Attribute
-      structures defined in this core schema specification. Schema extensions
-      MUST NOT override or redefine any schema defined in this core
-      specification. For representations that support expressing schema, the
-      native convention MUST be used (For instance, XML Namespace). When the
-      the "schemas" attribute is being used (as defined in Section 5.2),
-      additional URIs MUST be specified in the "schemas" attribute array.</t>
+      as specified by extensions not defined in this suite.  Schema extensions MUST NOT redefine any attributes defined in this
+      specification and SHOULD follow conventions defined in this specification. Each schema
+      extension must identify a URI used to identify the extension.  XML MUST use XML
+      namespaces and JSON formats MUST use the <xref target="schemas-attribute">"schemas" attribute</xref>
+        to distinguish extended resources and attributes.
+      </t>
     </section>
 
     <section anchor="schema" title="SCIM Core Schema">
       <section title="Common Schema Attributes">
-        <t>Each SCIM Resource (Users, Groups, etc.) implicitly
-        includes the following common attributes. These common attributes MUST
-        be included in all Resources, including any new Resource types
-        that may be defined. It it not necessary to designate support for Core
-        Schema with a value in the "schemas" attributes (defined in the next
-        section), as inclusion is implicit and mandatory.</t>
-
+        <t>Each SCIM Resource (Users, Groups, etc.) includes the below common attributes. These attributes MUST
+        be included in all Resources, including any extended Resource types. It is not necessary to specify the schemas
+          attribute if the Resource is fully defined in this document as the core schema is implicitly included.</t>
         <t>
           <list style="hanging">
             <t hangText="id">Unique identifier for the SCIM Resource as
@@ -268,45 +252,41 @@
             always interpret the externalId as scoped to the Service
             Consumer's tenant. OPTIONAL.</t>
 
-         <t hangText="meta">A complex type containing metadata about the
-            resource. OPTIONAL.<list style="hanging">
+         <t hangText="meta">A complex attribute containing resource metadata. OPTIONAL.  All sub-attributes are OPTIONAL <list style="hanging">
                 <t hangText="created">The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
-                READ-ONLY and OPTIONAL.</t>
+                READ-ONLY.</t>
 
                 <t hangText="lastModified">The most recent DateTime the
                 details of this Resource were updated at the Service Provider. If
                 this Resource has never been modified since its initial creation,
                 the value MUST be the same as the value of created. The
-                attribute MUST be a DateTime. READ-ONLY and OPTIONAL.</t>
+                attribute MUST be a DateTime. READ-ONLY.</t>
 
                 <t hangText="location">The URI of the Resource being returned. This value MUST be the same as the
-                    Location HTTP response header. READ-ONLY and OPTIONAL.</t>
+                    Location HTTP response header. READ-ONLY.</t>
 
                  <t hangText="version">The version of the Resource being returned. This value must be the same as the
-                     ETag HTTP response header. READ-ONLY and OPTIONAL.</t>
+                     ETag HTTP response header. READ-ONLY.</t>
 
                  <t hangText="attributes">The names of the attributes to remove from the Resource during a
-                     PATCH operation. OPTIONAL.</t>
+                     PATCH operation.</t>
               </list></t>
           </list>
         </t>
       </section>
 
-      <section title="&quot;schemas&quot; Attribute">
+      <section title="&quot;schemas&quot; Attribute" anchor="schemas-attribute">
         <t>SCIM supports resources of different types, with extensible
-        schemas. Each resource MUST be indicated using fully
-        qualified URNs.</t>
+        schemas. Each resource MUST be indicated using fully qualified URNs.</t>
 
         <t>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
         applied. For example, when representing users using XML, XML Namespace
         should be used.</t>
 
-        <t>When a representation does not explicitly provide support for
-        indicating a schema, such as JSON, a "schemas" attribute is used to
-        indicate the version of SCIM schema as well as any schema
-        extensions.</t>
+        <t>When a representation does not explicitly provide support for indicating a schema, such as JSON, a schemas
+          attribute is used to indicate the version of SCIM schema as well as any schema extensions.</t>
 
         <t>
           <list style="hanging">
@@ -314,8 +294,8 @@
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
             that representation. Each string value must be a unique URN. This
-            specification defines URNs for User, Group, and some standard
-            extensions. All representations of SCIM schema MUST include a
+            specification defines URNs for User, Group, and a standard "enterprise"
+            extension.  All representations of SCIM schema MUST include a
             non-zero value array with value(s) of the URNs supported by that
             representation.  Duplicate values MUST NOT be included.  Value
             order is not specified and MUST not impact behavior. REQUIRED.</t>
@@ -343,8 +323,6 @@
             the Service Consumer's entire set of Users. It MUST be a stable ID
             that does not change when the same User is returned in subsequent
             requests. REQUIRED.</t>
-
-
 
             <t hangText="name">The components of the User's real name.
             Providers MAY return just the full name as a single string in the
@@ -427,8 +405,8 @@
         </t>
       </section>
 
-      <section title="Plural Attributes">
-        <t>The following Plural Attributes are defined:</t>
+      <section title="Multi-valued Attributes">
+        <t>The following multi-valued attributes are defined:</t>
 
         <t>
           <list style="hanging">
@@ -594,7 +572,7 @@
 
       <t />
 
-      <t>The following Plural Attribute is defined in addition to the common
+      <t>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
           <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. The
               value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
@@ -659,7 +637,7 @@
               </t>
         </list>
       </t>
-      <t>The following Plural Attribute is defined in addition to the common attributes defined in Core Schema:
+      <t>The following multi-valued attribute is defined in addition to the common attributes defined in Core Schema:
         <list style="hanging">
           <t hangText="authenticationSchemes">A complex type that specifies supported Authentication Scheme
             properties.  Instead of the standard Canonical Values for type, this attribute defines the
@@ -686,22 +664,22 @@
            using an un-registered urn while in draft form).  Unlike other core Resources the schema Resource MAY contain
            a complex object within a Sub-Attribute.
         </t>
-        <t>The following Singular Attributes are defined in addition to the common attributes defined in SCIM Core Schema:
+        <t>The following Singular Attributes are defined:
           <list style="hanging">
-            <t hangText="name">The addressable Resource endpoint name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group". REQUIRED.</t>
+            <t hangText="name">The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group". REQUIRED.</t>
             <t hangText="description">The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.  REQUIRED.</t>
             <t hangText="schema">The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.  REQUIRED.</t>
-            <t hangText="queryEndpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.</t>
+            <t hangText="endpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.</t>
            </list>
         </t>
-          <t>The following Plural Attribute is defined in addition to the common attributes defined in SCIM Core Schema:
+          <t>The following multi-valued attribute is defined:
               <list style="hanging">
-                  <t hangText="attributes">A complex type that specifies the set of associated Resource attributes.
+                  <t hangText="attributes">A complex type that specifies the set of Resource attributes.
                       REQUIRED.
                       <list style="hanging">
                           <t hangText="name">The attribute's name. REQUIRED.</t>
                           <t hangText="type">The attribute's data type; e.g., String. REQUIRED.</t>
-                          <t hangText="plural">Specifies if the attribute is a plural. REQUIRED.</t>
+                          <t hangText="multiValued">Boolean value indicating the attribute's plurality. REQUIRED.</t>
                           <t hangText="description">The attribute's human readable description. When applicable Service
                               Providers MUST specify the description specified in the core schema specification.
                               REQUIRED.
@@ -717,7 +695,7 @@
                               sensitive.  REQUIRED.
                           </t>
 
-                          <t>The following Plural Attributes are defined. There are no canonical type values defined
+                          <t>The following multi-valued attributes are defined. There are no canonical type values defined
                             and the primary value serves no useful purpose.
                             <list style="hanging">
                               <t hangText="subAttributes">A list specifying the contained attributes. OPTIONAL.
@@ -737,11 +715,11 @@
                                   <t hangText="caseExact">A Boolean value that specifies if the string attribute
                                     is case sensitive. REQUIRED.
                                   </t>
+                                  <t hangText="canonicalValues">A collection of canonical values. When applicable Service
+                                    Providers MUST specify the canonical types specified in the core schema
+                                    specification; e.g.,"work","home". OPTIONAL.
+                                  </t>
                                 </list>
-                              </t>
-                              <t hangText="pluralTypes">A list of canonical type values. When
-                                applicable Service Providers MUST specify the canonical types specified in the
-                                core schema specification; e.g.,"work","home". OPTIONAL.
                               </t>
                             </list>
                           </t>
@@ -759,7 +737,7 @@
         <artwork><![CDATA[
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "005D0000001Az1u",
+  "id": "2819c223-7f76-453a-919d-413861904646",
   "userName": "bjensen@example.com"
 }
 
@@ -774,7 +752,7 @@
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "005D0000001Az1u",
+  "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
   "name": {
@@ -904,7 +882,7 @@
 
 {
   "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:enterprise:1.0"],
-  "id": "005D0000001Az1u",
+  "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
   "name": {
@@ -984,15 +962,15 @@
   "active":true,
   "groups": [
     {
-      "value": "00300000005N2Y6AA",
+      "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
       "display": "Tour Guides"
     },
     {
-      "value": "00300000005N34H78",
+      "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
       "display": "Employees"
     },
     {
-      "value": "00300000005N98YT1",
+      "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
       "display": "US Employees"
     }
   ],
@@ -1025,7 +1003,7 @@
     "division": "Theme Park",
     "department": "Tour Operations",
     "manager": {
-      "managerId": "005D0000001AQRE",
+      "managerId": "26118915-6090-4610-87e4-49d8ca9f808d",
       "displayName": "John Smith"
     }
   },
@@ -1046,15 +1024,15 @@
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
-  "id": "00300000005N98YT1",
+  "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
   "displayName": "Tour Guides",
   "members": [
     {
-      "value": "005D0000001Az1u",
+      "value": "2819c223-7f76-453a-919d-413861904646",
       "display": "Babs Jensen"
     },
     {
-      "value": "005D0000001AQRE",
+      "value": "902c246b-6245-4190-8e05-00816be7344a",
       "display": "Mandy Pepperidge"
     }
   ]
@@ -1124,12 +1102,12 @@
   "name":"User",
   "description":"Core User",
   "schema":"urn:scim:schemas:core:1.0",
-  "queryEndpoint":"/Users",
+  "endpoint":"/Users",
   "attributes":[
     {
       "name":"id",
       "type":"string",
-      "plural":false,
+      "multiValued":false,
       "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
       "schema":"urn:scim:schemas:core:1.0",
       "readOnly":true,
@@ -1139,7 +1117,7 @@
     {
       "name":"name",
       "type":"complex",
-      "plural":false,
+      "multiValued":false,
       "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
       "schema":"urn:scim:schemas:core:1.0",
       "readOnly":false,
@@ -1149,7 +1127,7 @@
         {
           "name":"formatted",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL." ,
           "readOnly":false,
           "required":false,
@@ -1158,7 +1136,7 @@
         {
           "name":"familyName",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.). OPTIONAL",
           "readOnly":false,
           "required":false,
@@ -1167,7 +1145,7 @@
         {
           "name":"givenName",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
           "readOnly":false,
           "required":false,
@@ -1176,7 +1154,7 @@
         {
           "name":"middleName",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
           "readOnly":false,
           "required":false,
@@ -1185,7 +1163,7 @@
         {
           "name":"honorificPrefix",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
           "readOnly":false,
           "required":false,
@@ -1194,7 +1172,7 @@
         {
           "name":"honorificSuffix",
           "type":"string",
-          "plural":false,
+          "multiValued":false,
           "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
           "readOnly":false,
           "required":false,
@@ -1204,30 +1182,66 @@
      },
      {
        "name":"emails",
-       "type":"string",
-       "plural":true,
+       "type":"complex",
+       "multiValued":true,
        "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
        "caseExact":false,
-       "pluralTypes":["work","home","other"]
+       "subAttributes":[
+         {
+           "name":"value",
+           "type":"string",
+           "multiValued":false,
+           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+           "readOnly":false,
+           "required":false,
+           "caseExact":false
+         },
+         {
+           "name":"display",
+           "type":"string",
+           "multiValued":false,
+           "description":"A human readable name, primarily used for display purposes. OPTIONAL and READ-ONLY.",
+           "readOnly":true,
+           "required":false,
+           "caseExact":false
+         },
+         {
+           "name":"type",
+           "type":"string",
+           "multiValued":false,
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "readOnly":false,
+           "required":false,
+           "caseExact":false,
+           "canonicalValues":["work","home","other"]
+         },
+         {
+           "name":"primary",
+           "type":"boolean",
+           "multiValued:false,
+           "description":"A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
+           "readOnly":false,
+           "required":false,
+           "caseExact":false
+         }
      },
      {
        "name":"addresses",
        "type":"complex",
-       "plural":true,
+       "multiValued":true,
        "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes. OPTIONAL.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
        "caseExact":false,
-       "pluralTypes":["work","home","other"],
        "subAttributes":[
          {
            "name":"formatted",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines. OPTIONAL.",
            "readOnly":false,
            "required":false,
@@ -1236,7 +1250,7 @@
          {
            "name":"streetAddress",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines. OPTIONAL.",
            "readOnly":false,
            "required":false,
@@ -1245,7 +1259,7 @@
          {
            "name":"locality",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The city or locality component. OPTIONAL.",
            "readOnly":false,
            "required":false,
@@ -1254,7 +1268,7 @@
          {
            "name":"region",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The state or region component. OPTIONAL.",
            "readOnly":false,
            "required":false,
@@ -1263,7 +1277,7 @@
          {
            "name":"postalCode",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The zipcode or postal code component. OPTIONAL.",
            "readOnly":false,
            "required":false,
@@ -1272,18 +1286,28 @@
          {
            "name":"country",
            "type":"string",
-           "plural":false,
+           "multiValued":false,
            "description":"The country name component. OPTIONAL.",
            "readOnly":false,
            "required":false,
            "caseExact":false
-         }
+         },
+         {
+           "name":"type",
+           "type":"string",
+           "multiValued":false,
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "readOnly":false,
+           "required":false,
+           "caseExact":false,
+           "canonicalValues":["work","home","other"]
+         },
        ]
      },
      {
        "name":"employeeNumber",
        "type":"string",
-       "plural":false,
+       "multiValued":false,
        "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization. Single valued. OPTIONAL.",
        "schema":"urn:scim:schemas:extension:enterprise:1.0",
        "readOnly":false,
@@ -1305,7 +1329,7 @@
         <artwork><![CDATA[
 
 <SCIM xmlns="urn:scim:schemas:core:1.0">
-  <id>005D0000001Az1u</id>
+  <id>2819c223-7f76-453a-919d-413861904646</id>
   <userName>bjensen@example.com</userName>
 </SCIM>
 
@@ -1319,7 +1343,7 @@
         <artwork><![CDATA[
 
 <SCIM xmlns="urn:scim:schemas:core:1.0">
-  <id>005D0000001Az1u</id>
+  <id>2819c223-7f76-453a-919d-413861904646</id>
   <externalId>701984</externalId>
   <userName>bjensen@example.com</userName>
   <name>
@@ -1399,15 +1423,15 @@
   <active>true</active>
   <groups>
     <group>
-      <value>00300000005N2Y6AA</value>
+      <value>e9e30dba-f08f-4109-8486-d5c6a331660a</value>
       <display>Tour Guides</display>
     </group>
     <group>
-      <value>00300000005N34H78</value>
+      <value>6d1a1088-3a56-4371-8e3b-6d48d67493ec</value>
       <display>Employees</display>
     </group>
     <group>
-      <value>00300000005N98YT1</value>
+      <value>5fd998b9-d2bd-479c-991b-6790537608dc</value>
       <display>US Employees</display>
     </group>
   </groups>
@@ -1451,7 +1475,7 @@
         <artwork><![CDATA[
 
 <SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0">
-  <id>005D0000001Az1u</id>
+  <id>2819c223-7f76-453a-919d-413861904646</id>
   <externalId>701984</externalId>
   <userName>bjensen@example.com</userName>
   <name>
@@ -1568,7 +1592,10 @@
     </x509Certificate>
   </x509Certificates>
   <enterprise:employeeNumber>701984</enterprise:employeeNumber>
-  <enterprise:manager managerId="005D0000001AQRE">Mandy Pepperidge</enterprise:manager>
+  <enterprise:manager>
+   <enterprise:managerId>902c246b-6245-4190-8e05-00816be7344a</enterprise:managerId>
+   <enterprise:displayName>Mandy Pepperidge</enterprise:displayName>
+  </enterprise:manager>
   <enterprise:costCenter>4130</enterprise:costCenter>
   <enterprise:organization>Universal Studios</enterprise:organization>
   <enterprise:division>Theme Park</enterprise:division>
@@ -1589,15 +1616,15 @@
         <artwork><![CDATA[
 
 <SCIM xmlns="urn:scim:schemas:core:1.0">
-  <id>00300000005N98YT1</id>
+  <id>2819c223-7f76-453a-919d-413861904646</id>
   <displayName>Tour Guides</displayName>
   <members>
     <member>
-     <value>005D0000001Az1u</value>
+     <value>902c246b-6245-4190-8e05-00816be7344a</value>
      <display>Babs Jensen</display>
     </member>
     <member>
-      <value>005D0000001AQRE</value>
+      <value>902c246b-6245-4190-8e05-00816be7344a</value>
       <display>Mandy Pepperidge</display>
     </member>
   </members>

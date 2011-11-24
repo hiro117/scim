@@ -42,7 +42,7 @@
       </address>
     </author>
 
-    <date day="10" month="October" year="2011" />
+    <date day="18" month="November" year="2011" />
     <keyword>SCIM</keyword>
     <abstract>
       <t>
@@ -65,15 +65,13 @@
   <middle>
     <section title="Introduction and Overview" anchor="intro" toc="default">
       <t>The SCIM Protocol is an application-level, REST protocol for
-        provisioning and managing identity data on the web. The protocol
-        supports creation, modification, retrieval, and discovery of core identity Resources; i.e., Users and Groups,
-        custom Resource extensions, and a simple password change operation.
+        provisioning and managing identity data on the web. The protocol supports creation, modification, retrieval,
+        and discovery of core identity Resources; i.e., Users and Groups, as well as custom Resource extensions.
       </t>
 
       <section title="Intended Audience" toc="default">
         <t>
-          This document is intended as a guide to SCIM API usage for both
-          identity Service Providers and Consumers.
+          This document is intended as a guide to SCIM API usage for both identity Service Providers and Consumers.
         </t>
       </section>
       <section title="Notational Conventions" anchor="notat" toc="default">
@@ -98,11 +96,10 @@
       </section>
       <section title="Definitions" anchor="defs" toc="default">
         <list style="hanging">
-          <t hangText="Service Provider:">A web application that provides
-            identity information via the SCIM protocol.
+          <t hangText="Service Provider:">A web application that provides identity information via the SCIM protocol.
           </t>
-          <t hangText="Consumer:">A website or application that uses the SCIM
-            protocol to manage identity data maintained by the Service Provider.
+          <t hangText="Consumer:">A website or application that uses the SCIM protocol to manage identity data
+            maintained by the Service Provider.
           </t>
           <t hangText="Base URL:">The SCIM REST API is always relative to a Base
             URL for the API. The Base URL MUST NOT contain a query string, as
@@ -110,23 +107,18 @@
             appended by Consumers as part of forming the request. Example:
             https://example.com/scim/v1/
           </t>
-          <t hangText="Singular Attribute:">A Resource attribute that can appear
-            at most once per Resource, e.g.displayName.
+          <t hangText="Resource:">The Service Provider managed artifact containing 1 or more attributes; e.g., User or Group
           </t>
-          <t hangText="Plural Attribute:">A Resource attribute that can appear
-            multiple times per Resource, e.g. emails
+          <t hangText="Singular Attribute:">A Resource attribute that can appear at most once per Resource, e.g.displayName.
           </t>
-          <t hangText="Simple Attribute:">A Singular or Plural attribute whose
-            value is a single attribute.
+          <t hangText="Multi-valued Attribute:">A Resource attribute that may contain multiple values, e.g. emails
           </t>
-          <t hangText="Complex Attribute:">A Singular or Plural attribute whose
-            value is an object containing multiple sub-attributes.
+          <t hangText="Simple Attribute:">A Singular or Multi-valued Attribute whose value is a primitive; e.g., string.
           </t>
-          <t hangText="Sub-Attribute:">An attribute contained by a Complex
-            Attribute.
+          <t hangText="Complex Attribute:">A Singular or Multi-valued Attribute whose value is a composition of 1 or
+            more Simple Attributes.
           </t>
-          <t hangText="Resource:">The Service Provider managed artifact; e.g.,
-            User or Group
+          <t hangText="Sub-Attribute:">A Simple Attribute contained within a Complex Attribute.
           </t>
         </list>
       </section>
@@ -141,7 +133,7 @@
         implemented in such a way that new authentication schemes can be
         deployed. Implementers SHOULD support existing
         authentication/authorization schemes. In particular,
-        <eref target="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-09">
+        <eref target="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-14">
           OAuth2 Bearer Token
         </eref>
         is RECOMMENDED. Appropriate security considerations of the selected
@@ -162,10 +154,10 @@
               align="left">
         <artwork height="" name="" width="" type="" alt="" align="left"
                  xml:space="preserve"><![CDATA[
-            GET /Users/uid=bjensen,dc=example,dc=com HTTP/1.1
-            Host: example.com
-            Authorization: Bearer h480djs93hd8
-                                   ]]></artwork>
+GET /Users/2819c223-7f76-453a-919d-413861904646 HTTP/1.1
+Host: example.com
+Authorization: Bearer h480djs93hd8
+        ]]></artwork>
       </figure>
       <t>
         The context of the request (i.e. the user for whom data is being
@@ -196,7 +188,7 @@
         that support extended Resources SHOULD define Resource endpoints using the established convention; pluralize
         the Resource name defined in the extended schema by appending an 's'.  Given there are cases where Resource
         pluralization is ambiguous; e.g., a Resource named 'person' is legitimately 'persons' and 'people' Consumers
-        can discover Resource endpoints via the Schema attribute 'endpoint'.
+        SHOULD discover Resource endpoints via the Schema Sub-Attribute 'endpoint'.
       </t>
       <list style="hanging">
         <t hangText="GET">Retrieves a complete or partial Resource
@@ -207,7 +199,7 @@
           specified Resource (replace)
         </t>
         <t hangText="PATCH">Modifies a Resource with a set of Consumer specified
-          changes (partial update) or changes a User password
+          changes (partial update)
         </t>
         <t hangText="DELETE">Deletes a Resource.
         </t>
@@ -239,13 +231,6 @@
           <xref target="delete-resource" format="default">DELETE</xref>
         </c>
         <c>Retrieve/Add/Modify Groups</c>
-
-        <c>User Password</c>
-        <c>/Users/{userId}/password</c>
-        <c>
-          <xref target="change-password" format="default">PATCH</xref>
-        </c>
-        <c>Change a User's password</c>
 
         <c>Service Provider Configuration</c>
         <c>/ServiceProviderConfigs</c>
@@ -336,17 +321,17 @@ Content-Length: ...
                    xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: "e180ee84f0671b1"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "externalId":"bjensen",
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
-    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"e180ee84f0671b1"
   },
   "name":{
@@ -386,7 +371,7 @@ ETag: "e180ee84f0671b1"
                      xml:space="preserve">
               <![CDATA[
 
-GET /Users/uid=bjensen,dc=example,dc=com
+GET /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -405,16 +390,16 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: "f250dd84f0671c3"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
+  "id":"2819c223-7f76-453a-919d-413861904646,
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
-    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"f250dd84f0671c3"
   },
   "name":{
@@ -618,13 +603,12 @@ filter=Username eq 'john'
               </c>
             </texttable>
             <t>
-              If the specified attribute in a filter expression is a Plural
-              attribute, the Resource MUST match if any of the instances of the
-              given attribute match the specified criterion; e.g. if a User has
+              If the specified attribute in a filter expression is a multi-valued attribute, the Resource MUST match
+              if any of the instances of the given attribute match the specified criterion; e.g. if a User has
               multiple emails values, only one has to match for the entire User
               to match. For complex attributes, a fully qualified Sub-Attribute MUST be specified using standard
-              <xref target="attribute-notation" format="default">attribute notation</xref>.  For example, to filter by userName the
-              parameter value is userName and to filter by first name, the
+              <xref target="attribute-notation" format="default">attribute notation</xref>.  For example, to filter by
+              userName the parameter value is userName and to filter by first name, the
               parameter value is name.givenName.
             </t>
 
@@ -689,7 +673,7 @@ co 'example.org')
                 The sortBy parameter specifies the attribute whose value SHALL
                 be used to order the returned responses. If the sortBy attribute
                 corresponds to a Singular Attribute, Resources are sorted
-                according to that attribute's value; if it's a Plural Attribute,
+                according to that attribute's value; if it's a Multi-valued Attribute,
                 Resources are sorted by the value of the primary attribute, if
                 any, or else the first value in the list, if any. If the
                 attribute is complex the attribute name must be a path to a
@@ -840,7 +824,7 @@ Authorization: Bearer h480djs93hd8
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PUT /Users/uid=bjensen,dc=example,dc=com
+PUT /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -848,7 +832,7 @@ ETag: "a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
   "name":{
@@ -882,10 +866,10 @@ ETag: "a330bc54f0671c9"
 HTTP/1.1 200 OK
 Content-Type: application/json
 ETag: "b431af54f0671a2"
-Location:"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com"
+Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
   "name":{
@@ -906,7 +890,7 @@ Location:"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com"
   "meta": {
     "created":"2011-08-08T04:56:22Z",
     "lastModified":"2011-08-08T08:00:12Z",
-    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"b431af54f0671a2"
   }
 }
@@ -961,36 +945,26 @@ Location:"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com"
               Complex Sub-Attribute values in the PATCH request body are merged
               into the complex attribute on the Resource.
             </t>
-            <t hangText="Plural attributes:">
-              Plural attributes in the PATCH request body are added to the
-              plural attribute on the Resource if the value does not yet exist
-              or are merged into the matching plural value on the Resource if
-              the value already exists.  Plural attribute values are matched by
+            <t hangText="Multi-valued attributes:">
+              An attribute value in the PATCH request body is added to the value collection if the value does not
+              exist and merged if a matching value is present. Values are matched by
               comparing the value Sub-Attribute from the PATCH request body to
-              the value Sub-Attribute of the Resource.  Plural attributes that
-              do not have a value Sub-Attribute (for example, addresses) cannot
-              be matched for the purposes of partially updating an an existing
-              value.  These must be deleted then added.  Similarly, plural
-              attributes that do not have unique value Sub-Attributes must be
-              deleted then added.
+              the value Sub-Attribute of the Resource.  Attributes that
+              do not have a value Sub-Attribute; e.g., addresses, or do not have unique value Sub-Attributes cannot
+              be matched and must instead be deleted then added.
+
+              Specific values can be removed from a Resource by adding an "operation" Sub-Attribute with the value
+              "delete" to the attribute in the PATCH request body.  As with adding/updating attribute value
+              collections, the value to delete is determined by comparing the value Sub-Attribute from the PATCH
+              request body to the value Sub-Attribute of the Resource.  Attributes that do not have a value
+              Sub-Attribute or that have a non-unique value Sub-Attribute are matched by comparing all Sub-Attribute
+              values from the PATCH request body to the Sub-Attribute values of the Resource. A delete operation
+              is ignored if the attribute's name is in the meta.attributes list.  If the requested value to
+              delete does not match a unique value on the Resource the server MAY return a HTTP 400 error.
             </t>
+
           </list>
 
-          <t>Individual plural values can be removed from a Resource by
-            including an "operation" Sub-Attribute with the value "delete" on
-            the plural attribute value in the PATCH request body.  As with
-            adding/updating plural attribute values, the plural value to delete
-            is determined by comparing the value Sub-Attribute from the PATCH
-            request body to the value Sub-Attribute of the Resource.
-            Additionally, plural attributes that do not have a value
-            Sub-Attribute (or that have a non-unique value Sub-Attribute) are
-            matched by comparing all Sub-Attribute values from the PATCH request
-            body to the Sub-Attribute values of the Resource. A delete operation
-            is ignored if the plural attribute's name is in the meta.attributes
-            list.  The server MAY return a HTTP 400 error with an appropriate
-            human readable response if the requested plural value to delete does
-            not match a unique value on the Resource.
-          </t>
 
           <t>The following example shows how to add a member to a group:
           </t>
@@ -999,7 +973,7 @@ Location:"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Groups/cn=group1,dc=example,dc=com
+PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1010,7 +984,7 @@ ETag: "a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
-      "value": "uid=bjensen,dc=example,dc=com"
+      "value": "2819c223-7f76-453a-919d-413861904646"
     }
   ]
 }
@@ -1032,7 +1006,7 @@ ETag: "a330bc54f0671c9"
 HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
 ETag: "b431af54f0671a2"
-Location: "https://example.com/v1/Groups/cn=group1,dc=example,dc=com"
+Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
             ]]></artwork>
           </figure>
 
@@ -1051,7 +1025,7 @@ Location: "https://example.com/v1/Groups/cn=group1,dc=example,dc=com"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Groups/cn=group1,dc=example,dc=com
+PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1062,7 +1036,7 @@ ETag: "a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
-      "value": "uid=bjensen,dc=example,dc=com"
+      "value": "2819c223-7f76-453a-919d-413861904646"
       "operation": "delete"
     }
   ]
@@ -1078,7 +1052,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Groups/cn=group1,dc=example,dc=com
+PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1103,7 +1077,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Groups/cn=group1,dc=example,dc=com
+PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1119,11 +1093,11 @@ ETag: "a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
-      "value": "uid=bjensen,dc=example,dc=com"
+      "value": "2819c223-7f76-453a-919d-413861904646"
     },
     {
       "display": "James Smith",
-      "value": "uid=jsmith,dc=example,dc=com"
+      "value": "08e1d05d-121c-4561-8b96-473d93df9210"
     }
   ]
 }
@@ -1138,7 +1112,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Groups/cn=group1,dc=example,dc=com
+PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1149,12 +1123,12 @@ ETag: "a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
-      "value": "uid=bjensen,dc=example,dc=com"
+      "value": "2819c223-7f76-453a-919d-413861904646"
       "operation": "delete"
     },
     {
       "display": "James Smith",
-      "value": "uid=jsmith,dc=example,dc=com"
+      "value": "08e1d05d-121c-4561-8b96-473d93df9210"
     }
   ]
 }
@@ -1172,7 +1146,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Users/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1199,7 +1173,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Users/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1241,7 +1215,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Users/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1261,7 +1235,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /User/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1288,7 +1262,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Users/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1312,7 +1286,7 @@ ETag: "a330bc54f0671c9"
                   align="left">
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve"><![CDATA[
-PATCH /Users/uid=bjensen,dc=example,dc=com
+PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1346,7 +1320,7 @@ ETag: "a330bc54f0671c9"
                    xml:space="preserve">
             <![CDATA[
 
-DELETE /Users/uid=bjensen,dc=example,dc=com
+DELETE /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Authorization: Bearer h480djs93hd8
 ETag: "c310cd84f0281b7"
@@ -1372,7 +1346,7 @@ HTTP/1.1 200 OK
                    xml:space="preserve">
             <![CDATA[
 
-GET /Users/uid=bjensen,dc=example,dc=com
+GET /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Authorization: Bearer h480djs93hd8
                                       ]]></artwork>
@@ -1389,7 +1363,7 @@ HTTP/1.1 404 NOT FOUND
 {
   "Errors":[
     {
-      "description":"Resource uid=bjensen,dc=example,dc=com not found",
+      "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
       "code":"404"
     }
   ]
@@ -1399,47 +1373,6 @@ HTTP/1.1 404 NOT FOUND
         </figure>
 
       </section>
-      <section title="Change password" anchor="change-password" toc="default">
-        <t>Consumers request User password change via PATCH. The change password
-          operation is OPTIONAL, hence Service Providers MAY choose not to honor
-          the request.
-
-          Since a password is a facet of the User the User endpoint is
-          overloaded; i.e., /Users/{id}/password. The consumer MUST specify the
-          attribute 'password' in the request body and MUST not specify any
-          other attributes. If successful the Service Provider MUST return a 204
-          response code and no content within the response body.
-        </t>
-        <figure height="" suppress-title="false" width="" alt="" title=""
-                align="left">
-          <artwork height="" name="" width="" type="" alt="" align="left"
-                   xml:space="preserve">
-            <![CDATA[
-
-PATCH /Users/uid=bjensen,dc=example,dc=com/password
-Host: example.com
-Authorization: Bearer h480djs93hd8
-
-{
-  "schemas":["urn:scim:schemas:core:1.0"],
-  "password":"t1meMa$heen"
-}
-
-]]></artwork>
-        </figure>
-
-        Server Response:
-        <figure height="" suppress-title="false" width="" alt="" title=""
-                align="left">
-          <artwork height="" name="" width="" type="" alt="" align="left"
-                   xml:space="preserve">
-            <![CDATA[
-HTTP/1.1 204 OK
-            ]]></artwork>
-        </figure>
-      </section>
-
-
         <section title="Bulk" anchor="bulk-resources"
                  toc="default">
 
@@ -1463,7 +1396,7 @@ HTTP/1.1 204 OK
             </t>
             
             <t>
-              The following Complex Plural Attribute is defined in addition to
+              The following Complex Multi-valued Attribute is defined in addition to
               the common attributes defined in core schema.
             </t>
             <t>
@@ -1482,14 +1415,13 @@ HTTP/1.1 204 OK
                         across operations within a bulk request.  REQUIRED when method is POST.
                     </t>
                     <t hangText="version">
-                      The current Resource version. Version is REQUIRED if the Service Provider supports Etags, the
-                        method is PUT or DELETE, or the method is PATCH and the request is not a change password
-                        operation.
+                      The current Resource version. Version is REQUIRED if the Service Provider supports Etags and the
+                        method is PUT, DELETE, or PATCH.
                     </t>
                     <t hangText="path">
                       The Resource's relative path.  If the method is POST the value must specify a Resource type
                         endpoint; e.g., /Users or /Groups whereas all other method values must specify the path to
-                        a specific Resource; e.g., /Users/uid=bjensen,dc=example,dc=com.  REQUIRED in a request.
+                        a specific Resource; e.g., /Users/2819c223-7f76-453a-919d-413861904646.  REQUIRED in a request.
                     </t>
                     <t hangText="data">
                       The Resource data as it would appear for a single POST, PUT or PATCH Resource operation.
@@ -1583,7 +1515,7 @@ HTTP/1.1 204 OK
               The following example shows how to add, update, and remove a user. The failOnErrors
               attribute is set to '1' indicating the Service Provider should return
               on the first error. The POST operation's bulkId value is set to 'qwerty' enabling the Consumer to match
-                the new User with the returned Resource id 'uid=alice,dc=example,dc=com'.
+                the new User with the returned Resource id '92b725cd-9465-4e7d-8c16-01f8e146b87a'.
             </t>
             <figure height="" suppress-title="false" width="" alt="" title=""
                     align="left">
@@ -1615,25 +1547,25 @@ Content-Length: ...
     },
     {
       "method":"PUT",
-      "path":"/Users/uid=bob,dc=example,dc=com",
+      "path":"/Users/b7c14771-226c-4d05-8860-134711653041",
       "version":"3694e05e9dff591",
       "data":{
         "schemas":[
           "urn:scim:schemas:core:1.0"
         ],
-        "id":"uid=bob,dc=example,dc=com",
+        "id":"b7c14771-226c-4d05-8860-134711653041",
         "userName":"Bob"
       }
     },
     {
       "method":"PATCH",
-      "path":"/Users/uid=dave,dc=example,dc=com",
+      "path":"/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
       "version":"edac3253e2c0ef2",
       "data":{
         "schemas":[
           "urn:scim:schemas:core:1.0"
         ],
-        "id":"uid=dave,dc=example,dc=com",
+        "id":"5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
         "userName":"Dave",
         "meta":{
           "attributes":[
@@ -1644,7 +1576,7 @@ Content-Length: ...
     },
     {
       "method":"DELETE",
-      "path":"/Users/uid=charlie,dc=example,dc=com",
+      "path":"/Users/e9025315-6bea-44e1-899c-1e07454e468b",
       "version":"0ee8add0a938e1a"
     }
   ]
@@ -1668,7 +1600,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
     ],
     "Operations": [
         {
-            "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
             "method": "POST",
             "bulkId": "qwerty",
             "version": "oY4m4wn58tkVjJxK",
@@ -1677,7 +1609,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/b7c14771-226c-4d05-8860-134711653041",
             "method": "PUT",
             "version": "huJj29dMNgu3WXPD",
             "status": {
@@ -1685,7 +1617,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/Users/uid=dave,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
             "method": "PATCH",
             "version": "huJj29dMNgu3WXPD",
             "status": {
@@ -1693,7 +1625,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             }
         },
         {
-            "location": "https://example.com/v1/Users/uid=charlie,dc=example,dc=com",
+            "location": "https://example.com/v1/Users/e9025315-6bea-44e1-899c-1e07454e468b",
             "method": "DELETE",
             "status": {
                 "code": "200"
@@ -1703,7 +1635,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
 }]]></artwork>
           </figure>
           <t>
-            The following response is returned if an error occurred when attempting to create the User 'alice'. The
+            The following response is returned if an error occurred when attempting to create the User 'Alice'. The
               Service Provider stops processing the bulk operation and immediately returns a response to the Consumer.
               The response contains the error and any successful results prior to the error.
           </t>
@@ -1761,7 +1693,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/b7c14771-226c-4d05-8860-134711653041",
       "method": "PUT",
       "status": {
         "code": "412",
@@ -1769,7 +1701,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/Users/uid=dave,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
       "method": "PATCH",
       "status": {
         "code": "412",
@@ -1777,7 +1709,7 @@ Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
       }
     },
     {
-      "location": "https://example.com/v1/Users/uid=charlie,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/e9025315-6bea-44e1-899c-1e07454e468b",
       "method": "DELETE",
       "status": {
         "code": "404",
@@ -1863,7 +1795,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
   ],
   "Operations": [
     {
-      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
+      "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
       "method": "POST",
       "bulkId": "qwerty",
       "version": "4weymrEsh5O6cAEK",
@@ -1872,7 +1804,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
       }
     },
     {
-      "location": "https://example.com/v1/Groups/cn=Tour Guides,dc=example,dc=com",
+      "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "method": "POST",
       "bulkId": "ytrewq",
       "version": "lha5bbazU3fNvfe5",
@@ -1884,14 +1816,14 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
 }]]></artwork>
         </figure>
         <t>
-          A request against the Group 'Tour Guides' returns the following:
+          A subsequent request for the 'Tour Guides' Group ('e9e30dba-f08f-4109-8486-d5c6a331660a') returns the following:
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve">
           <![CDATA[
-GET /v1/Groups/cn=Tour Guides,dc=example,dc=com
+GET /v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -1912,17 +1844,17 @@ Content-Type: application/json
   ],
   "Resources": [
     {
-      "id": "ou=Tour Guides,dc=example,dc=com",
+      "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
       "displayName": "Tour Guides",
       "meta": {
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T20:31:02.315Z",
-        "location": "https://example.com/v1/Groups/cn=Tour Guides,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
         "version": "lha5bbazU3fNvfe5"
       },
       "members": [
         {
-          "value": "uid=alice,dc=example,dc=com",
+          "value": "92b725cd-9465-4e7d-8c16-01f8e146b87a",
           "type": "user"
         }
       ]
@@ -2072,7 +2004,7 @@ Content-Type: application/json
   ],
   "Resources": [
     {
-      "id": "ou=Group A,dc=example,dc=com",
+      "id": "c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
       "schemas": [
         "urn:scim:schemas:core:1.0"
       ],
@@ -2080,18 +2012,18 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T18:29:51.135Z",
-        "location": "https://example.com/v1/Groups/ou=Group A,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
         "version": "mvwNGaxB5SDq074p"
       },
       "members": [
         {
-          "value": "ou=GroupB,dc=example,dc=com",
+          "value": "6c5bb468-14b2-4183-baf2-06d523e03bd3",
           "type": "group"
         }
       ]
     },
     {
-      "id": "ou=GroupB,dc=example,dc=com",
+      "id": "6c5bb468-14b2-4183-baf2-06d523e03bd3",
       "schemas": [
         "urn:scim:schemas:core:1.0"
       ],
@@ -2099,12 +2031,12 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:50.873Z",
         "lastModified":"2011-08-01T18:29:50.873Z",
-        "location": "https://example.com/v1/Groups/ou=GroupB,dc=example,dc=com",
+        "location": "https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
         "version": "wGB85s2QJMjiNnuI"
       },
       "members": [
         {
-          "value": "ou=GroupA,dc=example,dc=com",
+          "value": "c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
           "type": "group"
         }
       ]
@@ -2112,102 +2044,6 @@ Content-Type: application/json
   ]
 }]]></artwork>
         </figure>
-        <t>
-          If the Service Provider supports the change password endpoint the 
-          Consumer can create a new User set their password in a single bulk operation.
-        </t>
-        <t>
-          In the following example an existing User's ('bob') password is reset, a new User is created, and the newly
-            created User's password is set using the surrogate id, bulkId.
-        </t>
-        <figure height="" suppress-title="false" width="" alt="" title=""
-                align="left">
-          <artwork height="" name="" width="" type="" alt="" align="left"
-                   xml:space="preserve">
-            <![CDATA[
-POST /v1/Bulk
-Host: example.com
-Accept: application/json
-Authorization: Bearer h480djs93hd8
-Content-Length: ...
-
-{
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
-  "Operations": [
-    {
-      "method": "POST",
-      "path": "/Users",
-      "bulkId": "qwerty",
-      "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
-        "userName": "Alice"
-      }
-    },
-    {
-      "method": "PATCH",
-      "path": "/Users/bulkId:qwerty/password",
-      "data": {
-        "schemas":["urn:scim:schemas:core:1.0"],
-        "password":"t1meMa$heen"
-      }
-    },
-    {
-      "method": "PATCH",
-      "path": "/Users/uid=bob,dc=example,dc=com/password",
-      "data": {
-        "schemas":["urn:scim:schemas:core:1.0"],
-        "password":"neeh$aMem1t"
-      }
-    }
-  ]
-}]]></artwork>
-        </figure>
-
-        <figure height="" suppress-title="false" width="" alt="" title=""
-                align="left">
-          <artwork height="" name="" width="" type="" alt="" align="left"
-                   xml:space="preserve">
-            <![CDATA[
-HTTP/1.1 200 OK
-Content-Type: application/json
-Location: https://example.com/v1/Bulk/aWvINDpzLf5ufPqi
-
-{
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
-  "Operations": [
-    {
-      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com",
-      "method": "POST",
-      "bulkId": "qwerty",
-      "version": "Jg8SLbDLADDDyn2w",
-      "status": {
-          "code": "201"
-      }
-    },    
-    {
-      "location": "https://example.com/v1/Users/uid=alice,dc=example,dc=com/password",
-      "method": "PATCH",
-      "status": {
-        "code": "204"
-      }
-    },
-    {
-      "location": "https://example.com/v1/Users/uid=bob,dc=example,dc=com/password",
-      "method": "PATCH",
-      "status": {
-        "code": "204"
-      }
-    }
-  ]
-}]]></artwork>
-        </figure>
-    
         <t>
           The Service Provider MUST define a limit on how many operations
           can be sent in one bulk request. The Service Provider MUST also define the
@@ -2262,10 +2098,10 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
             <artwork height="" name="" width="" type="" alt="" align="left"
                      xml:space="preserve">
               <![CDATA[
-GET /Users/uid=bjensen,dc=example,dc=com.json
+GET /Users/2819c223-7f76-453a-919d-413861904646.json
 Host: example.com
 
-GET /Users/uid=bjensen,dc=example,dc=com.xml
+GET /Users/2819c223-7f76-453a-919d-413861904646.xml
 Host: example.com
             ]]></artwork>
           </figure>
@@ -2284,7 +2120,7 @@ Host: example.com
           the data.
         </t>
         <t>
-          Singular attributes are encoded as string key/value pairs in JSON;
+          Singular attributes are encoded as string name-value-pairs in JSON;
           e.g.,
         </t>
         <figure>
@@ -2292,15 +2128,14 @@ Host: example.com
 "attribute": "value"
                     ]]></artwork>
         </figure>
-        <t>and tags with text content in XML; e.g.,</t>
+        <t>and elements in XML; e.g.,</t>
         <figure>
           <artwork><![CDATA[
 <attribute>value</attribute>
                     ]]></artwork>
         </figure>
         <t>
-          Plural attributes and Plural Bundles are encoded as arrays in JSON;
-          e.g.,
+          Multi-valued attributes in JSON are encoded as arrays; e.g.,
         </t>
         <figure>
           <artwork><![CDATA[
@@ -2317,7 +2152,7 @@ Host: example.com
                     ]]></artwork>
         </figure>
         <t>
-          Nodes with multiple sub-nodes are represented as objects in JSON; e.g,
+          Elements with nested elements are represented as objects in JSON; e.g,
         </t>
         <figure>
           <artwork><![CDATA[
@@ -2343,8 +2178,8 @@ Host: example.com
           Consumers MAY request a partial Resource representation on any
           operation that returns a Resource within the response by specifying
           the URL query parameter 'attributes'. When specified, each Resource
-          returned SHALL contain the minimal set of Resource attributes and, at
-          the Service Providers discretion, the attributes explicitly requested.
+          returned MUST contain the minimal set of Resource attributes and, MUST
+          contain no other attributes or Sub-Attributes than those explicitly requested.
 
           The query parameter attributes value is a comma separated list of
           Resource attribute names in standard,
@@ -2354,7 +2189,7 @@ Host: example.com
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
-GET /Users/uid=bjensen,dc=example,dc=com?attributes=userName
+GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=userName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2370,16 +2205,17 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: "a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
-    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"a330bc54f0671c9"
   }
 }
@@ -2390,16 +2226,18 @@ ETag: "a330bc54f0671c9"
       </section>
       <section title="Attribute Notation" anchor="attribute-notation">
         <t>
-          All operations share a common scheme for referencing simple, complex (plural and singular), and extended
-          attributes.  In general, attributes are identified by prefixing the attribute name with its schema URN
+          All operations share a common scheme for referencing simple and complex  attributes.  In general, attributes
+          are identified by prefixing the attribute name with its schema URN
           separated by a ':' character; e.g., the core User Resource attribute 'userName' is identified as
-          'urn:scim:schemas:core:1.0:userName'.  Consumers MAY omit core attribute URN prefixes though MUST fully
+          'urn:scim:schemas:core:1.0:userName'.  Consumers MAY omit core schema attribute URN prefixes though MUST fully
           qualify extended attributes with the associated Resource URN; e.g., the attribute 'age' defined in
           'urn:hr:schemas:user' is fully encoded as 'urn:hr:schemas:user:age'.
 
-          A Complex attributes' Sub-attributes are referenced via nested, dot ('.') notation;
-          i.e., {urn}:{Attribute name}.{Sub-attribute name}.  For example, the fully qualified path for a User's
+          A Complex attributes' Sub-Attributes are referenced via nested, dot ('.') notation;
+          i.e., {urn}:{Attribute name}.{Sub-Attribute name}.  For example, the fully qualified path for a User's
           givenName is urn:scim:schemas:core:1.0:name.givenName
+
+          All facets (URN, attribute and Sub-Attribute name) of the fully encoded Attribute name are case insensitive.
         </t>
       </section>
 
@@ -2474,7 +2312,7 @@ HTTP/1.1 404 NOT FOUND
 {
   "Errors":[
     {
-      "description":"Resource uid=babs not found",
+      "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
       "code":"404"
     }
   ]
@@ -2530,16 +2368,16 @@ Content-Length: ...
                    xml:space="preserve"><![CDATA[
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: https://example.com/v1/Users/uid=bjensen,dc=example,dc=com
+Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: "e180ee84f0671b1"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
-  "id":"uid=bjensen,dc=example,dc=com",
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "meta":{
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
-    "location":"https://example.com/v1/Users/uid=bjensen,dc=example,dc=com",
+    "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"e180ee84f0671b1"
   },
   "name":{
@@ -2569,7 +2407,7 @@ ETag: "e180ee84f0671b1"
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve"><![CDATA[
-GET /Users/uid=bjensen,dc=example,dc=com?attributes=displayName
+GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=displayName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
@@ -2607,25 +2445,20 @@ If-None-Match: "e180ee84f0671b1"
         <t>In recognition that some clients, servers and firewalls prevent PUT,
           PATCH and DELETE operations a client MAY override the POST operation
           by specifying the custom header "X-HTTP-Method-Override" with the
-          intended PUT, PATCH, DELETE operation. For example:
+          desired PUT, PATCH, DELETE operation. For example:
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
           <artwork height="" name="" width="" type="" alt="" align="left"
                    xml:space="preserve">
             <![CDATA[
-POST /Users/uid=bjensen,dc=example,dc=com
+POST /Users/2819c223-7f76-453a-919d-413861904646
 X-HTTP-Method-Override: DELETE
 ]]></artwork>
         </figure>
       </section>
     </section>
     <section title="Acknowledgments">
-      <t>Portable Contacts -
-        <eref target="http://www.portablecontacts.net/draft-spec.html"
-              type="HTML">Portable Contacts 1.0 Draft C
-        </eref>
-      </t>
     </section>
   </middle>
 </rfc>
