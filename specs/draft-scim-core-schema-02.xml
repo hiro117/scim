@@ -480,7 +480,9 @@
               types and removes the standard canonical types. If the SCIM
               Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
-              user belongs.  OPTIONAL.
+              user belongs.  This attribute is read-only, and group membership
+              changes MUST happen through the Group Resource. READ-ONLY and
+              OPTIONAL.
             </t>
 
             <t hangText="entitlements">A list of entitlements for the User that
