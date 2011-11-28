@@ -479,8 +479,11 @@ Content-Type: application/json
               expression. When specified only those Resources matching the
               filter expression SHALL be returned. The expression language that
               is used in the filter parameter supports references to attributes
-              and literals. The literal values can be strings enclosed in single
-              quotes, numbers and Boolean values; i.e., true or false.
+              and literals. The literal values can be strings enclosed in double
+              quotes, numbers, date times enclosed in double quotes, and Boolean
+              values; i.e., true or false.  String literals MUST be valid <eref
+              target="http://www.json.org">JSON strings</eref> and use backslash
+              (\) to escape special characters.
             </t>
             <t>
               The attribute name and attribute operator are case insensitive.
@@ -491,9 +494,9 @@ Content-Type: application/json
                     align="left">
               <artwork height="" name="" width="" type="" alt="" align="left"
                        xml:space="preserve"><![CDATA[
-filter=userName Eq 'john'
+filter=userName Eq "john"
 
-filter=Username eq 'john'
+filter=Username eq "john"
               ]]></artwork>
             </figure>
 
@@ -502,7 +505,7 @@ filter=Username eq 'john'
               expression. Each expression MUST contain an attribute name
               followed by an attribute operator and optional value. Multiple
               expressions MAY be combined using the two logical operators.
-              Furthermore expressions can be grouped together using “()”.
+              Furthermore expressions can be grouped together using "()".
             </t>
             <t>
               The operators supported in the expression are listed in the
@@ -597,11 +600,22 @@ filter=Username eq 'john'
               <ttcol align='left'>Description</ttcol>
               <ttcol align='left'>Behavior</ttcol>
               <c>()</c>
-              <c>Precedence grouping.</c>
-              <c>Filter expressions are evaluated from left to right unless the
-                expression is enclosed in brackets.
+              <c>Precedence grouping</c>
+              <c>Boolean expressions may be grouped using parentheses to change
+                the standard order of operations; i.e., evaluate OR logical
+                operators before logical AND operators.
               </c>
             </texttable>
+
+            <t>
+              Filters MUST be evaluated using standard
+              <eref target="http://en.wikipedia.org/wiki/Order_of_operations#Programming_languages">
+               order of operations
+              </eref>.  Attribute operators have the highest precedence,
+              followed by the grouping operator (i.e, parentheses), followed by
+              the logical AND operator, followed by the logical OR operator.
+            </t>
+
             <t>
               If the specified attribute in a filter expression is a multi-valued attribute, the Resource MUST match
               if any of the instances of the given attribute match the specified criterion; e.g. if a User has
@@ -625,7 +639,7 @@ filter=Username eq 'john'
             <t>
               String type attributes are case insensitive by default unless the
               attribute type is defined as a caseExact string. Attribute
-              operators ‘eq’, ‘co’, and ‘sw’ MUST perform caseIgnore matching
+              operators 'eq', 'co', and 'sw' MUST perform caseIgnore matching
               for all string attributes unless the attribute is defined as
               caseExact. By default all string attributes are caseIgnore.
             </t>
@@ -637,28 +651,28 @@ filter=Username eq 'john'
               <artwork height="" name="" width="" type="" alt="" align="left"
                        xml:space="preserve"><![CDATA[
 
-filter=userName eq 'bjensen'
+filter=userName eq "bjensen"
 
-filter=userName co 'jensen'
+filter=name.familyName co "O'Malley"
 
-filter=userName sw 'J'
+filter=userName sw "J"
 
 filter=title pr
 
-filter=meta.lastModified gt '2011-05-13T04:42:34Z'
+filter=meta.lastModified gt "2011-05-13T04:42:34Z"
 
-filter=meta.lastModified ge '2011-05-13T04:42:34Z'
+filter=meta.lastModified ge "2011-05-13T04:42:34Z"
 
-filter=meta.lastModified lt '2011-05-13T04:42:34Z'
+filter=meta.lastModified lt "2011-05-13T04:42:34Z"
 
-filter=meta.lastModified le '2011-05-13T04:42:34Z'
+filter=meta.lastModified le "2011-05-13T04:42:34Z"
 
-filter=title pr and userType eq 'Employee'
+filter=title pr and userType eq "Employee"
 
-filter=title pr or userType eq 'Intern'
+filter=title pr or userType eq "Intern"
 
-filter=userType eq 'Employee' and (emails co 'example.com' or emails
-co 'example.org')
+filter=userType eq "Employee" and (emails co "example.com" or emails
+co "example.org")
               ]]></artwork>
             </figure>
           </section>
