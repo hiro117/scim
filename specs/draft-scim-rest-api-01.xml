@@ -107,7 +107,7 @@
             appended by Consumers as part of forming the request. Example:
             https://example.com/scim/v1/
           </t>
-          <t hangText="Resource:">The Service Provider managed artifact containing 1 or more attributes; e.g., User or Group
+          <t hangText="Resource:">The Service Provider managed artifact containing one or more attributes; e.g., User or Group
           </t>
           <t hangText="Singular Attribute:">A Resource attribute that can appear at most once per Resource, e.g.displayName.
           </t>
@@ -115,7 +115,7 @@
           </t>
           <t hangText="Simple Attribute:">A Singular or Multi-valued Attribute whose value is a primitive; e.g., string.
           </t>
-          <t hangText="Complex Attribute:">A Singular or Multi-valued Attribute whose value is a composition of 1 or
+          <t hangText="Complex Attribute:">A Singular or Multi-valued Attribute whose value is a composition of one or
             more Simple Attributes.
           </t>
           <t hangText="Sub-Attribute:">A Simple Attribute contained within a Complex Attribute.
@@ -322,7 +322,7 @@ Content-Length: ...
 HTTP/1.1 201 Created
 Content-Type: application/json
 Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
-ETag: "e180ee84f0671b1"
+ETag: W/"e180ee84f0671b1"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -332,7 +332,7 @@ ETag: "e180ee84f0671b1"
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-    "version":"e180ee84f0671b1"
+    "version":"W\/\"e180ee84f0671b1\""
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -391,7 +391,7 @@ Authorization: Bearer h480djs93hd8
 HTTP/1.1 200 OK
 Content-Type: application/json
 Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
-ETag: "f250dd84f0671c3"
+ETag: W/"f250dd84f0671c3"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -400,7 +400,7 @@ ETag: "f250dd84f0671c3"
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-    "version":"f250dd84f0671c3"
+    "version":"W\/\"f250dd84f0671c3\""
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -796,7 +796,9 @@ Authorization: Bearer h480djs93hd8
                 <artwork height="" name="" width="" type="" alt="" align="left"
                          xml:space="preserve"><![CDATA[
 {
-  "totalResults":100,"itemsPerPage":10,"startIndex":1,
+  "totalResults":100,
+  "itemsPerPage":10,
+  "startIndex":1,
   "schemas":["urn:scim:schemas:core:1.0"],
   "Resources":[{
     ...
@@ -842,7 +844,7 @@ PUT /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -879,7 +881,7 @@ ETag: "a330bc54f0671c9"
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-ETag: "b431af54f0671a2"
+ETag: W/"b431af54f0671a2"
 Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -905,7 +907,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
     "created":"2011-08-08T04:56:22Z",
     "lastModified":"2011-08-08T08:00:12Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-    "version":"b431af54f0671a2"
+    "version":"W\/\"b431af54f0671a2\""
   }
 }
                ]]></artwork>
@@ -991,7 +993,7 @@ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1019,7 +1021,7 @@ ETag: "a330bc54f0671c9"
                      xml:space="preserve"><![CDATA[
 HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
-ETag: "b431af54f0671a2"
+ETag: W/"b431af54f0671a2"
 Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
             ]]></artwork>
           </figure>
@@ -1043,7 +1045,7 @@ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1070,7 +1072,7 @@ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1095,7 +1097,7 @@ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1130,7 +1132,7 @@ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1191,7 +1193,7 @@ PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1233,7 +1235,7 @@ PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1253,7 +1255,7 @@ PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1280,7 +1282,7 @@ PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1304,7 +1306,7 @@ PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1337,7 +1339,7 @@ ETag: "a330bc54f0671c9"
 DELETE /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Authorization: Bearer h480djs93hd8
-ETag: "c310cd84f0281b7"
+ETag: W/"c310cd84f0281b7"
 
                                       ]]></artwork>
         </figure>
@@ -1397,7 +1399,7 @@ HTTP/1.1 404 NOT FOUND
              </t>
             <t>
               The following Singular Attribute is defined in addition to the 
-              common attributes defined in core schema.
+              common attributes defined in SCIM core schema.
             </t>
 
             <t>
@@ -1562,7 +1564,7 @@ Content-Length: ...
     {
       "method":"PUT",
       "path":"/Users/b7c14771-226c-4d05-8860-134711653041",
-      "version":"3694e05e9dff591",
+      "version":"W\/\"3694e05e9dff591\"",
       "data":{
         "schemas":[
           "urn:scim:schemas:core:1.0"
@@ -1574,7 +1576,7 @@ Content-Length: ...
     {
       "method":"PATCH",
       "path":"/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
-      "version":"edac3253e2c0ef2",
+      "version":"W\/\"edac3253e2c0ef2\"",
       "data":{
         "schemas":[
           "urn:scim:schemas:core:1.0"
@@ -1591,7 +1593,7 @@ Content-Length: ...
     {
       "method":"DELETE",
       "path":"/Users/e9025315-6bea-44e1-899c-1e07454e468b",
-      "version":"0ee8add0a938e1a"
+      "version":"W\/\"0ee8add0a938e1a\""
     }
   ]
 }]]></artwork>
@@ -1617,7 +1619,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
             "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
             "method": "POST",
             "bulkId": "qwerty",
-            "version": "oY4m4wn58tkVjJxK",
+            "version": "W\/\"oY4m4wn58tkVjJxK\"",
             "status": {
                 "code": "201"
             }
@@ -1625,7 +1627,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
         {
             "location": "https://example.com/v1/Users/b7c14771-226c-4d05-8860-134711653041",
             "method": "PUT",
-            "version": "huJj29dMNgu3WXPD",
+            "version": "W\/\"huJj29dMNgu3WXPD\"",
             "status": {
                 "code": "200"
             }
@@ -1633,7 +1635,7 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
         {
             "location": "https://example.com/v1/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
             "method": "PATCH",
-            "version": "huJj29dMNgu3WXPD",
+            "version": "W\/\"huJj29dMNgu3WXPD\"",
             "status": {
                 "code": "200"
             }
@@ -1812,7 +1814,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
       "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
       "method": "POST",
       "bulkId": "qwerty",
-      "version": "4weymrEsh5O6cAEK",
+      "version": "W\/\"4weymrEsh5O6cAEK\"",
       "status": {
         "code": "201"
       }
@@ -1821,7 +1823,7 @@ Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
       "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "method": "POST",
       "bulkId": "ytrewq",
-      "version": "lha5bbazU3fNvfe5",
+      "version": "W\/\"lha5bbazU3fNvfe5\"",
       "status": {
         "code": "201"
       }
@@ -1864,7 +1866,7 @@ Content-Type: application/json
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T20:31:02.315Z",
         "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
-        "version": "lha5bbazU3fNvfe5"
+        "version": "W\/\"lha5bbazU3fNvfe5\""
       },
       "members": [
         {
@@ -2026,8 +2028,8 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:49.793Z",
         "lastModified":"2011-08-01T18:29:51.135Z",
-        "location": "https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
-        "version": "mvwNGaxB5SDq074p"
+        "location":"https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
+        "version":"W\/\"mvwNGaxB5SDq074p\""
       },
       "members": [
         {
@@ -2045,8 +2047,8 @@ Content-Type: application/json
       "meta": {
         "created":"2011-08-01T18:29:50.873Z",
         "lastModified":"2011-08-01T18:29:50.873Z",
-        "location": "https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
-        "version": "wGB85s2QJMjiNnuI"
+        "location":"https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
+        "version":"W\/\"wGB85s2QJMjiNnuI\""
       },
       "members": [
         {
@@ -2102,9 +2104,9 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
       <section title="Data Input/Output Formats" anchor="io-format">
         <t>
-          Consumers SHOULD specify the format in which the data is submitted and
-          MAY specify the desired response data format. Consumers MAY indicate
-          the desired format via an HTTP Accept Header; e.g.,"Accept:
+          Consumers MUST specify the format in which the data is submitted via the
+          <eref target="http://tools.ietf.org/html/rfc2616#section-14.17 ">HTTP header content-type</eref> and
+          MAY specify the desired response data format via an HTTP Accept Header; e.g.,"Accept:
           application/json" or via URI suffix; e.g.,
 
           <figure height="" suppress-title="false" width="" alt="" title=""
@@ -2124,11 +2126,9 @@ Host: example.com
 
         <t>
           Service Providers MUST support the Accept Headers "Accept:
-          application/json" for
-          <eref target="http://json.org">JSON</eref>
-          and "Accept: application/xml" for
-          <eref target="http://www.w3.org/XML/">XML</eref>
-          and MAY support additional formats if desired. The format defaults to
+          application/json" for <eref target="http://json.org">JSON</eref>
+          and, if supported, "Accept: application/xml" for
+          <eref target="http://www.w3.org/XML/">XML</eref>. The format defaults to
           JSON if no format is specified. The data structure returned is
           equivalent in both formats; the only difference is in the encoding of
           the data.
@@ -2220,7 +2220,7 @@ Authorization: Bearer h480djs93hd8
 HTTP/1.1 200 OK
 Content-Type: application/json
 Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -2230,7 +2230,7 @@ ETag: "a330bc54f0671c9"
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-    "version":"a330bc54f0671c9"
+    "version":"W\/\"a330bc54f0671c9\""
   }
 }
 
@@ -2295,9 +2295,8 @@ ETag: "a330bc54f0671c9"
             duplicate resource
           </c>
           <c>412 PRECONDITION FAILED</c>
-          <c>PUT,PATCH</c>
-          <c>Failed to update as Resource {id} changed on the server since you
-            last retrieved it
+          <c>PUT,PATCH,DELETE</c>
+          <c>Failed to update as Resource {id} changed on the server last retrieved
           </c>
           <c>413 REQUEST ENTITY TOO LARGE</c>
           <c>POST</c>
@@ -2334,17 +2333,24 @@ HTTP/1.1 404 NOT FOUND
               ]]></artwork>
         </figure>
       </section>
-
+      <section title="API Versioning" anchor="api-versioning">
+        <t>
+          The Base URL MAY be appended with a version identifier as a separate segment in the URL path.  At this time the
+          only valid identifier is 'v1'.  If specified, the version identifier MUST appear in the URL path immediately
+          preceding the Resource endpoint and conform to the following scheme: the character 'v' followed by the desired
+          SCIM version number; e.g., a version 'v1' User request is specified as /v1/Users.  When specified Service
+          Providers MUST perform the operation using the desired version or reject the request.  When omitted Service
+          Providers SHOULD perform the operation using the most recent API supported by the Service Provider.
+        </t>
+      </section>
       <section title="Versioning Resources" anchor="etags">
         <t>
           The API supports resource versioning via standard,<eref
           target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19">
-          HTTP ETags</eref>. Service providers MAY support both weak and strong
-          ETags as the preferred mechanism for performing conditional retrievals
-          and ensuring Consumers do not inadvertently overwrite each others
-          changes, respectively. When supported SCIM ETags MUST be specified as
-          an HTTP header and SHOULD be specified as an attribute within a
-          Resource's 'meta' structure.
+          HTTP ETags</eref>. Service providers MAY support weak ETags as the preferred mechanism for performing
+          conditional retrievals and ensuring Consumers do not inadvertently overwrite each others
+          changes, respectively. When supported SCIM ETags MUST be specified as an HTTP header and SHOULD be
+          specified within the 'version' attribute contained in the Resource's 'meta' attribute.
         </t>
 
         <t>Example</t>
@@ -2383,7 +2389,7 @@ Content-Length: ...
 HTTP/1.1 201 Created
 Content-Type: application/json
 Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
-ETag: "e180ee84f0671b1"
+ETag: W/"e180ee84f0671b1"
 
 {
   "schemas":["urn:scim:schemas:core:1.0"],
@@ -2392,7 +2398,7 @@ ETag: "e180ee84f0671b1"
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-    "version":"e180ee84f0671b1"
+    "version":"W\/\"e180ee84f0671b1\""
   },
   "name":{
     "formatted":"Ms. Barbara J Jensen III",
@@ -2406,8 +2412,7 @@ ETag: "e180ee84f0671b1"
         <t>With the returned ETag, Consumers MAY choose to retrieve the Resource
           only if the Resource has been modified. In addition, if updating,
           specifying an ETag guarantees that previous updates will not be
-          overwritten. Note: Per the HTTP specification the ETag value is
-          quoted.
+          overwritten.
         </t>
 
         <t>Conditional retrieval example using
@@ -2425,7 +2430,7 @@ GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=displayName
 Host: example.com
 Accept: application/json
 Authorization: Bearer h480djs93hd8
-If-None-Match: "e180ee84f0671b1"
+If-None-Match: W/"e180ee84f0671b1"
 
                 ]]></artwork>
         </figure>
@@ -2442,7 +2447,7 @@ If-None-Match: "e180ee84f0671b1"
           </eref>
           ETag header for PUT, PATCH, and DELETE operations to ensure that the
           requested operation succeeds only if the supplied ETag matches the
-          latest Service Provider Resource; e.g., If-Match: "e180ee84f0671b1"
+          latest Service Provider Resource; e.g., If-Match: W/"e180ee84f0671b1"
         </t>
 
         <t>
