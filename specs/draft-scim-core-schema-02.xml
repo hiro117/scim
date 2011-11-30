@@ -53,7 +53,7 @@
       </address>
     </author>
 
-    <date day="14" month="November" year="2011" />
+    <date day="29" month="November" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
@@ -71,7 +71,7 @@
       <t>This document provides a platform neutral schema and extension model
       for representing users and groups in JSON and XML formats. This schema is intended for exchange
       and use with cloud service providers.  Additional binding documents provide a standard REST API,
-        SAML bindings, and use cases.</t>
+        SAML binding, and use cases.</t>
     </abstract>
   </front>
 
@@ -111,7 +111,32 @@
       <t>This document provides a platform neutral schema and extension model
       for representing users and groups in JSON and XML formats. This schema is intended for exchange
       and use with cloud service providers.  Additional binding documents provide a standard REST API,
-        SAML bindings, and use cases.</t>
+        SAML binding, and use cases.</t>
+
+
+      <section title="Definitions" anchor="defs" toc="default">
+        <list style="hanging">
+          <t hangText="Service Provider:">A web application that provides identity information via the SCIM protocol.
+          </t>
+          <t hangText="Consumer:">A website or application that uses the SCIM protocol to manage identity data
+            maintained by the Service Provider.
+          </t>
+          <t hangText="Resource:">The Service Provider managed artifact containing one or more attributes; e.g., User or Group
+          </t>
+          <t hangText="Singular Attribute:">A Resource attribute that contains 0..1 values; e.g., displayName.
+          </t>
+          <t hangText="Multi-valued Attribute:">A Resource attribute that contains 0..n values; e.g., emails.
+          </t>
+          <t hangText="Simple Attribute:">A Singular or Multi-valued Attribute whose value is a primitive; e.g., String.
+          </t>
+          <t hangText="Complex Attribute:">A Singular or Multi-valued Attribute whose value is a composition of one or
+            more Simple Attributes.
+          </t>
+          <t hangText="Sub-Attribute:">A Simple Attribute contained within a Complex Attribute.
+          </t>
+        </list>
+      </section>
+
     </section>
 
     <section anchor="schema_structure" title="SCIM Schema Structure">
@@ -119,50 +144,108 @@
         attributes found in many existing deployments and schemas.
       </t>
 
-      <t>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists of the
-        attributes' name and at least one simple (a primitive value; e.g., string) or complex (collection of sub-attributes)
-        value.  By definition, an attribute with more than one value is multi-valued and contains 0..n values while
-        single-valued attributes contain 0..1 values.  SCIM schema defines the data type, plurality and other distinguishing features of an
-        attribute.  Both XML and JSON formats are defined.  When marshalling or extending SCIM resources in XML
-        format implementors MUST use the normative, SCIM, XML schema (.xsd).  SCIM resources represented in a
-        schema-less format; e.g., JSON, MUST specify schema via the <xref target="schemas-attribute">"schemas" attribute</xref>.
+      <t>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists
+        of the attribute name and at least one Simple or Complex value either of which may be multi-valued.  SCIM schema
+        defines the data type, plurality and other distinguishing features of an attribute.  Unless otherwise specified
+        all attributes are modifiable by Consumers. Read-only attributes shall be specified as 'READ-ONLY' within the
+        attribute definition. Additionally, Service Providers MAY choose to make some or all Resource attributes
+        immutable and SHOULD identify those attributes via the associated
+        <xref target="schemas-attribute">Resource's schema endpoint</xref>.
       </t>
-
-      <t>Attribute value data types are derived from <eref target="http://www.w3.org/TR/xmlschema-2/">XML schema</eref>
-        and unless otherwise specified are optional and of type string.  All encoding MUST be UTF-8. Each attribute
-        label uses camelCase notation. Unless specified, attribute values MUST NOT contain any newline characters
-        (\r or \n).  An attribute value consists of one of the following types:</t>
 
       <t>
-        <list style="hanging">
-          <t hangText="String">An attribute containing a sequence of characters as defined in
-              <eref target="http://www.w3.org/TR/xmlschema-2/#string">section 3.2.1</eref> of the XML Schema Datatypes Specification.
-            A string attribute MAY specify a required data format. Additionally, when Canonical Values are specified Service Providers
-          SHOULD conform to those values if appropriate, but MAY provide alternate string values to represent additional values.</t>
-
-          <t hangText="Boolean">An attribute containing the literal "true" or "false" as defined in
-            <eref target="http://www.w3.org/TR/xmlschema-2/#boolean">section 3.2.2</eref> of the XML Schema Datatypes Specification</t>
-
-          <t hangText="DateTime">The attribute value MUST be a valid dateTime (e.g. 2008-01-23T04:56:22Z) as specified in
-            <eref target="http://www.w3.org/TR/xmlschema-2/#dateTime">
-               section 3.2.7 of the XML Schema Datatypes Specification
-              </eref>.
-          </t>
-
-          <t hangText="Binary">The attribute value MUST be encoded as a valid
-          xsd:base64Binary value as specified in <eref target="http://www.w3.org/TR/xmlschema-2/#base64Binary"> section 3.2.16 of the XML Schema
-              Datatypes Specification</eref>.  No binary attributes are specified in the core schema, however,
-            extended schemas may opt to include images, digital signatures, and the like.
-          </t>
-
-          <t hangText="Complex">An attribute containing any combination of other attributes. Complex attributes are defined by
-          listing the sub-attributes and their data types.</t>
-        </list>
+        Both XML and JSON formats are defined.  Resource and attribute names MUST conform to
+        <eref target="http://www.w3.org/TR/REC-xml/#NT-Names">XML naming rules</eref>;i.e., SCIM names MUST be
+        valid XML names and SHOULD be camelCased.  When marshalling or extending SCIM resources in XML
+         implementors MUST use the normative, SCIM, XML schema (.xsd).  SCIM resources represented in a
+        schema-less format; e.g., JSON, MUST specify schema via the <xref target="schemas-attribute">schemas attribute</xref>.
       </t>
 
-      <t>Multi-valued attributes in JSON format may be encoded as an array of primitive or complex values and MAY contain
-        the following sub-attributes:</t>
-      <list style="hanging">
+      <section anchor="attribute-types" title="Attribute Data Types">
+        <t>
+          Attribute data types are derived from <eref target="http://www.w3.org/TR/xmlschema-2/">XML schema</eref>
+          and unless otherwise specified are optional and of type <xref target="type-string">String</xref>.  The JSON
+          format defines a limited set of data types, hence, where appropriate, alternate JSON representations are
+          defined below.  SCIM extensions SHOULD not introduce new data types.
+        </t>
+
+        <section anchor="type-string" title="String">
+          <t>
+            A sequence of characters as defined in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#string">section 3.2.1</eref>
+            of the XML Schema Datatypes Specification.  A String attribute MAY specify a required data format.
+            Additionally, when Canonical Values are specified Service Providers SHOULD conform to those values if
+            appropriate, but MAY provide alternate String values to represent additional values.
+          </t>
+        </section>
+
+        <section anchor="type-boolean" title="Boolean">
+          <t>
+            The literal "true" or "false" as specified in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#boolean">section 3.2.2</eref> of the XML Schema Datatypes
+            Specification.
+          </t>
+        </section>
+
+        <section anchor="type-decimal" title="Decimal">
+          <t>
+            A real number with at least one digit to the left and right of the period as specified
+            in <eref target="http://www.w3.org/TR/xmlschema-2/#decimal">section 3.2.3</eref> of the XML Schema
+            Datatypes Specification.
+          </t>
+          <t>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <eref target="http://www.json.org/">JSON Number</eref>.
+          </t>
+        </section>
+
+        <section anchor="type-integer" title="Integer">
+          <t>
+            A Decimal number with no fractional digits as defined in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#integer">section 3.3.13</eref> of the XML Schema Datatypes
+            Specification.
+          </t>
+          <t>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <eref target="http://www.json.org/">JSON Number</eref>.
+          </t>
+        </section>
+
+        <section anchor="type-datetime" title="DateTime">
+          <t>
+            A dateTime (e.g. 2008-01-23T04:56:22Z) as specified in
+            <eref target="http://www.w3.org/TR/xmlschema-2/#dateTime"> section 3.2.7</eref> of the XML Schema Datatypes
+            Specification.
+          </t>
+          <t>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <eref target="http://www.json.org/">JSON String</eref>.
+          </t>
+
+        </section>
+
+        <section anchor="type-binary" title="Binary">
+          <t>
+            The attribute value MUST be encoded as a valid xsd:base64Binary value as specified in <eref target="http://www.w3.org/TR/xmlschema-2/#base64Binary">section 3.2.16</eref> of the XML Schema
+            Datatypes Specification.
+          </t>
+          <t>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <eref target="http://www.json.org/">JSON String</eref>.
+          </t>
+          </section>
+
+        <section anchor="type-complex" title="Complex">
+          <t>
+           A Singular or Multi-valued Attribute whose value is a composition of one or more Simple Attributes as
+            specified in <eref target="http://www.w3.org/TR/xmlschema-1/#Complex_Type_Definitions">section 3.4</eref> XML Schema Datatypes
+            Specification.
+          </t>
+          <t>JSON values are represented as <eref target="http://www.json.org/">JSON Objects</eref>.
+          </t>
+        </section>
+      </section>
+
+      <section anchor="multi-value-types" title="Multi-valued Attributes">
+        <t>Multi-valued attributes may contain Sub-Attributes and therefore may contain Complex Attributes. The below
+        Sub-Attributes are considered normative and when specified SHOULD be used as defined.</t>
+        <list style="hanging">
           <t hangText="type">A label indicating the attribute's function; e.g., "work" or "home".</t>
 
           <t hangText="primary">A Boolean value indicating the 'primary' or preferred
@@ -194,7 +277,7 @@
 }
 ]]>
 </artwork>
-    </list>
+      </list>
 
       <t>
       When returning multi-valued attributes, Service Providers SHOULD
@@ -204,6 +287,7 @@
       home), but SHOULD NOT return the same (type, value) combination more
       than once per Attribute, as this complicates processing by the Consumer.</t>
     </section>
+  </section>
 
     <section title="Schema Extension Model">
       <t>SCIM schema follows an object extension model similar to
@@ -278,7 +362,7 @@
 
       <section title="&quot;schemas&quot; Attribute" anchor="schemas-attribute">
         <t>SCIM supports resources of different types, with extensible
-        schemas. Each resource MUST be indicated using fully qualified URNs.</t>
+        schemas. Each resource MUST be indicated using fully qualified URLs.</t>
 
         <t>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -290,13 +374,13 @@
 
         <t>
           <list style="hanging">
-            <t hangText="schemas">The schemas attribute is an array of strings
+            <t hangText="schemas">The schemas attribute is an array of Strings
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
-            that representation. Each string value must be a unique URN. This
-            specification defines URNs for User, Group, and a standard "enterprise"
+            that representation. Each String value must be a unique URI. This
+            specification defines URIs for User, Group, and a standard "enterprise"
             extension.  All representations of SCIM schema MUST include a
-            non-zero value array with value(s) of the URNs supported by that
+            non-zero value array with value(s) of the URIs supported by that
             representation.  Duplicate values MUST NOT be included.  Value
             order is not specified and MUST not impact behavior. REQUIRED.</t>
           </list>
@@ -304,12 +388,10 @@
       </section>
     </section>
 
-    <section title="SCIM User Schema">
+    <section title="SCIM User Schema" anchor="user-resource">
       <t>SCIM provides a schema for representing Users, identified using the
-      following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
-      using an un-registered urn while in draft form). The following
-      attributes are defined in addition to those attributes defined in Core
-      SCIM Schema:</t>
+      following URI: 'urn:scim:schemas:core:1.0'. The following
+      attributes are defined in addition to those attributes defined in SCIM Core Schema:</t>
 
       <section title="Singular Attributes">
         <t>
@@ -406,7 +488,7 @@
       </section>
 
       <section title="Multi-valued Attributes">
-        <t>The following multi-valued attributes are defined:</t>
+        <t>The following multi-valued attributes are defined.  All attributes are OPTIONAL.</t>
 
         <t>
           <list style="hanging">
@@ -477,11 +559,10 @@
               membership and any behavior or authorization granted as a result
               of membership are defined by the Service Provider are considered
               out of scope for this specification. This value has NO canonical
-              types and removes the standard canonical types. If the SCIM
-              Service Provider exposes a Group resource, the value MUST be the
+              types. If the SCIM Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
-              user belongs.  This attribute is read-only, and group membership
-              changes MUST happen through the Group Resource. READ-ONLY and
+              user belongs.  Since this attribute is read-only, group membership
+              changes MUST be applied via the <xref target="group-resource">Group Resource</xref>. READ-ONLY and
               OPTIONAL.
             </t>
 
@@ -498,16 +579,14 @@
             <t hangText="roles">A list of roles for the User that collectively
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
-              role value is a string or label representing a collection of
-              entitlements.  This value has NO canonical types and removes the
-              standard canonical types.  OPTIONAL.
+              role value is a String or label representing a collection of
+              entitlements.  This value has NO canonical types.  OPTIONAL.
             </t>
             
-            <t hangText="x509Certificates">Certificates issued to the User. 
-              The value MUST contain a DER and then base64 encoded x509 certificate. 
+            <t hangText="x509Certificates">A list of certificates issued to the User. Values are
+              <xref target="type-binary">Binary</xref> and DER encoded x509.  This value has NO canonical types.
               OPTIONAL.
             </t>
-
           </list>
         </t>
       </section>
@@ -517,8 +596,7 @@
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:enterprise:1.0' ( Note:
-      we're currently using an un-registered urn while in draft form).</t>
+      following URI: 'urn:scim:schemas:extension:enterprise:1.0'.</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -554,10 +632,9 @@
       </t>
     </section>
 
-    <section title="SCIM Group Schema">
+    <section title="SCIM Group Schema" anchor="group-resource">
       <t>SCIM provides a schema for representing groups, identified using the
-      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
-      using an un-registered urn while in draft form).</t>
+      following URI: 'urn:scim:schemas:core:1.0'.</t>
 
       <t>Group resources are meant to enable expression of common Group or
       role based access control models, although no explicit authorization
@@ -572,8 +649,6 @@
           OPTIONAL.</t>
         </list></t>
 
-      <t />
-
       <t>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
           <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. The
@@ -581,15 +656,12 @@
               to allow the Service Provider to support nested Groups. REQUIRED.
           </t>
         </list></t>
-
-      <t />
     </section>
 
 
     <section title="Service Provider Configuration Schema">
       <t>SCIM provides a schema for representing the Service Provider's configuration identified using the
-      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
-      using an un-registered urn while in draft form).</t>
+      following URI: 'urn:scim:schemas:core:1.0'</t>
 
       <t>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
@@ -660,17 +732,16 @@
       </t>
     </section>
 
-      <section title="Resource Schema">
+      <section title="Resource Schema" anchor="resource-schema">
         <t>The Resource schema specifies the Attribute(s) and meta-data that constitute a Resource. Schema Resources
-           are READ-ONLY and identified using the following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
-           using an un-registered urn while in draft form).  Unlike other core Resources the schema Resource MAY contain
-           a complex object within a Sub-Attribute.
+           are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:1.0'.  Unlike other core
+          Resources the schema Resource MAY contain a complex object within a Sub-Attribute.
         </t>
         <t>The following Singular Attributes are defined:
           <list style="hanging">
             <t hangText="name">The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group". REQUIRED.</t>
             <t hangText="description">The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.  REQUIRED.</t>
-            <t hangText="schema">The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.  REQUIRED.</t>
+            <t hangText="schema">The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.  REQUIRED.</t>
             <t hangText="endpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.</t>
            </list>
         </t>
@@ -693,7 +764,7 @@
                           </t>
                           <t hangText="required">A Boolean value that specifies if the attribute is required. REQUIRED.
                           </t>
-                          <t hangText="caseExact">A Boolean value that specifies if the string attribute is case
+                          <t hangText="caseExact">A Boolean value that specifies if the String attribute is case
                               sensitive.  REQUIRED.
                           </t>
 
@@ -714,7 +785,7 @@
                                   <t hangText="required">A Boolean value that specifies if the attribute is required.
                                     REQUIRED.
                                   </t>
-                                  <t hangText="caseExact">A Boolean value that specifies if the string attribute
+                                  <t hangText="caseExact">A Boolean value that specifies if the String attribute
                                     is case sensitive. REQUIRED.
                                   </t>
                                   <t hangText="canonicalValues">A collection of canonical values. When applicable Service
@@ -802,11 +873,11 @@
   ],
   "phoneNumbers": [
     {
-      "value": "800-864-8377",
+      "value": "555-555-5555",
       "type": "work"
     },
     {
-      "value": "818-123-4567",
+      "value": "555-555-4444",
       "type": "mobile"
     }
   ],
@@ -932,11 +1003,11 @@
   ],
   "phoneNumbers": [
     {
-      "value": "800-864-8377",
+      "value": "555-555-5555",
       "type": "work"
     },
     {
-      "value": "818-123-4567",
+      "value": "555-555-4444",
       "type": "mobile"
     }
   ],
@@ -1330,10 +1401,10 @@
 
         <artwork><![CDATA[
 
-<SCIM xmlns="urn:scim:schemas:core:1.0">
+<User xmlns="urn:scim:schemas:core:1.0">
   <id>2819c223-7f76-453a-919d-413861904646</id>
   <userName>bjensen@example.com</userName>
-</SCIM>
+</User>
 
 ]]></artwork>
       </section>
@@ -1344,7 +1415,7 @@
 
         <artwork><![CDATA[
 
-<SCIM xmlns="urn:scim:schemas:core:1.0">
+<User xmlns="urn:scim:schemas:core:1.0">
   <id>2819c223-7f76-453a-919d-413861904646</id>
   <externalId>701984</externalId>
   <userName>bjensen@example.com</userName>
@@ -1393,11 +1464,11 @@
   </addresses>
   <phoneNumbers>
     <phoneNumber>
-      <value>800-864-8377</value>
+      <value>555-555-5555</value>
       <type>work</type>
     </phoneNumber>
     <phoneNumber>
-      <value>818-123-4567</value>
+      <value>555-555-4444</value>
       <type>mobile</type>
     </phoneNumber>
   </phoneNumbers>
@@ -1437,6 +1508,16 @@
       <display>US Employees</display>
     </group>
   </groups>
+  <roles>
+    <role>
+      <value>administrator</value>
+    </role>
+  </roles>
+  <entitlements>
+    <entitlement>
+      <value>delete users</value>
+    </entitlement>
+  </entitlements>
   <x509Certificates>
     <x509Certificate>
       <value>
@@ -1465,7 +1546,7 @@
     <created>2010-01-23T04:56:22Z</created>
     <lastModified>2011-05-13T04:42:34Z</lastModified>
   </meta>
-</SCIM>
+</User>
 
 ]]></artwork>
       </section>
@@ -1476,7 +1557,7 @@
 
         <artwork><![CDATA[
 
-<SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0">
+<User xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0">
   <id>2819c223-7f76-453a-919d-413861904646</id>
   <externalId>701984</externalId>
   <userName>bjensen@example.com</userName>
@@ -1531,11 +1612,11 @@
   </addresses>
   <phoneNumbers>
     <phoneNumber>
-      <value>800-864-8377</value>
+      <value>555-555-5555</value>
       <type>work</type>
     </phoneNumber>
     <phoneNumber>
-      <value>818-123-4567</value>
+      <value>555-555-4444</value>
       <type>mobile</type>
     </phoneNumber>
   </phoneNumbers>
@@ -1569,6 +1650,16 @@
       <value>00300000005N98YT1</value>
     </group>
   </groups>
+  <roles>
+    <role>
+      <value>administrator</value>
+    </role>
+  </roles>
+  <entitlements>
+    <entitlement>
+      <value>delete users</value>
+    </entitlement>
+  </entitlements>
   <x509Certificates>
     <x509Certificate>
       <value>
@@ -1606,7 +1697,7 @@
     <created>2010-01-23T04:56:22Z</created>
     <lastModified>2011-05-13T04:42:34Z</lastModified>
   </meta>
-</SCIM>
+</User>
 
 	]]></artwork>
       </section>
@@ -1617,7 +1708,7 @@
 
         <artwork><![CDATA[
 
-<SCIM xmlns="urn:scim:schemas:core:1.0">
+<Group xmlns="urn:scim:schemas:core:1.0">
   <id>2819c223-7f76-453a-919d-413861904646</id>
   <displayName>Tour Guides</displayName>
   <members>
@@ -1630,7 +1721,7 @@
       <display>Mandy Pepperidge</display>
     </member>
   </members>
-</SCIM>
+</Group>
 
 ]]></artwork>
       </section>
