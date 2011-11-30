@@ -150,7 +150,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Ping</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">J. Smarr</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 14, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 29, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />Simple Cloud Identity Management: Core
     Schema 1.0 - draft 2</h1>
@@ -172,7 +172,7 @@
 <p>This document provides a platform neutral schema and extension model
       for representing users and groups in JSON and XML formats. This schema is intended for exchange
       and use with cloud service providers.  Additional binding documents provide a standard REST API,
-        SAML bindings, and use cases.
+        SAML binding, and use cases.
 </p><a name="toc"></a><br /><hr />
 <h3>Table of Contents</h3>
 <p class="toc">
@@ -180,8 +180,14 @@
 Requirements Notation and Conventions<br />
 <a href="#overview">2.</a>&nbsp;
 Overview<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#defs">2.1.</a>&nbsp;
+Definitions<br />
 <a href="#schema_structure">3.</a>&nbsp;
 SCIM Schema Structure<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#attribute-types">3.1.</a>&nbsp;
+Attribute Data Types<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#multi-value-types">3.2.</a>&nbsp;
+Multi-valued Attributes<br />
 <a href="#anchor1">4.</a>&nbsp;
 Schema Extension Model<br />
 <a href="#schema">5.</a>&nbsp;
@@ -190,45 +196,45 @@ SCIM Core Schema<br />
 Common Schema Attributes<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#schemas-attribute">5.2.</a>&nbsp;
 &quot;schemas&quot; Attribute<br />
-<a href="#anchor3">6.</a>&nbsp;
+<a href="#user-resource">6.</a>&nbsp;
 SCIM User Schema<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">6.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor3">6.1.</a>&nbsp;
 Singular Attributes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">6.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">6.2.</a>&nbsp;
 Multi-valued Attributes<br />
-<a href="#anchor6">7.</a>&nbsp;
+<a href="#anchor5">7.</a>&nbsp;
 SCIM Enterprise User Schema Extension<br />
-<a href="#anchor7">8.</a>&nbsp;
+<a href="#group-resource">8.</a>&nbsp;
 SCIM Group Schema<br />
-<a href="#anchor8">9.</a>&nbsp;
+<a href="#anchor6">9.</a>&nbsp;
 Service Provider Configuration Schema<br />
-<a href="#anchor9">10.</a>&nbsp;
+<a href="#resource-schema">10.</a>&nbsp;
 Resource Schema<br />
 <a href="#json_representation">11.</a>&nbsp;
 JSON Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">11.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">11.1.</a>&nbsp;
 Minimal User Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">11.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">11.2.</a>&nbsp;
 Full User Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor12">11.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">11.3.</a>&nbsp;
 Enterprise User Extension Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">11.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">11.4.</a>&nbsp;
 Group Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">11.5.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">11.5.</a>&nbsp;
 Service Provider Configuration Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">11.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor12">11.6.</a>&nbsp;
 Resource Schema Representation<br />
 <a href="#xml_representation">12.</a>&nbsp;
 XML Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">12.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">12.1.</a>&nbsp;
 Minimal Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor17">12.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">12.2.</a>&nbsp;
 Full Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor18">12.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">12.3.</a>&nbsp;
 Enterprise User Extension Representation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor19">12.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">12.4.</a>&nbsp;
 Group Representation<br />
-<a href="#anchor20">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor17">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements<br />
 <a href="#rfc.references1">13.</a>&nbsp;
 Normative References<br />
@@ -279,8 +285,49 @@ Overview</h3>
 <p>This document provides a platform neutral schema and extension model
       for representing users and groups in JSON and XML formats. This schema is intended for exchange
       and use with cloud service providers.  Additional binding documents provide a standard REST API,
-        SAML bindings, and use cases.
+        SAML binding, and use cases.
 </p>
+<a name="defs"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.2.1"></a><h3>2.1.&nbsp;
+Definitions</h3>
+
+<blockquote class="text"><dl>
+<dt>Service Provider:</dt>
+<dd>A web application that provides identity information via the SCIM protocol.
+          
+</dd>
+<dt>Consumer:</dt>
+<dd>A website or application that uses the SCIM protocol to manage identity data
+            maintained by the Service Provider.
+          
+</dd>
+<dt>Resource:</dt>
+<dd>The Service Provider managed artifact containing one or more attributes; e.g., User or Group
+          
+</dd>
+<dt>Singular Attribute:</dt>
+<dd>A Resource attribute that contains 0..1 values; e.g., displayName.
+          
+</dd>
+<dt>Multi-valued Attribute:</dt>
+<dd>A Resource attribute that contains 0..n values; e.g., emails.
+          
+</dd>
+<dt>Simple Attribute:</dt>
+<dd>A Singular or Multi-valued Attribute whose value is a primitive; e.g., String.
+          
+</dd>
+<dt>Complex Attribute:</dt>
+<dd>A Singular or Multi-valued Attribute whose value is a composition of one or
+            more Simple Attributes.
+          
+</dd>
+<dt>Sub-Attribute:</dt>
+<dd>A Simple Attribute contained within a Complex Attribute.
+          
+</dd>
+</dl></blockquote>
 <a name="schema_structure"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3"></a><h3>3.&nbsp;
@@ -290,54 +337,139 @@ SCIM Schema Structure</h3>
         attributes found in many existing deployments and schemas.
       
 </p>
-<p>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists of the
-        attributes' name and at least one simple (a primitive value; e.g., string) or complex (collection of sub-attributes)
-        value.  By definition, an attribute with more than one value is multi-valued and contains 0..n values while
-        single-valued attributes contain 0..1 values.  SCIM schema defines the data type, plurality and other distinguishing features of an
-        attribute.  Both XML and JSON formats are defined.  When marshalling or extending SCIM resources in XML
-        format implementors MUST use the normative, SCIM, XML schema (.xsd).  SCIM resources represented in a
-        schema-less format; e.g., JSON, MUST specify schema via the <a class='info' href='#schemas-attribute'>"schemas" attribute<span> (</span><span class='info'>&quot;schemas&quot; Attribute</span><span>)</span></a>.
+<p>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists
+        of the attribute name and at least one Simple or Complex value either of which may be multi-valued.  SCIM schema
+        defines the data type, plurality and other distinguishing features of an attribute.  Unless otherwise specified
+        all attributes are modifiable by Consumers. Read-only attributes shall be specified as 'READ-ONLY' within the
+        attribute definition. Additionally, Service Providers MAY choose to make some or all Resource attributes
+        immutable and SHOULD identify those attributes via the associated
+        <a class='info' href='#schemas-attribute'>Resource's schema endpoint<span> (</span><span class='info'>&quot;schemas&quot; Attribute</span><span>)</span></a>.
       
-</p>
-<p>Attribute value data types are derived from <a href='http://www.w3.org/TR/xmlschema-2/'>XML schema</a>
-        and unless otherwise specified are optional and of type string.  All encoding MUST be UTF-8. Each attribute
-        label uses camelCase notation. Unless specified, attribute values MUST NOT contain any newline characters
-        (\r or \n).  An attribute value consists of one of the following types:
 </p>
 <p>
-        </p>
-<blockquote class="text"><dl>
-<dt>String</dt>
-<dd>An attribute containing a sequence of characters as defined in
-              <a href='http://www.w3.org/TR/xmlschema-2/#string'>section 3.2.1</a> of the XML Schema Datatypes Specification.
-            A string attribute MAY specify a required data format. Additionally, when Canonical Values are specified Service Providers
-          SHOULD conform to those values if appropriate, but MAY provide alternate string values to represent additional values.
-</dd>
-<dt>Boolean</dt>
-<dd>An attribute containing the literal "true" or "false" as defined in
-            <a href='http://www.w3.org/TR/xmlschema-2/#boolean'>section 3.2.2</a> of the XML Schema Datatypes Specification
-</dd>
-<dt>DateTime</dt>
-<dd>The attribute value MUST be a valid dateTime (e.g. 2008-01-23T04:56:22Z) as specified in
-            <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7 of the XML Schema Datatypes Specification</a>.
-          
-</dd>
-<dt>Binary</dt>
-<dd>The attribute value MUST be encoded as a valid
-          xsd:base64Binary value as specified in <a href='http://www.w3.org/TR/xmlschema-2/#base64Binary'>section 3.2.16 of the XML Schema
-              Datatypes Specification</a>.  No binary attributes are specified in the core schema, however,
-            extended schemas may opt to include images, digital signatures, and the like.
-          
-</dd>
-<dt>Complex</dt>
-<dd>An attribute containing any combination of other attributes. Complex attributes are defined by
-          listing the sub-attributes and their data types.
-</dd>
-</dl></blockquote><p>
+        Both XML and JSON formats are defined.  Resource and attribute names MUST conform to
+        <a href='http://www.w3.org/TR/REC-xml/#NT-Names'>XML naming rules</a>;i.e., SCIM names MUST be
+        valid XML names and SHOULD be camelCased.  When marshalling or extending SCIM resources in XML
+         implementors MUST use the normative, SCIM, XML schema (.xsd).  SCIM resources represented in a
+        schema-less format; e.g., JSON, MUST specify schema via the <a class='info' href='#schemas-attribute'>schemas attribute<span> (</span><span class='info'>&quot;schemas&quot; Attribute</span><span>)</span></a>.
       
 </p>
-<p>Multi-valued attributes in JSON format may be encoded as an array of primitive or complex values and MAY contain
-        the following sub-attributes:
+<a name="attribute-types"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
+Attribute Data Types</h3>
+
+<p>
+          Attribute data types are derived from <a href='http://www.w3.org/TR/xmlschema-2/'>XML schema</a>
+          and unless otherwise specified are optional and of type <a class='info' href='#type-string'>String<span> (</span><span class='info'>String</span><span>)</span></a>.  The JSON
+          format defines a limited set of data types, hence, where appropriate, alternate JSON representations are
+          defined below.  SCIM extensions SHOULD not introduce new data types.
+        
+</p>
+<a name="type-string"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.1"></a><h3>3.1.1.&nbsp;
+String</h3>
+
+<p>
+            A sequence of characters as defined in
+            <a href='http://www.w3.org/TR/xmlschema-2/#string'>section 3.2.1</a>
+            of the XML Schema Datatypes Specification.  A String attribute MAY specify a required data format.
+            Additionally, when Canonical Values are specified Service Providers SHOULD conform to those values if
+            appropriate, but MAY provide alternate String values to represent additional values.
+          
+</p>
+<a name="type-boolean"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.2"></a><h3>3.1.2.&nbsp;
+Boolean</h3>
+
+<p>
+            The literal "true" or "false" as specified in
+            <a href='http://www.w3.org/TR/xmlschema-2/#boolean'>section 3.2.2</a> of the XML Schema Datatypes
+            Specification.
+          
+</p>
+<a name="type-decimal"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.3"></a><h3>3.1.3.&nbsp;
+Decimal</h3>
+
+<p>
+            A real number with at least one digit to the left and right of the period as specified
+            in <a href='http://www.w3.org/TR/xmlschema-2/#decimal'>section 3.2.3</a> of the XML Schema
+            Datatypes Specification.
+          
+</p>
+<p>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <a href='http://www.json.org/'>JSON Number</a>.
+          
+</p>
+<a name="type-integer"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.4"></a><h3>3.1.4.&nbsp;
+Integer</h3>
+
+<p>
+            A Decimal number with no fractional digits as defined in
+            <a href='http://www.w3.org/TR/xmlschema-2/#integer'>section 3.3.13</a> of the XML Schema Datatypes
+            Specification.
+          
+</p>
+<p>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <a href='http://www.json.org/'>JSON Number</a>.
+          
+</p>
+<a name="type-datetime"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.5"></a><h3>3.1.5.&nbsp;
+DateTime</h3>
+
+<p>
+            A dateTime (e.g. 2008-01-23T04:56:22Z) as specified in
+            <a href='http://www.w3.org/TR/xmlschema-2/#dateTime'>section 3.2.7</a> of the XML Schema Datatypes
+            Specification.
+          
+</p>
+<p>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <a href='http://www.json.org/'>JSON String</a>.
+          
+</p>
+<a name="type-binary"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.6"></a><h3>3.1.6.&nbsp;
+Binary</h3>
+
+<p>
+            The attribute value MUST be encoded as a valid xsd:base64Binary value as specified in <a href='http://www.w3.org/TR/xmlschema-2/#base64Binary'>section 3.2.16</a> of the XML Schema
+            Datatypes Specification.
+          
+</p>
+<p>Values represented in JSON MUST conform to the XML constraints above and are represented as a
+            <a href='http://www.json.org/'>JSON String</a>.
+          
+</p>
+<a name="type-complex"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1.7"></a><h3>3.1.7.&nbsp;
+Complex</h3>
+
+<p>
+           A Singular or Multi-valued Attribute whose value is a composition of one or more Simple Attributes as
+            specified in <a href='http://www.w3.org/TR/xmlschema-1/#Complex_Type_Definitions'>section 3.4</a> XML Schema Datatypes
+            Specification.
+          
+</p>
+<p>JSON values are represented as <a href='http://www.json.org/'>JSON Objects</a>.
+          
+</p>
+<a name="multi-value-types"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
+Multi-valued Attributes</h3>
+
+<p>Multi-valued attributes may contain Sub-Attributes and therefore may contain Complex Attributes. The below
+        Sub-Attributes are considered normative and when specified SHOULD be used as defined.
 </p>
 <blockquote class="text"><dl>
 <dt>type</dt>
@@ -483,7 +615,7 @@ Common Schema Attributes</h3>
 &quot;schemas&quot; Attribute</h3>
 
 <p>SCIM supports resources of different types, with extensible
-        schemas. Each resource MUST be indicated using fully qualified URNs.
+        schemas. Each resource MUST be indicated using fully qualified URLs.
 </p>
 <p>Where a specific representation has existing support for expressing
         schema, the traditional convention of that representation MUST be
@@ -497,31 +629,29 @@ Common Schema Attributes</h3>
           </p>
 <blockquote class="text"><dl>
 <dt>schemas</dt>
-<dd>The schemas attribute is an array of strings
+<dd>The schemas attribute is an array of Strings
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
-            that representation. Each string value must be a unique URN. This
-            specification defines URNs for User, Group, and a standard "enterprise"
+            that representation. Each String value must be a unique URI. This
+            specification defines URIs for User, Group, and a standard "enterprise"
             extension.  All representations of SCIM schema MUST include a
-            non-zero value array with value(s) of the URNs supported by that
+            non-zero value array with value(s) of the URIs supported by that
             representation.  Duplicate values MUST NOT be included.  Value
             order is not specified and MUST not impact behavior. REQUIRED.
 </dd>
 </dl></blockquote><p>
         
 </p>
-<a name="anchor3"></a><br /><hr />
+<a name="user-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 SCIM User Schema</h3>
 
 <p>SCIM provides a schema for representing Users, identified using the
-      following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
-      using an un-registered urn while in draft form). The following
-      attributes are defined in addition to those attributes defined in Core
-      SCIM Schema:
+      following URI: 'urn:scim:schemas:core:1.0'. The following
+      attributes are defined in addition to those attributes defined in SCIM Core Schema:
 </p>
-<a name="anchor4"></a><br /><hr />
+<a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1"></a><h3>6.1.&nbsp;
 Singular Attributes</h3>
@@ -637,12 +767,12 @@ Singular Attributes</h3>
 </dl></blockquote><p>
         
 </p>
-<a name="anchor5"></a><br /><hr />
+<a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.2"></a><h3>6.2.&nbsp;
 Multi-valued Attributes</h3>
 
-<p>The following multi-valued attributes are defined:
+<p>The following multi-valued attributes are defined.  All attributes are OPTIONAL.
 </p>
 <p>
           </p>
@@ -727,10 +857,11 @@ Multi-valued Attributes</h3>
               membership and any behavior or authorization granted as a result
               of membership are defined by the Service Provider are considered
               out of scope for this specification. This value has NO canonical
-              types and removes the standard canonical types. If the SCIM
-              Service Provider exposes a Group resource, the value MUST be the
+              types. If the SCIM Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
-              user belongs.  OPTIONAL.
+              user belongs.  Since this attribute is read-only, group membership
+              changes MUST be applied via the <a class='info' href='#group-resource'>Group Resource<span> (</span><span class='info'>SCIM Group Schema</span><span>)</span></a>. READ-ONLY and
+              OPTIONAL.
             
 </dd>
 <dt>entitlements</dt>
@@ -748,21 +879,20 @@ Multi-valued Attributes</h3>
 <dd>A list of roles for the User that collectively
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
-              role value is a string or label representing a collection of
-              entitlements.  This value has NO canonical types and removes the
-              standard canonical types.  OPTIONAL.
+              role value is a String or label representing a collection of
+              entitlements.  This value has NO canonical types.  OPTIONAL.
             
 </dd>
 <dt>x509Certificates</dt>
-<dd>Certificates issued to the User. 
-              The value MUST contain a DER and then base64 encoded x509 certificate. 
+<dd>A list of certificates issued to the User. Values are
+              <a class='info' href='#type-binary'>Binary<span> (</span><span class='info'>Binary</span><span>)</span></a> and DER encoded x509.  This value has NO canonical types.
               OPTIONAL.
             
 </dd>
 </dl></blockquote><p>
         
 </p>
-<a name="anchor6"></a><br /><hr />
+<a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7"></a><h3>7.&nbsp;
 SCIM Enterprise User Schema Extension</h3>
@@ -770,8 +900,7 @@ SCIM Enterprise User Schema Extension</h3>
 <p>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:enterprise:1.0' ( Note:
-      we're currently using an un-registered urn while in draft form).
+      following URI: 'urn:scim:schemas:extension:enterprise:1.0'.
 </p>
 <p>The following Singular Attributes are defined:
 </p>
@@ -818,14 +947,13 @@ SCIM Enterprise User Schema Extension</h3>
 </dl></blockquote><p>
       
 </p>
-<a name="anchor7"></a><br /><hr />
+<a name="group-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 SCIM Group Schema</h3>
 
 <p>SCIM provides a schema for representing groups, identified using the
-      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
-      using an un-registered urn while in draft form).
+      following URI: 'urn:scim:schemas:core:1.0'.
 </p>
 <p>Group resources are meant to enable expression of common Group or
       role based access control models, although no explicit authorization
@@ -843,8 +971,6 @@ SCIM Group Schema</h3>
 </dd>
 </dl></blockquote>
 
-<p>
-</p>
 <p>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
@@ -856,16 +982,13 @@ SCIM Group Schema</h3>
 </dd>
 </dl></blockquote>
 
-<p>
-</p>
-<a name="anchor8"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Service Provider Configuration Schema</h3>
 
 <p>SCIM provides a schema for representing the Service Provider's configuration identified using the
-      following URN: 'urn:scim:schemas:core:1.0' ( Note: we're currently
-      using an un-registered urn while in draft form).
+      following URI: 'urn:scim:schemas:core:1.0'
 </p>
 <p>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
@@ -989,15 +1112,14 @@ Service Provider Configuration Schema</h3>
 </dl></blockquote><p>
       
 </p>
-<a name="anchor9"></a><br /><hr />
+<a name="resource-schema"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10"></a><h3>10.&nbsp;
 Resource Schema</h3>
 
 <p>The Resource schema specifies the Attribute(s) and meta-data that constitute a Resource. Schema Resources
-           are READ-ONLY and identified using the following URN: 'urn:scim:schemas:core:1.0' (Note: we're currently
-           using an un-registered urn while in draft form).  Unlike other core Resources the schema Resource MAY contain
-           a complex object within a Sub-Attribute.
+           are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:1.0'.  Unlike other core
+          Resources the schema Resource MAY contain a complex object within a Sub-Attribute.
         
 </p>
 <p>The following Singular Attributes are defined:
@@ -1010,7 +1132,7 @@ Resource Schema</h3>
 <dd>The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.  REQUIRED.
 </dd>
 <dt>schema</dt>
-<dd>The Resource's associated schema URN; e.g., urn:scim:schemas:core:1.0.  REQUIRED.
+<dd>The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.  REQUIRED.
 </dd>
 <dt>endpoint</dt>
 <dd>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.
@@ -1055,7 +1177,7 @@ Resource Schema</h3>
                           
 </dd>
 <dt>caseExact</dt>
-<dd>A Boolean value that specifies if the string attribute is case
+<dd>A Boolean value that specifies if the String attribute is case
                               sensitive.  REQUIRED.
                           
 </dd>
@@ -1091,7 +1213,7 @@ Resource Schema</h3>
                                   
 </dd>
 <dt>caseExact</dt>
-<dd>A Boolean value that specifies if the string attribute
+<dd>A Boolean value that specifies if the String attribute
                                     is case sensitive. REQUIRED.
                                   
 </dd>
@@ -1118,7 +1240,7 @@ Resource Schema</h3>
 <a name="rfc.section.11"></a><h3>11.&nbsp;
 JSON Representation</h3>
 
-<a name="anchor10"></a><br /><hr />
+<a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.1"></a><h3>11.1.&nbsp;
 Minimal User Representation</h3>
@@ -1133,7 +1255,7 @@ Minimal User Representation</h3>
 }
 
 </pre></div>
-<a name="anchor11"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.2"></a><h3>11.2.&nbsp;
 Full User Representation</h3>
@@ -1192,11 +1314,11 @@ Full User Representation</h3>
   ],
   "phoneNumbers": [
     {
-      "value": "800-864-8377",
+      "value": "555-555-5555",
       "type": "work"
     },
     {
-      "value": "818-123-4567",
+      "value": "555-555-4444",
       "type": "mobile"
     }
   ],
@@ -1264,7 +1386,7 @@ Full User Representation</h3>
   }
 }
 </pre></div>
-<a name="anchor12"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.3"></a><h3>11.3.&nbsp;
 Enterprise User Extension Representation</h3>
@@ -1323,11 +1445,11 @@ Enterprise User Extension Representation</h3>
   ],
   "phoneNumbers": [
     {
-      "value": "800-864-8377",
+      "value": "555-555-5555",
       "type": "work"
     },
     {
-      "value": "818-123-4567",
+      "value": "555-555-4444",
       "type": "mobile"
     }
   ],
@@ -1407,7 +1529,7 @@ Enterprise User Extension Representation</h3>
 }
 
 </pre></div>
-<a name="anchor13"></a><br /><hr />
+<a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.4"></a><h3>11.4.&nbsp;
 Group Representation</h3>
@@ -1433,7 +1555,7 @@ Group Representation</h3>
 }
 
 </pre></div>
-<a name="anchor14"></a><br /><hr />
+<a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.5"></a><h3>11.5.&nbsp;
 Service Provider Configuration Representation</h3>
@@ -1485,7 +1607,7 @@ Service Provider Configuration Representation</h3>
 }
 
 </pre></div>
-<a name="anchor15"></a><br /><hr />
+<a name="anchor12"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.6"></a><h3>11.6.&nbsp;
 Resource Schema Representation</h3>
@@ -1719,7 +1841,7 @@ Resource Schema Representation</h3>
 <a name="rfc.section.12"></a><h3>12.&nbsp;
 XML Representation</h3>
 
-<a name="anchor16"></a><br /><hr />
+<a name="anchor13"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.12.1"></a><h3>12.1.&nbsp;
 Minimal Representation</h3>
@@ -1728,13 +1850,13 @@ Minimal Representation</h3>
         SCIM User representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
+&lt;User xmlns="urn:scim:schemas:core:1.0"&gt;
   &lt;id&gt;2819c223-7f76-453a-919d-413861904646&lt;/id&gt;
   &lt;userName&gt;bjensen@example.com&lt;/userName&gt;
-&lt;/SCIM&gt;
+&lt;/User&gt;
 
 </pre></div>
-<a name="anchor17"></a><br /><hr />
+<a name="anchor14"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.12.2"></a><h3>12.2.&nbsp;
 Full Representation</h3>
@@ -1743,7 +1865,7 @@ Full Representation</h3>
         SCIM representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
+&lt;User xmlns="urn:scim:schemas:core:1.0"&gt;
   &lt;id&gt;2819c223-7f76-453a-919d-413861904646&lt;/id&gt;
   &lt;externalId&gt;701984&lt;/externalId&gt;
   &lt;userName&gt;bjensen@example.com&lt;/userName&gt;
@@ -1792,11 +1914,11 @@ Full Representation</h3>
   &lt;/addresses&gt;
   &lt;phoneNumbers&gt;
     &lt;phoneNumber&gt;
-      &lt;value&gt;800-864-8377&lt;/value&gt;
+      &lt;value&gt;555-555-5555&lt;/value&gt;
       &lt;type&gt;work&lt;/type&gt;
     &lt;/phoneNumber&gt;
     &lt;phoneNumber&gt;
-      &lt;value&gt;818-123-4567&lt;/value&gt;
+      &lt;value&gt;555-555-4444&lt;/value&gt;
       &lt;type&gt;mobile&lt;/type&gt;
     &lt;/phoneNumber&gt;
   &lt;/phoneNumbers&gt;
@@ -1836,6 +1958,16 @@ Full Representation</h3>
       &lt;display&gt;US Employees&lt;/display&gt;
     &lt;/group&gt;
   &lt;/groups&gt;
+  &lt;roles&gt;
+    &lt;role&gt;
+      &lt;value&gt;administrator&lt;/value&gt;
+    &lt;/role&gt;
+  &lt;/roles&gt;
+  &lt;entitlements&gt;
+    &lt;entitlement&gt;
+      &lt;value&gt;delete users&lt;/value&gt;
+    &lt;/entitlement&gt;
+  &lt;/entitlements&gt;
   &lt;x509Certificates&gt;
     &lt;x509Certificate&gt;
       &lt;value&gt;
@@ -1864,10 +1996,10 @@ Full Representation</h3>
     &lt;created&gt;2010-01-23T04:56:22Z&lt;/created&gt;
     &lt;lastModified&gt;2011-05-13T04:42:34Z&lt;/lastModified&gt;
   &lt;/meta&gt;
-&lt;/SCIM&gt;
+&lt;/User&gt;
 
 </pre></div>
-<a name="anchor18"></a><br /><hr />
+<a name="anchor15"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.12.3"></a><h3>12.3.&nbsp;
 Enterprise User Extension Representation</h3>
@@ -1876,7 +2008,7 @@ Enterprise User Extension Representation</h3>
         User using the enterprise User extension in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-&lt;SCIM xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0"&gt;
+&lt;User xmlns="urn:scim:schemas:core:1.0" xmlns:enterprise="urn:scim:schemas:extension:enterprise:1.0"&gt;
   &lt;id&gt;2819c223-7f76-453a-919d-413861904646&lt;/id&gt;
   &lt;externalId&gt;701984&lt;/externalId&gt;
   &lt;userName&gt;bjensen@example.com&lt;/userName&gt;
@@ -1931,11 +2063,11 @@ Enterprise User Extension Representation</h3>
   &lt;/addresses&gt;
   &lt;phoneNumbers&gt;
     &lt;phoneNumber&gt;
-      &lt;value&gt;800-864-8377&lt;/value&gt;
+      &lt;value&gt;555-555-5555&lt;/value&gt;
       &lt;type&gt;work&lt;/type&gt;
     &lt;/phoneNumber&gt;
     &lt;phoneNumber&gt;
-      &lt;value&gt;818-123-4567&lt;/value&gt;
+      &lt;value&gt;555-555-4444&lt;/value&gt;
       &lt;type&gt;mobile&lt;/type&gt;
     &lt;/phoneNumber&gt;
   &lt;/phoneNumbers&gt;
@@ -1969,6 +2101,16 @@ Enterprise User Extension Representation</h3>
       &lt;value&gt;00300000005N98YT1&lt;/value&gt;
     &lt;/group&gt;
   &lt;/groups&gt;
+  &lt;roles&gt;
+    &lt;role&gt;
+      &lt;value&gt;administrator&lt;/value&gt;
+    &lt;/role&gt;
+  &lt;/roles&gt;
+  &lt;entitlements&gt;
+    &lt;entitlement&gt;
+      &lt;value&gt;delete users&lt;/value&gt;
+    &lt;/entitlement&gt;
+  &lt;/entitlements&gt;
   &lt;x509Certificates&gt;
     &lt;x509Certificate&gt;
       &lt;value&gt;
@@ -2006,10 +2148,10 @@ Enterprise User Extension Representation</h3>
     &lt;created&gt;2010-01-23T04:56:22Z&lt;/created&gt;
     &lt;lastModified&gt;2011-05-13T04:42:34Z&lt;/lastModified&gt;
   &lt;/meta&gt;
-&lt;/SCIM&gt;
+&lt;/User&gt;
 
 </pre></div>
-<a name="anchor19"></a><br /><hr />
+<a name="anchor16"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.12.4"></a><h3>12.4.&nbsp;
 Group Representation</h3>
@@ -2018,7 +2160,7 @@ Group Representation</h3>
         representation in XML format.
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-&lt;SCIM xmlns="urn:scim:schemas:core:1.0"&gt;
+&lt;Group xmlns="urn:scim:schemas:core:1.0"&gt;
   &lt;id&gt;2819c223-7f76-453a-919d-413861904646&lt;/id&gt;
   &lt;displayName&gt;Tour Guides&lt;/displayName&gt;
   &lt;members&gt;
@@ -2031,10 +2173,10 @@ Group Representation</h3>
       &lt;display&gt;Mandy Pepperidge&lt;/display&gt;
     &lt;/member&gt;
   &lt;/members&gt;
-&lt;/SCIM&gt;
+&lt;/Group&gt;
 
 </pre></div>
-<a name="anchor20"></a><br /><hr />
+<a name="anchor17"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Acknowledgements</h3>
