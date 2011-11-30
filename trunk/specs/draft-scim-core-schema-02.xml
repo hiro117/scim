@@ -715,7 +715,7 @@
         <list style="hanging">
           <t hangText="authenticationSchemes">A complex type that specifies supported Authentication Scheme
             properties.  Instead of the standard Canonical Values for type, this attribute defines the
-            following Canonical Values to represent common schemes: OAuth, OAuth2, HttpBasic, and HttpDigest.
+            following Canonical Values to represent common schemes: oauth, oauth2, oauthbearertoken, httpbasic, and httpdigest.
             REQUIRED.
             <list style="hanging">
               <t hangText="name">The common authentication scheme name; e.g., HTTP Basic. REQUIRED.</t>
@@ -941,7 +941,9 @@
   ],
   "meta": {
     "created": "2010-01-23T04:56:22Z",
-    "lastModified": "2011-05-13T04:42:34Z"
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "a330bc54f0671c9",
+    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
   }
 }
 ]]></artwork>
@@ -1082,7 +1084,9 @@
   },
   "meta": {
     "created": "2010-01-23T04:56:22Z",
-    "lastModified": "2011-05-13T04:42:34Z"
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "3694e05e9dff591",
+    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
   }
 }
 
@@ -1129,7 +1133,7 @@
   "bulk": {
     "supported":true,
     "maxOperations":1000,
-    "maxPayloadSize":1024
+    "maxPayloadSize":1048576
   },
   "filter": {
     "supported":true,
@@ -1150,7 +1154,7 @@
       "description": "Authentication Scheme using the OAuth Bearer Token Standard",
       "specUrl":"http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-01",
       "documentationUrl":"http://example.com/help/oauth.html",
-      "type":"OAuthBearerToken",
+      "type":"oauthbearertoken",
       "primary": true
     },
     {
@@ -1158,7 +1162,7 @@
       "description": "Authentication Scheme using the Http Basic Standard",
       "specUrl":"http://www.ietf.org/rfc/rfc2617.txt",
       "documentationUrl":"http://example.com/help/httpBasic.html",
-      "type":"HttpBasic"
+      "type":"httpbasic"
      }
   ]
 }
@@ -1545,6 +1549,8 @@
   <meta>
     <created>2010-01-23T04:56:22Z</created>
     <lastModified>2011-05-13T04:42:34Z</lastModified>
+    <version>a330bc54f0671c9</version>
+    <location>https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646</location>
   </meta>
 </User>
 
@@ -1696,6 +1702,8 @@
   <meta>
     <created>2010-01-23T04:56:22Z</created>
     <lastModified>2011-05-13T04:42:34Z</lastModified>
+    <version>3694e05e9dff591</version>
+    <location>https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646</location>
   </meta>
 </User>
 

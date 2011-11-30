@@ -383,21 +383,21 @@ API</h3>
 </p>
 <blockquote class="text"><dl>
 <dt>GET</dt>
-<dd>Retrieves a complete or partial Resource
+<dd>Retrieves a complete or partial Resource.
         
 </dd>
 <dt>POST</dt>
-<dd>Creates a new Resource
+<dd>Create new Resource or bulk modify Resources.
         
 </dd>
 <dt>PUT</dt>
 <dd>Modifies a Resource with a complete, Consumer
-          specified Resource (replace)
+          specified Resource (replace).
         
 </dd>
 <dt>PATCH</dt>
 <dd>Modifies a Resource with a set of Consumer specified
-          changes (partial update)
+          changes (partial update).
         
 </dd>
 <dt>DELETE</dt>
@@ -587,6 +587,7 @@ ETag: W/"f250dd84f0671c3"
 {
   "schemas":["urn:scim:schemas:core:1.0"],
   "id":"2819c223-7f76-453a-919d-413861904646,
+  "externalId":"bjensen",
   "meta":{
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
@@ -1064,7 +1065,6 @@ ETag: W/"a330bc54f0671c9"
     "familyName":"Jensen",
     "givenName":"Barbara",
     "middleName":"Jane"
-
   },
   "emails":[
     {
@@ -1097,7 +1097,6 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
     "familyName":"Jensen",
     "givenName":"Barbara",
     "middleName":"Jane"
-
   },
   "emails":[
     {
@@ -1519,7 +1518,7 @@ Bulk</h3>
 <blockquote class="text"><dl>
 <dt>failOnErrors</dt>
 <dd>
-                 An integer specifying the number of errors that the Service Provider will accept before the
+                 An Integer specifying the number of errors that the Service Provider will accept before the
                     operation is terminated and an error response is returned. OPTIONAL.
                 
 </dd>
@@ -1555,7 +1554,7 @@ Bulk</h3>
 </dd>
 <dt>version</dt>
 <dd>
-                      The current Resource version. Version is REQUIRED if the Service Provider supports Etags and the
+                      The current Resource version. Version is REQUIRED if the Service Provider supports ETags and the
                         method is PUT, DELETE, or PATCH.
                     
 </dd>
@@ -1690,7 +1689,7 @@ Content-Length: ...
         "schemas":[
           "urn:scim:schemas:core:1.0"
         ],
-        "userName":"alice"
+        "userName":"Alice"
       }
     },
     {
@@ -1736,7 +1735,6 @@ Content-Length: ...
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
 
 {
     "schemas": [
@@ -1786,7 +1784,6 @@ Location: https://example.com/v1/Bulk/Xr5ALyfpDj4Gmoeh
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Bulk/PPqzp3j5E0FkXGlQ
 
 {
   "schemas": [
@@ -1813,7 +1810,6 @@ Location: https://example.com/v1/Bulk/PPqzp3j5E0FkXGlQ
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Bulk/TmP1K5VtAxOQLERb
 
 {
   "schemas": [
@@ -1916,7 +1912,6 @@ Content-Length: ...
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Location: https://example.com/v1/Bulk/Zo3bPdXbCz1B0c3F
 
 {
   "schemas": [
@@ -1956,28 +1951,23 @@ Authorization: Bearer h480djs93hd8
 
 HTTP/1.1 200 OK
 Content-Type: application/json
+Location: https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a
+ETag: W/"lha5bbazU3fNvfe5"
 
 {
-  "totalResults": 1,
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
-  "Resources": [
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+  "displayName": "Tour Guides",
+  "meta": {
+    "created":"2011-08-01T18:29:49.793Z",
+    "lastModified":"2011-08-01T20:31:02.315Z",
+    "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
+    "version": "W\/\"lha5bbazU3fNvfe5\""
+  },
+  "members": [
     {
-      "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
-      "displayName": "Tour Guides",
-      "meta": {
-        "created":"2011-08-01T18:29:49.793Z",
-        "lastModified":"2011-08-01T20:31:02.315Z",
-        "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
-        "version": "W\/\"lha5bbazU3fNvfe5\""
-      },
-      "members": [
-        {
-          "value": "92b725cd-9465-4e7d-8c16-01f8e146b87a",
-          "type": "user"
-        }
-      ]
+      "value": "92b725cd-9465-4e7d-8c16-01f8e146b87a",
+      "type": "user"
     }
   ]
 }</pre></div>
@@ -2130,7 +2120,7 @@ Content-Type: application/json
       "schemas": [
         "urn:scim:schemas:core:1.0"
       ],
-      "displayName": "GroupB",
+      "displayName": "Group B",
       "meta": {
         "created":"2011-08-01T18:29:50.873Z",
         "lastModified":"2011-08-01T18:29:50.873Z",
