@@ -664,7 +664,7 @@ co "example.org")
                 ; e.g., sortBy=name.givenName. For all attribute
                 types, if there is no data for the specified sortBy value they
                 are sorted via the 'sortOrder' parameter; i.e., they are ordered
-                first if ascending and last if descending.
+                last if ascending and first if descending.
               </t>
               <t hangText="sortOrder:">
                 The order in which the sortBy parameter is applied. Allowed
