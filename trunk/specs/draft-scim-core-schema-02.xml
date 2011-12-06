@@ -466,7 +466,7 @@
 
             <t hangText="preferredLanguage">Indicates the User's preferred written or spoken language. Generally used
               for selecting a localized User interface.  Valid values are concatenation of the
-              <ehref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</ehref>,
+              <eref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</eref>,
               an underscore, and the
               <eref target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
                 ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies the language English and country US.
@@ -474,7 +474,7 @@
 
             <t hangText="locale">Used to indicate the User's default location for purposes of localizing items such
               as currency, date time format, numerical representations, etc. A locale value is a concatenation of the
-              <ehref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</ehref>,
+              <eref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</eref>,
               an underscore, and the
               <eref target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
                 ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies the language English and country US.
@@ -624,10 +624,10 @@
 
           <t hangText="manager">The User's manager. A complex type that
           optionally allows Service Providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User. All Sub-Attributes are OPTIONAL.
+          hierarchy by referencing the "id" attribute of another User.
           <list style="hanging">
-              <t hangText="managerId">The id of the SCIM resource representing the User's manager.</t>
-              <t hangText="displayName">The displayName of the User's manager.  READ-ONLY.</t>
+              <t hangText="managerId">The id of the SCIM resource representing the User's manager. REQUIRED.</t>
+              <t hangText="displayName">The displayName of the User's manager.  OPTIONAL and READ-ONLY.</t>
             </list></t>
         </list>
       </t>
@@ -740,37 +740,38 @@
       <section title="Resource Schema" anchor="resource-schema">
         <t>The Resource schema specifies the Attribute(s) and meta-data that constitute a Resource. Schema Resources
            are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:1.0'.  Unlike other core
-          Resources the schema Resource MAY contain a complex object within a Sub-Attribute.
+          Resources the schema Resource MAY contain a complex object within a Sub-Attribute and all Attributes are
+          REQUIRED unless other specified.
         </t>
         <t>The following Singular Attributes are defined:
           <list style="hanging">
-            <t hangText="name">The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group". REQUIRED.</t>
-            <t hangText="description">The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.  REQUIRED.</t>
-            <t hangText="schema">The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.  REQUIRED.</t>
-            <t hangText="endpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.</t>
+            <t hangText="name">The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group".</t>
+            <t hangText="description">The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.</t>
+            <t hangText="schema">The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.</t>
+            <t hangText="endpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.</t>
            </list>
         </t>
           <t>The following multi-valued attribute is defined:
               <list style="hanging">
                   <t hangText="attributes">A complex type that specifies the set of Resource attributes.
-                      REQUIRED.
                       <list style="hanging">
-                          <t hangText="name">The attribute's name. REQUIRED.</t>
-                          <t hangText="type">The attribute's data type; e.g., String. REQUIRED.</t>
-                          <t hangText="multiValued">Boolean value indicating the attribute's plurality. REQUIRED.</t>
+                          <t hangText="name">The attribute's name.</t>
+                          <t hangText="type">The attribute's data type; e.g., String.</t>
+                          <t hangText="multiValued">Boolean value indicating the attribute's plurality.</t>
+                          <t hangText="multiValuedAttributeChildName">String value specifying the child XML element
+                            name; e.g., the 'emails' attribute value is 'email', 'phoneNumbers', is 'phoneNumber'.
+                            REQUIRED when the multiValued attribute value is true otherwise this attribute MUST be
+                            omitted.</t>
                           <t hangText="description">The attribute's human readable description. When applicable Service
                               Providers MUST specify the description specified in the core schema specification.
-                              REQUIRED.
                           </t>
                           <t hangText="schema">The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.
-                              REQUIRED.
                           </t>
-                          <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable. REQUIRED.
+                          <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
                           </t>
-                          <t hangText="required">A Boolean value that specifies if the attribute is required. REQUIRED.
+                          <t hangText="required">A Boolean value that specifies if the attribute is required.
                           </t>
-                          <t hangText="caseExact">A Boolean value that specifies if the String attribute is case
-                              sensitive.  REQUIRED.
+                          <t hangText="caseExact">A Boolean value that specifies if the String attribute is case sensitive.
                           </t>
 
                           <t>The following multi-valued attributes are defined. There are no canonical type values defined
@@ -778,20 +779,18 @@
                             <list style="hanging">
                               <t hangText="subAttributes">A list specifying the contained attributes. OPTIONAL.
                                 <list style="hanging">
-                                  <t hangText="name">The attribute's name. REQUIRED.</t>
-                                  <t hangText="type">The attribute's data type; e.g., String. REQUIRED.</t>
+                                  <t hangText="name">The attribute's name.</t>
+                                  <t hangText="type">The attribute's data type; e.g., String.</t>
                                   <t hangText="description">The attribute's human readable description. When
                                     applicable Service Providers MUST specify the description specified in the core
-                                    schema specification. REQUIRED.
+                                    schema specification.
                                   </t>
                                   <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
-                                    REQUIRED.
                                   </t>
                                   <t hangText="required">A Boolean value that specifies if the attribute is required.
-                                    REQUIRED.
                                   </t>
                                   <t hangText="caseExact">A Boolean value that specifies if the String attribute
-                                    is case sensitive. REQUIRED.
+                                    is case sensitive.
                                   </t>
                                   <t hangText="canonicalValues">A collection of canonical values. When applicable Service
                                     Providers MUST specify the canonical types specified in the core schema
@@ -1155,6 +1154,9 @@
   "etag": {
     "supported":true
   },
+  "xmlDataFormat": {
+    "supported":true
+  },
   "authenticationSchemes": [
     {
       "name": "OAuth Bearer Token",
@@ -1268,6 +1270,7 @@
        "name":"emails",
        "type":"complex",
        "multiValued":true,
+       "multiValuedAttributeChildName":"email",
        "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
@@ -1316,6 +1319,7 @@
        "name":"addresses",
        "type":"complex",
        "multiValued":true,
+       "multiValuedAttributeChildName":"address",
        "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
@@ -1766,8 +1770,6 @@
           <t>Joseph Smarr (jsmarr@google.com) &lt;author&gt;</t>
 
           <t>Sidharth Choudhury (schoudhury@salesforce.com)</t>
-
-          <t>...</t>
         </list>
       </t>
 
