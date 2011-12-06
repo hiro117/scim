@@ -42,7 +42,7 @@
       </address>
     </author>
 
-    <date day="18" month="November" year="2011" />
+    <date day="5" month="December" year="2011" />
     <keyword>SCIM</keyword>
     <abstract>
       <t>
@@ -83,7 +83,7 @@
           requirements of the protocol or application features and behavior that
           affect the interoperability and security of implementations. When
           these words are not capitalized, they are meant in their
-          natural-language sense
+          natural-language sense.
         </t>
 
         <t>
@@ -91,34 +91,14 @@
           MUST percent encode URLs as described in
           <eref
             target="http://tools.ietf.org/html/rfc3986#section-2.1">RFC3896 2.1
-          </eref>
+          </eref>.
         </t>
       </section>
       <section title="Definitions" anchor="defs" toc="default">
         <list style="hanging">
-          <t hangText="Service Provider:">A web application that provides identity information via the SCIM protocol.
-          </t>
-          <t hangText="Consumer:">A website or application that uses the SCIM protocol to manage identity data
-            maintained by the Service Provider.
-          </t>
-          <t hangText="Base URL:">The SCIM REST API is always relative to a Base
-            URL for the API. The Base URL MUST NOT contain a query string, as
-            additional path information and query string variables MAY be
-            appended by Consumers as part of forming the request. Example:
-            https://example.com/scim/v1/
-          </t>
-          <t hangText="Resource:">The Service Provider managed artifact containing one or more attributes; e.g., User or Group
-          </t>
-          <t hangText="Singular Attribute:">A Resource attribute that can appear at most once per Resource, e.g.displayName.
-          </t>
-          <t hangText="Multi-valued Attribute:">A Resource attribute that may contain multiple values, e.g. emails
-          </t>
-          <t hangText="Simple Attribute:">A Singular or Multi-valued Attribute whose value is a primitive; e.g., string.
-          </t>
-          <t hangText="Complex Attribute:">A Singular or Multi-valued Attribute whose value is a composition of one or
-            more Simple Attributes.
-          </t>
-          <t hangText="Sub-Attribute:">A Simple Attribute contained within a Complex Attribute.
+          <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL. The Base URL MUST NOT contain a
+            query string as Consumers may append additional path information and query parameters as part of forming
+            the request. Example: https://example.com/scim/v1/
           </t>
         </list>
       </section>
@@ -167,19 +147,6 @@ Authorization: Bearer h480djs93hd8
     </section>
 
     http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15
-    <section title="Security Considerations" anchor="Security" toc="default">
-      <t>
-        The SCIM Protocol is based on HTTP and thus subject to the security
-        considerations found in Section 15 of <eref
-        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
-        RFC2616
-      </eref>.
-
-        In recognition that SCIM Resources; e.g., User and Group, contain
-        sensitive information Consumers and Service Providers SHOULD require an
-        authenticated and TLS protected transport.
-      </t>
-    </section>
 
     <section title="API" anchor="api">
       <t>
@@ -438,7 +405,7 @@ ETag: W/"f250dd84f0671c3"
             they don't recognize.
           </t>
 
-          <t>The below example returns the userName for all Users
+          <t>The below example returns the userName for all Users:
           </t>
           <figure height="" suppress-title="false" width="" alt="" title=""
                   align="left">
@@ -2343,7 +2310,7 @@ HTTP/1.1 404 NOT FOUND
           specified within the 'version' attribute contained in the Resource's 'meta' attribute.
         </t>
 
-        <t>Example</t>
+        <t>Example:</t>
 
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2467,7 +2434,27 @@ X-HTTP-Method-Override: DELETE
         </figure>
       </section>
     </section>
+    <section title="Security Considerations" anchor="Security" toc="default">
+      <t>
+        The SCIM Protocol is based on HTTP and thus subject to the security
+        considerations found in Section 15 of <eref
+        target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
+        RFC2616
+      </eref>.
+        In recognition that SCIM Resources; e.g., User and Group, contain
+        sensitive information Consumers and Service Providers SHOULD require an
+        authenticated and TLS protected transport.
+      </t>
+    </section>
     <section title="Acknowledgments">
+      <t>The SCIM Community would like to thank the following people for the
+      work they've done in the research, formulation, drafting, editing, and
+      support of this specification.</t>
+      <t>
+        <list style="empty">
+          <t>Samuel Erdtman (samuel@erdtman.se)</t>
+        </list>
+      </t>
     </section>
   </middle>
 </rfc>

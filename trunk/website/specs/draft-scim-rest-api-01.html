@@ -152,7 +152,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">SailPoint</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">E. Wahlström</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Technology Nexus</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 18, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">December 5, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />SCIM PROTOCOL</h1>
 
@@ -184,42 +184,42 @@ Notational Conventions<br />
 Definitions<br />
 <a href="#aa">2.</a>&nbsp;
 Authentication and Authorization<br />
-<a href="#Security">3.</a>&nbsp;
-Security Considerations<br />
-<a href="#api">4.</a>&nbsp;
+<a href="#api">3.</a>&nbsp;
 API<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#create-resource">4.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#create-resource">3.1.</a>&nbsp;
 Creating Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-resources-ops">4.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-resources-ops">3.2.</a>&nbsp;
 Retrieving Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-resource">4.2.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get-resource">3.2.1.</a>&nbsp;
 Retrieving a known Resource<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-resources">4.2.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-resources">3.2.2.</a>&nbsp;
 List/Query Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">3.3.</a>&nbsp;
 Modifying Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-resource-with-put">4.3.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-resource-with-put">3.3.1.</a>&nbsp;
 Modifying with PUT<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-resource-with-patch">4.3.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#edit-resource-with-patch">3.3.2.</a>&nbsp;
 Modifying with PATCH<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#delete-resource">4.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#delete-resource">3.4.</a>&nbsp;
 Deleting Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bulk-resources">4.5.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bulk-resources">3.5.</a>&nbsp;
 Bulk<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">4.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#io-format">3.6.</a>&nbsp;
 Data Input/Output Formats<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">4.7.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#addtl-retrieval-query-params">3.7.</a>&nbsp;
 Additional retrieval query parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#attribute-notation">4.8.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#attribute-notation">3.8.</a>&nbsp;
 Attribute Notation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">4.9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">3.9.</a>&nbsp;
 HTTP Response Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#api-versioning">4.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#api-versioning">3.10.</a>&nbsp;
 API Versioning<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">4.11.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#etags">3.11.</a>&nbsp;
 Versioning Resources<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.12.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">3.12.</a>&nbsp;
 HTTP Method Overloading<br />
+<a href="#Security">4.</a>&nbsp;
+Security Considerations<br />
 <a href="#anchor8">5.</a>&nbsp;
 Acknowledgments<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
@@ -259,13 +259,13 @@ Notational Conventions</h3>
           requirements of the protocol or application features and behavior that
           affect the interoperability and security of implementations. When
           these words are not capitalized, they are meant in their
-          natural-language sense
+          natural-language sense.
         
 </p>
 <p>
           For purposes of readability examples are not URL encoded. Implementers
           MUST percent encode URLs as described in
-          <a href='http://tools.ietf.org/html/rfc3986#section-2.1'>RFC3896 2.1</a>
+          <a href='http://tools.ietf.org/html/rfc3986#section-2.1'>RFC3896 2.1</a>.
         
 </p>
 <a name="defs"></a><br /><hr />
@@ -274,46 +274,10 @@ Notational Conventions</h3>
 Definitions</h3>
 
 <blockquote class="text"><dl>
-<dt>Service Provider:</dt>
-<dd>A web application that provides identity information via the SCIM protocol.
-          
-</dd>
-<dt>Consumer:</dt>
-<dd>A website or application that uses the SCIM protocol to manage identity data
-            maintained by the Service Provider.
-          
-</dd>
 <dt>Base URL:</dt>
-<dd>The SCIM REST API is always relative to a Base
-            URL for the API. The Base URL MUST NOT contain a query string, as
-            additional path information and query string variables MAY be
-            appended by Consumers as part of forming the request. Example:
-            https://example.com/scim/v1/
-          
-</dd>
-<dt>Resource:</dt>
-<dd>The Service Provider managed artifact containing one or more attributes; e.g., User or Group
-          
-</dd>
-<dt>Singular Attribute:</dt>
-<dd>A Resource attribute that can appear at most once per Resource, e.g.displayName.
-          
-</dd>
-<dt>Multi-valued Attribute:</dt>
-<dd>A Resource attribute that may contain multiple values, e.g. emails
-          
-</dd>
-<dt>Simple Attribute:</dt>
-<dd>A Singular or Multi-valued Attribute whose value is a primitive; e.g., string.
-          
-</dd>
-<dt>Complex Attribute:</dt>
-<dd>A Singular or Multi-valued Attribute whose value is a composition of one or
-            more Simple Attributes.
-          
-</dd>
-<dt>Sub-Attribute:</dt>
-<dd>A Simple Attribute contained within a Complex Attribute.
+<dd>The SCIM REST API is always relative to a Base URL. The Base URL MUST NOT contain a
+            query string as Consumers may append additional path information and query parameters as part of forming
+            the request. Example: https://example.com/scim/v1/
           
 </dd>
 </dl></blockquote>
@@ -353,23 +317,9 @@ Authorization: Bearer h480djs93hd8
         requested) MUST be inferred by Service Providers.
       
 </p>
-<a name="Security"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3"></a><h3>3.&nbsp;
-Security Considerations</h3>
-
-<p>
-        The SCIM Protocol is based on HTTP and thus subject to the security
-        considerations found in Section 15 of <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
-
-        In recognition that SCIM Resources; e.g., User and Group, contain
-        sensitive information Consumers and Service Providers SHOULD require an
-        authenticated and TLS protected transport.
-      
-</p>
 <a name="api"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4"></a><h3>4.&nbsp;
+<a name="rfc.section.3"></a><h3>3.&nbsp;
 API</h3>
 
 <p>
@@ -473,7 +423,7 @@ API</h3>
 </p>
 <a name="create-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
+<a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
 Creating Resources</h3>
 
 <p>To create new Resources, clients send POST requests to the Resource
@@ -541,7 +491,7 @@ ETag: W/"e180ee84f0671b1"
 </pre></div>
 <a name="get-resources-ops"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2"></a><h3>4.2.&nbsp;
+<a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
 Retrieving Resources</h3>
 
 <p>Users and Group Resources are retrieved via opaque, unique URLs or
@@ -552,7 +502,7 @@ Retrieving Resources</h3>
 </p>
 <a name="get-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.1"></a><h3>4.2.1.&nbsp;
+<a name="rfc.section.3.2.1"></a><h3>3.2.1.&nbsp;
 Retrieving a known Resource</h3>
 
 <p>To retrieve a known Resource, clients send GET requests to the
@@ -616,7 +566,7 @@ ETag: W/"f250dd84f0671c3"
 </pre></div>
 <a name="query-resources"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.2"></a><h3>4.2.2.&nbsp;
+<a name="rfc.section.3.2.2"></a><h3>3.2.2.&nbsp;
 List/Query Resources</h3>
 
 <p>
@@ -628,7 +578,7 @@ List/Query Resources</h3>
             they don't recognize.
           
 </p>
-<p>The below example returns the userName for all Users
+<p>The below example returns the userName for all Users:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -655,7 +605,7 @@ Content-Type: application/json
 }</pre></div>
 <a name="anchor2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.2.1"></a><h3>4.2.2.1.&nbsp;
+<a name="rfc.section.3.2.2.1"></a><h3>3.2.2.1.&nbsp;
 Filtering</h3>
 
 <p>
@@ -872,7 +822,7 @@ co "example.org")
 </pre></div>
 <a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.2.2"></a><h3>4.2.2.2.&nbsp;
+<a name="rfc.section.3.2.2.2"></a><h3>3.2.2.2.&nbsp;
 Sorting</h3>
 
 <p>Sort is OPTIONAL. Sorting allows Consumers to specify the order
@@ -916,7 +866,7 @@ Sorting</h3>
 </dl></blockquote>
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.2.3"></a><h3>4.2.2.3.&nbsp;
+<a name="rfc.section.3.2.2.3"></a><h3>3.2.2.3.&nbsp;
 Pagination</h3>
 
 <p>Pagination parameters can be used together to "page through"
@@ -1022,7 +972,7 @@ Authorization: Bearer h480djs93hd8
 </p>
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
+<a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
 Modifying Resources</h3>
 
 <p>Resources can be modified in whole or in part via PUT or PATCH,
@@ -1036,7 +986,7 @@ Modifying Resources</h3>
 </p>
 <a name="edit-resource-with-put"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.3.1"></a><h3>4.3.1.&nbsp;
+<a name="rfc.section.3.3.1"></a><h3>3.3.1.&nbsp;
 Modifying with PUT</h3>
 
 <p>
@@ -1116,7 +1066,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 </pre></div>
 <a name="edit-resource-with-patch"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.3.2"></a><h3>4.3.2.&nbsp;
+<a name="rfc.section.3.3.2"></a><h3>3.3.2.&nbsp;
 Modifying with PATCH</h3>
 
 <p>PATCH is OPTIONAL.  PATCH enables consumers to send only those attributes requiring
@@ -1455,7 +1405,7 @@ ETag: W/"a330bc54f0671c9"
 </pre></div>
 <a name="delete-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
+<a name="rfc.section.3.4"></a><h3>3.4.&nbsp;
 Deleting Resources</h3>
 
 <p>Consumers request Resource removal via DELETE. Service Providers MAY
@@ -1499,7 +1449,7 @@ HTTP/1.1 404 NOT FOUND
 </pre></div>
 <a name="bulk-resources"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.5"></a><h3>4.5.&nbsp;
+<a name="rfc.section.3.5"></a><h3>3.5.&nbsp;
 Bulk</h3>
 
 <p>
@@ -2169,7 +2119,7 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 }</pre></div>
 <a name="io-format"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.6"></a><h3>4.6.&nbsp;
+<a name="rfc.section.3.6"></a><h3>3.6.&nbsp;
 Data Input/Output Formats</h3>
 
 <p>
@@ -2242,7 +2192,7 @@ Host: example.com
 </pre></div>
 <a name="addtl-retrieval-query-params"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.7"></a><h3>4.7.&nbsp;
+<a name="rfc.section.3.7"></a><h3>3.7.&nbsp;
 Additional retrieval query parameters</h3>
 
 <p>
@@ -2286,7 +2236,7 @@ ETag: W/"a330bc54f0671c9"
 </pre></div>
 <a name="attribute-notation"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.8"></a><h3>4.8.&nbsp;
+<a name="rfc.section.3.8"></a><h3>3.8.&nbsp;
 Attribute Notation</h3>
 
 <p>
@@ -2306,7 +2256,7 @@ Attribute Notation</h3>
 </p>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.9"></a><h3>4.9.&nbsp;
+<a name="rfc.section.3.9"></a><h3>3.9.&nbsp;
 HTTP Response Codes</h3>
 
 <p>
@@ -2397,7 +2347,7 @@ HTTP/1.1 404 NOT FOUND
 </pre></div>
 <a name="api-versioning"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.10"></a><h3>4.10.&nbsp;
+<a name="rfc.section.3.10"></a><h3>3.10.&nbsp;
 API Versioning</h3>
 
 <p>
@@ -2411,7 +2361,7 @@ API Versioning</h3>
 </p>
 <a name="etags"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.11"></a><h3>4.11.&nbsp;
+<a name="rfc.section.3.11"></a><h3>3.11.&nbsp;
 Versioning Resources</h3>
 
 <p>
@@ -2421,7 +2371,7 @@ Versioning Resources</h3>
           specified within the 'version' attribute contained in the Resource's 'meta' attribute.
         
 </p>
-<p>Example
+<p>Example:
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 POST /Users  HTTP/1.1
 Host: example.com
@@ -2506,7 +2456,7 @@ If-None-Match: W/"e180ee84f0671b1"
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.12"></a><h3>4.12.&nbsp;
+<a name="rfc.section.3.12"></a><h3>3.12.&nbsp;
 HTTP Method Overloading</h3>
 
 <p>In recognition that some clients, servers and firewalls prevent PUT,
@@ -2519,11 +2469,36 @@ HTTP Method Overloading</h3>
 POST /Users/2819c223-7f76-453a-919d-413861904646
 X-HTTP-Method-Override: DELETE
 </pre></div>
+<a name="Security"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4"></a><h3>4.&nbsp;
+Security Considerations</h3>
+
+<p>
+        The SCIM Protocol is based on HTTP and thus subject to the security
+        considerations found in Section 15 of <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
+        In recognition that SCIM Resources; e.g., User and Group, contain
+        sensitive information Consumers and Service Providers SHOULD require an
+        authenticated and TLS protected transport.
+      
+</p>
 <a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
 Acknowledgments</h3>
 
+<p>The SCIM Community would like to thank the following people for the
+      work they've done in the research, formulation, drafting, editing, and
+      support of this specification.
+</p>
+<p>
+        </p>
+<blockquote class="text">
+<p>Samuel Erdtman (samuel@erdtman.se)
+</p>
+</blockquote><p>
+      
+</p>
 <a name="rfc.authors"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <h3>Authors' Addresses</h3>
