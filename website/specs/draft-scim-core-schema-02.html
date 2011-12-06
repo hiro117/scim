@@ -747,7 +747,7 @@ Singular Attributes</h3>
 <dt>preferredLanguage</dt>
 <dd>Indicates the User's preferred written or spoken language. Generally used
               for selecting a localized User interface.  Valid values are concatenation of the
-              ,
+              <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>ISO 639-1 two letter language code</a>,
               an underscore, and the
               <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 2 letter country code</a>; e.g., 'en_US' specifies the language English and country US.
             
@@ -755,7 +755,7 @@ Singular Attributes</h3>
 <dt>locale</dt>
 <dd>Used to indicate the User's default location for purposes of localizing items such
               as currency, date time format, numerical representations, etc. A locale value is a concatenation of the
-              ,
+              <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>ISO 639-1 two letter language code</a>,
               an underscore, and the
               <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 2 letter country code</a>; e.g., 'en_US' specifies the language English and country US.
             
@@ -939,14 +939,14 @@ SCIM Enterprise User Schema Extension</h3>
 <dt>manager</dt>
 <dd>The User's manager. A complex type that
           optionally allows Service Providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User. All Sub-Attributes are OPTIONAL.
+          hierarchy by referencing the "id" attribute of another User.
           
 <blockquote class="text"><dl>
 <dt>managerId</dt>
-<dd>The id of the SCIM resource representing the User's manager.
+<dd>The id of the SCIM resource representing the User's manager. REQUIRED.
 </dd>
 <dt>displayName</dt>
-<dd>The displayName of the User's manager.  READ-ONLY.
+<dd>The displayName of the User's manager.  OPTIONAL and READ-ONLY.
 </dd>
 </dl></blockquote>
 </dd>
@@ -1136,23 +1136,24 @@ Resource Schema</h3>
 
 <p>The Resource schema specifies the Attribute(s) and meta-data that constitute a Resource. Schema Resources
            are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:1.0'.  Unlike other core
-          Resources the schema Resource MAY contain a complex object within a Sub-Attribute.
+          Resources the schema Resource MAY contain a complex object within a Sub-Attribute and all Attributes are
+          REQUIRED unless other specified.
         
 </p>
 <p>The following Singular Attributes are defined:
           </p>
 <blockquote class="text"><dl>
 <dt>name</dt>
-<dd>The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group". REQUIRED.
+<dd>The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group".
 </dd>
 <dt>description</dt>
-<dd>The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.  REQUIRED.
+<dd>The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.
 </dd>
 <dt>schema</dt>
-<dd>The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.  REQUIRED.
+<dd>The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.
 </dd>
 <dt>endpoint</dt>
-<dd>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.  REQUIRED.
+<dd>The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.
 </dd>
 </dl></blockquote><p>
         
@@ -1162,40 +1163,42 @@ Resource Schema</h3>
 <blockquote class="text"><dl>
 <dt>attributes</dt>
 <dd>A complex type that specifies the set of Resource attributes.
-                      REQUIRED.
                       
 <blockquote class="text"><dl>
 <dt>name</dt>
-<dd>The attribute's name. REQUIRED.
+<dd>The attribute's name.
 </dd>
 <dt>type</dt>
-<dd>The attribute's data type; e.g., String. REQUIRED.
+<dd>The attribute's data type; e.g., String.
 </dd>
 <dt>multiValued</dt>
-<dd>Boolean value indicating the attribute's plurality. REQUIRED.
+<dd>Boolean value indicating the attribute's plurality.
+</dd>
+<dt>multiValuedAttributeChildName</dt>
+<dd>String value specifying the child XML element
+                            name; e.g., the 'emails' attribute value is 'email', 'phoneNumbers', is 'phoneNumber'.
+                            REQUIRED when the multiValued attribute value is true otherwise this attribute MUST be
+                            omitted.
 </dd>
 <dt>description</dt>
 <dd>The attribute's human readable description. When applicable Service
                               Providers MUST specify the description specified in the core schema specification.
-                              REQUIRED.
                           
 </dd>
 <dt>schema</dt>
 <dd>The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.
-                              REQUIRED.
                           
 </dd>
 <dt>readOnly</dt>
-<dd>A Boolean value that specifies if the attribute is mutable. REQUIRED.
+<dd>A Boolean value that specifies if the attribute is mutable.
                           
 </dd>
 <dt>required</dt>
-<dd>A Boolean value that specifies if the attribute is required. REQUIRED.
+<dd>A Boolean value that specifies if the attribute is required.
                           
 </dd>
 <dt>caseExact</dt>
-<dd>A Boolean value that specifies if the String attribute is case
-                              sensitive.  REQUIRED.
+<dd>A Boolean value that specifies if the String attribute is case sensitive.
                           
 </dd>
 <dt></dt>
@@ -1208,30 +1211,28 @@ Resource Schema</h3>
                                 
 <blockquote class="text"><dl>
 <dt>name</dt>
-<dd>The attribute's name. REQUIRED.
+<dd>The attribute's name.
 </dd>
 <dt>type</dt>
-<dd>The attribute's data type; e.g., String. REQUIRED.
+<dd>The attribute's data type; e.g., String.
 </dd>
 <dt>description</dt>
 <dd>The attribute's human readable description. When
                                     applicable Service Providers MUST specify the description specified in the core
-                                    schema specification. REQUIRED.
+                                    schema specification.
                                   
 </dd>
 <dt>readOnly</dt>
 <dd>A Boolean value that specifies if the attribute is mutable.
-                                    REQUIRED.
                                   
 </dd>
 <dt>required</dt>
 <dd>A Boolean value that specifies if the attribute is required.
-                                    REQUIRED.
                                   
 </dd>
 <dt>caseExact</dt>
 <dd>A Boolean value that specifies if the String attribute
-                                    is case sensitive. REQUIRED.
+                                    is case sensitive.
                                   
 </dd>
 <dt>canonicalValues</dt>
@@ -1610,6 +1611,9 @@ Service Provider Configuration Representation</h3>
   "etag": {
     "supported":true
   },
+  "xmlDataFormat": {
+    "supported":true
+  },
   "authenticationSchemes": [
     {
       "name": "OAuth Bearer Token",
@@ -1725,6 +1729,7 @@ Resource Schema Representation</h3>
        "name":"emails",
        "type":"complex",
        "multiValued":true,
+       "multiValuedAttributeChildName":"email",
        "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
@@ -1773,6 +1778,7 @@ Resource Schema Representation</h3>
        "name":"addresses",
        "type":"complex",
        "multiValued":true,
+       "multiValuedAttributeChildName":"address",
        "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
@@ -2237,8 +2243,6 @@ Acknowledgements</h3>
 <p>Joseph Smarr (jsmarr@google.com) &lt;author&gt;
 </p>
 <p>Sidharth Choudhury (schoudhury@salesforce.com)
-</p>
-<p>...
 </p>
 </blockquote><p>
       
