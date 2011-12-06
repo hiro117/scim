@@ -53,7 +53,7 @@
       </address>
     </author>
 
-    <date day="29" month="November" year="2011" />
+    <date day="5" month="December" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
@@ -145,11 +145,11 @@
       </t>
 
       <t>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists
-        of the attribute name and at least one Simple or Complex value either of which may be multi-valued.  SCIM schema
+        of the attribute name and at least one Simple or Complex value either of which may be Multi-valued.  SCIM schema
         defines the data type, plurality and other distinguishing features of an attribute.  Unless otherwise specified
-        all attributes are modifiable by Consumers. Read-only attributes shall be specified as 'READ-ONLY' within the
-        attribute definition. Additionally, Service Providers MAY choose to make some or all Resource attributes
-        immutable and SHOULD identify those attributes via the associated
+        all attributes are modifiable by Consumers. Immutable (read-only) attributes SHALL be specified as 'READ-ONLY'
+        within the attribute definition.  Additionally, Service Providers MAY choose to make some or all Resource
+        attributes immutable and SHOULD identify those attributes via the associated
         <xref target="schemas-attribute">Resource's schema endpoint</xref>.
       </t>
 
@@ -164,9 +164,10 @@
       <section anchor="attribute-types" title="Attribute Data Types">
         <t>
           Attribute data types are derived from <eref target="http://www.w3.org/TR/xmlschema-2/">XML schema</eref>
-          and unless otherwise specified are optional and of type <xref target="type-string">String</xref>.  The JSON
-          format defines a limited set of data types, hence, where appropriate, alternate JSON representations are
-          defined below.  SCIM extensions SHOULD not introduce new data types.
+          and unless otherwise specified are optional, modifiable by Consumers, and of type
+          <xref target="type-string">String</xref>. The JSON format defines a limited set of data types, hence, where
+          appropriate, alternate JSON representations are defined below.  SCIM extensions SHOULD not introduce new data
+          types.
         </t>
 
         <section anchor="type-string" title="String">
@@ -255,7 +256,7 @@
           <t hangText="display">A human readable name, primarily used for display purposes.  READ-ONLY.</t>
 
           <t hangText="operation">The operation to perform on the multi-valued attribute during a PATCH request. The only
-              valid value is "delete", which signifies that this instance should be removed from the Resource.</t>
+          valid value is "delete", which signifies that this instance should be removed from the Resource.</t>
 
           <t hangText="value">The attribute's significant value; e.g., the e-mail address, phone number, etc. Attributes
         that define a "value" sub-attribute MAY be alternately represented as a collection of primitive types.  For example:</t>
@@ -334,9 +335,9 @@
             non-reassignable identifier that does not change when the same
             Resource is returned in subsequent requests. The Service Provider MUST
             always interpret the externalId as scoped to the Service
-            Consumer's tenant. OPTIONAL.</t>
+            Consumer's tenant.</t>
 
-         <t hangText="meta">A complex attribute containing resource metadata. OPTIONAL.  All sub-attributes are OPTIONAL <list style="hanging">
+         <t hangText="meta">A complex attribute containing resource metadata.  All sub-attributes are OPTIONAL <list style="hanging">
                 <t hangText="created">The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
                 READ-ONLY.</t>
@@ -412,33 +413,32 @@
             component attributes using the other sub-attributes, or they MAY
             return both. If both variants are returned, they SHOULD be
             describing the same name, with the formatted name indicating how
-            the component attributes should be combined. OPTIONAL.<list
+            the component attributes should be combined.<list
                 style="hanging">
                 <t hangText="formatted">The full name, including all middle
                 names, titles, and suffixes as appropriate, formatted for
-                display (e.g. Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
+                display (e.g. Ms. Barbara Jane Jensen, III.).</t>
 
                 <t hangText="familyName">The family name of the User, or "Last
                 Name" in most Western languages (e.g. Jensen given the full
-                name Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
+                name Ms. Barbara Jane Jensen, III.).</t>
 
                 <t hangText="givenName">The given name of the User, or "First
                 Name" in most Western languages (e.g. Barbara given the full
-                name Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
+                name Ms. Barbara Jane Jensen, III.).</t>
 
                 <t hangText="middleName">The middle name(s) of the User (e.g.
                 Jane given the full name Ms. Barbara Jane Jensen, III.).
-                OPTIONAL.</t>
+                </t>
 
                 <t hangText="honorificPrefix">The honorific prefix(es) of the
                 User, or "Title" in most Western languages (e.g. Ms. given the
-                full name Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
+                full name Ms. Barbara Jane Jensen, III.).</t>
 
                 <t hangText="honorificSuffix">The honorific suffix(es) of the
                 User, or "Suffix" in most Western languages (e.g. III. given
-                the full name Ms. Barbara Jane Jensen, III.). OPTIONAL.</t>
+                the full name Ms. Barbara Jane Jensen, III.).</t>
               </list></t>
-
             <t hangText="displayName">The name of the User, suitable for
             display to end-users. Each User returned MAY include a non-empty
             displayName value. The name SHOULD be the full name of the User
@@ -446,60 +446,68 @@
             Jensen, III), but MAY be a username or handle, if that is all that
             is available (e.g. bjensen). The value provided SHOULD be the
             primary textual label by which this User is normally displayed by
-            the Service Provider when presenting it to end-users. OPTIONAL</t>
+            the Service Provider when presenting it to end-users.</t>
 
             <t hangText="nickName">The casual way to address the user in real
             life, e.g. "Bob" or "Bobby" instead of "Robert". This attribute
             SHOULD NOT be used to represent a User's username (e.g. bjensen or
-            mpepperidge). OPTIONAL.</t>
+            mpepperidge).</t>
 
-            <t hangText="profileUrl">URL to a page representing the User's
-            online profile. OPTIONAL.</t>
+            <t hangText="profileUrl">A fully qualified URL to a page representing the User's
+            online profile.</t>
 
             <t hangText="title">The user&rsquo;s title, such as &ldquo;Vice
-            President.&rdquo; OPTIONAL.</t>
+            President.&rdquo;</t>
 
             <t hangText="userType">Used to identify the organization to user
             relationship. Typical values used might be "Contractor",
             "Employee", "Intern", "Temp", "External", and "Unknown" but any
-            value may be used. OPTIONAL.</t>
+            value may be used.</t>
 
-            <t hangText="preferredLanguage">Used to indicate a User's
-            preferred written or spoken language. Generally used for
-            localizing the interface presented to the user.</t>
+            <t hangText="preferredLanguage">Indicates the User's preferred written or spoken language. Generally used
+              for selecting a localized User interface.  Valid values are concatenation of the
+              <ehref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</ehref>,
+              an underscore, and the
+              <eref target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
+                ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies the language English and country US.
+            </t>
 
-            <t hangText="locale">Used to indicate the User's default location
-            for purposes of localizing items such as currency, date time
-            format, numerical representations, etc. OPTIONAL. TODO - what ISO
-            code list should we use here?</t>
+            <t hangText="locale">Used to indicate the User's default location for purposes of localizing items such
+              as currency, date time format, numerical representations, etc. A locale value is a concatenation of the
+              <ehref target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-1 two letter language code</ehref>,
+              an underscore, and the
+              <eref target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
+                ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies the language English and country US.
+            </t>
 
-            <t hangText="timezone">The User's time zone in the public-domain
-              time zone database format; e.g.,'America/Denver'. Valid values
-              and details at  <eref target="http://cs.ucla.edu/~eggert/tz/tz-link.htm">
-               http://cs.ucla.edu/~eggert/tz/tz-link.htm
-              </eref>.
-              OPTIONAL.
+            <t hangText="timezone">The User's time zone in the
+              <eref target="http://www.twinsun.com/tz/tz-link.htm">"Olson" timezone database format</eref>; e.g.,'America/Los_Angeles'.
             </t>
             <t hangText="active">A Boolean value indicating the User's administrative status. The definitive meaning of
                 this attribute is determined by the Service Provider though a value of true infers the User is, for
-                example, able to login while a value of false implies the User's account has been suspended.  OPTIONAL.</t>
+                example, able to login while a value of false implies the User's account has been suspended.</t>
+
+            <t hangText="password">The User's clear text password.  This attribute is intended to be used as a means to
+              specify an initial password when creating a new User or to reset an existing User's password.  No accepted
+              standards exist to convey password policies, hence Consumers should expect Service Providers to reject
+              password values.  This value MUST never be returned by a Service Provider in any form.</t>
           </list>
         </t>
       </section>
 
       <section title="Multi-valued Attributes">
-        <t>The following multi-valued attributes are defined.  All attributes are OPTIONAL.</t>
+        <t>The following multi-valued attributes are defined.</t>
 
         <t>
           <list style="hanging">
             <t hangText="emails">E-mail addresses for the User. The value
             SHOULD be canonicalized by the Service Provider, e.g.
             bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type
-            values of work, home, and other. OPTIONAL.</t>
+            values of work, home, and other.</t>
 
             <t hangText="phoneNumbers">Phone numbers for the User. No
             canonical value is assumed here. Canonical Type values of work,
-            home, mobile, fax, pager and other. OPTIONAL.</t>
+            home, mobile, fax, pager and other.</t>
 
             <t hangText="ims">Instant messaging address for the User. No
             official canonicalization rules exist for all instant messaging
@@ -507,7 +515,7 @@
             convert the address to lowercase. Instead of the standard
             Canonical Values for type, this attribute defines the following
             Canonical Values to represent currently popular IM services: aim,
-            gtalk, icq, xmpp, msn, skype, qq, and yahoo. OPTIONAL.</t>
+            gtalk, icq, xmpp, msn, skype, qq, and yahoo.</t>
 
             <t hangText="photos">URL of a photo of the User. The value SHOULD
             be a canonicalized URL, and MUST point to an image file
@@ -520,34 +528,32 @@
             suitable for display when describing the User. Instead of the
             standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent popular photo sizes:
-            photo, thumbnail. OPTIONAL.</t>
+            photo, thumbnail.</t>
 
             <t hangText="addresses">A physical mailing address for this User. Canonical Type Values of work,
             home, and other. The value attribute is a complex type with the
-            following sub-attributes. OPTIONAL <list style="hanging">
+            following sub-attributes.  All Sub-Attributes are OPTIONAL.
+              <list style="hanging">
                 <t hangText="formatted">The full mailing address, formatted
                 for display or use with a mailing label. This attribute MAY
-                contain newlines. OPTIONAL</t>
+                contain newlines.</t>
 
                 <t hangText="streetAddress">The full street address component,
                 which may include house number, street name, P.O. box, and
                 multi-line extended street address information. This attribute
-                MAY contain newlines. OPTIONAL</t>
+                MAY contain newlines.</t>
 
-                <t hangText="locality">The city or locality component.
-                OPTIONAL</t>
+                <t hangText="locality">The city or locality component.</t>
 
-                <t hangText="region">The state or region component.
-                OPTIONAL</t>
+                <t hangText="region">The state or region component.</t>
 
-                <t hangText="postalCode">The zipcode or postal code component.
-                OPTIONAL</t>
+                <t hangText="postalCode">The zipcode or postal code component.</t>
 
                 <t hangText="country">The country name component.
                   When specified the value MUST be in
                     <eref target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
                   ISO 3166-1 alpha 2 "short" code format</eref>; e.g., the United States and Sweden are "US" and "SE",
-                  respectively.  OPTIONAL.
+                  respectively.
                 </t>
               </list>
             </t>
@@ -562,8 +568,7 @@
               types. If the SCIM Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
               user belongs.  Since this attribute is read-only, group membership
-              changes MUST be applied via the <xref target="group-resource">Group Resource</xref>. READ-ONLY and
-              OPTIONAL.
+              changes MUST be applied via the <xref target="group-resource">Group Resource</xref>. READ-ONLY.
             </t>
 
             <t hangText="entitlements">A list of entitlements for the User that
@@ -573,19 +578,18 @@
               to encode sufficient information in the value so as to accurately
               and without ambiguity determine what the User has access to. This
               value has NO canonical types though type may be useful as a means
-              to scope entitlements. OPTIONAL.
+              to scope entitlements.
             </t>
 
             <t hangText="roles">A list of roles for the User that collectively
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
               role value is a String or label representing a collection of
-              entitlements.  This value has NO canonical types.  OPTIONAL.
+              entitlements.  This value has NO canonical types.
             </t>
             
             <t hangText="x509Certificates">A list of certificates issued to the User. Values are
               <xref target="type-binary">Binary</xref> and DER encoded x509.  This value has NO canonical types.
-              OPTIONAL.
             </t>
           </list>
         </t>
@@ -604,29 +608,26 @@
         <list style="hanging">
           <t hangText="employeeNumber">Numeric or alphanumeric identifier
           assigned to a person, typically based on order of hire or
-          association with an organization. OPTIONAL.</t>
+          association with an organization.</t>
 
           <t hangText="costCenter">Identifies the name of a cost center.
-          OPTIONAL.</t>
+          </t>
 
           <t hangText="organization">Identifies the name of an organization.
-          OPTIONAL.</t>
+          </t>
 
           <t hangText="division">Identifies the name of a division.
-          OPTIONAL.</t>
+          </t>
 
           <t hangText="department">Identifies the name of a department.
-          OPTIONAL.</t>
+          </t>
 
           <t hangText="manager">The User's manager. A complex type that
           optionally allows Service Providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User.
-          OPTIONAL<list style="hanging">
-              <t hangText="managerId">The id of the SCIM resource representing
-              the User's manager. OPTIONAL.</t>
-
-              <t hangText="displayName">The displayName of the
-                User's manager.  READ-ONLY and OPTIONAL.</t>
+          hierarchy by referencing the "id" attribute of another User. All Sub-Attributes are OPTIONAL.
+          <list style="hanging">
+              <t hangText="managerId">The id of the SCIM resource representing the User's manager.</t>
+              <t hangText="displayName">The displayName of the User's manager.  READ-ONLY.</t>
             </list></t>
         </list>
       </t>
@@ -645,9 +646,9 @@
 
       <t>The following Singular Attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="displayName">A human readable name for the Group.
-          OPTIONAL.</t>
-        </list></t>
+          <t hangText="displayName">A human readable name for the Group.</t>
+        </list>
+      </t>
 
       <t>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
@@ -655,10 +656,9 @@
               value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
               to allow the Service Provider to support nested Groups. REQUIRED.
           </t>
-        </list></t>
+        </list>
+      </t>
     </section>
-
-
     <section title="Service Provider Configuration Schema">
       <t>SCIM provides a schema for representing the Service Provider's configuration identified using the
       following URI: 'urn:scim:schemas:core:1.0'</t>
@@ -671,44 +671,49 @@
       <t>The following Singular Attributes are defined in addition to the common attributes defined in Core Schema:
           <list style="hanging">
             <t hangText="documentationUrl">An HTTP addressable URL pointing to the Service Provider's human consumable
-              help documentation.  OPTIONAL.</t>
+              help documentation.</t>
             <t hangText="patch">A complex type that specifies PATCH configuration options.  REQUIRED.
-                <list style="hanging">
-                    <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
-                </list>
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+              </list>
             </t>
-            <t hangText="bulk">A complex type that specifies BULK configuration options.  REQUIRED.
-                <list style="hanging">
-                    <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
-                </list>
-                <list style="hanging">
-                    <t hangText="maxOperations">An integer value specifying the maximum number of operations. REQUIRED.</t>
-                </list>
-                <list style="hanging">
-                    <t hangText="maxPayloadSize">An integer value specifying the maximum payload size in bytes. REQUIRED.</t>
-                </list>
+            <t hangText="bulk">A complex type that specifies BULK configuration options.  REQUIRED
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+              </list>
+              <list style="hanging">
+                <t hangText="maxOperations">An integer value specifying the maximum number of operations. REQUIRED.</t>
+              </list>
+              <list style="hanging">
+                <t hangText="maxPayloadSize">An integer value specifying the maximum payload size in bytes. REQUIRED.</t>
+              </list>
             </t>
-              <t hangText="filter">A complex type that specifies FILTER options.  REQUIRED.
-                  <list style="hanging">
-                      <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
-                      <t hangText="maxResults">Integer value specifying the maximum number of Resources returned in a response. REQUIRED.</t>
-                  </list>
-              </t>
-              <t hangText="changePassword">A complex type that specifies Change Password configuration options.  REQUIRED.
-                  <list style="hanging">
-                      <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
-                  </list>
-              </t>
-              <t hangText="sort">A complex type that specifies Sort configuration options.  REQUIRED.
-                  <list style="hanging">
-                      <t hangText="supported">Boolean value specifying whether sorting is supported. REQUIRED.</t>
-                  </list>
-              </t>
-              <t hangText="etag">A complex type that specifies Etag configuration options.  REQUIRED.
-                  <list style="hanging">
-                      <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
-                  </list>
-              </t>
+            <t hangText="filter">A complex type that specifies FILTER options.  REQUIRED.
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+                <t hangText="maxResults">Integer value specifying the maximum number of Resources returned in a response. REQUIRED.</t>
+              </list>
+            </t>
+            <t hangText="changePassword">A complex type that specifies Change Password configuration options.  REQUIRED.
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+              </list>
+            </t>
+            <t hangText="sort">A complex type that specifies Sort configuration options.  REQUIRED.
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether sorting is supported. REQUIRED.</t>
+              </list>
+            </t>
+            <t hangText="etag">A complex type that specifies Etag configuration options.  REQUIRED.
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+              </list>
+            </t>
+            <t hangText="xmlDataFormat">A complex type that specifies whether the XML data format is supported.  REQUIRED.
+              <list style="hanging">
+                <t hangText="supported">Boolean value specifying whether the operation is supported. REQUIRED.</t>
+              </list>
+            </t>
         </list>
       </t>
       <t>The following multi-valued attribute is defined in addition to the common attributes defined in Core Schema:
@@ -899,10 +904,11 @@
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage": "en_US",
+  "preferredLanguage":"en_US",
   "locale": "en_US",
-  "timezone": "America/Denver",
+  "timezone": "America/Los_Angeles",
   "active":true,
+  "password":"t1meMa$heen",
   "groups": [
     {
       "display": "Tour Guides",
@@ -1031,10 +1037,11 @@
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage": "en_US",
+  "preferredLanguage":"en_US",
   "locale": "en_US",
-  "timezone": "America/Denver",
+  "timezone": "America/Los_Angeles",
   "active":true,
+  "password":"t1meMa$heen",
   "groups": [
     {
       "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
@@ -1195,7 +1202,7 @@
       "name":"name",
       "type":"complex",
       "multiValued":false,
-      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
+      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
       "schema":"urn:scim:schemas:core:1.0",
       "readOnly":false,
       "required":false,
@@ -1205,7 +1212,7 @@
           "name":"formatted",
           "type":"string",
           "multiValued":false,
-          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL." ,
+          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.)." ,
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1214,7 +1221,7 @@
           "name":"familyName",
           "type":"string",
           "multiValued":false,
-          "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.). OPTIONAL",
+          "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1223,7 +1230,7 @@
           "name":"givenName",
           "type":"string",
           "multiValued":false,
-          "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1232,7 +1239,7 @@
           "name":"middleName",
           "type":"string",
           "multiValued":false,
-          "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1241,7 +1248,7 @@
           "name":"honorificPrefix",
           "type":"string",
           "multiValued":false,
-          "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1250,7 +1257,7 @@
           "name":"honorificSuffix",
           "type":"string",
           "multiValued":false,
-          "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1261,7 +1268,7 @@
        "name":"emails",
        "type":"complex",
        "multiValued":true,
-       "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+       "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
@@ -1271,7 +1278,7 @@
            "name":"value",
            "type":"string",
            "multiValued":false,
-           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1280,7 +1287,7 @@
            "name":"display",
            "type":"string",
            "multiValued":false,
-           "description":"A human readable name, primarily used for display purposes. OPTIONAL and READ-ONLY.",
+           "description":"A human readable name, primarily used for display purposes. READ-ONLY.",
            "readOnly":true,
            "required":false,
            "caseExact":false
@@ -1289,7 +1296,7 @@
            "name":"type",
            "type":"string",
            "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
            "readOnly":false,
            "required":false,
            "caseExact":false,
@@ -1309,7 +1316,7 @@
        "name":"addresses",
        "type":"complex",
        "multiValued":true,
-       "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes. OPTIONAL.",
+       "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
@@ -1319,7 +1326,7 @@
            "name":"formatted",
            "type":"string",
            "multiValued":false,
-           "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines. OPTIONAL.",
+           "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1328,7 +1335,7 @@
            "name":"streetAddress",
            "type":"string",
            "multiValued":false,
-           "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines. OPTIONAL.",
+           "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1337,7 +1344,7 @@
            "name":"locality",
            "type":"string",
            "multiValued":false,
-           "description":"The city or locality component. OPTIONAL.",
+           "description":"The city or locality component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1346,7 +1353,7 @@
            "name":"region",
            "type":"string",
            "multiValued":false,
-           "description":"The state or region component. OPTIONAL.",
+           "description":"The state or region component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1355,7 +1362,7 @@
            "name":"postalCode",
            "type":"string",
            "multiValued":false,
-           "description":"The zipcode or postal code component. OPTIONAL.",
+           "description":"The zipcode or postal code component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1364,7 +1371,7 @@
            "name":"country",
            "type":"string",
            "multiValued":false,
-           "description":"The country name component. OPTIONAL.",
+           "description":"The country name component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1373,7 +1380,7 @@
            "name":"type",
            "type":"string",
            "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
            "readOnly":false,
            "required":false,
            "caseExact":false,
@@ -1385,7 +1392,7 @@
        "name":"employeeNumber",
        "type":"string",
        "multiValued":false,
-       "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization. Single valued. OPTIONAL.",
+       "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
        "schema":"urn:scim:schemas:extension:enterprise:1.0",
        "readOnly":false,
        "required":false,
@@ -1496,8 +1503,9 @@
   <title>Tour Guide</title>
   <preferredLanguage>en_US</preferredLanguage>
   <locale>en_US</locale>
-  <timezone>America/Denver</timezone>
+  <timezone>America/Los_Angeles</timezone>
   <active>true</active>
+  <password>t1meMa$heen</password>
   <groups>
     <group>
       <value>e9e30dba-f08f-4109-8486-d5c6a331660a</value>
@@ -1582,8 +1590,9 @@
   <userType>Employee</userType>
   <preferredLanguage>en_US</preferredLanguage>
   <locale>en_US</locale>
-  <timezone>America/Denver</timezone>
+  <timezone>America/Los_Angeles</timezone>
   <active>true</active>
+  <password>t1meMa$heen</password>
   <emails>
     <email>
       <value>bjensen@example.com</value>
@@ -1733,6 +1742,13 @@
 
 ]]></artwork>
       </section>
+    </section>
+    <section title="Security Considerations" anchor="Security" toc="default">
+      <t>
+        The SCIM Core schema contains personally identifiable information as well as other sensitive data.  Aside from
+        prohibiting password values in a SCIM response this specification does not provide any means or guarantee of
+        confidentiality.
+      </t>
     </section>
     <appendix title="Acknowledgements">
       <t>The SCIM Community would like to thank the following people for the

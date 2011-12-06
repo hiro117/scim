@@ -150,7 +150,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Ping</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">J. Smarr</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 29, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">December 5, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />Simple Cloud Identity Management: Core
     Schema 1.0 - draft 2</h1>
@@ -234,9 +234,11 @@ Full Representation<br />
 Enterprise User Extension Representation<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">12.4.</a>&nbsp;
 Group Representation<br />
+<a href="#Security">13.</a>&nbsp;
+Security Considerations<br />
 <a href="#anchor17">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements<br />
-<a href="#rfc.references1">13.</a>&nbsp;
+<a href="#rfc.references1">14.</a>&nbsp;
 Normative References<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
@@ -338,11 +340,11 @@ SCIM Schema Structure</h3>
       
 </p>
 <p>A resource is a collection of attributes identified by one or more schemas.  Minimally, an attribute consists
-        of the attribute name and at least one Simple or Complex value either of which may be multi-valued.  SCIM schema
+        of the attribute name and at least one Simple or Complex value either of which may be Multi-valued.  SCIM schema
         defines the data type, plurality and other distinguishing features of an attribute.  Unless otherwise specified
-        all attributes are modifiable by Consumers. Read-only attributes shall be specified as 'READ-ONLY' within the
-        attribute definition. Additionally, Service Providers MAY choose to make some or all Resource attributes
-        immutable and SHOULD identify those attributes via the associated
+        all attributes are modifiable by Consumers. Immutable (read-only) attributes SHALL be specified as 'READ-ONLY'
+        within the attribute definition.  Additionally, Service Providers MAY choose to make some or all Resource
+        attributes immutable and SHOULD identify those attributes via the associated
         <a class='info' href='#schemas-attribute'>Resource's schema endpoint<span> (</span><span class='info'>&quot;schemas&quot; Attribute</span><span>)</span></a>.
       
 </p>
@@ -361,9 +363,10 @@ Attribute Data Types</h3>
 
 <p>
           Attribute data types are derived from <a href='http://www.w3.org/TR/xmlschema-2/'>XML schema</a>
-          and unless otherwise specified are optional and of type <a class='info' href='#type-string'>String<span> (</span><span class='info'>String</span><span>)</span></a>.  The JSON
-          format defines a limited set of data types, hence, where appropriate, alternate JSON representations are
-          defined below.  SCIM extensions SHOULD not introduce new data types.
+          and unless otherwise specified are optional, modifiable by Consumers, and of type
+          <a class='info' href='#type-string'>String<span> (</span><span class='info'>String</span><span>)</span></a>. The JSON format defines a limited set of data types, hence, where
+          appropriate, alternate JSON representations are defined below.  SCIM extensions SHOULD not introduce new data
+          types.
         
 </p>
 <a name="type-string"></a><br /><hr />
@@ -485,7 +488,7 @@ Multi-valued Attributes</h3>
 </dd>
 <dt>operation</dt>
 <dd>The operation to perform on the multi-valued attribute during a PATCH request. The only
-              valid value is "delete", which signifies that this instance should be removed from the Resource.
+          valid value is "delete", which signifies that this instance should be removed from the Resource.
 </dd>
 <dt>value</dt>
 <dd>The attribute's significant value; e.g., the e-mail address, phone number, etc. Attributes
@@ -575,10 +578,10 @@ Common Schema Attributes</h3>
             non-reassignable identifier that does not change when the same
             Resource is returned in subsequent requests. The Service Provider MUST
             always interpret the externalId as scoped to the Service
-            Consumer's tenant. OPTIONAL.
+            Consumer's tenant.
 </dd>
 <dt>meta</dt>
-<dd>A complex attribute containing resource metadata. OPTIONAL.  All sub-attributes are OPTIONAL 
+<dd>A complex attribute containing resource metadata.  All sub-attributes are OPTIONAL 
 <blockquote class="text"><dl>
 <dt>created</dt>
 <dd>The DateTime the Resource was added to
@@ -677,37 +680,37 @@ Singular Attributes</h3>
             component attributes using the other sub-attributes, or they MAY
             return both. If both variants are returned, they SHOULD be
             describing the same name, with the formatted name indicating how
-            the component attributes should be combined. OPTIONAL.
+            the component attributes should be combined.
 <blockquote class="text"><dl>
 <dt>formatted</dt>
 <dd>The full name, including all middle
                 names, titles, and suffixes as appropriate, formatted for
-                display (e.g. Ms. Barbara Jane Jensen, III.). OPTIONAL.
+                display (e.g. Ms. Barbara Jane Jensen, III.).
 </dd>
 <dt>familyName</dt>
 <dd>The family name of the User, or "Last
                 Name" in most Western languages (e.g. Jensen given the full
-                name Ms. Barbara Jane Jensen, III.). OPTIONAL.
+                name Ms. Barbara Jane Jensen, III.).
 </dd>
 <dt>givenName</dt>
 <dd>The given name of the User, or "First
                 Name" in most Western languages (e.g. Barbara given the full
-                name Ms. Barbara Jane Jensen, III.). OPTIONAL.
+                name Ms. Barbara Jane Jensen, III.).
 </dd>
 <dt>middleName</dt>
 <dd>The middle name(s) of the User (e.g.
                 Jane given the full name Ms. Barbara Jane Jensen, III.).
-                OPTIONAL.
+                
 </dd>
 <dt>honorificPrefix</dt>
 <dd>The honorific prefix(es) of the
                 User, or "Title" in most Western languages (e.g. Ms. given the
-                full name Ms. Barbara Jane Jensen, III.). OPTIONAL.
+                full name Ms. Barbara Jane Jensen, III.).
 </dd>
 <dt>honorificSuffix</dt>
 <dd>The honorific suffix(es) of the
                 User, or "Suffix" in most Western languages (e.g. III. given
-                the full name Ms. Barbara Jane Jensen, III.). OPTIONAL.
+                the full name Ms. Barbara Jane Jensen, III.).
 </dd>
 </dl></blockquote>
 </dd>
@@ -719,50 +722,59 @@ Singular Attributes</h3>
             Jensen, III), but MAY be a username or handle, if that is all that
             is available (e.g. bjensen). The value provided SHOULD be the
             primary textual label by which this User is normally displayed by
-            the Service Provider when presenting it to end-users. OPTIONAL
+            the Service Provider when presenting it to end-users.
 </dd>
 <dt>nickName</dt>
 <dd>The casual way to address the user in real
             life, e.g. "Bob" or "Bobby" instead of "Robert". This attribute
             SHOULD NOT be used to represent a User's username (e.g. bjensen or
-            mpepperidge). OPTIONAL.
+            mpepperidge).
 </dd>
 <dt>profileUrl</dt>
-<dd>URL to a page representing the User's
-            online profile. OPTIONAL.
+<dd>A fully qualified URL to a page representing the User's
+            online profile.
 </dd>
 <dt>title</dt>
 <dd>The user&rsquo;s title, such as &ldquo;Vice
-            President.&rdquo; OPTIONAL.
+            President.&rdquo;
 </dd>
 <dt>userType</dt>
 <dd>Used to identify the organization to user
             relationship. Typical values used might be "Contractor",
             "Employee", "Intern", "Temp", "External", and "Unknown" but any
-            value may be used. OPTIONAL.
+            value may be used.
 </dd>
 <dt>preferredLanguage</dt>
-<dd>Used to indicate a User's
-            preferred written or spoken language. Generally used for
-            localizing the interface presented to the user.
+<dd>Indicates the User's preferred written or spoken language. Generally used
+              for selecting a localized User interface.  Valid values are concatenation of the
+              ,
+              an underscore, and the
+              <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 2 letter country code</a>; e.g., 'en_US' specifies the language English and country US.
+            
 </dd>
 <dt>locale</dt>
-<dd>Used to indicate the User's default location
-            for purposes of localizing items such as currency, date time
-            format, numerical representations, etc. OPTIONAL. TODO - what ISO
-            code list should we use here?
+<dd>Used to indicate the User's default location for purposes of localizing items such
+              as currency, date time format, numerical representations, etc. A locale value is a concatenation of the
+              ,
+              an underscore, and the
+              <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 2 letter country code</a>; e.g., 'en_US' specifies the language English and country US.
+            
 </dd>
 <dt>timezone</dt>
-<dd>The User's time zone in the public-domain
-              time zone database format; e.g.,'America/Denver'. Valid values
-              and details at  <a href='http://cs.ucla.edu/~eggert/tz/tz-link.htm'>http://cs.ucla.edu/~eggert/tz/tz-link.htm</a>.
-              OPTIONAL.
+<dd>The User's time zone in the
+              <a href='http://www.twinsun.com/tz/tz-link.htm'>"Olson" timezone database format</a>; e.g.,'America/Los_Angeles'.
             
 </dd>
 <dt>active</dt>
 <dd>A Boolean value indicating the User's administrative status. The definitive meaning of
                 this attribute is determined by the Service Provider though a value of true infers the User is, for
-                example, able to login while a value of false implies the User's account has been suspended.  OPTIONAL.
+                example, able to login while a value of false implies the User's account has been suspended.
+</dd>
+<dt>password</dt>
+<dd>The User's clear text password.  This attribute is intended to be used as a means to
+              specify an initial password when creating a new User or to reset an existing User's password.  No accepted
+              standards exist to convey password policies, hence Consumers should expect Service Providers to reject
+              password values.  This value MUST never be returned by a Service Provider in any form.
 </dd>
 </dl></blockquote><p>
         
@@ -772,7 +784,7 @@ Singular Attributes</h3>
 <a name="rfc.section.6.2"></a><h3>6.2.&nbsp;
 Multi-valued Attributes</h3>
 
-<p>The following multi-valued attributes are defined.  All attributes are OPTIONAL.
+<p>The following multi-valued attributes are defined.
 </p>
 <p>
           </p>
@@ -781,12 +793,12 @@ Multi-valued Attributes</h3>
 <dd>E-mail addresses for the User. The value
             SHOULD be canonicalized by the Service Provider, e.g.
             bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type
-            values of work, home, and other. OPTIONAL.
+            values of work, home, and other.
 </dd>
 <dt>phoneNumbers</dt>
 <dd>Phone numbers for the User. No
             canonical value is assumed here. Canonical Type values of work,
-            home, mobile, fax, pager and other. OPTIONAL.
+            home, mobile, fax, pager and other.
 </dd>
 <dt>ims</dt>
 <dd>Instant messaging address for the User. No
@@ -795,7 +807,7 @@ Multi-valued Attributes</h3>
             convert the address to lowercase. Instead of the standard
             Canonical Values for type, this attribute defines the following
             Canonical Values to represent currently popular IM services: aim,
-            gtalk, icq, xmpp, msn, skype, qq, and yahoo. OPTIONAL.
+            gtalk, icq, xmpp, msn, skype, qq, and yahoo.
 </dd>
 <dt>photos</dt>
 <dd>URL of a photo of the User. The value SHOULD
@@ -809,41 +821,39 @@ Multi-valued Attributes</h3>
             suitable for display when describing the User. Instead of the
             standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent popular photo sizes:
-            photo, thumbnail. OPTIONAL.
+            photo, thumbnail.
 </dd>
 <dt>addresses</dt>
 <dd>A physical mailing address for this User. Canonical Type Values of work,
             home, and other. The value attribute is a complex type with the
-            following sub-attributes. OPTIONAL 
+            following sub-attributes.  All Sub-Attributes are OPTIONAL.
+              
 <blockquote class="text"><dl>
 <dt>formatted</dt>
 <dd>The full mailing address, formatted
                 for display or use with a mailing label. This attribute MAY
-                contain newlines. OPTIONAL
+                contain newlines.
 </dd>
 <dt>streetAddress</dt>
 <dd>The full street address component,
                 which may include house number, street name, P.O. box, and
                 multi-line extended street address information. This attribute
-                MAY contain newlines. OPTIONAL
+                MAY contain newlines.
 </dd>
 <dt>locality</dt>
 <dd>The city or locality component.
-                OPTIONAL
 </dd>
 <dt>region</dt>
 <dd>The state or region component.
-                OPTIONAL
 </dd>
 <dt>postalCode</dt>
 <dd>The zipcode or postal code component.
-                OPTIONAL
 </dd>
 <dt>country</dt>
 <dd>The country name component.
                   When specified the value MUST be in
                     <a href='http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm'>ISO 3166-1 alpha 2 "short" code format</a>; e.g., the United States and Sweden are "US" and "SE",
-                  respectively.  OPTIONAL.
+                  respectively.
                 
 </dd>
 </dl></blockquote>
@@ -860,8 +870,7 @@ Multi-valued Attributes</h3>
               types. If the SCIM Service Provider exposes a Group resource, the value MUST be the
               "id" attribute of the corresponding Group resources to which the
               user belongs.  Since this attribute is read-only, group membership
-              changes MUST be applied via the <a class='info' href='#group-resource'>Group Resource<span> (</span><span class='info'>SCIM Group Schema</span><span>)</span></a>. READ-ONLY and
-              OPTIONAL.
+              changes MUST be applied via the <a class='info' href='#group-resource'>Group Resource<span> (</span><span class='info'>SCIM Group Schema</span><span>)</span></a>. READ-ONLY.
             
 </dd>
 <dt>entitlements</dt>
@@ -872,7 +881,7 @@ Multi-valued Attributes</h3>
               to encode sufficient information in the value so as to accurately
               and without ambiguity determine what the User has access to. This
               value has NO canonical types though type may be useful as a means
-              to scope entitlements. OPTIONAL.
+              to scope entitlements.
             
 </dd>
 <dt>roles</dt>
@@ -880,13 +889,12 @@ Multi-valued Attributes</h3>
               represent who the User is; e.g., 'Student', "Faculty". No
               vocabulary or syntax is specified though it is expected that a
               role value is a String or label representing a collection of
-              entitlements.  This value has NO canonical types.  OPTIONAL.
+              entitlements.  This value has NO canonical types.
             
 </dd>
 <dt>x509Certificates</dt>
 <dd>A list of certificates issued to the User. Values are
               <a class='info' href='#type-binary'>Binary<span> (</span><span class='info'>Binary</span><span>)</span></a> and DER encoded x509.  This value has NO canonical types.
-              OPTIONAL.
             
 </dd>
 </dl></blockquote><p>
@@ -910,37 +918,35 @@ SCIM Enterprise User Schema Extension</h3>
 <dt>employeeNumber</dt>
 <dd>Numeric or alphanumeric identifier
           assigned to a person, typically based on order of hire or
-          association with an organization. OPTIONAL.
+          association with an organization.
 </dd>
 <dt>costCenter</dt>
 <dd>Identifies the name of a cost center.
-          OPTIONAL.
+          
 </dd>
 <dt>organization</dt>
 <dd>Identifies the name of an organization.
-          OPTIONAL.
+          
 </dd>
 <dt>division</dt>
 <dd>Identifies the name of a division.
-          OPTIONAL.
+          
 </dd>
 <dt>department</dt>
 <dd>Identifies the name of a department.
-          OPTIONAL.
+          
 </dd>
 <dt>manager</dt>
 <dd>The User's manager. A complex type that
           optionally allows Service Providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User.
-          OPTIONAL
+          hierarchy by referencing the "id" attribute of another User. All Sub-Attributes are OPTIONAL.
+          
 <blockquote class="text"><dl>
 <dt>managerId</dt>
-<dd>The id of the SCIM resource representing
-              the User's manager. OPTIONAL.
+<dd>The id of the SCIM resource representing the User's manager.
 </dd>
 <dt>displayName</dt>
-<dd>The displayName of the
-                User's manager.  READ-ONLY and OPTIONAL.
+<dd>The displayName of the User's manager.  READ-ONLY.
 </dd>
 </dl></blockquote>
 </dd>
@@ -967,10 +973,10 @@ SCIM Group Schema</h3>
 <blockquote class="text"><dl>
 <dt>displayName</dt>
 <dd>A human readable name for the Group.
-          OPTIONAL.
 </dd>
-</dl></blockquote>
-
+</dl></blockquote><p>
+      
+</p>
 <p>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:</p>
 <blockquote class="text"><dl>
@@ -980,8 +986,9 @@ SCIM Group Schema</h3>
               to allow the Service Provider to support nested Groups. REQUIRED.
           
 </dd>
-</dl></blockquote>
-
+</dl></blockquote><p>
+      
+</p>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
@@ -1000,11 +1007,11 @@ Service Provider Configuration Schema</h3>
 <blockquote class="text"><dl>
 <dt>documentationUrl</dt>
 <dd>An HTTP addressable URL pointing to the Service Provider's human consumable
-              help documentation.  OPTIONAL.
+              help documentation.
 </dd>
 <dt>patch</dt>
 <dd>A complex type that specifies PATCH configuration options.  REQUIRED.
-                
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
@@ -1013,20 +1020,20 @@ Service Provider Configuration Schema</h3>
             
 </dd>
 <dt>bulk</dt>
-<dd>A complex type that specifies BULK configuration options.  REQUIRED.
-                
+<dd>A complex type that specifies BULK configuration options.  REQUIRED
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-                
+              
 <blockquote class="text"><dl>
 <dt>maxOperations</dt>
 <dd>An integer value specifying the maximum number of operations. REQUIRED.
 </dd>
 </dl></blockquote>
-                
+              
 <blockquote class="text"><dl>
 <dt>maxPayloadSize</dt>
 <dd>An integer value specifying the maximum payload size in bytes. REQUIRED.
@@ -1036,7 +1043,7 @@ Service Provider Configuration Schema</h3>
 </dd>
 <dt>filter</dt>
 <dd>A complex type that specifies FILTER options.  REQUIRED.
-                  
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
@@ -1045,37 +1052,47 @@ Service Provider Configuration Schema</h3>
 <dd>Integer value specifying the maximum number of Resources returned in a response. REQUIRED.
 </dd>
 </dl></blockquote>
-              
+            
 </dd>
 <dt>changePassword</dt>
 <dd>A complex type that specifies Change Password configuration options.  REQUIRED.
-                  
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-              
+            
 </dd>
 <dt>sort</dt>
 <dd>A complex type that specifies Sort configuration options.  REQUIRED.
-                  
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether sorting is supported. REQUIRED.
 </dd>
 </dl></blockquote>
-              
+            
 </dd>
 <dt>etag</dt>
 <dd>A complex type that specifies Etag configuration options.  REQUIRED.
-                  
+              
 <blockquote class="text"><dl>
 <dt>supported</dt>
 <dd>Boolean value specifying whether the operation is supported. REQUIRED.
 </dd>
 </dl></blockquote>
+            
+</dd>
+<dt>xmlDataFormat</dt>
+<dd>A complex type that specifies whether the XML data format is supported.  REQUIRED.
               
+<blockquote class="text"><dl>
+<dt>supported</dt>
+<dd>Boolean value specifying whether the operation is supported. REQUIRED.
+</dd>
+</dl></blockquote>
+            
 </dd>
 </dl></blockquote><p>
       
@@ -1340,10 +1357,11 @@ Full User Representation</h3>
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage": "en_US",
+  "preferredLanguage":"en_US",
   "locale": "en_US",
-  "timezone": "America/Denver",
+  "timezone": "America/Los_Angeles",
   "active":true,
+  "password":"t1meMa$heen",
   "groups": [
     {
       "display": "Tour Guides",
@@ -1473,10 +1491,11 @@ Enterprise User Extension Representation</h3>
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage": "en_US",
+  "preferredLanguage":"en_US",
   "locale": "en_US",
-  "timezone": "America/Denver",
+  "timezone": "America/Los_Angeles",
   "active":true,
+  "password":"t1meMa$heen",
   "groups": [
     {
       "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
@@ -1640,7 +1659,7 @@ Resource Schema Representation</h3>
       "name":"name",
       "type":"complex",
       "multiValued":false,
-      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined. OPTIONAL.",
+      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
       "schema":"urn:scim:schemas:core:1.0",
       "readOnly":false,
       "required":false,
@@ -1650,7 +1669,7 @@ Resource Schema Representation</h3>
           "name":"formatted",
           "type":"string",
           "multiValued":false,
-          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.). OPTIONAL." ,
+          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.)." ,
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1659,7 +1678,7 @@ Resource Schema Representation</h3>
           "name":"familyName",
           "type":"string",
           "multiValued":false,
-          "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.). OPTIONAL",
+          "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1668,7 +1687,7 @@ Resource Schema Representation</h3>
           "name":"givenName",
           "type":"string",
           "multiValued":false,
-          "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1677,7 +1696,7 @@ Resource Schema Representation</h3>
           "name":"middleName",
           "type":"string",
           "multiValued":false,
-          "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1686,7 +1705,7 @@ Resource Schema Representation</h3>
           "name":"honorificPrefix",
           "type":"string",
           "multiValued":false,
-          "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1695,7 +1714,7 @@ Resource Schema Representation</h3>
           "name":"honorificSuffix",
           "type":"string",
           "multiValued":false,
-          "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.). OPTIONAL.",
+          "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.).",
           "readOnly":false,
           "required":false,
           "caseExact":false
@@ -1706,7 +1725,7 @@ Resource Schema Representation</h3>
        "name":"emails",
        "type":"complex",
        "multiValued":true,
-       "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+       "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
@@ -1716,7 +1735,7 @@ Resource Schema Representation</h3>
            "name":"value",
            "type":"string",
            "multiValued":false,
-           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other. OPTIONAL.",
+           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1725,7 +1744,7 @@ Resource Schema Representation</h3>
            "name":"display",
            "type":"string",
            "multiValued":false,
-           "description":"A human readable name, primarily used for display purposes. OPTIONAL and READ-ONLY.",
+           "description":"A human readable name, primarily used for display purposes. READ-ONLY.",
            "readOnly":true,
            "required":false,
            "caseExact":false
@@ -1734,7 +1753,7 @@ Resource Schema Representation</h3>
            "name":"type",
            "type":"string",
            "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
            "readOnly":false,
            "required":false,
            "caseExact":false,
@@ -1754,7 +1773,7 @@ Resource Schema Representation</h3>
        "name":"addresses",
        "type":"complex",
        "multiValued":true,
-       "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes. OPTIONAL.",
+       "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
        "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
@@ -1764,7 +1783,7 @@ Resource Schema Representation</h3>
            "name":"formatted",
            "type":"string",
            "multiValued":false,
-           "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines. OPTIONAL.",
+           "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1773,7 +1792,7 @@ Resource Schema Representation</h3>
            "name":"streetAddress",
            "type":"string",
            "multiValued":false,
-           "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines. OPTIONAL.",
+           "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1782,7 +1801,7 @@ Resource Schema Representation</h3>
            "name":"locality",
            "type":"string",
            "multiValued":false,
-           "description":"The city or locality component. OPTIONAL.",
+           "description":"The city or locality component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1791,7 +1810,7 @@ Resource Schema Representation</h3>
            "name":"region",
            "type":"string",
            "multiValued":false,
-           "description":"The state or region component. OPTIONAL.",
+           "description":"The state or region component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1800,7 +1819,7 @@ Resource Schema Representation</h3>
            "name":"postalCode",
            "type":"string",
            "multiValued":false,
-           "description":"The zipcode or postal code component. OPTIONAL.",
+           "description":"The zipcode or postal code component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1809,7 +1828,7 @@ Resource Schema Representation</h3>
            "name":"country",
            "type":"string",
            "multiValued":false,
-           "description":"The country name component. OPTIONAL.",
+           "description":"The country name component.",
            "readOnly":false,
            "required":false,
            "caseExact":false
@@ -1818,7 +1837,7 @@ Resource Schema Representation</h3>
            "name":"type",
            "type":"string",
            "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'. OPTIONAL.",
+           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
            "readOnly":false,
            "required":false,
            "caseExact":false,
@@ -1830,7 +1849,7 @@ Resource Schema Representation</h3>
        "name":"employeeNumber",
        "type":"string",
        "multiValued":false,
-       "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization. Single valued. OPTIONAL.",
+       "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
        "schema":"urn:scim:schemas:extension:enterprise:1.0",
        "readOnly":false,
        "required":false,
@@ -1946,8 +1965,9 @@ Full Representation</h3>
   &lt;title&gt;Tour Guide&lt;/title&gt;
   &lt;preferredLanguage&gt;en_US&lt;/preferredLanguage&gt;
   &lt;locale&gt;en_US&lt;/locale&gt;
-  &lt;timezone&gt;America/Denver&lt;/timezone&gt;
+  &lt;timezone&gt;America/Los_Angeles&lt;/timezone&gt;
   &lt;active&gt;true&lt;/active&gt;
+  &lt;password&gt;t1meMa$heen&lt;/password&gt;
   &lt;groups&gt;
     &lt;group&gt;
       &lt;value&gt;e9e30dba-f08f-4109-8486-d5c6a331660a&lt;/value&gt;
@@ -2033,8 +2053,9 @@ Enterprise User Extension Representation</h3>
   &lt;userType&gt;Employee&lt;/userType&gt;
   &lt;preferredLanguage&gt;en_US&lt;/preferredLanguage&gt;
   &lt;locale&gt;en_US&lt;/locale&gt;
-  &lt;timezone&gt;America/Denver&lt;/timezone&gt;
+  &lt;timezone&gt;America/Los_Angeles&lt;/timezone&gt;
   &lt;active&gt;true&lt;/active&gt;
+  &lt;password&gt;t1meMa$heen&lt;/password&gt;
   &lt;emails&gt;
     &lt;email&gt;
       &lt;value&gt;bjensen@example.com&lt;/value&gt;
@@ -2184,6 +2205,17 @@ Group Representation</h3>
 &lt;/Group&gt;
 
 </pre></div>
+<a name="Security"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.13"></a><h3>13.&nbsp;
+Security Considerations</h3>
+
+<p>
+        The SCIM Core schema contains personally identifiable information as well as other sensitive data.  Aside from
+        prohibiting password values in a SCIM response this specification does not provide any means or guarantee of
+        confidentiality.
+      
+</p>
 <a name="anchor17"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
@@ -2217,7 +2249,7 @@ Acknowledgements</h3>
 </p>
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>13.&nbsp;Normative References</h3>
+<h3>14.&nbsp;Normative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="PortableContacts">[PortableContacts]</a></td>
 <td class="author-text">Smarr, J., &ldquo;<a href="http://www.portablecontacts.net/draft-schema.html">Portable Contacts 1.0 Draft C - Schema Only</a>,&rdquo; August&nbsp;2008.</td></tr>
