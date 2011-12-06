@@ -324,6 +324,7 @@
       <xs:extension base="tns:SchemaSubAttribute">
         <xs:sequence>
           <xs:element name="multiValued" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="multiValuedAttributeChildName" type="xs:string" minOccurs="0"/>
           <xs:element name="canonicalValues" type="xs:string" minOccurs="0"/>
           <xs:element name="subAttributes" minOccurs="0">
           <xs:complexType>
