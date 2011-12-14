@@ -41,7 +41,7 @@
       </address>
     </author>
 
-    <date day="7" month="December" year="2011" />
+    <date day="14" month="December" year="2011" />
     <keyword>SCIM</keyword>
     <abstract>
       <t>
@@ -127,7 +127,7 @@
       </eref>.
       </t>
       <t>
-        All examples assume OAuth2; e.g.,
+        All examples assume OAuth2 bearer token; e.g.,
       </t>
       <figure height="" suppress-title="false" width="" alt="" title=""
               align="left">
@@ -449,8 +449,7 @@ Content-Type: application/json
               and literals. The literal values can be strings enclosed in double
               quotes, numbers, date times enclosed in double quotes, and Boolean
               values; i.e., true or false.  String literals MUST be valid <eref
-              target="http://www.json.org">JSON strings</eref> and use backslash
-              (\) to escape special characters.
+              target="http://www.json.org">JSON strings</eref>.
             </t>
             <t>
               The attribute name and attribute operator are case insensitive.
@@ -2440,20 +2439,21 @@ X-HTTP-Method-Override: DELETE
         target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15">
         RFC2616
       </eref>.
-        In recognition that SCIM Resources; e.g., User and Group, contain
-        sensitive information Consumers and Service Providers SHOULD require an
-        authenticated and TLS protected transport.
+        In recognition that SCIM Resources; e.g., User and Group, contain sensitive information Consumers and Service
+          Providers MUST implement TLS <eref target="http://tools.ietf.org/html/rfc5246">RFC5246</eref>. TLS is
+          mandatory to implement and use with this specification; other specifications may extend this specification
+          for use with other transport protocols.
       </t>
     </section>
-    <section title="Acknowledgments">
-      <t>The SCIM Community would like to thank the following people for the
-      work they've done in the research, formulation, drafting, editing, and
-      support of this specification.</t>
+    <section title="Contributors">
       <t>
         <list style="empty">
           <t>Samuel Erdtman (samuel@erdtman.se)</t>
         </list>
       </t>
+    </section>
+    <section title="Acknowledgments">
+      <t>The editor would like to thank the participants in the the SCIM working group for their support of this specification.</t>
     </section>
   </middle>
 </rfc>
