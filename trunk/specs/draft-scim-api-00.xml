@@ -2449,6 +2449,7 @@ X-HTTP-Method-Override: DELETE
       <t>
         <list style="empty">
           <t>Samuel Erdtman (samuel@erdtman.se)</t>
+          <t>Patrick Harding (pharding@pingidentity.com)</t>
         </list>
       </t>
     </section>
