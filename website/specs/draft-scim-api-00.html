@@ -2476,12 +2476,15 @@ X-HTTP-Method-Override: DELETE
     Security Considerations</h3>
 
 <p>
-    The SCIM Protocol is based on HTTP and thus subject to the security
-    considerations found in Section 15 of <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>RFC2616</a>.
-    In recognition that SCIM Resources; e.g., User and Group, contain sensitive information Consumers and Service
-    Providers MUST implement TLS <a href='http://tools.ietf.org/html/rfc5246'>RFC5246</a>. TLS is
-    mandatory to implement and use with this specification; other specifications may extend this specification
-    for use with other transport protocols.
+    The SCIM Protocol is based on HTTP and thus subject to the security considerations found in Section 15 of
+    <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15'>[RFC2616]</a>.
+    SCIM Resources (e.g., Users and Groups) can contain sensitive information.  Therefore, SCIM Consumers and
+    Service Providers MUST implement TLS.  Which version(s) ought to be implemented will vary over time, and depend on the
+    widespread deployment and known security vulnerabilities at the time of implementation.  At the time of this
+    writing, TLS version 1.2 [<a href='http://tools.ietf.org/html/rfc5246'>RFC5246</a>] is the most
+    recent version, but has very limited actual deployment, and might not be readily available in
+    implementation toolkits.  TLS version 1.0 [<a href='http://tools.ietf.org/html/rfc5246'>RFC2246</a>]
+    is the most widely deployed version, and will give the broadest interoperability.
 
 </p>
 <a name="anchor8"></a><br /><hr />
@@ -2494,8 +2497,7 @@ X-HTTP-Method-Override: DELETE
 <blockquote class="text">
     <p>Samuel Erdtman (samuel@erdtman.se)
     </p>
-    <p>
-    Patrick Harding (pharding@pingidentity.com)
+    <p>Patrick Harding (pharding@pingidentity.com)
     </p>
 </blockquote><p>
 
