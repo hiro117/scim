@@ -6,3 +6,4 @@ Known SCIM client/server implementations
 || UnboundID Reference SDK || Yes, Java || Yes, Java || Yes, client only.  GPL, LGPL, or UnboundID Free License. ||   UnboundID ||  [http://code.google.com/p/scimsdk/] ||
 || SCIM Proxy || Yes, Java ||  Yes, Java || Yes, MIT License || Google Code || [http://code.google.com/p/scimproxy/] ||
 || OpenSCIM ||  Yes, Java, .Net || Yes, Java, .Net || Yes, GPL V3 || Google Code || [http://code.google.com/p/openscim/] ||
+|| Gluu ||  Unknown || Yes, Java || Unknown || Gluu.org || [http://www.gluu.org/] ||
