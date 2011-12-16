@@ -23,7 +23,6 @@
     <author fullname="Chuck Mortimore" initials="C." role="editor"
             surname="Mortimore">
       <organization abbrev="Salesforce">Salesforce.com</organization>
-
       <address>
         <email>cmortimore@salesforce.com</email>
       </address>
@@ -31,7 +30,6 @@
 
     <author fullname="Patrick Harding" initials="P." surname="Harding">
       <organization abbrev="Ping">Ping Identity</organization>
-
       <address>
         <email>pharding@pingidentity.com</email>
       </address>
@@ -39,21 +37,19 @@
 
     <author fullname="Paul Madsen" initials="P." surname="Madsen">
       <organization abbrev="Ping">Ping Identity</organization>
-
       <address>
         <email>pmadsen@pingidentity.com</email>
       </address>
     </author>
 
-    <author fullname="Joseph Smarr" initials="J." surname="Smarr">
-      <organization abbrev="Google">Google</organization>
-
+    <author fullname="Trey Drake" initials="T." surname="Drake">
+      <organization abbrev="UnboundID">UnboundID</organization>
       <address>
-        <email>jsmarr@google.com</email>
+        <email>trey.drake@unboundid.com</email>
       </address>
     </author>
 
-    <date day="7" month="December" year="2011" />
+    <date day="16" month="December" year="2011" />
 
     <abstract>
       <t>The Simple Cloud Identity Management (SCIM) specification is designed
@@ -1756,28 +1752,25 @@
         confidentiality.
       </t>
     </section>
-    <appendix title="Acknowledgements">
+
+    <appendix title="Contributors">
       <t>The SCIM Community would like to thank the following people for the
       work they've done in the research, formulation, drafting, editing, and
       support of this specification.</t>
-
       <t>
         <list style="empty">
-          <t>Chuck Mortimore (cmortimore@salesforce.com) &lt;editor&gt;</t>
-
-          <t>Patrick Harding (pharding@pingidentity.com) &lt;author&gt;</t>
-
-          <t>Paul Madsen (pmadsen@pingidentity.com) &lt;author&gt;</t>
-
-          <t>Joseph Smarr (jsmarr@google.com) &lt;author&gt;</t>
-
+          <t>Morteza Ansari (morteza.ansari@webex.com)</t>
           <t>Sidharth Choudhury (schoudhury@salesforce.com)</t>
+          <t>Samuel Erdtman (samuel@erdtman.se)</t>
+          <t>Kelly Grizzle (kelly.grizzle@sailpoint.com)</t>
+          <t>Chris Phillips (cjphillips@gmail.com)</t>
+          <t>Erik Wahlstrom (erik.wahlstrom@nexussafe.com)</t>
         </list>
       </t>
 
-      <t>Special thanks to Joeseph Smarr, who's excellent work on the Portable
-      Contacts Specification <xref target="PortableContacts" /> provided the
-      basis for much of the SCIM schema structure and text.</t>
+      <t>Special thanks to Joeseph Smarr, who's excellent work on the Portable Contacts Specification
+          <xref target="PortableContacts" /> provided a basis for the SCIM schema structure and text.
+      </t>
     </appendix>
   </middle>
 
