@@ -4,4 +4,6 @@ The SCIM WG is an open, collaborative, and loosely organized group of SaaS provi
 
 If you would like to contribute language to the specifications you must first sign the [http://www.openwebfoundation.org/legal/the-owf-1-0-agreements OWF CLA].  After signing post the signed CLA to the [http://groups.google.com/group/cloud-directory WG alias] and we'll add it to the list. 
 
+If you have specific needs or wants, say a new attribute added to the core schema, [http://code.google.com/p/scim/issues/list enter a new ticket], make your case for it in the description section and send a note to the cloud-directory group.  A well reasoned argument for change goes a long way.
+
 Weekly conference calls are held to discuss issues better suited for synchronous conversations.  Feel free to join in.  The call day/time occasionally floats so check here for the latest [WeeklyWGTeleconference dial-in details]. 
