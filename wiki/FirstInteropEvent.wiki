@@ -17,3 +17,4 @@ Specific day and time TBD
 
 || Person || Representing || Client || Server ||
 || Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y ||
+|| Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N ||
