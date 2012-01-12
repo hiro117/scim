@@ -8,7 +8,7 @@ Specific test plan/use cases TBD
 
 = When & Where =
 
-[http://www.ietf.org/meeting/83/index.html | IETF Paris (March 25-30 2012)]
+[http://www.ietf.org/meeting/83/index.html  IETF Paris (March 25-30 2012)]
 
 Specific day and time TBD
 
@@ -16,4 +16,4 @@ Specific day and time TBD
 = Who =
 
 || Person || Representing || Client || Server ||
-|| Trey Drake || [http://www.unboundid.com | UnboundID] || Y || Y ||
+|| Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y ||
