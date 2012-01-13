@@ -8,6 +8,6 @@
 
   * Interop (IETF and IIW, logistics, test plan, who's coming)
 
-  * New features/changes
+  * New features/changes - Review issue list
 
   * SAML binding
