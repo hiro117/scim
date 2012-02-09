@@ -15,7 +15,8 @@ Specific day and time TBD
 
 = Who =
 
-|| Person || Representing || Client || Server ||
-|| Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y ||
-|| Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N ||
-|| Erik Wahlström & Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y ||
+|| Person || Representing || Client || Server || Auth ||
+|| Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y || Basic ||
+|| Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N || Basic ||
+|| Erik Wahlström & Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y || Basic/OAuth ||
+|| Emmanuel Dreux || [http://www.bcpsoft.fr BCPSOFT] || Y || Y || Basic/OAuth(client) ||
