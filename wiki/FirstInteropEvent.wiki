@@ -18,6 +18,7 @@ Specific day and time TBD
 || Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N || Basic ||
 || Erik Wahlström & Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y || Basic/OAuth ||
 || Emmanuel Dreux || [http://www.bcpsoft.fr BCPSOFT] || Y || Y || Basic/OAuth(client) ||
+|| Hasini Gunasinghe || [http://wso2.org/library/identity-server WSO2] || Y || Y || Basic/OAuth ||
 
 
 = How =
