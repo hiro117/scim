@@ -1,8 +1,5 @@
-#summary One-sentence summary of this page.
+#summary SAMLBindingTests
 
 = Interop tests for SAML Binding =
 
 = Use cases =
-
-Use Cases
-
