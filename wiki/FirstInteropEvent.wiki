@@ -1,4 +1,4 @@
-#summary Logistics and attendee info for the first SCIM interop event
+#summary Logistics and attendee info for the March 2012 SCIM interop event.
 
 = Goal =
 The usual.  Bang up as many implementations as we can.  Primarily this should find weaknesses in the implementations and - more importantly - the spec.
@@ -10,6 +10,7 @@ The usual.  Bang up as many implementations as we can.  Primarily this should fi
 
 Specific day and time TBD
 
+Remote participation will be available for attendees that cannot attend IETF.  Logistics still need to be worked out, but this will probably work best for attendees that have public SCIM servers.  Remote participation may be difficult for SCIM clients if servers are not public.
 
 = Who =
 
