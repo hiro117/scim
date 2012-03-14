@@ -6,9 +6,9 @@ The usual.  Bang up as many implementations as we can.  Primarily this should fi
 
 = When & Where =
 
-[http://www.ietf.org/meeting/83/index.html  IETF Paris (March 25-30 2012)]
+IETF 83 Paris - [http://www.concorde-lafayette.com/en/paris-events/mezzanine.aspx Hotel Concorde La Fayette]
 
-Specific day and time TBD
+March 29, 2012 - 12:00-18:00 CET (tentatively)
 
 Remote participation will be available for attendees that cannot attend IETF.  Logistics still need to be worked out, but this will probably work best for attendees that have public SCIM servers.  Remote participation may be difficult for SCIM clients if servers are not public.
 
