@@ -2016,16 +2016,13 @@ Content-Type: application/json
 }]]></artwork>
         </figure>
         <t>
-          The Service Provider MUST define a limit on how many operations
-          can be sent in one bulk request. The Service Provider MUST also define the
-          max payload size of a bulk request. If either limits are exceeded the Service Provider
-          MUST return the HTTP response code 413 Request Entity Too Large. The
-          returned response must also include the attributes maxOperations and
-          maxPayloadSize with the limits accepted by the Service Provider.
+          The Service Provider MUST define the maximum number of operations and maximum payload size a Consumer may
+            send in a single request.  If either limits are exceeded the Service Provider MUST return the HTTP response
+            code 413 Request Entity Too Large. The returned response MUST specify the limit exceeded in the body of
+            the error response.
         </t>
         <t>
-          In the following example the Consumer sent a request that exceeded the Service Provider's max  payload size
-            1 megabyte.
+          The following example the Consumer sent a request exceeding the Service Provider's max payload size of 1 megabyte.
         </t>
         <figure height="" suppress-title="false" width="" alt="" title=""
                 align="left">
@@ -2050,9 +2047,14 @@ Content-Type: application/json
 Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
 {
-  "maxOperations": 1000,
-  "maxPayload": 1048576
-}]]></artwork>
+  "Errors":[
+    {
+      "description":"The size of the bulk operation exceeds the maxPayloadSize (1048576).",
+      "code":"413"
+    }
+  ]
+}
+]]></artwork>
         </figure>
 
       </section>
