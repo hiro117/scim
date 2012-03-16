@@ -23,6 +23,7 @@ Remote participation will be available for attendees that cannot attend IETF.  L
 || Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || ? ||
 || Michael Schwartz (remote) || [http://www.gluu.org/ Gluu] || N || Y || ? ||
 || Brian Milas (remote) || [http://www.courion.com/ Courion] || N || Y || ? ||
+|| Chuck Mortimore || [http://www.salesforce.com/ Salesforce.com] || Y || Y || OAuth ||
 
 = How =
 
