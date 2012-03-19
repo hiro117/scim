@@ -15,7 +15,7 @@ Remote participation will be available for attendees that cannot attend IETF.  L
 = Who =
 
 || Person || Representing || Client || Server || Auth ||
-|| Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y || Basic ||
+|| Trey Drake || [http://www.unboundid.com UnboundID] || Y || Y || Server Basic only, Client Basic and OAuth   ||
 || Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N || Basic ||
 || Erik Wahlström & Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y || Basic/OAuth ||
 || Emmanuel Dreux || [http://www.bcpsoft.fr BCPSOFT] || Y || Y || Basic/OAuth(client) ||
