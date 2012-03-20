@@ -22,7 +22,7 @@ Remote participation will be available for attendees that cannot attend IETF.  L
 || Hasini Gunasinghe || [http://wso2.org/library/identity-server WSO2] || Y || Y || Basic/OAuth ||
 || Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || ? ||
 || Michael Schwartz (remote) || [http://www.gluu.org/ Gluu] || N || Y || ? ||
-|| Brian Milas (remote) || [http://www.courion.com/ Courion] || N || Y || ? ||
+|| Brian Milas (remote) || [http://www.courion.com/ Courion] || N || Y || OAuth ||  https://labs.courion.com/scim/ ||
 || Chuck Mortimore || [http://www.salesforce.com/ Salesforce.com] || Y || Y || OAuth ||
 
 = How =
