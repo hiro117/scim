@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='http://xml.resource.org/authoring/rfc2629.xslt' ?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<rfc category="info" docName="draft-scim-ldap" ipr="trust200902">
+    <?rfc toc="yes"?>
+    <?rfc symrefs="yes"?>
+    <?rfc comments="yes"?>
+    <?rfc inline="no"?>
+    <?rfc private="DRAFT"?>
+    <front>
+        <title abbrev="draft-scim-ldap">Simple Cloud Identity Management: LDAP Binding</title>
+
+        <author initials="C.P." surname="Phillips" fullname="Chris Phillips">
+            <organization abbrev="Canarie">Canarie</organization>
+            <address>
+                <email>cjphillips@gmail.com</email>
+            </address>
+        </author>
+        <author initials="T.D." surname="Drake" fullname="Trey Drake">
+            <organization abbrev="UnboundID">UnboundID</organization>
+            <address>
+                <email>trey.drake@unboundid.com</email>
+            </address>
+        </author>
+        <author fullname="Paul Madsen" initials="P." surname="Madsen">
+            <organization abbrev="Ping">Ping Identity</organization>
+            <address>
+                <email>pmadsen@pingidentity.com</email>
+            </address>
+        </author>
+        <date day="21" month="March" year="2012"/>
+        <keyword>SCIM</keyword>
+        <abstract>
+            <t>
+                This document is intended to provide a technical specification for
+                mapping SCIM User and Group resources to their LDAP equivalent
+                objectclass schemas.
+            </t>
+        </abstract>
+    </front>
+
+
+    <middle>
+        <section title="Introduction and Overview" anchor="intro" toc="default">
+            <t>The SCIM schema and protocol specifications
+                provisioning and managing identity data on the web. The protocol supports creation, modification,
+                retrieval,
+                and discovery of core identity Resources; i.e., Users and Groups, as well as custom Resource extensions.
+            </t>
+
+            <section title="Intended Audience" toc="default">
+                <t>
+                    This document is intended as a guide for SCIM implementors using LDAP as a User and group storage
+                    scheme.
+                </t>
+            </section>
+            <section title="Notational Conventions" anchor="notat" toc="default">
+                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+                    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+                    document are to be interpreted as described in [RFC2119].
+
+                    These keywords are capitalized when used to unambiguously specify
+                    requirements of the protocol or application features and behavior that
+                    affect the interoperability and security of implementations. When
+                    these words are not capitalized, they are meant in their
+                    natural-language sense.
+                </t>
+
+                <t>
+                    For purposes of readability examples are not URL encoded. Implementers
+                    MUST percent encode URLs as described in
+                    <eref
+                            target="http://tools.ietf.org/html/rfc3986#section-2.1">RFC3896 2.1
+                    </eref>.
+                </t>
+            </section>
+        </section>
+
+        <section title="User" anchor="user" toc="default">
+            <t>
+                tidbit on User as defined in both SCIM and LDAP
+
+            </t>
+
+            <section title="id" anchor="user_id">
+                <t>implementors choice, has no effect on interop. May consider DN if and only if DN is permenantly
+                    stable.
+                </t>
+            </section>
+
+            <section title="externalId" anchor="user_externalId">
+                <t>implementors choice, has no effect on interop. uid?
+                </t>
+            </section>
+
+            <section title="userName" anchor="user_userName">
+                <t>uid - add OID</t>
+            </section>
+
+            <section title="name/nameFormatted" anchor="user_nameFormatted">
+                <t>cn - add OID</t>
+            </section>
+
+            <section title="name/familyName" anchor="user_familyName">
+                <t>surname (sn) - add OID</t>
+            </section>
+
+            <section title="name/givenName" anchor="user_givenName">
+                <t>givenname - add OID</t>
+            </section>
+
+            <section title="name/middleName" anchor="user_middleName">
+                <t>initials - add OID</t>
+            </section>
+
+            <section title="name/honorificPrefix" anchor="user_honorificPrefix">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="name/honorificSuffix" anchor="user_honorificSuffix">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="name/displayName" anchor="user_displayName">
+                <t>displayname - add OID</t>
+            </section>
+
+            <section title="name/nickName" anchor="user_nickName">
+                <t>eduPersonNickname - add OID</t>
+            </section>
+
+            <section title="profileUrl" anchor="user_profileUrl">
+                <t>labeledURI - add OID</t>
+            </section>
+
+            <section title="employeeNumber" anchor="user_enterprise_employeeNumber">
+                <t>employeeNumber - add OID</t>
+            </section>
+
+            <section title="userType" anchor="user_userType">
+                <t>employeeType - add OID</t>
+            </section>
+
+            <section title="title" anchor="user_title">
+                <t>title - add OID</t>
+            </section>
+
+            <section title="manager" anchor="user_manager">
+                <t>manager - add OID</t>
+            </section>
+
+            <section title="preferredLanguage" anchor="user_preferredLanguage">
+                <t>preferredLanguage - add OID</t>
+            </section>
+
+            <section title="locale" anchor="user_locale">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="utcOffset" anchor="user_utcOffset">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="costCenter" anchor="user_costCenter">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="organization" anchor="user_organization">
+                <t>eduPersonOrgDN - o - add OID</t>
+            </section>
+
+            <section title="division" anchor="user_division">
+                <t>$X - ou - add OID</t>
+            </section>
+
+            <section title="department" anchor="user_department">
+                <t>eduPersonPrimaryOrgUnitDN - add OID</t>
+            </section>
+
+            <section title="email" anchor="user_email">
+                <t>mail - add OID - mail is multivalued</t>
+            </section>
+
+            <section title="phoneNumber" anchor="user_phoneNumber">
+                <t>homePhone - add OID - multivalued</t>
+            </section>
+
+            <section title="im" anchor="user_im">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="photo" anchor="user_photo">
+                <t>jpegPhoto - add OID</t>
+            </section>
+
+            <section title="address" anchor="user_address">
+                <t>postalAddress - add OID</t>
+            </section>
+
+            <section title="address/formatted" anchor="user_addressFormatted">
+                <t>addressFormatted - add OID</t>
+            </section>
+
+            <section title="address/streetAddress" anchor="user_addressStreetAddress">
+                <t>street - add OID</t>
+            </section>
+
+            <section title="address/locality" anchor="user_addressLocality">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="address/region" anchor="user_addressRegion">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="address/postalCode" anchor="user_addressPostalCode">
+                <t>postalCode - add OID</t>
+            </section>
+
+            <section title="address/country" anchor="user_addressCountry">
+                <t>c - add OID</t>
+            </section>
+
+            <section title="groups" anchor="user_group">
+                <t>$X - add OID</t>
+            </section>
+
+            <section title="entitlements" anchor="user_entitlements">
+                <t>eduPersonEntitlement - add OID</t>
+            </section>
+
+            <section title="roles" anchor="user_roles">
+                <t>nsRoleDN - add OID</t>
+            </section>
+
+            <section title="x509Certificates" anchor="user_x509Certificates">
+                <t>userCertificate - add OID</t>
+            </section>
+
+            <section title="active" anchor="user_active">
+                <t>$X - add OID</t>
+            </section>
+        </section>
+
+
+        <section title="Security Considerations" anchor="Security" toc="default">
+            <t>
+                XXX
+            </t>
+        </section>
+        <section title="Contributors">
+        </section>
+        <section title="Acknowledgments">
+            <t>XXX</t>
+        </section>
+    </middle>
+</rfc>
