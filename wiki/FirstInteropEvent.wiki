@@ -20,7 +20,7 @@ Remote participation will be available for attendees that cannot attend IETF.  L
 || Erik Wahlström & Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y || Basic/OAuth ||
 || Emmanuel Dreux || [http://www.bcpsoft.fr BCPSOFT] || Y || Y || Basic/OAuth(client) ||
 || Hasini Gunasinghe || [http://wso2.org/library/identity-server WSO2] || Y || Y || Basic/OAuth ||
-|| Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || ? ||
+|| Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || Basic ||
 || Michael Schwartz (remote) || [http://www.gluu.org/ Gluu] || N || Y || ? ||
 || Brian Milas (remote) || [http://www.courion.com/ Courion] || N || Y || OAuth ||  https://labs.courion.com/scim/ ||
 || Chuck Mortimore || [http://www.salesforce.com/ Salesforce.com] || Y || Y || OAuth ||
