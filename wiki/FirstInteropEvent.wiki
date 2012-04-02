@@ -98,9 +98,6 @@ Each pair should attempt the following use cases if supported by both the client
  # Retrieve schemas.
 
 
-Each client/server pair should document the use cases attempted, whether each succeeded or failed, and notes about any issues that were encountered.  The result of the interop will be a document that looks something like this:
+=Results=
 
-|| *Client* || *Server* || *Use Cases Attempted* || *Passed* || *Failed* || *Notes* ||
-|| SailPoint || Nexus || 1-11 || 1-11 || none || ||
-|| Nexus || UnboundID || 1-3, 7, 13 || 1-3 || 7, 13 || Details about failures... ||
-|| ... || ... || ... || ... || ... || ... ||
+The results of the interop can be viewed and edited in the [https://docs.google.com/spreadsheet/ccc?key=0AtYxhHKU0YhodEdEaW1TaUsyM2h2cjhjbllabkhuUWc interop results spreadsheet].
