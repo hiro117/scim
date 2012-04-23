@@ -29,6 +29,7 @@ Remote participation will be available if the participant has a public server en
 || Janaka Ranabahu || [http://wso2.com/products/identity-server/ WSO2] || Y || Y || Basic || http://people.wso2.com:8080/charonDemoApp/interop_details.html ||
 || Brian Milas || [http://www.courion.com Courion] || N || Y || Basic/OAuth2 || https://labs.courion.com/scim ||
 || Chuck Mortimore || [http://www.salesforce.com Salesforce] || Y || Y || OAuth ||  ||
+|| Michael Schwartz || [http://www.gluu.org/ Gluu] || N || Y || Basic || http://ox.gluu.org/doku.php?id=scim:interop1 ||
 
 = How =
 
