@@ -30,6 +30,7 @@ Remote participation will be available if the participant has a public server en
 || Brian Milas || [http://www.courion.com Courion] || N || Y || Basic/OAuth2 || https://labs.courion.com/scim ||
 || Chuck Mortimore || [http://www.salesforce.com Salesforce] || Y || Y || OAuth ||  ||
 || Michael Schwartz || [http://www.gluu.org/ Gluu] || N || Y || Basic || http://ox.gluu.org/doku.php?id=scim:interop1 ||
+|| Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || Basic ||  ||
 
 = How =
 
