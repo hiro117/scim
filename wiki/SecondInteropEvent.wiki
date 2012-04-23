@@ -27,6 +27,7 @@ Remote participation will be available if the participant has a public server en
 || Kelly Grizzle || [http://www.sailpoint.com SailPoint] || Y || N || Basic/OAuth || ||
 || Erik Wahlström and Samuel Erdtman || [http://www.nexussafe.com Technology Nexus] || Y || Y || Basic/OAuth || http://code.google.com/p/scimproxy/ ||
 || Janaka Ranabahu || [http://wso2.com/products/identity-server/ WSO2] || Y || Y || Basic || http://people.wso2.com:8080/charonDemoApp/interop_details.html ||
+|| Brian Milas || [http://www.courion.com Courion] || N || Y || Basic/OAuth2 || https://labs.courion.com/scim ||
 
 = How =
 
