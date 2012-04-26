@@ -23,7 +23,7 @@ Remote participation will be available for attendees that cannot attend IETF.  L
 || Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || Basic ||
 || Michael Schwartz (remote) || [http://www.gluu.org/ Gluu] || N || Y || ? || http://ox.gluu.org/doku.php?id=scim:interop1 ||
 || Brian Milas (remote) || [http://www.courion.com/ Courion] || N || Y || OAuth ||  https://labs.courion.com/scim/ ||
-|| Chuck Mortimore || [http://www.salesforce.com/ Salesforce.com] || Y || Y || OAuth || https://scim-developer-edition.my.salesforce.com/services/apexrest/scim/v1/   ( https://login.salesforce.com/services/oauth2/authorize scim@salesforce.com/test1234  client_id=3MVG9QDx8IX8nP5Q3Qg39jXJDGh_SESgJ6BqovTyXh_UuSc5O0nUCqYS5nWwKF82nbYpejJXFr0H.nZGxV2Xl client_secret=1981419349128675123 )||
+|| Chuck Mortimore || [http://www.salesforce.com/ Salesforce.com] || Y || Y || OAuth || https://scim-developer-edition.my.salesforce.com/services/apexrest/scim/v1/   ( https://login.salesforce.com/services/oauth2/authorize interop@simplecloud.info/test1234  client_id=3MVG9QDx8IX8nP5Q3Qg39jXJDGh_SESgJ6BqovTyXh_UuSc5O0nUCqYS5nWwKF82nbYpejJXFr0H.nZGxV2Xl client_secret=1981419349128675123 )||
 
 = How =
 
