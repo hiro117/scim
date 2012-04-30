@@ -115,4 +115,4 @@ Each pair should attempt the following use cases if supported by both the client
 
 =Results=
 
-TBD - Will create another google spreadsheet to capture results.
+The results of the interop can be viewed and edited in the [https://docs.google.com/spreadsheet/ccc?key=0AtYxhHKU0YhodHpkcGFEUDVBY3ZJY1lqUUYwdWc2NUE interop results spreadsheet].
