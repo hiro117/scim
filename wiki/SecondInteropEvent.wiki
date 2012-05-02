@@ -29,26 +29,7 @@ Remote participation will be available if the participant has a public server en
 || Samuel Erdtman || [http://www.nexussafe.com Technology Nexus - PortWise Access Manager] || Y || N || Basic/OAuth ||  ||
 || Janaka Ranabahu || [http://wso2.com/products/identity-server/ WSO2] || Y || Y || Basic || http://people.wso2.com:8080/charonDemoApp/interop_details.html ||
 || Brian Milas || [http://www.courion.com Courion] || N || Y || Basic/OAuth2 || https://labs.courion.com/scim ||
-|| Chuck Mortimore || [http://www.salesforce.com Salesforce] || Y || Y || OAuth || https://scim-developer-edition.my.salesforce.com/services/apexrest/scim/v1/ ( https://login.salesforce.com/services/oauth2/authorize interop@simplecloud.info/test1234 client_id=3MVG9QDx8IX8nP5Q3Qg39jXJDGh_SESgJ6BqovTyXh_UuSc5O0nUCqYS5nWwKF82nbYpejJXFr0H.nZGxV2Xl client_secret=1981419349128675123 )  {
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "userName": "c4@cmort.org",
-  "name": {
-    "familyName": "Jensen"
-  },
-  "emails": [
-    {
-      "value": "charliemortimore@gmail.com",
-      "type": "work",
-      "primary": true
-    }
-  ],
-  "entitlements": [
-    {
-      "value": "00eU0000000EAs4",
-      "display": "Tour Guides"
-    }
-  ]
-} ||
+|| Chuck Mortimore || [http://www.salesforce.com Salesforce] || Y || Y || OAuth || https://scim-developer-edition.my.salesforce.com/services/apexrest/scim/v1/ ( https://login.salesforce.com/services/oauth2/authorize interop@simplecloud.info/test1234 client_id=3MVG9QDx8IX8nP5Q3Qg39jXJDGh_SESgJ6BqovTyXh_UuSc5O0nUCqYS5nWwKF82nbYpejJXFr0H.nZGxV2Xl client_secret=1981419349128675123 )   ||
 || Michael Schwartz || [http://www.gluu.org/ Gluu] || N || Y || Basic || http://ox.gluu.org/doku.php?id=scim:interop1 ||
 || Travis Spencer || [https://www.pingidentity.com/ Ping] || N || Y || Basic ||  ||
 
