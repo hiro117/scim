@@ -74,17 +74,17 @@ Table of Contents
        3.3.2.  Modifying with PATCH . . . . . . . . . . . . . . . . . 18
      3.4.  Deleting Resources . . . . . . . . . . . . . . . . . . . . 26
      3.5.  Bulk . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
-     3.6.  Data Input/Output Formats  . . . . . . . . . . . . . . . . 41
-     3.7.  Additional retrieval query parameters  . . . . . . . . . . 42
-     3.8.  Attribute Notation . . . . . . . . . . . . . . . . . . . . 42
-     3.9.  HTTP Response Codes  . . . . . . . . . . . . . . . . . . . 43
-     3.10. API Versioning . . . . . . . . . . . . . . . . . . . . . . 44
-     3.11. Versioning Resources . . . . . . . . . . . . . . . . . . . 45
-     3.12. HTTP Method Overloading  . . . . . . . . . . . . . . . . . 47
-   4.  Security Considerations  . . . . . . . . . . . . . . . . . . . 48
-   5.  Contributors . . . . . . . . . . . . . . . . . . . . . . . . . 49
-   6.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 50
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 51
+     3.6.  Data Input/Output Formats  . . . . . . . . . . . . . . . . 42
+     3.7.  Additional retrieval query parameters  . . . . . . . . . . 43
+     3.8.  Attribute Notation . . . . . . . . . . . . . . . . . . . . 43
+     3.9.  HTTP Response Codes  . . . . . . . . . . . . . . . . . . . 44
+     3.10. API Versioning . . . . . . . . . . . . . . . . . . . . . . 45
+     3.11. Versioning Resources . . . . . . . . . . . . . . . . . . . 46
+     3.12. HTTP Method Overloading  . . . . . . . . . . . . . . . . . 48
+   4.  Security Considerations  . . . . . . . . . . . . . . . . . . . 49
+   5.  Contributors . . . . . . . . . . . . . . . . . . . . . . . . . 50
+   6.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 51
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 52
 
 
 
@@ -340,6 +340,7 @@ Drake, et al.                                                   [Page 6]
    POST /Users  HTTP/1.1
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: ...
 
@@ -381,7 +382,6 @@ ETag: W/"e180ee84f0671b1"
   },
   "userName":"bjensen"
 }
-
 
 
 
@@ -900,6 +900,7 @@ Drake, et al.                                                  [Page 16]
    PUT /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -927,7 +928,6 @@ Drake, et al.                                                  [Page 16]
 
 
    The service responds with the entire, updated User
-
 
 
 
@@ -1068,6 +1068,7 @@ Drake, et al.                                                  [Page 19]
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1115,7 +1116,6 @@ Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 
 
 
-
 Drake, et al.                                                  [Page 20]
 
                             draft-scim-api-01                 March 2012
@@ -1124,6 +1124,7 @@ Drake, et al.                                                  [Page 20]
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1143,6 +1144,7 @@ Drake, et al.                                                  [Page 20]
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1170,8 +1172,6 @@ Drake, et al.                                                  [Page 20]
 
 
 
-
-
 Drake, et al.                                                  [Page 21]
 
                             draft-scim-api-01                 March 2012
@@ -1180,6 +1180,7 @@ Drake, et al.                                                  [Page 21]
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1205,9 +1206,37 @@ Drake, et al.                                                  [Page 21]
    The following example shows how to add a member to and remove a
    member from a Group in a single request:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Drake, et al.                                                  [Page 22]
+
+                            draft-scim-api-01                 March 2012
+
+
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1226,13 +1255,6 @@ Drake, et al.                                                  [Page 21]
      ]
    }
 
-
-
-Drake, et al.                                                  [Page 22]
-
-                            draft-scim-api-01                 March 2012
-
-
    The following example shows how to change a User's primary email.  If
    the User already has the email address, it is made the primary
    address and the current primary address (if present) is made non-
@@ -1242,8 +1264,9 @@ Drake, et al.                                                  [Page 22]
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: "a330bc54f0671c9"
+   ETag: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1261,29 +1284,6 @@ Drake, et al.                                                  [Page 22]
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Drake, et al.                                                  [Page 23]
 
                             draft-scim-api-01                 March 2012
@@ -1292,6 +1292,7 @@ Drake, et al.                                                  [Page 23]
   PATCH /Users/2819c223-7f76-453a-919d-413861904646
   Host: example.com
   Accept: application/json
+  Content-Type: application/json
   Authorization: Bearer h480djs93hd8
   ETag: W/"a330bc54f0671c9"
 
@@ -1327,6 +1328,7 @@ Drake, et al.                                                  [Page 23]
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1334,8 +1336,6 @@ Drake, et al.                                                  [Page 23]
      "schemas": ["urn:scim:schemas:core:1.0"],
      "nickName": "Barbie"
    }
-
-   The following example shows how to remove a User's nickname:
 
 
 
@@ -1345,9 +1345,12 @@ Drake, et al.                                                  [Page 24]
                             draft-scim-api-01                 March 2012
 
 
+   The following example shows how to remove a User's nickname:
+
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1368,6 +1371,7 @@ Drake, et al.                                                  [Page 24]
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1392,10 +1396,6 @@ Drake, et al.                                                  [Page 24]
 
 
 
-
-
-
-
 Drake, et al.                                                  [Page 25]
 
                             draft-scim-api-01                 March 2012
@@ -1404,6 +1404,7 @@ Drake, et al.                                                  [Page 25]
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    ETag: W/"a330bc54f0671c9"
 
@@ -1444,7 +1445,6 @@ Drake, et al.                                                  [Page 25]
    GET /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Authorization: Bearer h480djs93hd8
-
 
 
 
@@ -1603,6 +1603,7 @@ Drake, et al.                                                  [Page 28]
    POST /v1/Bulk
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: ...
 
@@ -1616,7 +1617,6 @@ Drake, et al.                                                  [Page 28]
          "method":"POST",
          "path":"/Users",
          "bulkId":"qwerty",
-         "data":{
 
 
 
@@ -1625,6 +1625,7 @@ Drake, et al.                                                  [Page 29]
                             draft-scim-api-01                 March 2012
 
 
+         "data":{
            "schemas":[
              "urn:scim:schemas:core:1.0"
            ],
@@ -1669,7 +1670,6 @@ Drake, et al.                                                  [Page 29]
    }
 
    The Service Provider returns the following response.
-
 
 
 
@@ -1860,6 +1860,7 @@ Drake, et al.                                                  [Page 33]
    POST /v1/Bulk
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: ...
 
@@ -1896,7 +1897,6 @@ Drake, et al.                                                  [Page 33]
            ]
          }
        }
-     ]
 
 
 
@@ -1905,6 +1905,7 @@ Drake, et al.                                                  [Page 34]
                             draft-scim-api-01                 March 2012
 
 
+     ]
    }
 
    The Service Provider returns the following response.
@@ -1947,7 +1948,6 @@ Content-Type: application/json
    Host: example.com
    Accept: application/json
    Authorization: Bearer h480djs93hd8
-
 
 
 
@@ -2020,6 +2020,7 @@ Drake, et al.                                                  [Page 36]
    POST /v1/Bulk
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: ...
 
@@ -2064,7 +2065,6 @@ Drake, et al.                                                  [Page 36]
    The Service Provider MUST try to resolve circular cross references
    between Resources in a single bulk job but MAY stop after a failed
    attempt and instead return the status code 409 Conflict.  The
-   following example exhibits the potential conflict.
 
 
 
@@ -2073,9 +2073,66 @@ Drake, et al.                                                  [Page 37]
                             draft-scim-api-01                 March 2012
 
 
+   following example exhibits the potential conflict.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Drake, et al.                                                  [Page 38]
+
+                            draft-scim-api-01                 March 2012
+
+
    POST /v1/Bulk
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: ...
 
@@ -2123,8 +2180,7 @@ Drake, et al.                                                  [Page 37]
 
 
 
-
-Drake, et al.                                                  [Page 38]
+Drake, et al.                                                  [Page 39]
 
                             draft-scim-api-01                 March 2012
 
@@ -2180,7 +2236,7 @@ Content-Type: application/json
 
 
 
-Drake, et al.                                                  [Page 39]
+Drake, et al.                                                  [Page 40]
 
                             draft-scim-api-01                 March 2012
 
@@ -2211,6 +2267,7 @@ Drake, et al.                                                  [Page 39]
    POST /v1/Bulk
    Host: example.com
    Accept: application/json
+   Content-Type: application/json
    Authorization: Bearer h480djs93hd8
    Content-Length: 4294967296
 
@@ -2235,8 +2292,7 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
 
 
-
-Drake, et al.                                                  [Page 40]
+Drake, et al.                                                  [Page 41]
 
                             draft-scim-api-01                 March 2012
 
@@ -2292,7 +2348,7 @@ Drake, et al.                                                  [Page 40]
 
 
 
-Drake, et al.                                                  [Page 41]
+Drake, et al.                                                  [Page 42]
 
                             draft-scim-api-01                 March 2012
 
@@ -2348,7 +2404,7 @@ ETag: W/"a330bc54f0671c9"
 
 
 
-Drake, et al.                                                  [Page 42]
+Drake, et al.                                                  [Page 43]
 
                             draft-scim-api-01                 March 2012
 
@@ -2404,7 +2460,7 @@ Drake, et al.                                                  [Page 42]
 
 
 
-Drake, et al.                                                  [Page 43]
+Drake, et al.                                                  [Page 44]
 
                             draft-scim-api-01                 March 2012
 
@@ -2460,7 +2516,7 @@ HTTP/1.1 404 NOT FOUND
 
 
 
-Drake, et al.                                                  [Page 44]
+Drake, et al.                                                  [Page 45]
 
                             draft-scim-api-01                 March 2012
 
@@ -2516,7 +2572,7 @@ Drake, et al.                                                  [Page 44]
 
 
 
-Drake, et al.                                                  [Page 45]
+Drake, et al.                                                  [Page 46]
 
                             draft-scim-api-01                 March 2012
 
@@ -2572,7 +2628,7 @@ ETag: W/"e180ee84f0671b1"
 
 
 
-Drake, et al.                                                  [Page 46]
+Drake, et al.                                                  [Page 47]
 
                             draft-scim-api-01                 March 2012
 
@@ -2628,7 +2684,7 @@ Drake, et al.                                                  [Page 46]
 
 
 
-Drake, et al.                                                  [Page 47]
+Drake, et al.                                                  [Page 48]
 
                             draft-scim-api-01                 March 2012
 
@@ -2684,7 +2740,7 @@ Drake, et al.                                                  [Page 47]
 
 
 
-Drake, et al.                                                  [Page 48]
+Drake, et al.                                                  [Page 49]
 
                             draft-scim-api-01                 March 2012
 
@@ -2740,7 +2796,7 @@ Drake, et al.                                                  [Page 48]
 
 
 
-Drake, et al.                                                  [Page 49]
+Drake, et al.                                                  [Page 50]
 
                             draft-scim-api-01                 March 2012
 
@@ -2796,7 +2852,7 @@ Drake, et al.                                                  [Page 49]
 
 
 
-Drake, et al.                                                  [Page 50]
+Drake, et al.                                                  [Page 51]
 
                             draft-scim-api-01                 March 2012
 
@@ -2852,5 +2908,5 @@ Authors' Addresses
 
 
 
-Drake, et al.                                                  [Page 51]
+Drake, et al.                                                  [Page 52]
 

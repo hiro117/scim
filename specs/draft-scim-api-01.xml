@@ -259,6 +259,7 @@ Authorization: Bearer h480djs93hd8
 POST /Users  HTTP/1.1
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -809,6 +810,7 @@ Authorization: Bearer h480djs93hd8
 PUT /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -956,6 +958,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1008,6 +1011,7 @@ Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1035,6 +1039,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1060,6 +1065,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1095,6 +1101,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1129,8 +1136,9 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
-ETag: "a330bc54f0671c9"
+ETag: W/"a330bc54f0671c9"
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1156,6 +1164,7 @@ ETag: "a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1198,6 +1207,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1218,6 +1228,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1245,6 +1256,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1269,6 +1281,7 @@ ETag: W/"a330bc54f0671c9"
 PATCH /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 ETag: W/"a330bc54f0671c9"
 
@@ -1505,6 +1518,7 @@ HTTP/1.1 404 NOT FOUND
 POST /v1/Bulk
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -1715,6 +1729,7 @@ Content-Type: application/json
 POST /v1/Bulk
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -1845,6 +1860,7 @@ ETag: W/"lha5bbazU3fNvfe5"
 POST /v1/Bulk
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -1900,6 +1916,7 @@ Content-Length: ...
 POST /v1/Bulk
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -2032,6 +2049,7 @@ Content-Type: application/json
 POST /v1/Bulk
 Host: example.com
 Accept: application/json
+Content-Type: application/json
 Authorization: Bearer h480djs93hd8
 Content-Length: 4294967296
 
