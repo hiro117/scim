@@ -902,7 +902,7 @@ Drake, et al.                                                  [Page 16]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas":["urn:scim:schemas:core:1.0"],
@@ -1070,7 +1070,7 @@ Drake, et al.                                                  [Page 19]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1126,7 +1126,7 @@ Drake, et al.                                                  [Page 20]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1146,7 +1146,7 @@ Drake, et al.                                                  [Page 20]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1182,7 +1182,7 @@ Drake, et al.                                                  [Page 21]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1238,7 +1238,7 @@ Drake, et al.                                                  [Page 22]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1266,7 +1266,7 @@ Drake, et al.                                                  [Page 22]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1294,7 +1294,7 @@ Drake, et al.                                                  [Page 23]
   Accept: application/json
   Content-Type: application/json
   Authorization: Bearer h480djs93hd8
-  ETag: W/"a330bc54f0671c9"
+  If-Match: W/"a330bc54f0671c9"
 
   {
     "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1330,7 +1330,7 @@ Drake, et al.                                                  [Page 23]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1352,7 +1352,7 @@ Drake, et al.                                                  [Page 24]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1373,7 +1373,7 @@ Drake, et al.                                                  [Page 24]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1406,7 +1406,7 @@ Drake, et al.                                                  [Page 25]
    Accept: application/json
    Content-Type: application/json
    Authorization: Bearer h480djs93hd8
-   ETag: W/"a330bc54f0671c9"
+   If-Match: W/"a330bc54f0671c9"
 
    {
      "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1431,7 +1431,7 @@ Drake, et al.                                                  [Page 25]
    DELETE /Users/2819c223-7f76-453a-919d-413861904646
    Host: example.com
    Authorization: Bearer h480djs93hd8
-   ETag: W/"c310cd84f0281b7"
+   If-Match: W/"c310cd84f0281b7"
 
 
 
