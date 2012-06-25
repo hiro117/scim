@@ -977,9 +977,9 @@ Mortimore, et al.                                              [Page 17]
       "Group" are READ-ONLY.  The value must be the "id" of a SCIM
       resource, either a User, or a Group.  The intention of the Group
       type is to allow the Service Provider to support nested Groups.
-      REQUIRED.
-
-
+      Service Providers MAY require Consumers to provide a non-empty
+      members value based on the "required" sub attribute of the
+      "members" attribute in Group Resource Schema.
 
 
 

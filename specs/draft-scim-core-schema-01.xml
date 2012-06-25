@@ -644,9 +644,10 @@
 
       <t>The following multi-valued attribute is defined in addition to the common
       attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. The
-              value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type is
-              to allow the Service Provider to support nested Groups. REQUIRED.
+          <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. 
+	The value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type 
+	is to allow the Service Provider to support nested Groups. Service Providers MAY require Consumers to provide 
+	a non-empty members value based on the "required" sub attribute of the "members" attribute in Group Resource Schema.
           </t>
         </list>
       </t>
