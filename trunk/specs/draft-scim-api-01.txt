@@ -865,16 +865,16 @@ Drake, et al.                                                  [Page 15]
 
    PUT performs a full update.  Consumers must retrieve the entire
    Resource and PUT the desired modifications as the operation
-   overwrites all previously stored data.  Unless otherwise specified a
-   successful PUT operation returns a 200 OK response code and the
-   entire Resource within the response body.  Example:
-
-
-
-
-
-
-
+   overwrites all previously stored data with the exception of the
+   password attribute.  If the password attribute of the User resource
+   is unspecified, it should be left in-tact.  Since this performs a
+   full update, Consumers MAY send read-only attributes of the retrieved
+   resource and Service Provider MUST ignore any read-only attributes
+   that are present in the payload of a PUT request.  Unless otherwise
+   specified a successful PUT operation returns a 200 OK response code
+   and the entire Resource within the response body, enabling the
+   Consumer to correlate the Consumer's and Provider's views of the
+   updated Resource.  Example:
 
 
 
