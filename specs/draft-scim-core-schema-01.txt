@@ -968,7 +968,7 @@ Mortimore, et al.                                              [Page 17]
    The following Singular Attribute is defined in addition to the common
    attributes defined in SCIM Core Schema:
 
-   displayName  A human readable name for the Group.
+   displayName  A human readable name for the Group.  REQUIRED.
 
    The following multi-valued attribute is defined in addition to the
    common attributes defined in SCIM Core Schema:
