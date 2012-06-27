@@ -632,9 +632,7 @@ Mortimore, et al.                                              [Page 11]
       opposed to id or externalId, which are generally opaque and not
       user-friendly identifiers).  Each User MUST include a non-empty
       userName value.  This identifier MUST be unique across the Service
-      Consumer's entire set of Users.  It MUST be a stable ID that does
-      not change when the same User is returned in subsequent requests.
-      REQUIRED.
+      Consumer's entire set of Users.  REQUIRED.
 
    name  The components of the User's real name.  Providers MAY return
       just the full name as a single string in the formatted sub-
@@ -663,7 +661,9 @@ Mortimore, et al.                                              [Page 11]
          in most Western languages (e.g.  Ms. given the full name Ms.
          Barbara Jane Jensen, III.).
 
-
+      honorificSuffix  The honorific suffix(es) of the User, or "Suffix"
+         in most Western languages (e.g.  III. given the full name Ms.
+         Barbara Jane Jensen, III.).
 
 
 
@@ -672,10 +672,6 @@ Mortimore, et al.                                              [Page 12]
 
                         draft-scim-core-schema-00          December 2011
 
-
-      honorificSuffix  The honorific suffix(es) of the User, or "Suffix"
-         in most Western languages (e.g.  III. given the full name Ms.
-         Barbara Jane Jensen, III.).
 
    displayName  The name of the User, suitable for display to end-users.
       Each User returned MAY include a non-empty displayName value.  The
@@ -721,6 +717,10 @@ Mortimore, et al.                                              [Page 12]
       The definitive meaning of this attribute is determined by the
       Service Provider though a value of true infers the User is, for
       example, able to login while a value of false implies the User's
+      account has been suspended.
+
+
+
 
 
 
@@ -728,8 +728,6 @@ Mortimore, et al.                                              [Page 13]
 
                         draft-scim-core-schema-00          December 2011
 
-
-      account has been suspended.
 
    password  The User's clear text password.  This attribute is intended
       to be used as a means to specify an initial password when creating
@@ -776,6 +774,8 @@ Mortimore, et al.                                              [Page 13]
       Values of work, home, and other.  The value attribute is a complex
       type with the following sub-attributes.  All Sub-Attributes are
       OPTIONAL.
+
+
 
 
 
