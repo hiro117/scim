@@ -17,8 +17,8 @@
   <?rfc private="Draft" ?>
 
   <front>
-    <title abbrev="draft-scim-core-schema-00">Simple Cloud Identity Management: Core
-    Schema 1.0</title>
+    <title abbrev="draft-scim-core-schema-00">System for Cross-Domain Identity
+    Management: Core Schema 1.1</title>
 
     <author fullname="Chuck Mortimore" initials="C." role="editor"
             surname="Mortimore">
@@ -52,9 +52,9 @@
     <date day="16" month="December" year="2011" />
 
     <abstract>
-      <t>The Simple Cloud Identity Management (SCIM) specification is designed
-      to make managing user identity in cloud based applications and services
-      easier. The specification suite builds upon experience with
+      <t>The System for Cross-Domain Identity Management (SCIM) specification is
+      designed to make managing user identity in cloud based applications and
+      services easier. The specification suite builds upon experience with
       existing schemas and deployments, placing specific emphasis on
       simplicity of development and integration, while applying existing
       authentication, authorization, and privacy models. Its intent is to
