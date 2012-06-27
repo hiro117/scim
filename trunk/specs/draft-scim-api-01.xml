@@ -8,7 +8,7 @@
     <?rfc inline="no"?>
     <?rfc private="DRAFT"?>
     <front>
-        <title  abbrev="draft-scim-api-01">Simple Cloud Identity Management: Protocol 1.0</title>
+        <title abbrev="draft-scim-api-01">System for Cross-Domain Identity Management:Protocol 1.1</title>
 
         <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
             <organization abbrev="UnboundID">UnboundID</organization>
@@ -45,10 +45,10 @@
         <keyword>SCIM</keyword>
         <abstract>
             <t>
-                The Simple Cloud Identity Management (SCIM) specification is designed to
-                make managing user identity in cloud based applications and services
-                easier. The specification suite seeks to build upon experience with
-                existing schemas and deployments, placing specific emphasis on
+                The System for Cross-Domain Identity Management (SCIM) specification is
+                designed to make managing user identity in cloud based applications and
+                services easier. The specification suite seeks to build upon experience
+                with existing schemas and deployments, placing specific emphasis on
                 simplicity of development and integration, while applying existing
                 authentication, authorization, and privacy models. It's intent is to
                 reduce the cost and complexity of user management operations by
