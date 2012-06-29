@@ -381,10 +381,10 @@ Mortimore, et al.                                               [Page 6]
 
 3.2.  Multi-valued Attributes
 
-   Multi-valued attributes may contain Sub-Attributes and therefore may
-   contain Complex Attributes.  The below Sub-Attributes are considered
-   normative and when specified SHOULD be used as defined.
-
+   Multi-valued attributes are unordered lists of attributes.  Each
+   attribute MAY contain Sub-Attributes and therefore multi-valued
+   attributes may contain Complex Attributes.  The below Sub-Attributes
+   are considered normative and when specified SHOULD be used as
 
 
 
@@ -392,6 +392,8 @@ Mortimore, et al.                                               [Page 7]
 
                         draft-scim-core-schema-00          December 2011
 
+
+   defined.
 
    type  A label indicating the attribute's function; e.g., "work" or
       "home".
@@ -434,8 +436,6 @@ Mortimore, et al.                                               [Page 7]
    work and home), but SHOULD NOT return the same (type, value)
    combination more than once per Attribute, as this complicates
    processing by the Consumer.
-
-
 
 
 
