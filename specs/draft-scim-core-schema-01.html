@@ -788,9 +788,10 @@ Multi-valued Attributes</h3>
             values of work, home, and other.
 </dd>
 <dt>phoneNumbers</dt>
-<dd>Phone numbers for the User. No
-            canonical value is assumed here. Canonical Type values of work,
-            home, mobile, fax, pager and other.
+<dd>Phone numbers for the User. The value 
+            SHOULD be canonicalized by the Service Provider according to 
+            format in <a href='http://tools.ietf.org/html/rfc3966'>RFC3966</a> e.g. 'tel:+1-201-555-0123'. Canonical Type 
+            values of work, home, mobile, fax, pager and other.
 </dd>
 <dt>ims</dt>
 <dd>Instant messaging address for the User. No
@@ -857,11 +858,11 @@ Multi-valued Attributes</h3>
               access control models, although no explicit authorization model is defined. It is intended that the
               semantics of group membership and any behavior or authorization granted as a result of membership are
               defined by the Service Provider. The Canonical types "direct" and "indirect" are defined to describe how
-              the group membership was derived. Â Direct group membership indicates the User is directly associated with
-              the group and SHOULD indicate that Consumers may modify membership through the Group Resource. Â Indirect
+              the group membership was derived. Direct group membership indicates the User is directly associated with
+              the group and SHOULD indicate that Consumers may modify membership through the Group Resource. Indirect
               membership indicates User membership is transitive or dynamic and implies that Consumers cannot modify
               indirect group membership through the Group resource but MAY modify direct group membership through the
-              Group resource which MAY influence indirect memberships. Â If the SCIM Service Provider exposes a Group
+              Group resource which MAY influence indirect memberships. If the SCIM Service Provider exposes a Group
               resource, the value MUST be the "id" attribute of the corresponding Group resources to which the user
               belongs. Since this attribute is read-only, group membership changes MUST be applied via the
               <a class='info' href='#group-resource'>Group Resource<span> (</span><span class='info'>SCIM Group Schema</span><span>)</span></a>. READ-ONLY.
