@@ -240,8 +240,10 @@
       </section>
 
       <section anchor="multi-value-types" title="Multi-valued Attributes">
-        <t>Multi-valued attributes may contain Sub-Attributes and therefore may contain Complex Attributes. The below
-        Sub-Attributes are considered normative and when specified SHOULD be used as defined.</t>
+        <t>Multi-valued attributes are unordered lists of attributes. Each attribute MAY 
+        contain Sub-Attributes and therefore multi-valued attributes may contain 
+        Complex Attributes. The below Sub-Attributes are considered normative and when 
+        specified SHOULD be used as defined.</t>
         <list style="hanging">
           <t hangText="type">A label indicating the attribute's function; e.g., "work" or "home".</t>
 
