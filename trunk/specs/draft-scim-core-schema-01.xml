@@ -493,9 +493,10 @@
             bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type
             values of work, home, and other.</t>
 
-            <t hangText="phoneNumbers">Phone numbers for the User. No
-            canonical value is assumed here. Canonical Type values of work,
-            home, mobile, fax, pager and other.</t>
+            <t hangText="phoneNumbers">Phone numbers for the User. The value 
+            SHOULD be canonicalized by the Service Provider according to 
+            format in <eref target="http://tools.ietf.org/html/rfc3966">RFC3966</eref> e.g. 'tel:+1-201-555-0123'. Canonical Type 
+            values of work, home, mobile, fax, pager and other.</t>
 
             <t hangText="ims">Instant messaging address for the User. No
             official canonicalization rules exist for all instant messaging
@@ -551,11 +552,11 @@
               access control models, although no explicit authorization model is defined. It is intended that the
               semantics of group membership and any behavior or authorization granted as a result of membership are
               defined by the Service Provider. The Canonical types "direct" and "indirect" are defined to describe how
-              the group membership was derived.  Direct group membership indicates the User is directly associated with
-              the group and SHOULD indicate that Consumers may modify membership through the Group Resource.  Indirect
+              the group membership was derived. Direct group membership indicates the User is directly associated with
+              the group and SHOULD indicate that Consumers may modify membership through the Group Resource. Indirect
               membership indicates User membership is transitive or dynamic and implies that Consumers cannot modify
               indirect group membership through the Group resource but MAY modify direct group membership through the
-              Group resource which MAY influence indirect memberships.  If the SCIM Service Provider exposes a Group
+              Group resource which MAY influence indirect memberships. If the SCIM Service Provider exposes a Group
               resource, the value MUST be the "id" attribute of the corresponding Group resources to which the user
               belongs. Since this attribute is read-only, group membership changes MUST be applied via the
               <xref target="group-resource">Group Resource</xref>. READ-ONLY.

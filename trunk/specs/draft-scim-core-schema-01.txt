@@ -745,9 +745,10 @@ Mortimore, et al.                                              [Page 13]
       instead of bjensen@EXAMPLE.COM.  Canonical Type values of work,
       home, and other.
 
-   phoneNumbers  Phone numbers for the User.  No canonical value is
-      assumed here.  Canonical Type values of work, home, mobile, fax,
-      pager and other.
+   phoneNumbers  Phone numbers for the User.  The value SHOULD be
+      canonicalized by the Service Provider according to format in
+      RFC3966 [7] e.g. 'tel:+1-201-555-0123'.  Canonical Type values of
+      work, home, mobile, fax, pager and other.
 
    ims  Instant messaging address for the User.  No official
       canonicalization rules exist for all instant messaging addresses,
@@ -774,7 +775,6 @@ Mortimore, et al.                                              [Page 13]
       Values of work, home, and other.  The value attribute is a complex
       type with the following sub-attributes.  All Sub-Attributes are
       OPTIONAL.
-
 
 
 
@@ -811,14 +811,14 @@ Mortimore, et al.                                              [Page 14]
       membership and any behavior or authorization granted as a result
       of membership are defined by the Service Provider.  The Canonical
       types "direct" and "indirect" are defined to describe how the
-      group membership was derived.  A Direct group membership indicates
+      group membership was derived.  Direct group membership indicates
       the User is directly associated with the group and SHOULD indicate
       that Consumers may modify membership through the Group Resource.
-      A Indirect membership indicates User membership is transitive or
+      Indirect membership indicates User membership is transitive or
       dynamic and implies that Consumers cannot modify indirect group
       membership through the Group resource but MAY modify direct group
       membership through the Group resource which MAY influence indirect
-      memberships.  A If the SCIM Service Provider exposes a Group
+      memberships.  If the SCIM Service Provider exposes a Group
       resource, the value MUST be the "id" attribute of the
       corresponding Group resources to which the user belongs.  Since
       this attribute is read-only, group membership changes MUST be
@@ -2487,7 +2487,7 @@ Mortimore, et al.                                              [Page 44]
 
    [6]  <http://www.twinsun.com/tz/tz-link.htm>
 
-
+   [7]  <http://tools.ietf.org/html/rfc3966>
 
 
 
