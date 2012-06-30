@@ -152,7 +152,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">SailPoint</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">E. Wahlström</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Technology Nexus</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">March 14, 2012</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">June 29, 2012</td></tr>
 </table></td></tr></table>
 <h1><br />System for Cross-Domain Identity Management:Protocol 1.1</h1>
 
@@ -441,6 +441,12 @@ Creating Resources</h3>
 
                     When a Resource is created, its URI must be returned in the response
                     Location header.
+                
+</p>
+<p>
+                    If there is a conflict for the POST operation, a 409 error should be
+                    returned. For example if a request to create a User resource with a
+                    userName that already exists results in a 409 error.
                 
 </p>
 <p>Below, the client sends a POST request containing a User
@@ -1430,7 +1436,11 @@ Deleting Resources</h3>
                     choose not to permanently delete the Resource, but MUST return a 404
                     error code for all operations associated with the previously deleted
                     Id. Service Providers MUST also omit the Resource from future query
-                    results.
+                    results. In addition the Service Provider MUST not consider the deleted
+                    resource in conflict calculation. For example if a User resource is
+                    deleted, a CREATE request for a User resource with the same userName
+                    as the previously deleted resouce should not fail with 409 error
+                    due to userName conflict.
                 
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2321,7 +2331,7 @@ HTTP Response Codes</h3>
 </tr>
 <tr>
 <td align="left">409 CONFLICT</td>
-<td align="left">PUT,PATCH,DELETE</td>
+<td align="left">POST, PUT,PATCH,DELETE</td>
 <td align="left">The specified version number does not match the resource's latest
                         version number or a Service Provider refused to create a new,
                         duplicate resource

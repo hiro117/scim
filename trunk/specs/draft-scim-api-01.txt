@@ -11,7 +11,7 @@ DRAFT                                                      T. Drake, Ed.
                                                                SailPoint
                                                            E. Wahlstroem
                                                         Technology Nexus
-                                                          March 14, 2012
+                                                           June 29, 2012
 
 
         System for Cross-Domain Identity Management:Protocol 1.1
@@ -54,7 +54,7 @@ Abstract
 
 Drake, et al.                                                   [Page 1]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 Table of Contents
@@ -110,7 +110,7 @@ Table of Contents
 
 Drake, et al.                                                   [Page 2]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 1.  Introduction and Overview
@@ -166,7 +166,7 @@ Drake, et al.                                                   [Page 2]
 
 Drake, et al.                                                   [Page 3]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 2.  Authentication and Authorization
@@ -222,7 +222,7 @@ Drake, et al.                                                   [Page 3]
 
 Drake, et al.                                                   [Page 4]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 3.  API
@@ -278,7 +278,7 @@ Drake, et al.                                                   [Page 4]
 
 Drake, et al.                                                   [Page 5]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    | Group      | /Groups            | GET           | Retrieve/Add/Mo |
@@ -328,14 +328,19 @@ Drake, et al.                                                   [Page 5]
    server views of the new Resource.  When a Resource is created, its
    URI must be returned in the response Location header.
 
-   Below, the client sends a POST request containing a User
+   If there is a conflict for the POST operation, a 409 error should be
 
 
 
 Drake, et al.                                                   [Page 6]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
+
+   returned.  For example if a request to create a User resource with a
+   userName that already exists results in a 409 error.
+
+   Below, the client sends a POST request containing a User
 
    POST /Users  HTTP/1.1
    Host: example.com
@@ -360,6 +365,34 @@ Drake, et al.                                                   [Page 6]
    The response includes a Location header indicating the User URI, and
    a representation of that User in the body of the response.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Drake, et al.                                                   [Page 7]
+
+                            draft-scim-api-01                  June 2012
+
+
 HTTP/1.1 201 Created
 Content-Type: application/json
 Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
@@ -382,16 +415,6 @@ ETag: W/"e180ee84f0671b1"
   },
   "userName":"bjensen"
 }
-
-
-
-
-
-
-Drake, et al.                                                   [Page 7]
-
-                            draft-scim-api-01                 March 2012
-
 
 3.2.  Retrieving Resources
 
@@ -418,35 +441,16 @@ Drake, et al.                                                   [Page 7]
    Authorization: Bearer h480djs93hd8
 
 
-   The server responds with:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 Drake, et al.                                                   [Page 8]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
+
+
+   The server responds with:
+
 
 
 HTTP/1.1 200 OK
@@ -493,16 +497,15 @@ ETag: W/"f250dd84f0671c3"
    and Providers SHOULD ignore any query parameters they don't
    recognize.
 
-   The below example returns the userName for all Users:
-
-
-
 
 
 
 Drake, et al.                                                   [Page 9]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
+
+
+   The below example returns the userName for all Users:
 
 
    GET /Users?attributes=userName
@@ -550,16 +553,17 @@ Drake, et al.                                                   [Page 9]
 
    The filter parameter MUST contain at least one valid Boolean
    expression.  Each expression MUST contain an attribute name followed
-   by an attribute operator and optional value.  Multiple expressions
-   MAY be combined using the two logical operators.  Furthermore
-   expressions can be grouped together using "()".
 
 
 
 Drake, et al.                                                  [Page 10]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
+
+   by an attribute operator and optional value.  Multiple expressions
+   MAY be combined using the two logical operators.  Furthermore
+   expressions can be grouped together using "()".
 
    The operators supported in the expression are listed in the following
    table.
@@ -602,6 +606,17 @@ Drake, et al.                                                  [Page 10]
    |          |             | DateTime types, it is a chronological    |
    |          |             | comparison.                              |
    |          |             |                                          |
+
+
+
+
+
+
+Drake, et al.                                                  [Page 11]
+
+                            draft-scim-api-01                  June 2012
+
+
    | lt       | less than   | If the attribute value is less than      |
    |          |             | operator value, there is a match.  The   |
    |          |             | actual comparison is dependent on the    |
@@ -609,14 +624,7 @@ Drake, et al.                                                  [Page 10]
    |          |             | types, this is a lexicographical         |
    |          |             | comparison and for DateTime types, it is |
    |          |             | a chronological comparison.              |
-
-
-
-Drake, et al.                                                  [Page 11]
-
-                            draft-scim-api-01                 March 2012
-
-
+   |          |             |                                          |
    | le       | less than   | If the attribute value is less than or   |
    |          | or equal    | equal to the operator value, there is a  |
    |          |             | match.  The actual comparison is         |
@@ -657,6 +665,14 @@ Drake, et al.                                                  [Page 11]
    grouping operator (i.e, parentheses), followed by the logical AND
    operator, followed by the logical OR operator.
 
+
+
+
+Drake, et al.                                                  [Page 12]
+
+                            draft-scim-api-01                  June 2012
+
+
    If the specified attribute in a filter expression is a multi-valued
    attribute, the Resource MUST match if any of the instances of the
    given attribute match the specified criterion; e.g. if a User has
@@ -665,13 +681,6 @@ Drake, et al.                                                  [Page 11]
    be specified using standard attribute notation (Section 3.8).  For
    example, to filter by userName the parameter value is userName and to
    filter by first name, the parameter value is name.givenName.
-
-
-
-Drake, et al.                                                  [Page 12]
-
-                            draft-scim-api-01                 March 2012
-
 
    Providers MAY support additional filter operations if they choose.
    Providers MUST decline to filter results if the specified filter
@@ -713,21 +722,18 @@ Drake, et al.                                                  [Page 12]
    filter=userType eq "Employee" and (emails co "example.com" or emails
    co "example.org")
 
+
+
+Drake, et al.                                                  [Page 13]
+
+                            draft-scim-api-01                  June 2012
+
+
 3.2.2.2.  Sorting
 
    Sort is OPTIONAL.  Sorting allows Consumers to specify the order in
    which Resources are returned by specifying a combination of sortBy
    and sortOrder URL parameters.
-
-
-
-
-
-
-Drake, et al.                                                  [Page 13]
-
-                            draft-scim-api-01                 March 2012
-
 
    sortBy:  The sortBy parameter specifies the attribute whose value
       SHALL be used to order the returned responses.  If the sortBy
@@ -767,13 +773,7 @@ Drake, et al.                                                  [Page 13]
 
    The following table describes the URL pagination parameters.
 
-   +------------+-------------------+----------------------------------+
-   | Parameter  | Description       | Default                          |
-   +------------+-------------------+----------------------------------+
-   | startIndex | The 1-based index | 1                                |
-   |            | of the first      |                                  |
-   |            | search result.    |                                  |
-   |            |                   |                                  |
+
 
 
 
@@ -782,9 +782,16 @@ Drake, et al.                                                  [Page 13]
 
 Drake, et al.                                                  [Page 14]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
+   +------------+-------------------+----------------------------------+
+   | Parameter  | Description       | Default                          |
+   +------------+-------------------+----------------------------------+
+   | startIndex | The 1-based index | 1                                |
+   |            | of the first      |                                  |
+   |            | search result.    |                                  |
+   |            |                   |                                  |
    | count      | Non-negative      | None.  When specified the        |
    |            | Integer.          | Service Provider MUST not return |
    |            | Specifies the     | more results than specified      |
@@ -829,16 +836,9 @@ Drake, et al.                                                  [Page 14]
 
 
 
-
-
-
-
-
-
-
 Drake, et al.                                                  [Page 15]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    {
@@ -894,7 +894,7 @@ Drake, et al.                                                  [Page 15]
 
 Drake, et al.                                                  [Page 16]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PUT /Users/2819c223-7f76-453a-919d-413861904646
@@ -950,7 +950,7 @@ Drake, et al.                                                  [Page 16]
 
 Drake, et al.                                                  [Page 17]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 200 OK
@@ -1006,7 +1006,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 
 Drake, et al.                                                  [Page 18]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    attributes specified in the meta.attributes Sub-Attribute (if
@@ -1062,7 +1062,7 @@ Drake, et al.                                                  [Page 18]
 
 Drake, et al.                                                  [Page 19]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1118,7 +1118,7 @@ Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 
 Drake, et al.                                                  [Page 20]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1174,7 +1174,7 @@ Drake, et al.                                                  [Page 20]
 
 Drake, et al.                                                  [Page 21]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1230,7 +1230,7 @@ Drake, et al.                                                  [Page 21]
 
 Drake, et al.                                                  [Page 22]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1286,7 +1286,7 @@ Drake, et al.                                                  [Page 22]
 
 Drake, et al.                                                  [Page 23]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
   PATCH /Users/2819c223-7f76-453a-919d-413861904646
@@ -1342,7 +1342,7 @@ Drake, et al.                                                  [Page 23]
 
 Drake, et al.                                                  [Page 24]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    The following example shows how to remove a User's nickname:
@@ -1398,7 +1398,7 @@ Drake, et al.                                                  [Page 24]
 
 Drake, et al.                                                  [Page 25]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
@@ -1424,7 +1424,11 @@ Drake, et al.                                                  [Page 25]
    choose not to permanently delete the Resource, but MUST return a 404
    error code for all operations associated with the previously deleted
    Id.  Service Providers MUST also omit the Resource from future query
-   results.
+   results.  In addition the Service Provider MUST not consider the
+   deleted resource in conflict calculation.  For example if a User
+   resource is deleted, a CREATE request for a User resource with the
+   same userName as the previously deleted resouce should not fail with
+   409 error due to userName conflict.
 
 
 
@@ -1448,13 +1452,9 @@ Drake, et al.                                                  [Page 25]
 
 
 
-
-
-
-
 Drake, et al.                                                  [Page 26]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 404 NOT FOUND
@@ -1510,7 +1510,7 @@ HTTP/1.1 404 NOT FOUND
 
 Drake, et al.                                                  [Page 27]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
       path  The Resource's relative path.  If the method is POST the
@@ -1566,7 +1566,7 @@ Drake, et al.                                                  [Page 27]
 
 Drake, et al.                                                  [Page 28]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    processed operations.  A location attribute that includes the
@@ -1622,7 +1622,7 @@ Drake, et al.                                                  [Page 28]
 
 Drake, et al.                                                  [Page 29]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
          "data":{
@@ -1678,7 +1678,7 @@ Drake, et al.                                                  [Page 29]
 
 Drake, et al.                                                  [Page 30]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 200 OK
@@ -1734,7 +1734,7 @@ Content-Type: application/json
 
 Drake, et al.                                                  [Page 31]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 200 OK
@@ -1790,7 +1790,7 @@ Content-Type: application/json
 
 Drake, et al.                                                  [Page 32]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 200 OK
@@ -1846,7 +1846,7 @@ Content-Type: application/json
 
 Drake, et al.                                                  [Page 33]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    if the bulkId is 'qwerty' the value is "bulkId:qwerty".  The Service
@@ -1902,7 +1902,7 @@ Drake, et al.                                                  [Page 33]
 
 Drake, et al.                                                  [Page 34]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
      ]
@@ -1958,7 +1958,7 @@ Content-Type: application/json
 
 Drake, et al.                                                  [Page 35]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 200 OK
@@ -2014,7 +2014,7 @@ ETag: W/"lha5bbazU3fNvfe5"
 
 Drake, et al.                                                  [Page 36]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    POST /v1/Bulk
@@ -2070,7 +2070,7 @@ Drake, et al.                                                  [Page 36]
 
 Drake, et al.                                                  [Page 37]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    following example exhibits the potential conflict.
@@ -2126,7 +2126,7 @@ Drake, et al.                                                  [Page 37]
 
 Drake, et al.                                                  [Page 38]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    POST /v1/Bulk
@@ -2182,7 +2182,7 @@ Drake, et al.                                                  [Page 38]
 
 Drake, et al.                                                  [Page 39]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    If the Service Provider resolved the above circular references the
@@ -2238,7 +2238,7 @@ Content-Type: application/json
 
 Drake, et al.                                                  [Page 40]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
         "location":"https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
@@ -2294,7 +2294,7 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
 Drake, et al.                                                  [Page 41]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 3.6.  Data Input/Output Formats
@@ -2350,7 +2350,7 @@ Drake, et al.                                                  [Page 41]
 
 Drake, et al.                                                  [Page 42]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    </attribute>
@@ -2406,7 +2406,7 @@ ETag: W/"a330bc54f0671c9"
 
 Drake, et al.                                                  [Page 43]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    extended attributes with the associated Resource URN; e.g., the
@@ -2448,7 +2448,7 @@ Drake, et al.                                                  [Page 43]
    | FOUND        |                           | e.g., User, does not   |
    |              |                           | exist                  |
    |              |                           |                        |
-   | 409 CONFLICT | PUT,PATCH,DELETE          | The specified version  |
+   | 409 CONFLICT | POST, PUT,PATCH,DELETE    | The specified version  |
    |              |                           | number does not match  |
    |              |                           | the resource's latest  |
    |              |                           | version number or a    |
@@ -2462,7 +2462,7 @@ Drake, et al.                                                  [Page 43]
 
 Drake, et al.                                                  [Page 44]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
    | 412          | PUT,PATCH,DELETE          | Failed to update as    |
@@ -2518,7 +2518,7 @@ HTTP/1.1 404 NOT FOUND
 
 Drake, et al.                                                  [Page 45]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 3.11.  Versioning Resources
@@ -2574,7 +2574,7 @@ Drake, et al.                                                  [Page 45]
 
 Drake, et al.                                                  [Page 46]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 HTTP/1.1 201 Created
@@ -2630,7 +2630,7 @@ ETag: W/"e180ee84f0671b1"
 
 Drake, et al.                                                  [Page 47]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 3.12.  HTTP Method Overloading
@@ -2686,7 +2686,7 @@ Drake, et al.                                                  [Page 47]
 
 Drake, et al.                                                  [Page 48]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 4.  Security Considerations
@@ -2742,7 +2742,7 @@ Drake, et al.                                                  [Page 48]
 
 Drake, et al.                                                  [Page 49]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 5.  Contributors
@@ -2798,7 +2798,7 @@ Drake, et al.                                                  [Page 49]
 
 Drake, et al.                                                  [Page 50]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 6.  Acknowledgments
@@ -2854,7 +2854,7 @@ Drake, et al.                                                  [Page 50]
 
 Drake, et al.                                                  [Page 51]
 
-                            draft-scim-api-01                 March 2012
+                            draft-scim-api-01                  June 2012
 
 
 Authors' Addresses
