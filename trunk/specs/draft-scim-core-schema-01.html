@@ -1100,9 +1100,10 @@ Service Provider Configuration Schema</h3>
 <blockquote class="text"><dl>
 <dt>authenticationSchemes</dt>
 <dd>A complex type that specifies supported Authentication Scheme
-            properties.  Instead of the standard Canonical Values for type, this attribute defines the
+            properties. Instead of the standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent common schemes: oauth, oauth2, oauthbearertoken, httpbasic, and httpdigest.
-            REQUIRED.
+            To enable seamless discovery of configuration, the Service Provider SHOULD, with the appropriate security 
+            considerations, make the authenticationSchemes attribute publicly accessible without prior authentication. REQUIRED.
             
 <blockquote class="text"><dl>
 <dt>name</dt>

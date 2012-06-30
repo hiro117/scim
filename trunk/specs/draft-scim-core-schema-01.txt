@@ -1093,7 +1093,11 @@ Mortimore, et al.                                              [Page 19]
       Authentication Scheme properties.  Instead of the standard
       Canonical Values for type, this attribute defines the following
       Canonical Values to represent common schemes: oauth, oauth2,
-      oauthbearertoken, httpbasic, and httpdigest.  REQUIRED.
+      oauthbearertoken, httpbasic, and httpdigest.  To enable seamless
+      discovery of configuration, the Service Provider SHOULD, with the
+      appropriate security considerations, make the
+      authenticationSchemes attribute publicly accessible without prior
+      authentication.  REQUIRED.
 
       name  The common authentication scheme name; e.g., HTTP Basic.
          REQUIRED.
@@ -1106,10 +1110,6 @@ Mortimore, et al.                                              [Page 19]
 
       documentationUrl  A HTTP addressable URL pointing to the
          Authentication Scheme's usage documentation.  OPTIONAL.
-
-
-
-
 
 
 
