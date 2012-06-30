@@ -80,7 +80,7 @@ Table of Contents
      3.9.  HTTP Response Codes  . . . . . . . . . . . . . . . . . . . 44
      3.10. API Versioning . . . . . . . . . . . . . . . . . . . . . . 45
      3.11. Versioning Resources . . . . . . . . . . . . . . . . . . . 46
-     3.12. HTTP Method Overloading  . . . . . . . . . . . . . . . . . 48
+     3.12. HTTP Method Overloading  . . . . . . . . . . . . . . . . . 47
    4.  Security Considerations  . . . . . . . . . . . . . . . . . . . 49
    5.  Contributors . . . . . . . . . . . . . . . . . . . . . . . . . 50
    6.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 51
@@ -2600,9 +2600,7 @@ ETag: W/"e180ee84f0671b1"
 }
 
    With the returned ETag, Consumers MAY choose to retrieve the Resource
-   only if the Resource has been modified.  In addition, if updating,
-   specifying an ETag guarantees that previous updates will not be
-   overwritten.
+   only if the Resource has been modified.
 
    Conditional retrieval example using If-None-Match header:
 
@@ -2616,15 +2614,17 @@ ETag: W/"e180ee84f0671b1"
    If the Resource has not changed the Service Provider simply returns
    an empty body with a 304 "Not Modified" response code.
 
-   Similarly, consumers MAY supply an If-Match ETag header for PUT,
-   PATCH, and DELETE operations to ensure that the requested operation
-   succeeds only if the supplied ETag matches the latest Service
-   Provider Resource; e.g., If-Match: W/"e180ee84f0671b1"
+   If the Service Providers supports versioning of resources the
+   Consumer MUST supply an If-Match header for PUT and PATCH operations
+   to ensure that the requested operation succeeds only if the supplied
+   ETag matches the latest Service Provider Resource; e.g., If-Match:
+   W/"e180ee84f0671b1"
 
-   To perform DELETE, PATCH, or PUT operations and override ETag
-   versioning specify "If-Match: *" in lieu of an ETag header.
+3.12.  HTTP Method Overloading
 
-
+   In recognition that some clients, servers and firewalls prevent PUT,
+   PATCH and DELETE operations a client MAY override the POST operation
+   by specifying the custom header "X-HTTP-Method-Override" with the
 
 
 
@@ -2633,16 +2633,16 @@ Drake, et al.                                                  [Page 47]
                             draft-scim-api-01                  June 2012
 
 
-3.12.  HTTP Method Overloading
-
-   In recognition that some clients, servers and firewalls prevent PUT,
-   PATCH and DELETE operations a client MAY override the POST operation
-   by specifying the custom header "X-HTTP-Method-Override" with the
    desired PUT, PATCH, DELETE operation.  For example:
 
 
    POST /Users/2819c223-7f76-453a-919d-413861904646
    X-HTTP-Method-Override: DELETE
+
+
+
+
+
 
 
 

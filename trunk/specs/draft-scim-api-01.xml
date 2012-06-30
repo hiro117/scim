@@ -2399,9 +2399,7 @@ ETag: W/"e180ee84f0671b1"
                         ]]></artwork>
                 </figure>
                 <t>With the returned ETag, Consumers MAY choose to retrieve the Resource
-                    only if the Resource has been modified. In addition, if updating,
-                    specifying an ETag guarantees that previous updates will not be
-                    overwritten.
+                    only if the Resource has been modified.
                 </t>
 
                 <t>Conditional retrieval example using
@@ -2429,24 +2427,15 @@ If-None-Match: W/"e180ee84f0671b1"
                     empty body with a 304 "Not Modified" response code.
                 </t>
                 <t>
-                    Similarly, consumers MAY supply an
+                    If the Service Providers supports versioning of resources 
+                    the Consumer MUST supply an
                     <eref
                             target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">
                         If-Match
                     </eref>
-                    ETag header for PUT, PATCH, and DELETE operations to ensure that the
+                    header for PUT and PATCH operations to ensure that the
                     requested operation succeeds only if the supplied ETag matches the
                     latest Service Provider Resource; e.g., If-Match: W/"e180ee84f0671b1"
-                </t>
-
-                <t>
-                    To perform DELETE, PATCH, or PUT operations and override ETag
-                    versioning specify
-                    <eref
-                            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24">
-                        "If-Match: *"
-                    </eref>
-                    in lieu of an ETag header.
                 </t>
             </section>
             <section title="HTTP Method Overloading">
