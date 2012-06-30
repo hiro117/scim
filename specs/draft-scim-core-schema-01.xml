@@ -713,9 +713,10 @@
       <t>The following multi-valued attribute is defined in addition to the common attributes defined in Core Schema:
         <list style="hanging">
           <t hangText="authenticationSchemes">A complex type that specifies supported Authentication Scheme
-            properties.  Instead of the standard Canonical Values for type, this attribute defines the
+            properties. Instead of the standard Canonical Values for type, this attribute defines the
             following Canonical Values to represent common schemes: oauth, oauth2, oauthbearertoken, httpbasic, and httpdigest.
-            REQUIRED.
+            To enable seamless discovery of configuration, the Service Provider SHOULD, with the appropriate security 
+            considerations, make the authenticationSchemes attribute publicly accessible without prior authentication. REQUIRED.
             <list style="hanging">
               <t hangText="name">The common authentication scheme name; e.g., HTTP Basic. REQUIRED.</t>
               <t hangText="description">A description of the Authentication Scheme. REQUIRED.</t>
