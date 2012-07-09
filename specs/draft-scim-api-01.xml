@@ -252,9 +252,10 @@ Authorization: Bearer h480djs93hd8
                 </t>
 
                 <t>
-                    If there is a conflict for the POST operation, a 409 error should be
-                    returned. For example if a request to create a User resource with a
-                    userName that already exists results in a 409 error.
+                    If the Service Provider determines creation of the requested Resource
+                    conflicts with existing resources; e.g., a User Resource with a duplicate
+                    userName, the Service Provider MUST return a 409 error and SHOULD indicate
+                    the conflicting attribute(s) in the body of the response.
                 </t>
 
                 <t>Below, the client sends a POST request containing a User</t>
@@ -1318,7 +1319,7 @@ If-Match: W/"a330bc54f0671c9"
                     results. In addition the Service Provider MUST not consider the deleted
                     resource in conflict calculation. For example if a User resource is
                     deleted, a CREATE request for a User resource with the same userName
-                    as the previously deleted resouce should not fail with 409 error
+                    as the previously deleted resource should not fail with a 409 error
                     due to userName conflict.
                 </t>
                 <figure height="" suppress-title="false" width="" alt="" title=""
