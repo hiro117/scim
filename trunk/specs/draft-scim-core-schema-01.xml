@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <?xml-stylesheet type='text/xsl' href='http://xml.resource.org/authoring/rfc2629.xslt' ?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd">
-<rfc category="info" docName="draft-scim-core-schema-00" ipr="trust200902">
+<rfc category="info" docName="draft-scim-core-schema-01" ipr="trust200902">
   <?rfc toc="yes" ?>
 
   <?rfc tocdepth="2" ?>
@@ -17,7 +17,7 @@
   <?rfc private="Draft" ?>
 
   <front>
-    <title abbrev="draft-scim-core-schema-00">System for Cross-Domain Identity
+    <title abbrev="draft-scim-core-schema-01">System for Cross-Domain Identity
     Management: Core Schema 1.1</title>
 
     <author fullname="Chuck Mortimore" initials="C." role="editor"
@@ -49,7 +49,7 @@
       </address>
     </author>
 
-    <date day="16" month="December" year="2011" />
+    <date day="09" month="July" year="2012" />
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification is
