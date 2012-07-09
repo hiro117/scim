@@ -8,7 +8,7 @@ Draft                                                  C. Mortimore, Ed.
                                                                     Ping
                                                                 T. Drake
                                                                UnboundID
-                                                       December 16, 2011
+                                                           July 09, 2012
 
 
       System for Cross-Domain Identity Management: Core Schema 1.1
@@ -54,7 +54,7 @@ Abstract
 
 Mortimore, et al.                                               [Page 1]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 Table of Contents
@@ -110,7 +110,7 @@ Table of Contents
 
 Mortimore, et al.                                               [Page 2]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 1.  Requirements Notation and Conventions
@@ -166,7 +166,7 @@ Mortimore, et al.                                               [Page 2]
 
 Mortimore, et al.                                               [Page 3]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 2.  Overview
@@ -222,7 +222,7 @@ Mortimore, et al.                                               [Page 3]
 
 Mortimore, et al.                                               [Page 4]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
    Simple Attribute:  A Singular or Multi-valued Attribute whose value
@@ -278,7 +278,7 @@ Mortimore, et al.                                               [Page 4]
 
 Mortimore, et al.                                               [Page 5]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 3.  SCIM Schema Structure
@@ -334,7 +334,7 @@ Mortimore, et al.                                               [Page 5]
 
 Mortimore, et al.                                               [Page 6]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 3.1.3.  Decimal
@@ -390,7 +390,7 @@ Mortimore, et al.                                               [Page 6]
 
 Mortimore, et al.                                               [Page 7]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
    defined.
@@ -446,7 +446,7 @@ Mortimore, et al.                                               [Page 7]
 
 Mortimore, et al.                                               [Page 8]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 4.  Schema Extension Model
@@ -502,7 +502,7 @@ Mortimore, et al.                                               [Page 8]
 
 Mortimore, et al.                                               [Page 9]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 5.  SCIM Core Schema
@@ -558,7 +558,7 @@ Mortimore, et al.                                               [Page 9]
 
 Mortimore, et al.                                              [Page 10]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       location  The URI of the Resource being returned.  This value MUST
@@ -614,7 +614,7 @@ Mortimore, et al.                                              [Page 10]
 
 Mortimore, et al.                                              [Page 11]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 6.  SCIM User Schema
@@ -670,7 +670,7 @@ Mortimore, et al.                                              [Page 11]
 
 Mortimore, et al.                                              [Page 12]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
    displayName  The name of the User, suitable for display to end-users.
@@ -726,7 +726,7 @@ Mortimore, et al.                                              [Page 12]
 
 Mortimore, et al.                                              [Page 13]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
    password  The User's clear text password.  This attribute is intended
@@ -782,7 +782,7 @@ Mortimore, et al.                                              [Page 13]
 
 Mortimore, et al.                                              [Page 14]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       formatted  The full mailing address, formatted for display or use
@@ -838,7 +838,7 @@ Mortimore, et al.                                              [Page 14]
 
 Mortimore, et al.                                              [Page 15]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
    roles  A list of roles for the User that collectively represent who
@@ -894,7 +894,7 @@ Mortimore, et al.                                              [Page 15]
 
 Mortimore, et al.                                              [Page 16]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 7.  SCIM Enterprise User Schema Extension
@@ -950,7 +950,7 @@ Mortimore, et al.                                              [Page 16]
 
 Mortimore, et al.                                              [Page 17]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 8.  SCIM Group Schema
@@ -1006,7 +1006,7 @@ Mortimore, et al.                                              [Page 17]
 
 Mortimore, et al.                                              [Page 18]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 9.  Service Provider Configuration Schema
@@ -1062,7 +1062,7 @@ Mortimore, et al.                                              [Page 18]
 
 Mortimore, et al.                                              [Page 19]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       supported  Boolean value specifying whether the operation is
@@ -1118,7 +1118,7 @@ Mortimore, et al.                                              [Page 19]
 
 Mortimore, et al.                                              [Page 20]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 10.  Resource Schema
@@ -1174,7 +1174,7 @@ Mortimore, et al.                                              [Page 20]
 
 Mortimore, et al.                                              [Page 21]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       schema  The attribute's associated schema; e.g.,
@@ -1230,7 +1230,7 @@ Mortimore, et al.                                              [Page 21]
 
 Mortimore, et al.                                              [Page 22]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 11.  JSON Representation
@@ -1286,7 +1286,7 @@ Mortimore, et al.                                              [Page 22]
 
 Mortimore, et al.                                              [Page 23]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
     {
@@ -1342,7 +1342,7 @@ Mortimore, et al.                                              [Page 23]
 
 Mortimore, et al.                                              [Page 24]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
   "preferredLanguage":"en_US",
@@ -1398,7 +1398,7 @@ Mortimore, et al.                                              [Page 24]
 
 Mortimore, et al.                                              [Page 25]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 11.3.  Enterprise User Extension Representation
@@ -1454,7 +1454,7 @@ Mortimore, et al.                                              [Page 25]
 
 Mortimore, et al.                                              [Page 26]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       "postalCode": "91608",
@@ -1510,7 +1510,7 @@ Mortimore, et al.                                              [Page 26]
 
 Mortimore, et al.                                              [Page 27]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
     {
@@ -1566,7 +1566,7 @@ Mortimore, et al.                                              [Page 27]
 
 Mortimore, et al.                                              [Page 28]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 11.4.  Group Representation
@@ -1622,7 +1622,7 @@ Mortimore, et al.                                              [Page 28]
 
 Mortimore, et al.                                              [Page 29]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 {
@@ -1678,7 +1678,7 @@ Mortimore, et al.                                              [Page 29]
 
 Mortimore, et al.                                              [Page 30]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 11.6.  Resource Schema Representation
@@ -1734,7 +1734,7 @@ Mortimore, et al.                                              [Page 30]
 
 Mortimore, et al.                                              [Page 31]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
           "caseExact":false
@@ -1790,7 +1790,7 @@ Mortimore, et al.                                              [Page 31]
 
 Mortimore, et al.                                              [Page 32]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
        "required":false,
@@ -1846,7 +1846,7 @@ Mortimore, et al.                                              [Page 32]
 
 Mortimore, et al.                                              [Page 33]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
        "readOnly":false,
@@ -1902,7 +1902,7 @@ Mortimore, et al.                                              [Page 33]
 
 Mortimore, et al.                                              [Page 34]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
          },
@@ -1958,7 +1958,7 @@ Mortimore, et al.                                              [Page 34]
 
 Mortimore, et al.                                              [Page 35]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 12.  XML Representation
@@ -2014,7 +2014,7 @@ Mortimore, et al.                                              [Page 35]
 
 Mortimore, et al.                                              [Page 36]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       <formatted>100 Universal City Plaza\nHollywood, CA 91608 USA</formatted>
@@ -2070,7 +2070,7 @@ Mortimore, et al.                                              [Page 36]
 
 Mortimore, et al.                                              [Page 37]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
   <locale>en_US</locale>
@@ -2126,7 +2126,7 @@ Mortimore, et al.                                              [Page 37]
 
 Mortimore, et al.                                              [Page 38]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
         +GFiBZ+GNF/cAYKcMtGcrs2i97ZkJMo=
@@ -2182,7 +2182,7 @@ Mortimore, et al.                                              [Page 38]
 
 Mortimore, et al.                                              [Page 39]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       <value>babs@jensen.com/value>
@@ -2238,7 +2238,7 @@ Mortimore, et al.                                              [Page 39]
 
 Mortimore, et al.                                              [Page 40]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
      <type>thumbnail></type>
@@ -2294,7 +2294,7 @@ Mortimore, et al.                                              [Page 40]
 
 Mortimore, et al.                                              [Page 41]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
       </value>
@@ -2350,7 +2350,7 @@ Mortimore, et al.                                              [Page 41]
 
 Mortimore, et al.                                              [Page 42]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 13.  Security Considerations
@@ -2406,7 +2406,7 @@ Mortimore, et al.                                              [Page 42]
 
 Mortimore, et al.                                              [Page 43]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 Appendix A.  Contributors
@@ -2462,7 +2462,7 @@ Appendix A.  Contributors
 
 Mortimore, et al.                                              [Page 44]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 14.  Normative References
@@ -2518,7 +2518,7 @@ Mortimore, et al.                                              [Page 44]
 
 Mortimore, et al.                                              [Page 45]
 
-                        draft-scim-core-schema-00          December 2011
+                        draft-scim-core-schema-01              July 2012
 
 
 Authors' Addresses

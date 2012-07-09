@@ -152,7 +152,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">SailPoint</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">E. Wahlström</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Technology Nexus</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">June 29, 2012</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">July 09, 2012</td></tr>
 </table></td></tr></table>
 <h1><br />System for Cross-Domain Identity Management:Protocol 1.1</h1>
 
@@ -444,9 +444,10 @@ Creating Resources</h3>
                 
 </p>
 <p>
-                    If there is a conflict for the POST operation, a 409 error should be
-                    returned. For example if a request to create a User resource with a
-                    userName that already exists results in a 409 error.
+                    If the Service Provider determines creation of the requested Resource
+                    conflicts with existing resources; e.g., a User Resource with a duplicate
+                    userName, the Service Provider MUST return a 409 error and SHOULD indicate
+                    the conflicting attribute(s) in the body of the response.
                 
 </p>
 <p>Below, the client sends a POST request containing a User
@@ -1439,7 +1440,7 @@ Deleting Resources</h3>
                     results. In addition the Service Provider MUST not consider the deleted
                     resource in conflict calculation. For example if a User resource is
                     deleted, a CREATE request for a User resource with the same userName
-                    as the previously deleted resouce should not fail with 409 error
+                    as the previously deleted resource should not fail with a 409 error
                     due to userName conflict.
                 
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
