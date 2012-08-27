@@ -11,7 +11,7 @@
   <?rfc inline="yes"?>
   <?rfc compact="yes"?>
   <?rfc subcompact="no"?>
-  <rfc category="std" docName="draft-scim-api-00" ipr="trust200902">
+  <rfc category="std" docName="draft-ietf-scim-api-00" ipr="trust200902">
 
   <front>
         <title abbrev="draft-scim-api-00">System for Cross-Domain Identity Management:Protocol</title>
@@ -47,7 +47,7 @@
             </address>
         </author>
 
-        <date day="24" month="August" year="2012" />
+        <date day="27" month="August" year="2012" />
         <keyword>SCIM</keyword>
         <abstract>
             <t>
