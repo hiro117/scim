@@ -4,18 +4,18 @@
 Network Working Group                                      T. Drake, Ed.
 Internet-Draft                                                 UnboundID
 Intended status: Standards Track                            C. Mortimore
-Expires: February 28, 2013                                    SalesForce
+Expires: May 5, 2013                                          SalesForce
                                                                M. Ansari
                                                                    Cisco
                                                               K. Grizzle
                                                                SailPoint
                                                            E. Wahlstroem
                                                         Technology Nexus
-                                                         August 27, 2012
+                                                        November 1, 2012
 
 
           System for Cross-Domain Identity Management:Protocol
-                         draft-ietf-scim-api-00
+                         draft-ietf-scim-api-01
 
 Abstract
 
@@ -46,15 +46,15 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 28, 2013.
+   This Internet-Draft will expire on May 5, 2013.
 
 Copyright Notice
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 1]
+Drake, et al.              Expires May 5, 2013                  [Page 1]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    Copyright (c) 2012 IETF Trust and the persons identified as the
@@ -108,9 +108,9 @@ Table of Contents
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 2]
+Drake, et al.              Expires May 5, 2013                  [Page 2]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 1.  Introduction and Overview
@@ -164,9 +164,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 3]
+Drake, et al.              Expires May 5, 2013                  [Page 3]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    respond to unauthorized or unauthenticated requests using the 401
@@ -220,9 +220,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 4]
+Drake, et al.              Expires May 5, 2013                  [Page 4]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    +------------+--------------------+---------------+-----------------+
@@ -276,9 +276,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 5]
+Drake, et al.              Expires May 5, 2013                  [Page 5]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 3.1.  Creating Resources
@@ -332,9 +332,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 6]
+Drake, et al.              Expires May 5, 2013                  [Page 6]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 201 Created
@@ -388,9 +388,9 @@ ETag: W/"e180ee84f0671b1"
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 7]
+Drake, et al.              Expires May 5, 2013                  [Page 7]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    The server responds with:
@@ -444,9 +444,9 @@ ETag: W/"f250dd84f0671c3"
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 8]
+Drake, et al.              Expires May 5, 2013                  [Page 8]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    The below example returns the userName for all Users:
@@ -500,9 +500,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013               [Page 9]
+Drake, et al.              Expires May 5, 2013                  [Page 9]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    by an attribute operator and optional value.  Multiple expressions
@@ -556,9 +556,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 10]
+Drake, et al.              Expires May 5, 2013                 [Page 10]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    | le       | less than   | If the attribute value is less than or   |
@@ -612,9 +612,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 11]
+Drake, et al.              Expires May 5, 2013                 [Page 11]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    Providers MAY support additional filter operations if they choose.
@@ -668,9 +668,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 12]
+Drake, et al.              Expires May 5, 2013                 [Page 12]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    sortBy:  The sortBy parameter specifies the attribute whose value
@@ -724,9 +724,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 13]
+Drake, et al.              Expires May 5, 2013                 [Page 13]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    | count      | Non-negative      | None.  When specified the        |
@@ -780,9 +780,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 14]
+Drake, et al.              Expires May 5, 2013                 [Page 14]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    Given the example above, to continue paging set the startIndex to 11
@@ -836,9 +836,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 15]
+Drake, et al.              Expires May 5, 2013                 [Page 15]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PUT /Users/2819c223-7f76-453a-919d-413861904646
@@ -892,9 +892,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 16]
+Drake, et al.              Expires May 5, 2013                 [Page 16]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -948,9 +948,9 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 17]
+Drake, et al.              Expires May 5, 2013                 [Page 17]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    attributes specified in the meta.attributes Sub-Attribute (if
@@ -1004,9 +1004,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 18]
+Drake, et al.              Expires May 5, 2013                 [Page 18]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1060,9 +1060,9 @@ Location: "https://example.com/v1/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 19]
+Drake, et al.              Expires May 5, 2013                 [Page 19]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1116,9 +1116,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 20]
+Drake, et al.              Expires May 5, 2013                 [Page 20]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1172,9 +1172,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 21]
+Drake, et al.              Expires May 5, 2013                 [Page 21]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1228,9 +1228,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 22]
+Drake, et al.              Expires May 5, 2013                 [Page 22]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
   PATCH /Users/2819c223-7f76-453a-919d-413861904646
@@ -1284,9 +1284,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 23]
+Drake, et al.              Expires May 5, 2013                 [Page 23]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    The following example shows how to remove a User's nickname:
@@ -1340,9 +1340,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 24]
+Drake, et al.              Expires May 5, 2013                 [Page 24]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    PATCH /Users/2819c223-7f76-453a-919d-413861904646
@@ -1396,9 +1396,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 25]
+Drake, et al.              Expires May 5, 2013                 [Page 25]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 404 NOT FOUND
@@ -1452,9 +1452,9 @@ HTTP/1.1 404 NOT FOUND
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 26]
+Drake, et al.              Expires May 5, 2013                 [Page 26]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
       path  The Resource's relative path.  If the method is POST the
@@ -1508,9 +1508,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 27]
+Drake, et al.              Expires May 5, 2013                 [Page 27]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    processed operations.  A location attribute that includes the
@@ -1564,9 +1564,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 28]
+Drake, et al.              Expires May 5, 2013                 [Page 28]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
          "data":{
@@ -1620,9 +1620,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 29]
+Drake, et al.              Expires May 5, 2013                 [Page 29]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -1676,9 +1676,9 @@ Content-Type: application/json
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 30]
+Drake, et al.              Expires May 5, 2013                 [Page 30]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -1732,9 +1732,9 @@ Content-Type: application/json
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 31]
+Drake, et al.              Expires May 5, 2013                 [Page 31]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -1788,9 +1788,9 @@ Content-Type: application/json
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 32]
+Drake, et al.              Expires May 5, 2013                 [Page 32]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    if the bulkId is 'qwerty' the value is "bulkId:qwerty".  The Service
@@ -1844,9 +1844,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 33]
+Drake, et al.              Expires May 5, 2013                 [Page 33]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
      ]
@@ -1900,9 +1900,9 @@ Content-Type: application/json
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 34]
+Drake, et al.              Expires May 5, 2013                 [Page 34]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -1956,9 +1956,9 @@ ETag: W/"lha5bbazU3fNvfe5"
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 35]
+Drake, et al.              Expires May 5, 2013                 [Page 35]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    POST /v1/Bulk
@@ -2012,9 +2012,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 36]
+Drake, et al.              Expires May 5, 2013                 [Page 36]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    following example exhibits the potential conflict.
@@ -2068,9 +2068,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 37]
+Drake, et al.              Expires May 5, 2013                 [Page 37]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    POST /v1/Bulk
@@ -2124,9 +2124,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 38]
+Drake, et al.              Expires May 5, 2013                 [Page 38]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    If the Service Provider resolved the above circular references the
@@ -2180,9 +2180,9 @@ Content-Type: application/json
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 39]
+Drake, et al.              Expires May 5, 2013                 [Page 39]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
         "location":"https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
@@ -2236,9 +2236,9 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 40]
+Drake, et al.              Expires May 5, 2013                 [Page 40]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 3.6.  Data Input/Output Formats
@@ -2292,9 +2292,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 41]
+Drake, et al.              Expires May 5, 2013                 [Page 41]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    </attribute>
@@ -2348,9 +2348,9 @@ ETag: W/"a330bc54f0671c9"
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 42]
+Drake, et al.              Expires May 5, 2013                 [Page 42]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    extended attributes with the associated Resource URN; e.g., the
@@ -2404,9 +2404,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 43]
+Drake, et al.              Expires May 5, 2013                 [Page 43]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    | 413 REQUEST  | POST                      | {"maxOperations":      |
@@ -2460,9 +2460,9 @@ HTTP/1.1 404 NOT FOUND
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 44]
+Drake, et al.              Expires May 5, 2013                 [Page 44]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    supported SCIM ETags MUST be specified as an HTTP header and SHOULD
@@ -2516,9 +2516,9 @@ ETag: W/"e180ee84f0671b1"
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 45]
+Drake, et al.              Expires May 5, 2013                 [Page 45]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
    With the returned ETag, Consumers MAY choose to retrieve the Resource
@@ -2572,9 +2572,9 @@ Internet-Draft              draft-scim-api-00                August 2012
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 46]
+Drake, et al.              Expires May 5, 2013                 [Page 46]
 
-Internet-Draft              draft-scim-api-00                August 2012
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 5.  Contributors
@@ -2628,5 +2628,5 @@ Authors' Addresses
 
 
 
-Drake, et al.           Expires February 28, 2013              [Page 47]
+Drake, et al.              Expires May 5, 2013                 [Page 47]
 

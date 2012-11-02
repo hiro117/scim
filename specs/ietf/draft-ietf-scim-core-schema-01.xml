@@ -11,9 +11,9 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-ietf-scim-core-schema-00" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-scim-core-schema-01" ipr="trust200902">
   <front>
-    <title abbrev="draft-scim-core-schema-00">System for Cross-Domain Identity
+    <title abbrev="draft-scim-core-schema-01">System for Cross-Domain Identity
     Management: Core Schema</title>
 
     <author fullname="Chuck Mortimore" initials="C." role="editor"
@@ -45,7 +45,7 @@
       </address>
     </author>
 
-    <date day="27" month="August" year="2012" />
+    <date day="1" month="November" year="2012" />
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification is
