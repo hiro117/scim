@@ -4,15 +4,15 @@
 Network Working Group                                  C. Mortimore, Ed.
 Internet-Draft                                                Salesforce
 Intended status: Standards Track                              P. Harding
-Expires: February 28, 2013                                     P. Madsen
+Expires: May 5, 2013                                           P. Madsen
                                                                     Ping
                                                                 T. Drake
                                                                UnboundID
-                                                         August 27, 2012
+                                                        November 1, 2012
 
 
         System for Cross-Domain Identity Management: Core Schema
-                     draft-ietf-scim-core-schema-00
+                     draft-ietf-scim-core-schema-01
 
 Abstract
 
@@ -52,12 +52,12 @@ Status of this Memo
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 1]
+Mortimore, et al.          Expires May 5, 2013                  [Page 1]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
-   This Internet-Draft will expire on February 28, 2013.
+   This Internet-Draft will expire on May 5, 2013.
 
 Copyright Notice
 
@@ -108,9 +108,9 @@ Copyright Notice
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 2]
+Mortimore, et al.          Expires May 5, 2013                  [Page 2]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 Table of Contents
@@ -164,9 +164,9 @@ Table of Contents
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 3]
+Mortimore, et al.          Expires May 5, 2013                  [Page 3]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 1.  Requirements Notation and Conventions
@@ -220,9 +220,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 4]
+Mortimore, et al.          Expires May 5, 2013                  [Page 4]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    Consumer:  A website or application that uses the SCIM protocol to
@@ -276,9 +276,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 5]
+Mortimore, et al.          Expires May 5, 2013                  [Page 5]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 3.1.  Attribute Data Types
@@ -332,9 +332,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 6]
+Mortimore, et al.          Expires May 5, 2013                  [Page 6]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 3.1.6.  Binary
@@ -388,9 +388,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 7]
+Mortimore, et al.          Expires May 5, 2013                  [Page 7]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    {
@@ -444,9 +444,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 8]
+Mortimore, et al.          Expires May 5, 2013                  [Page 8]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    id Unique identifier for the SCIM Resource as defined by the Service
@@ -500,9 +500,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013               [Page 9]
+Mortimore, et al.          Expires May 5, 2013                  [Page 9]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 5.2.  "schemas" Attribute
@@ -556,9 +556,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 10]
+Mortimore, et al.          Expires May 5, 2013                 [Page 10]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       the same name, with the formatted name indicating how the
@@ -612,9 +612,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 11]
+Mortimore, et al.          Expires May 5, 2013                 [Page 11]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    userType  Used to identify the organization to user relationship.
@@ -668,9 +668,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 12]
+Mortimore, et al.          Expires May 5, 2013                 [Page 12]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    ims  Instant messaging address for the User.  No official
@@ -724,9 +724,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 13]
+Mortimore, et al.          Expires May 5, 2013                 [Page 13]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    groups  A list of groups that the user belongs to, either thorough
@@ -780,9 +780,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 14]
+Mortimore, et al.          Expires May 5, 2013                 [Page 14]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    The following Singular Attributes are defined:
@@ -836,9 +836,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 15]
+Mortimore, et al.          Expires May 5, 2013                 [Page 15]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    members  A list of members of the Group.  Canonical Types "User" and
@@ -892,9 +892,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 16]
+Mortimore, et al.          Expires May 5, 2013                 [Page 16]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    filter  A complex type that specifies FILTER options.  REQUIRED.
@@ -948,9 +948,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 17]
+Mortimore, et al.          Expires May 5, 2013                 [Page 17]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       name  The common authentication scheme name; e.g., HTTP Basic.
@@ -1004,9 +1004,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 18]
+Mortimore, et al.          Expires May 5, 2013                 [Page 18]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       type  The attribute's data type; e.g., String.
@@ -1060,9 +1060,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 19]
+Mortimore, et al.          Expires May 5, 2013                 [Page 19]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
             caseExact  A Boolean value that specifies if the String
@@ -1116,9 +1116,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 20]
+Mortimore, et al.          Expires May 5, 2013                 [Page 20]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       "type": "work",
@@ -1172,9 +1172,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 21]
+Mortimore, et al.          Expires May 5, 2013                 [Page 21]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       "type": "photo"
@@ -1228,9 +1228,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 22]
+Mortimore, et al.          Expires May 5, 2013                 [Page 22]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
     }
@@ -1284,9 +1284,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 23]
+Mortimore, et al.          Expires May 5, 2013                 [Page 23]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       "postalCode": "91608",
@@ -1340,9 +1340,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 24]
+Mortimore, et al.          Expires May 5, 2013                 [Page 24]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
   "password":"t1meMa$heen",
@@ -1396,9 +1396,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 25]
+Mortimore, et al.          Expires May 5, 2013                 [Page 25]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
   "meta": {
@@ -1452,9 +1452,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 26]
+Mortimore, et al.          Expires May 5, 2013                 [Page 26]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 {
@@ -1508,9 +1508,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 27]
+Mortimore, et al.          Expires May 5, 2013                 [Page 27]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 11.6.  Resource Schema Representation
@@ -1564,9 +1564,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 28]
+Mortimore, et al.          Expires May 5, 2013                 [Page 28]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
           "caseExact":false
@@ -1620,9 +1620,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 29]
+Mortimore, et al.          Expires May 5, 2013                 [Page 29]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
        "required":false,
@@ -1676,9 +1676,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 30]
+Mortimore, et al.          Expires May 5, 2013                 [Page 30]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
        "readOnly":false,
@@ -1732,9 +1732,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 31]
+Mortimore, et al.          Expires May 5, 2013                 [Page 31]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
          },
@@ -1788,9 +1788,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 32]
+Mortimore, et al.          Expires May 5, 2013                 [Page 32]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    </User>
@@ -1844,9 +1844,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 33]
+Mortimore, et al.          Expires May 5, 2013                 [Page 33]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       <streetAddress>456 Hollywood Blvd</streetAddress>
@@ -1900,9 +1900,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 34]
+Mortimore, et al.          Expires May 5, 2013                 [Page 34]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       <display>Employees</display>
@@ -1956,9 +1956,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 35]
+Mortimore, et al.          Expires May 5, 2013                 [Page 35]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 12.3.  Enterprise User Extension Representation
@@ -2012,9 +2012,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 36]
+Mortimore, et al.          Expires May 5, 2013                 [Page 36]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       <primary>true</primary>
@@ -2068,9 +2068,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 37]
+Mortimore, et al.          Expires May 5, 2013                 [Page 37]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       <display>US Employees</display>
@@ -2124,9 +2124,9 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 38]
+Mortimore, et al.          Expires May 5, 2013                 [Page 38]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
     <created>2010-01-23T04:56:22Z</created>
@@ -2180,9 +2180,9 @@ Appendix A.  Contributors
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 39]
+Mortimore, et al.          Expires May 5, 2013                 [Page 39]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
       Sidharth Choudhury (schoudhury@salesforce.com)
@@ -2236,9 +2236,9 @@ Authors' Addresses
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 40]
+Mortimore, et al.          Expires May 5, 2013                 [Page 40]
 
-Internet-Draft          draft-scim-core-schema-00            August 2012
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
    Patrick Harding
@@ -2292,5 +2292,5 @@ Internet-Draft          draft-scim-core-schema-00            August 2012
 
 
 
-Mortimore, et al.       Expires February 28, 2013              [Page 41]
+Mortimore, et al.          Expires May 5, 2013                 [Page 41]
 
