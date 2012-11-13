@@ -79,7 +79,7 @@ Table of Contents
      1.3.  Definitions  . . . . . . . . . . . . . . . . . . . . . . .  3
    2.  Authentication and Authorization . . . . . . . . . . . . . . .  3
    3.  API  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
-     3.1.  Creating Resources . . . . . . . . . . . . . . . . . . . .  6
+     3.1.  Creating Resources . . . . . . . . . . . . . . . . . . . .  5
      3.2.  Retrieving Resources . . . . . . . . . . . . . . . . . . .  7
        3.2.1.  Retrieving a known Resource  . . . . . . . . . . . . .  7
        3.2.2.  List/Query Resources . . . . . . . . . . . . . . . . .  8
@@ -89,14 +89,14 @@ Table of Contents
      3.4.  Deleting Resources . . . . . . . . . . . . . . . . . . . . 25
      3.5.  Bulk . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
      3.6.  Data Input/Output Formats  . . . . . . . . . . . . . . . . 41
-     3.7.  Additional retrieval query parameters  . . . . . . . . . . 42
+     3.7.  Additional retrieval query parameters  . . . . . . . . . . 41
      3.8.  Attribute Notation . . . . . . . . . . . . . . . . . . . . 42
-     3.9.  HTTP Response Codes  . . . . . . . . . . . . . . . . . . . 43
+     3.9.  HTTP Response Codes  . . . . . . . . . . . . . . . . . . . 42
      3.10. API Versioning . . . . . . . . . . . . . . . . . . . . . . 44
      3.11. Versioning Resources . . . . . . . . . . . . . . . . . . . 44
      3.12. HTTP Method Overloading  . . . . . . . . . . . . . . . . . 46
    4.  Security Considerations  . . . . . . . . . . . . . . . . . . . 46
-   5.  Contributors . . . . . . . . . . . . . . . . . . . . . . . . . 47
+   5.  Contributors . . . . . . . . . . . . . . . . . . . . . . . . . 46
    6.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 47
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 47
 
@@ -265,14 +265,14 @@ Internet-Draft              draft-scim-api-01              November 2012
 
    All requests to the Service Provider are made via HTTP operations on
    a URL derived from the Base URL.  Responses are returned in the body
-   of the HTTP response, formatted as JSON or XML, depending on what is
-   requested.  Response and error codes SHOULD be transmitted via the
-   HTTP status code of the response (if possible), and SHOULD also be
-   specified in the body of the response.
+   of the HTTP response, formatted as JSON.  Response and error codes
+   SHOULD be transmitted via the HTTP status code of the response (if
+   possible), and SHOULD also be specified in the body of the response.
 
+3.1.  Creating Resources
 
-
-
+   To create new Resources, clients send POST requests to the Resource
+   endpoint; i.e., /Users or /Groups.
 
 
 
@@ -280,11 +280,6 @@ Drake, et al.              Expires May 5, 2013                  [Page 5]
 
 Internet-Draft              draft-scim-api-01              November 2012
 
-
-3.1.  Creating Resources
-
-   To create new Resources, clients send POST requests to the Resource
-   endpoint; i.e., /Users or /Groups.
 
    Successful Resource creation is indicated with a 201 ("Created")
    response code.  Upon successful creation, the response body MUST
@@ -324,6 +319,11 @@ Internet-Draft              draft-scim-api-01              November 2012
    The server signals a successful creation with a status code of 201.
    The response includes a Location header indicating the User URI, and
    a representation of that User in the body of the response.
+
+
+
+
+
 
 
 
@@ -2252,52 +2252,23 @@ Internet-Draft              draft-scim-api-01              November 2012
    GET /Users/2819c223-7f76-453a-919d-413861904646.json
    Host: example.com
 
-   GET /Users/2819c223-7f76-453a-919d-413861904646.xml
-   Host: example.com
-
    Service Providers MUST support the Accept Headers "Accept:
-   application/json" for JSON [5] and, if supported, "Accept:
-   application/xml" for XML [6].  The format defaults to JSON if no
-   format is specified.  The data structure returned is equivalent in
-   both formats; the only difference is in the encoding of the data.
+   application/json" for JSON [5].  The format defaults to JSON if no
+   format is specified.
 
    Singular attributes are encoded as string name-value-pairs in JSON;
    e.g.,
 
    "attribute": "value"
 
-   and elements in XML; e.g.,
-
-   <attribute>value</attribute>
-
    Multi-valued attributes in JSON are encoded as arrays; e.g.,
 
    "attributes": [ "value1", "value2" ]
-
-   and repeated tags in XML; e.g.,
-
-   <attributes>value1</attributes>
-   <attributes>value2</attributes>
 
    Elements with nested elements are represented as objects in JSON;
    e.g,
 
    "attribute": { "subattribute1": "value1", "subattribute2": "value2" }
-
-   and repeated tags in XML; e.g.,
-
-   <attribute>
-     <subattribute1>value1</subattribute1>
-     <subattribute2>value2</subattribute2>
-
-
-
-Drake, et al.              Expires May 5, 2013                 [Page 41]
-
-Internet-Draft              draft-scim-api-01              November 2012
-
-
-   </attribute>
 
 3.7.  Additional retrieval query parameters
 
@@ -2317,6 +2288,13 @@ Internet-Draft              draft-scim-api-01              November 2012
 
 
    Giving the response
+
+
+
+
+Drake, et al.              Expires May 5, 2013                 [Page 41]
+
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 200 OK
@@ -2345,14 +2323,6 @@ ETag: W/"a330bc54f0671c9"
    character; e.g., the core User Resource attribute 'userName' is
    identified as 'urn:scim:schemas:core:1.0:userName'.  Consumers MAY
    omit core schema attribute URN prefixes though MUST fully qualify
-
-
-
-Drake, et al.              Expires May 5, 2013                 [Page 42]
-
-Internet-Draft              draft-scim-api-01              November 2012
-
-
    extended attributes with the associated Resource URN; e.g., the
    attribute 'age' defined in 'urn:hr:schemas:user' is fully encoded as
    'urn:hr:schemas:user:age'.  A Complex attributes' Sub-Attributes are
@@ -2364,13 +2334,24 @@ Internet-Draft              draft-scim-api-01              November 2012
 
 3.9.  HTTP Response Codes
 
-   The SCIM Protocol uses the response status codes defined in HTTP [7]
+   The SCIM Protocol uses the response status codes defined in HTTP [6]
    to indicate operation success or failure.  In addition to returning a
    HTTP response code implementers MUST return the errors in the body of
    the response in the client requested format containing the error
    response and, per the HTTP specification, human-readable
    explanations.  Implementers SHOULD handle the identified errors as
    described below.
+
+
+
+
+
+
+
+Drake, et al.              Expires May 5, 2013                 [Page 42]
+
+Internet-Draft              draft-scim-api-01              November 2012
+
 
    +--------------+---------------------------+------------------------+
    | Code         | Applicability             | Suggested Explanation  |
@@ -2400,15 +2381,6 @@ Internet-Draft              draft-scim-api-01              November 2012
    | PRECONDITION |                           | Resource {id} changed  |
    | FAILED       |                           | on the server last     |
    |              |                           | retrieved              |
-
-
-
-
-Drake, et al.              Expires May 5, 2013                 [Page 43]
-
-Internet-Draft              draft-scim-api-01              November 2012
-
-
    | 413 REQUEST  | POST                      | {"maxOperations":      |
    | ENTITY TOO   |                           | 1000,"maxPayload":     |
    | LARGE        |                           | 1048576}               |
@@ -2425,6 +2397,16 @@ Internet-Draft              draft-scim-api-01              November 2012
                        Table 7: Defined error cases
 
    Error example in response to a non-existent GET request.
+
+
+
+
+
+
+
+Drake, et al.              Expires May 5, 2013                 [Page 43]
+
+Internet-Draft              draft-scim-api-01              November 2012
 
 
 HTTP/1.1 404 NOT FOUND
@@ -2457,6 +2439,24 @@ HTTP/1.1 404 NOT FOUND
    Service providers MAY support weak ETags as the preferred mechanism
    for performing conditional retrievals and ensuring Consumers do not
    inadvertently overwrite each others changes, respectively.  When
+   supported SCIM ETags MUST be specified as an HTTP header and SHOULD
+   be specified within the 'version' attribute contained in the
+   Resource's 'meta' attribute.
+
+   Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2464,12 +2464,6 @@ Drake, et al.              Expires May 5, 2013                 [Page 44]
 
 Internet-Draft              draft-scim-api-01              November 2012
 
-
-   supported SCIM ETags MUST be specified as an HTTP header and SHOULD
-   be specified within the 'version' attribute contained in the
-   Resource's 'meta' attribute.
-
-   Example:
 
    POST /Users  HTTP/1.1
    Host: example.com
@@ -2513,6 +2507,12 @@ ETag: W/"e180ee84f0671b1"
   "userName":"bjensen"
 }
 
+   With the returned ETag, Consumers MAY choose to retrieve the Resource
+   only if the Resource has been modified.
+
+   Conditional retrieval example using If-None-Match header:
+
+
 
 
 
@@ -2520,11 +2520,6 @@ Drake, et al.              Expires May 5, 2013                 [Page 45]
 
 Internet-Draft              draft-scim-api-01              November 2012
 
-
-   With the returned ETag, Consumers MAY choose to retrieve the Resource
-   only if the Resource has been modified.
-
-   Conditional retrieval example using If-None-Match header:
 
   GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=displayName
   Host: example.com
@@ -2563,11 +2558,16 @@ Internet-Draft              draft-scim-api-01              November 2012
    Which version(s) ought to be implemented will vary over time, and
    depend on the widespread deployment and known security
    vulnerabilities at the time of implementation.  At the time of this
-   writing, TLS version 1.2 [RFC5246 [8]] is the most recent version,
+   writing, TLS version 1.2 [RFC5246 [7]] is the most recent version,
    but has very limited actual deployment, and might not be readily
-   available in implementation toolkits.  TLS version 1.0 [RFC2246 [8]]
+   available in implementation toolkits.  TLS version 1.0 [RFC2246 [7]]
    is the most widely deployed version, and will give the broadest
    interoperability.
+
+
+5.  Contributors
+
+
 
 
 
@@ -2576,8 +2576,6 @@ Drake, et al.              Expires May 5, 2013                 [Page 46]
 
 Internet-Draft              draft-scim-api-01              November 2012
 
-
-5.  Contributors
 
       Samuel Erdtman (samuel@erdtman.se)
 
@@ -2620,6 +2618,8 @@ Authors' Addresses
    Technology Nexus
 
    Email: erik.wahlstrom@nexussafe.com
+
+
 
 
 
