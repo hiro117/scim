@@ -234,10 +234,9 @@ Authorization: Bearer h480djs93hd8
                     HTTP operations
                 </eref>
                 on a URL derived from the Base URL. Responses are returned in the body
-                of the HTTP response, formatted as JSON or XML, depending on what is
-                requested. Response and error codes SHOULD be transmitted via the HTTP
-                status code of the response (if possible), and SHOULD also be specified
-                in the body of the response.
+                of the HTTP response, formatted as JSON. Response and error codes SHOULD
+                be transmitted via the HTTP status code of the response (if possible), and
+                SHOULD also be specified in the body of the response.
             </t>
 
             <section title="Creating Resources" anchor="create-resource"
@@ -2112,22 +2111,14 @@ Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
               <![CDATA[
 GET /Users/2819c223-7f76-453a-919d-413861904646.json
 Host: example.com
-
-GET /Users/2819c223-7f76-453a-919d-413861904646.xml
-Host: example.com
             ]]></artwork>
                     </figure>
-
                 </t>
 
                 <t>
                     Service Providers MUST support the Accept Headers "Accept:
-                    application/json" for <eref target="http://json.org">JSON</eref>
-                    and, if supported, "Accept: application/xml" for
-                    <eref target="http://www.w3.org/XML/">XML</eref>. The format defaults to
-                    JSON if no format is specified. The data structure returned is
-                    equivalent in both formats; the only difference is in the encoding of
-                    the data.
+                    application/json" for <eref target="http://json.org">JSON</eref>.
+                    The format defaults to JSON if no format is specified.
                 </t>
                 <t>
                     Singular attributes are encoded as string name-value-pairs in JSON;
@@ -2136,12 +2127,6 @@ Host: example.com
                 <figure>
                     <artwork><![CDATA[
 "attribute": "value"
-                    ]]></artwork>
-                </figure>
-                <t>and elements in XML; e.g.,</t>
-                <figure>
-                    <artwork><![CDATA[
-<attribute>value</attribute>
                     ]]></artwork>
                 </figure>
                 <t>
@@ -2153,31 +2138,11 @@ Host: example.com
                     ]]></artwork>
                 </figure>
                 <t>
-                    and repeated tags in XML; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
-<attributes>value1</attributes>
-<attributes>value2</attributes>
-                    ]]></artwork>
-                </figure>
-                <t>
                     Elements with nested elements are represented as objects in JSON; e.g,
                 </t>
                 <figure>
                     <artwork><![CDATA[
 "attribute": { "subattribute1": "value1", "subattribute2": "value2" }
-                    ]]></artwork>
-                </figure>
-                <t>
-                    and repeated tags in XML; e.g.,
-                </t>
-                <figure>
-                    <artwork><![CDATA[
-<attribute>
-  <subattribute1>value1</subattribute1>
-  <subattribute2>value2</subattribute2>
-</attribute>
                     ]]></artwork>
                 </figure>
             </section>
