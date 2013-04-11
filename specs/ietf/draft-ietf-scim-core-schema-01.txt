@@ -126,31 +126,31 @@ Table of Contents
        3.1.4.  Integer  . . . . . . . . . . . . . . . . . . . . . . .  6
        3.1.5.  DateTime . . . . . . . . . . . . . . . . . . . . . . .  6
        3.1.6.  Binary . . . . . . . . . . . . . . . . . . . . . . . .  6
-       3.1.7.  Complex  . . . . . . . . . . . . . . . . . . . . . . .  7
+       3.1.7.  Reference  . . . . . . . . . . . . . . . . . . . . . .  7
+       3.1.8.  Complex  . . . . . . . . . . . . . . . . . . . . . . .  7
      3.2.  Multi-valued Attributes  . . . . . . . . . . . . . . . . .  7
    4.  Schema Extension Model . . . . . . . . . . . . . . . . . . . .  8
-   5.  SCIM Core Schema . . . . . . . . . . . . . . . . . . . . . . .  8
-     5.1.  Common Schema Attributes . . . . . . . . . . . . . . . . .  8
-     5.2.  "schemas" Attribute  . . . . . . . . . . . . . . . . . . .  9
+   5.  SCIM Core Schema . . . . . . . . . . . . . . . . . . . . . . .  9
+     5.1.  Common Schema Attributes . . . . . . . . . . . . . . . . .  9
+     5.2.  "schemas" Attribute  . . . . . . . . . . . . . . . . . . . 10
    6.  SCIM User Schema . . . . . . . . . . . . . . . . . . . . . . . 10
      6.1.  Singular Attributes  . . . . . . . . . . . . . . . . . . . 10
      6.2.  Multi-valued Attributes  . . . . . . . . . . . . . . . . . 12
-   7.  SCIM Enterprise User Schema Extension  . . . . . . . . . . . . 14
+   7.  SCIM Enterprise User Schema Extension  . . . . . . . . . . . . 15
    8.  SCIM Group Schema  . . . . . . . . . . . . . . . . . . . . . . 15
-   9.  Service Provider Configuration Schema  . . . . . . . . . . . . 15
-   10. Resource Schema  . . . . . . . . . . . . . . . . . . . . . . . 17
-   11. JSON Representation  . . . . . . . . . . . . . . . . . . . . . 19
-     11.1. Minimal User Representation  . . . . . . . . . . . . . . . 19
-     11.2. Full User Representation . . . . . . . . . . . . . . . . . 19
-     11.3. Enterprise User Extension Representation . . . . . . . . . 22
-     11.4. Group Representation . . . . . . . . . . . . . . . . . . . 25
-     11.5. Service Provider Configuration Representation  . . . . . . 25
-     11.6. Resource Schema Representation . . . . . . . . . . . . . . 27
-   12. Security Considerations  . . . . . . . . . . . . . . . . . . . 31
-   Appendix A.  Contributors  . . . . . . . . . . . . . . . . . . . . 31
-   13. Normative References . . . . . . . . . . . . . . . . . . . . . 32
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 32
-
+   9.  Service Provider Configuration Schema  . . . . . . . . . . . . 16
+   10. Resource Schema  . . . . . . . . . . . . . . . . . . . . . . . 18
+   11. JSON Representation  . . . . . . . . . . . . . . . . . . . . . 20
+     11.1. Minimal User Representation  . . . . . . . . . . . . . . . 20
+     11.2. Full User Representation . . . . . . . . . . . . . . . . . 20
+     11.3. Enterprise User Extension Representation . . . . . . . . . 23
+     11.4. Group Representation . . . . . . . . . . . . . . . . . . . 26
+     11.5. Service Provider Configuration Representation  . . . . . . 27
+     11.6. Resource Schema Representation . . . . . . . . . . . . . . 28
+   12. Security Considerations  . . . . . . . . . . . . . . . . . . . 32
+   Appendix A.  Contributors  . . . . . . . . . . . . . . . . . . . . 32
+   13. Normative References . . . . . . . . . . . . . . . . . . . . . 33
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 33
 
 
 
@@ -337,7 +337,28 @@ Mortimore, et al.          Expires May 5, 2013                  [Page 6]
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
-3.1.7.  Complex
+3.1.7.  Reference
+
+   A reference to a SCIM Resource.  The value MUST be the absolute or
+   relative URI of the target Resource.  Relative URIs should be
+   resolved as specified in section 5.2 of RFC 3986.  The base URI for
+   relative URI resolution MUST include all URI components and path
+   segments up to but not including the Endpoint URI; e.g., the base URI
+   for a request to
+   https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
+   would be https://example.com/v1/ and the relative URI for this
+   Resource would be Users/2819c223-7f76-453a-919d-413861904646.
+
+   Performing a GET operation on a reference URI MUST return the target
+   Resource or an appropriate HTTP response code.  The Service Provider
+   MAY optionally choose to enforce referential integrity for
+   references.
+
+   By convention, a reference is commonly represented as a "$ref" sub-
+   attribute in complex or multi-valued attributes, however this is
+   OPTIONAL.
+
+3.1.8.  Complex
 
    A Singular or Multi-valued Attribute whose value is a composition of
    one or more Simple Attributes.  The JSON format is defined in section
@@ -362,6 +383,16 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    display  A human readable name, primarily used for display purposes.
       READ-ONLY.
 
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                  [Page 7]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
    operation  The operation to perform on the multi-valued attribute
       during a PATCH request.  The only valid value is "delete", which
       signifies that this instance should be removed from the Resource.
@@ -385,13 +416,8 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    }
 
 
-
-
-
-Mortimore, et al.          Expires May 5, 2013                  [Page 7]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
+   $ref  The Reference of the target Resource, if the attribute is a
+      reference.
 
    When returning multi-valued attributes, Service Providers SHOULD
    canonicalize the value returned, if appropriate (e.g. for e-mail
@@ -417,6 +443,12 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    attributes.
 
 
+
+Mortimore, et al.          Expires May 5, 2013                  [Page 8]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
 5.  SCIM Core Schema
 
 5.1.  Common Schema Attributes
@@ -437,17 +469,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       be specified by the Service Consumer. bulkId: is a reserved
       keyword and MUST NOT be used in the unique identifier.  REQUIRED
       and READ-ONLY.
-
-
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                  [Page 8]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
 
    externalId  An identifier for the Resource as defined by the Service
       Consumer.  The externalId may simplify identification of the
@@ -473,6 +494,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
          the value MUST be the same as the value of created.  The
          attribute MUST be a DateTime.  READ-ONLY.
 
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                  [Page 9]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
       location  The URI of the Resource being returned.  This value MUST
          be the same as the Location HTTP response header.  READ-ONLY.
 
@@ -497,14 +529,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       representation.  Each String value must be a unique URI.  This
       specification defines URIs for User, Group, and a standard
       "enterprise" extension.  All representations of SCIM schema MUST
-
-
-
-Mortimore, et al.          Expires May 5, 2013                  [Page 9]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
       include a non-zero value array with value(s) of the URIs supported
       by that representation.  Duplicate values MUST NOT be included.
       Value order is not specified and MUST not impact behavior.
@@ -527,6 +551,15 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       user-friendly identifiers).  Each User MUST include a non-empty
       userName value.  This identifier MUST be unique across the Service
       Consumer's entire set of Users.  REQUIRED.
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 10]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
 
    name  The components of the User's real name.  Providers MAY return
       just the full name as a single string in the formatted sub-
@@ -551,16 +584,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       middleName  The middle name(s) of the User (e.g.  Jane given the
          full name Ms. Barbara Jane Jensen, III.).
 
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 10]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
       honorificPrefix  The honorific prefix(es) of the User, or "Title"
          in most Western languages (e.g.  Ms. given the full name Ms.
          Barbara Jane Jensen, III.).
@@ -582,6 +605,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       "Bob" or "Bobby" instead of "Robert".  This attribute SHOULD NOT
       be used to represent a User's username (e.g. bjensen or
       mpepperidge).
+
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 11]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
 
    profileUrl  A fully qualified URL to a page representing the User's
       online profile.
@@ -605,17 +639,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       ISO 639-1 two letter language code [5], an underscore, and the ISO
       3166-1 2 letter country code [6]; e.g., 'en_US' specifies the
       language English and country US.
-
-
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 11]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
 
    timezone  The User's time zone in the "Olson" timezone database
       format [7]; e.g.,'America/Los_Angeles'.
@@ -642,6 +665,14 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       instead of bjensen@EXAMPLE.COM.  Canonical Type values of work,
       home, and other.
 
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 12]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
    phoneNumbers  Phone numbers for the User.  The value SHOULD be
       canonicalized by the Service Provider according to format in
       RFC3966 [8] e.g. 'tel:+1-201-555-0123'.  Canonical Type values of
@@ -665,14 +696,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       by this User, but specifically profile photos of the User suitable
       for display when describing the User.  Instead of the standard
       Canonical Values for type, this attribute defines the following
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 12]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
       Canonical Values to represent popular photo sizes: photo,
       thumbnail.
 
@@ -695,6 +718,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
       postalCode  The zipcode or postal code component.
 
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 13]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
       country  The country name component.  When specified the value
          MUST be in ISO 3166-1 alpha 2 "short" code format [6]; e.g.,
          the United States and Sweden are "US" and "SE", respectively.
@@ -715,19 +749,11 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       membership through the Group resource but MAY modify direct group
       membership through the Group resource which MAY influence indirect
       memberships.  If the SCIM Service Provider exposes a Group
-      resource, the value MUST be the "id" attribute of the
-      corresponding Group resources to which the user belongs.  Since
-      this attribute is read-only, group membership changes MUST be
-      applied via the Group Resource (Section 8).  READ-ONLY.
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 13]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
+      resource, the "value" sub-attribute MUST be the "id" and the
+      "$ref" sub-attribute must be the URI of the corresponding Group
+      resources to which the user belongs.  Since this attribute is
+      read-only, group membership changes MUST be applied via the Group
+      Resource (Section 8).  READ-ONLY.
 
    entitlements  A list of entitlements for the User that represent a
       thing the User has.  That is, an entitlement is an additional
@@ -747,6 +773,16 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    x509Certificates  A list of certificates issued to the User.  Values
       are Binary (Section 3.1.6) and DER encoded x509.  This value has
       NO canonical types.
+
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 14]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 7.  SCIM Enterprise User Schema Extension
@@ -774,18 +810,10 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       Service Providers to represent organizational hierarchy by
       referencing the "id" attribute of another User.
 
-
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 14]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
       managerId  The id of the SCIM resource representing the User's
+         manager.  REQUIRED.
+
+      $ref  The URI of the SCIM resource representing the User's
          manager.  REQUIRED.
 
       displayName  The displayName of the User's manager.  OPTIONAL and
@@ -805,6 +833,14 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    scope for this specification.
 
    The following Singular Attribute is defined in addition to the common
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 15]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
    attributes defined in SCIM Core Schema:
 
    displayName  A human readable name for the Group.  REQUIRED.
@@ -813,12 +849,13 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    common attributes defined in SCIM Core Schema:
 
    members  A list of members of the Group.  Canonical Types "User" and
-      "Group" are READ-ONLY.  The value must be the "id" of a SCIM
-      resource, either a User, or a Group.  The intention of the Group
-      type is to allow the Service Provider to support nested Groups.
-      Service Providers MAY require Consumers to provide a non-empty
-      members value based on the "required" sub attribute of the
-      "members" attribute in Group Resource Schema.
+      "Group" are READ-ONLY.  The "value" sub-attribute must be the "id"
+      and the "$ref" sub-attribute must be the URI of a SCIM resource,
+      either a User, or a Group.  The intention of the Group type is to
+      allow the Service Provider to support nested Groups.  Service
+      Providers MAY require Consumers to provide a non-empty members
+      value based on the "required" sub attribute of the "members"
+      attribute in Group Resource Schema.
 
 
 9.  Service Provider Configuration Schema
@@ -833,14 +870,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    details to Consumers.  All attributes are READ-ONLY.
 
    The following Singular Attributes are defined in addition to the
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 15]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
    common attributes defined in Core Schema:
 
    documentationUrl  An HTTP addressable URL pointing to the Service
@@ -857,6 +886,16 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
       supported  Boolean value specifying whether the operation is
          supported.  REQUIRED.
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 16]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
 
       maxOperations  An integer value specifying the maximum number of
          operations.  REQUIRED.
@@ -887,16 +926,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    etag  A complex type that specifies Etag configuration options.
       REQUIRED.
 
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 16]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
       supported  Boolean value specifying whether the operation is
          supported.  REQUIRED.
 
@@ -912,6 +941,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       appropriate security considerations, make the
       authenticationSchemes attribute publicly accessible without prior
       authentication.  REQUIRED.
+
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 17]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
 
       name  The common authentication scheme name; e.g., HTTP Basic.
          REQUIRED.
@@ -945,14 +985,6 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       applicable Service Providers MUST specify the description
       specified in the core schema specification.
 
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 17]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
    schema  The Resource's associated schema URI; e.g.,
       urn:scim:schemas:core:1.0.
 
@@ -965,6 +997,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       attributes.
 
       name  The attribute's name.
+
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 18]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
 
       type  The attribute's data type; e.g., String.
 
@@ -986,6 +1029,10 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       caseExact  A Boolean value that specifies if the String attribute
          is case sensitive.
 
+      referenceTypes  The names of the Resources that may be referenced;
+         e.g., User.  This is only applicable for attributes that are of
+         the "reference" data type.
+
          The following multi-valued attributes are defined.  There are
          no canonical type values defined and the primary value serves
          no useful purpose.
@@ -1001,22 +1048,29 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
                When applicable Service Providers MUST specify the
                description specified in the core schema specification.
 
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 18]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
-
             readOnly  A Boolean value that specifies if the attribute is
                mutable.
 
             required  A Boolean value that specifies if the attribute is
                required.
 
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 19]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
+
+
             caseExact  A Boolean value that specifies if the String
                attribute is case sensitive.
+
+            referenceTypes  The names of the Resources that may be
+               referenced; e.g., User.  This is only applicable for
+               attributes that are of the "reference" data type.
 
             canonicalValues  A collection of canonical values.  When
                applicable Service Providers MUST specify the canonical
@@ -1057,16 +1111,16 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
     "honorificPrefix": "Ms.",
     "honorificSuffix": "III"
   },
+  "displayName": "Babs Jensen",
+  "nickName": "Babs",
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 19]
+Mortimore, et al.          Expires May 5, 2013                 [Page 20]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
-  "displayName": "Babs Jensen",
-  "nickName": "Babs",
   "profileUrl": "https://login.example.com/bjensen",
   "emails": [
     {
@@ -1113,16 +1167,16 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
   "ims": [
     {
       "value": "someaimhandle",
+      "type": "aim"
+    }
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 20]
+Mortimore, et al.          Expires May 5, 2013                 [Page 21]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
-      "type": "aim"
-    }
   ],
   "photos": [
     {
@@ -1143,16 +1197,19 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
   "password":"t1meMa$heen",
   "groups": [
     {
-      "display": "Tour Guides",
-      "value": "00300000005N2Y6AA"
+      "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "$ref": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "display": "Tour Guides"
     },
     {
-      "display": "Employees",
-      "value": "00300000005N34H78"
+      "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "$ref": "https://example.com/v1/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "display": "Employees"
     },
     {
-      "display": "US Employees",
-      "value": "00300000005N98YT1"
+      "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "$ref": "https://example.com/v1/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "display": "US Employees"
     }
   ],
   "x509Certificates": [
@@ -1168,15 +1225,15 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
                 PSi8xO8SL7I7SDhcBVJhqVqr3HgllEG6UClDdHO7nkLuwXq8HcISKkbT5WFTVfFZ
                 zidPl8HZ7DhXkZIRtJwBweq4bvm3hM1Os7UQH05ZS6cVDgweKNwdLLrT51ikSQG3
                 DYrl+ft781UQRIqxgwqCfXEuDiinPh0kkvIi5jivVu1Z9QiwlYEdRbLJ4zJQBmDr
-                SGTMYn4lRc2HgHO4DqB/bnMVorHB0CC6AV1QoFK4GPe1LwIDAQABo3sweTAJBgNV
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 21]
+Mortimore, et al.          Expires May 5, 2013                 [Page 22]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
+                SGTMYn4lRc2HgHO4DqB/bnMVorHB0CC6AV1QoFK4GPe1LwIDAQABo3sweTAJBgNV
                 HRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZp
                 Y2F0ZTAdBgNVHQ4EFgQU8pD0U0vsZIsaA16lL8En8bx0F/gwHwYDVR0jBBgwFoAU
                 dGeKitcaF7gnzsNwDx708kqaVt0wDQYJKoZIhvcNAQEFBQADgYEAA81SsFnOdYJt
@@ -1224,15 +1281,15 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
     {
       "value": "babs@jensen.org",
       "type": "home"
-    }
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 22]
+Mortimore, et al.          Expires May 5, 2013                 [Page 23]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
+    }
   ],
   "addresses": [
     {
@@ -1280,15 +1337,15 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
       "value": "https://photos.example.com/profilephoto/72930000000Ccne/T",
       "type": "thumbnail"
     }
-  ],
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 23]
+Mortimore, et al.          Expires May 5, 2013                 [Page 24]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
+  ],
   "userType": "Employee",
   "title": "Tour Guide",
   "preferredLanguage":"en_US",
@@ -1299,14 +1356,17 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
   "groups": [
     {
       "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "$ref": "/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "display": "Tour Guides"
     },
     {
       "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "$ref": "/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
       "display": "Employees"
     },
     {
       "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "$ref": "/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
       "display": "US Employees"
     }
   ],
@@ -1333,21 +1393,22 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
     }
   ],
   "urn:scim:schemas:extension:enterprise:1.0": {
-    "employeeNumber": "701984",
-    "costCenter": "4130",
-    "organization": "Universal Studios",
-    "division": "Theme Park",
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 24]
+Mortimore, et al.          Expires May 5, 2013                 [Page 25]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
+    "employeeNumber": "701984",
+    "costCenter": "4130",
+    "organization": "Universal Studios",
+    "division": "Theme Park",
     "department": "Tour Operations",
     "manager": {
       "managerId": "26118915-6090-4610-87e4-49d8ca9f808d",
+      "$ref": "/Users/26118915-6090-4610-87e4-49d8ca9f808d",
       "displayName": "John Smith"
     }
   },
@@ -1366,40 +1427,40 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
    in JSON format.
 
 
-   {
-     "schemas": ["urn:scim:schemas:core:1.0"],
-     "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
-     "displayName": "Tour Guides",
-     "members": [
-       {
-         "value": "2819c223-7f76-453a-919d-413861904646",
-         "display": "Babs Jensen"
-       },
-       {
-         "value": "902c246b-6245-4190-8e05-00816be7344a",
-         "display": "Mandy Pepperidge"
-       }
-     ]
-   }
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+  "displayName": "Tour Guides",
+  "members": [
+    {
+      "value": "2819c223-7f76-453a-919d-413861904646",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
+      "display": "Babs Jensen"
+    },
+    {
+      "value": "902c246b-6245-4190-8e05-00816be7344a",
+      "$ref": "https://example.com/v1/Users/902c246b-6245-4190-8e05-00816be7344a",
+      "display": "Mandy Pepperidge"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+Mortimore, et al.          Expires May 5, 2013                 [Page 26]
+
+Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 11.5.  Service Provider Configuration Representation
 
    The following is a non-normative example of the SCIM Service Provider
    Configuration representation in JSON format.
-
-
-
-
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 25]
-
-Internet-Draft          draft-scim-core-schema-01          November 2012
-
 
 {
   "schemas": ["urn:scim:schemas:core:1.0"],
@@ -1447,12 +1508,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-
-
-
-
-
-Mortimore, et al.          Expires May 5, 2013                 [Page 26]
+Mortimore, et al.          Expires May 5, 2013                 [Page 27]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1508,7 +1564,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 27]
+Mortimore, et al.          Expires May 5, 2013                 [Page 28]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1564,7 +1620,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 28]
+Mortimore, et al.          Expires May 5, 2013                 [Page 29]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1620,7 +1676,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 29]
+Mortimore, et al.          Expires May 5, 2013                 [Page 30]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1676,7 +1732,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 30]
+Mortimore, et al.          Expires May 5, 2013                 [Page 31]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1732,7 +1788,7 @@ Appendix A.  Contributors
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 31]
+Mortimore, et al.          Expires May 5, 2013                 [Page 32]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1788,7 +1844,7 @@ Internet-Draft          draft-scim-core-schema-01          November 2012
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 32]
+Mortimore, et al.          Expires May 5, 2013                 [Page 33]
 
 Internet-Draft          draft-scim-core-schema-01          November 2012
 
@@ -1844,5 +1900,5 @@ Authors' Addresses
 
 
 
-Mortimore, et al.          Expires May 5, 2013                 [Page 33]
+Mortimore, et al.          Expires May 5, 2013                 [Page 34]
 

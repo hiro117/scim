@@ -983,6 +983,7 @@ If-Match: W/"a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
     }
   ]
@@ -1036,6 +1037,7 @@ If-Match: W/"a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
       "operation": "delete"
     }
@@ -1095,10 +1097,12 @@ If-Match: W/"a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
     },
     {
       "display": "James Smith",
+      "$ref": "https://example.com/v1/Users/08e1d05d-121c-4561-8b96-473d93df9210",
       "value": "08e1d05d-121c-4561-8b96-473d93df9210"
     }
   ]
@@ -1126,11 +1130,13 @@ If-Match: W/"a330bc54f0671c9"
   "members": [
     {
       "display": "Babs Jensen",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
       "operation": "delete"
     },
     {
       "display": "James Smith",
+      "$ref": "https://example.com/v1/Users/08e1d05d-121c-4561-8b96-473d93df9210",
       "value": "08e1d05d-121c-4561-8b96-473d93df9210"
     }
   ]
@@ -1863,7 +1869,8 @@ ETag: W/"lha5bbazU3fNvfe5"
   "members": [
     {
       "value": "92b725cd-9465-4e7d-8c16-01f8e146b87a",
-      "type": "user"
+      "$ref": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
+      "type": "User"
     }
   ]
 }]]></artwork>
@@ -2026,7 +2033,8 @@ Content-Type: application/json
       "members": [
         {
           "value": "6c5bb468-14b2-4183-baf2-06d523e03bd3",
-          "type": "group"
+          "$ref": "https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
+          "type": "Group"
         }
       ]
     },
@@ -2045,7 +2053,8 @@ Content-Type: application/json
       "members": [
         {
           "value": "c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
-          "type": "group"
+          "$ref": "https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
+          "type": "Group"
         }
       ]
     }

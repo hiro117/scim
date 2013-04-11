@@ -217,6 +217,27 @@
           </t>
         </section>
 
+        <section anchor="type-reference" title="Reference">
+          <t>
+            A reference to a SCIM Resource.  The value MUST be the absolute or relative URI of the target Resource.
+            Relative URIs should be resolved as specified in
+            <eref target="http://tools.ietf.org/html/rfc3986#section-5.2">section 5.2</eref> of RFC 3986.
+            The base URI for relative URI resolution MUST include all URI components and path segments up to but
+            not including the Endpoint URI; e.g., the base URI for a request to
+            https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646 would be
+            https://example.com/v1/ and the relative URI for this Resource would be
+            Users/2819c223-7f76-453a-919d-413861904646.
+          </t>
+          <t>
+            Performing a GET operation on a reference URI MUST return the target Resource or an appropriate HTTP
+            response code.  The Service Provider MAY optionally choose to enforce referential integrity for references.
+          </t>
+          <t>
+            By convention, a reference is commonly represented as a "$ref" sub-attribute in complex or
+            multi-valued attributes, however this is OPTIONAL.
+          </t>
+        </section>
+
         <section anchor="type-complex" title="Complex">
           <t>
             A Singular or Multi-valued Attribute whose value is a composition of one or more Simple Attributes.
@@ -263,6 +284,8 @@
 }
 ]]>
 </artwork>
+
+          <t hangText="$ref">The Reference of the target Resource, if the attribute is a reference.</t>
       </list>
 
       <t>
@@ -541,9 +564,9 @@
               membership indicates User membership is transitive or dynamic and implies that Consumers cannot modify
               indirect group membership through the Group resource but MAY modify direct group membership through the
               Group resource which MAY influence indirect memberships. If the SCIM Service Provider exposes a Group
-              resource, the value MUST be the "id" attribute of the corresponding Group resources to which the user
-              belongs. Since this attribute is read-only, group membership changes MUST be applied via the
-              <xref target="group-resource">Group Resource</xref>. READ-ONLY.
+              resource, the "value" sub-attribute MUST be the "id" and the "$ref" sub-attribute must be the URI of the
+              corresponding Group resources to which the user belongs.  Since this attribute is read-only, group
+              membership changes MUST be applied via the <xref target="group-resource">Group Resource</xref>. READ-ONLY.
             </t>
 
             <t hangText="entitlements">A list of entitlements for the User that
@@ -602,6 +625,7 @@
           hierarchy by referencing the "id" attribute of another User.
           <list style="hanging">
               <t hangText="managerId">The id of the SCIM resource representing the User's manager. REQUIRED.</t>
+              <t hangText="$ref">The URI of the SCIM resource representing the User's manager. REQUIRED.</t>
               <t hangText="displayName">The displayName of the User's manager.  OPTIONAL and READ-ONLY.</t>
             </list></t>
         </list>
@@ -626,11 +650,15 @@
       </t>
 
       <t>The following multi-valued attribute is defined in addition to the common
-      attributes defined in SCIM Core Schema:<list style="hanging">
-          <t hangText="members">A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. 
-	The value must be the "id" of a SCIM resource, either a User, or a Group. The intention of the Group type 
-	is to allow the Service Provider to support nested Groups. Service Providers MAY require Consumers to provide 
-	a non-empty members value based on the "required" sub attribute of the "members" attribute in Group Resource Schema.
+      attributes defined in SCIM Core Schema:
+
+        <list style="hanging">
+          <t hangText="members">
+            A list of members of the Group. Canonical Types "User" and "Group" are READ-ONLY. 
+	        The "value" sub-attribute must be the "id" and the "$ref" sub-attribute must be the URI of a SCIM resource,
+            either a User, or a Group. The intention of the Group type is to allow the Service Provider to support
+            nested Groups. Service Providers MAY require Consumers to provide a non-empty members value based on the
+            "required" sub attribute of the "members" attribute in Group Resource Schema.
           </t>
         </list>
       </t>
@@ -741,6 +769,10 @@
                           </t>
                           <t hangText="caseExact">A Boolean value that specifies if the String attribute is case sensitive.
                           </t>
+                          <t hangText="referenceTypes">
+                            The names of the Resources that may be referenced; e.g., User. This is only applicable
+                            for attributes that are of the "reference" data type.
+                          </t>
 
                           <t>The following multi-valued attributes are defined. There are no canonical type values defined
                             and the primary value serves no useful purpose.
@@ -759,6 +791,10 @@
                                   </t>
                                   <t hangText="caseExact">A Boolean value that specifies if the String attribute
                                     is case sensitive.
+                                  </t>
+                                  <t hangText="referenceTypes">
+                                    The names of the Resources that may be referenced; e.g., User. This is only applicable
+                                    for attributes that are of the "reference" data type.
                                   </t>
                                   <t hangText="canonicalValues">A collection of canonical values. When applicable Service
                                     Providers MUST specify the canonical types specified in the core schema
@@ -878,16 +914,19 @@
   "password":"t1meMa$heen",
   "groups": [
     {
-      "display": "Tour Guides",
-      "value": "00300000005N2Y6AA"
+      "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "$ref": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "display": "Tour Guides"
     },
     {
-      "display": "Employees",
-      "value": "00300000005N34H78"
+      "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "$ref": "https://example.com/v1/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "display": "Employees"
     },
     {
-      "display": "US Employees",
-      "value": "00300000005N98YT1"
+      "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "$ref": "https://example.com/v1/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "display": "US Employees"
     }
   ],
   "x509Certificates": [
@@ -1012,14 +1051,17 @@
   "groups": [
     {
       "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "$ref": "/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "display": "Tour Guides"
     },
     {
       "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "$ref": "/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
       "display": "Employees"
     },
     {
       "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "$ref": "/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
       "display": "US Employees"
     }
   ],
@@ -1053,6 +1095,7 @@
     "department": "Tour Operations",
     "manager": {
       "managerId": "26118915-6090-4610-87e4-49d8ca9f808d",
+      "$ref": "/Users/26118915-6090-4610-87e4-49d8ca9f808d",
       "displayName": "John Smith"
     }
   },
@@ -1080,10 +1123,12 @@
   "members": [
     {
       "value": "2819c223-7f76-453a-919d-413861904646",
+      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
       "display": "Babs Jensen"
     },
     {
       "value": "902c246b-6245-4190-8e05-00816be7344a",
+      "$ref": "https://example.com/v1/Users/902c246b-6245-4190-8e05-00816be7344a",
       "display": "Mandy Pepperidge"
     }
   ]
