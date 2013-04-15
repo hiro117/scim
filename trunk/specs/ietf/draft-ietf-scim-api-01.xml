@@ -47,7 +47,7 @@
             </address>
         </author>
 
-        <date day="1" month="November" year="2012" />
+        <date day="15" month="April" year="2013" />
         <keyword>SCIM</keyword>
         <abstract>
             <t>
@@ -100,12 +100,14 @@
                 </t>
             </section>
             <section title="Definitions" anchor="defs" toc="default">
-                <list style="hanging">
-                    <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL. The Base URL MUST NOT contain a
-                        query string as Consumers may append additional path information and query parameters as part of forming
-                        the request. Example: https://example.com/scim/v1/
-                    </t>
-                </list>
+                <t>
+                    <list style="hanging">
+                        <t hangText="Base URL:">The SCIM REST API is always relative to a Base URL. The Base URL MUST NOT contain a
+                            query string as Consumers may append additional path information and query parameters as part of forming
+                            the request. Example: https://example.com/scim/v1/
+                        </t>
+                    </list>
+                </t>
             </section>
         </section>
 
@@ -151,8 +153,6 @@ Authorization: Bearer h480djs93hd8
 
         </section>
 
-        http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15
-
         <section title="API" anchor="api">
             <t>
                 The SCIM protocol specifies well known endpoints and HTTP methods for managing Resources defined in the
@@ -162,20 +162,22 @@ Authorization: Bearer h480djs93hd8
                 pluralization is ambiguous; e.g., a Resource named 'person' is legitimately 'persons' and 'people' Consumers
                 SHOULD discover Resource endpoints via the Schema Sub-Attribute 'endpoint'.
             </t>
-            <list style="hanging">
-                <t hangText="GET">Retrieves a complete or partial Resource.
-                </t>
-                <t hangText="POST">Create new Resource, perform an extended Search, or bulk modify Resources.
-                </t>
-                <t hangText="PUT">Modifies a Resource with a complete, Consumer
-                    specified Resource (replace).
-                </t>
-                <t hangText="PATCH">Modifies a Resource with a set of Consumer specified
-                    changes (partial update).
-                </t>
-                <t hangText="DELETE">Deletes a Resource.
-                </t>
-            </list>
+            <t>
+                <list style="hanging">
+                    <t hangText="GET">Retrieves a complete or partial Resource.
+                    </t>
+                    <t hangText="POST">Create new Resource, perform an extended Search, or bulk modify Resources.
+                    </t>
+                    <t hangText="PUT">Modifies a Resource with a complete, Consumer
+                        specified Resource (replace).
+                    </t>
+                    <t hangText="PATCH">Modifies a Resource with a set of Consumer specified
+                        changes (partial update).
+                    </t>
+                    <t hangText="DELETE">Deletes a Resource.
+                    </t>
+                </list>
+            </t>
 
             <texttable anchor='endpoint-summary' title="Defined endpoints">
                 <ttcol align='left'>Resource</ttcol>
@@ -540,7 +542,7 @@ filter=Username eq "john"
                         </t>
 
                         <texttable anchor='filter-operator-table' title="Attribute
-            Operators" alight='left'>
+            Operators" align='left'>
                             <ttcol align='left'>Operator</ttcol>
                             <ttcol align='left'>Description</ttcol>
                             <ttcol align='left'>Behavior</ttcol>
@@ -607,7 +609,7 @@ filter=Username eq "john"
                         </texttable>
 
                         <texttable anchor='logical-operator-table' title="Logical
-               Operators" alight='left'>
+               Operators" align='left'>
                             <ttcol align='left'>Operator</ttcol>
                             <ttcol align='left'>Description</ttcol>
                             <ttcol align='left'>Behavior</ttcol>
@@ -709,7 +711,8 @@ co "example.org")
                             in which Resources are returned by specifying a combination of
                             sortBy and sortOrder URL parameters.
                         </t>
-                        <list style="hanging">
+                        <t>
+                          <list style="hanging">
                             <t hangText="sortBy:">
                                 The sortBy parameter specifies the attribute whose value SHALL
                                 be used to order the returned responses. If the sortBy attribute
@@ -738,7 +741,8 @@ co "example.org")
                                 attribute types, sort the result using case sensitive,
                                 Unicode alphabetic sort order.
                             </t>
-                        </list>
+                          </list>
+                        </t>
                     </section>
 
                     <section title="Pagination">
@@ -1058,7 +1062,8 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
                         the Resource according to the following rules.
                     </t>
 
-                    <list style="hanging">
+                    <t>
+                      <list style="hanging">
                         <t hangText="Singular attributes:">
                             Singular attributes in the PATCH request body replace the
                             attribute on the Resource.
@@ -1084,9 +1089,8 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
                             is ignored if the attribute's name is in the meta.attributes list.  If the requested value to
                             delete does not match a unique value on the Resource the server MAY return a HTTP 400 error.
                         </t>
-
-                    </list>
-
+                      </list>
+                    </t>
 
                     <t>The following example shows how to add a member to a group:
                     </t>
@@ -1471,7 +1475,7 @@ If-Match: W/"c310cd84f0281b7"
                                       ]]></artwork>
                 </figure>
 
-                Server Response:
+                <t>Server Response:</t>
                 <figure height="" suppress-title="false" width="" alt="" title=""
                         align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left"
@@ -1495,7 +1499,7 @@ Authorization: Bearer h480djs93hd8
                                       ]]></artwork>
                 </figure>
 
-                Server Response:
+                <t>Server Response:</t>
                 <figure height="" suppress-title="false" width="" alt="" title=""
                         align="left">
                     <artwork height="" name="" width="" type="" alt="" align="left"
@@ -1577,18 +1581,19 @@ HTTP/1.1 404 NOT FOUND
                                     A complex type that contains information about the
                                     success or failure of one operation within the bulk job.
                                     REQUIRED in a response.
+
+                                    <list style="hanging">
+                                        <t hangText="code">
+                                            The HTTP response code that would have been
+                                            returned if a a single HTTP request would have been
+                                            used. REQUIRED.
+                                        </t>
+                                        <t hangText="description">
+                                            A human readable error message. REQUIRED when an error
+                                            occurred.
+                                        </t>
+                                    </list>
                                 </t>
-                                <list style="hanging">
-                                    <t hangText="code">
-                                        The HTTP response code that would have been
-                                        returned if a a single HTTP request would have been
-                                        used. REQUIRED.
-                                    </t>
-                                    <t hangText="description">
-                                        A human readable error message. REQUIRED when an error
-                                        occurred.
-                                    </t>
-                                </list>
                             </list>
                         </t>
                     </list>
