@@ -2436,6 +2436,102 @@ X-HTTP-Method-Override: DELETE
                 </figure>
             </section>
         </section>
+
+        <section title="Multi-Tenancy" anchor="MultiTenancy" toc="default">
+          <t>
+            A single Service Provider may expose the SCIM protocol to multiple Consumers. Depending on
+            the nature of the service, the Consumers may have authority to access and alter Resources
+            initially created by other Consumers. Alternatively, Consumers may expect to access disjoint
+            sets of Resources, and may expect that their resources are inaccessible by other Consumers.
+            These scenarios are called "multi-tenancy", where each Consumer is understood to be or represent
+            a "tenant" of the Service Provider. Consumers may also be multi-tenanted.
+          </t>
+
+          <t>
+            The following common cases may occur:
+            <list style="numbers">
+              <t>All Consumers share all Resources (no tenancy)</t>
+              <t>Each single Consumer creates and accesses a private subset of Resources (1 Consumer:1 Tenant)</t>
+              <t>Sets of Consumers share sets of Resources (M Consumers:1 Tenant)</t>
+              <t>One Consumer to Multiple Tenants (1 Consumer:M Tenants)</t>
+            </list>
+            Service Providers may implement any subset of the above cases.
+          </t>
+
+          <t>
+            Multi-Tenancy is OPTIONAL. The SCIM protocol does not define a scheme for multi-tenancy. 
+          </t>
+
+          <t>
+            The SCIM protocol does not prescribe the mechanisms whereby Consumers and Service Providers
+            interact for:
+            <list style="symbols">
+              <t>Registering or provisioning Tenants</t>
+              <t>Associating a subset of Consumers with a subset of the Tenants</t>
+              <t>Indicating which tenant is associated with the data in a request or response, or indicating
+                 which Tenant is the subject of a query</t>
+              <t>Implementers are encouraged to use mechanisms which comply with RESTful conventions.</t>
+            </list>
+          </t>
+
+          <section title="Associating Consumers to Tenants" anchor="tenantAssoc" toc="default">
+            <t>
+              The Service Provider MAY use the authentication mechanism (Section 2) to determine the identity
+              of the Consumer, and thus infer the associated Tenant.
+            </t>
+            <t>
+              For implementations where a Consumer is associated with more than one Tenant, the Service 
+              Provider MAY use one of the following methods for explicit specification of the Tenant.
+            </t>
+            <t>
+              If any of these methods of allowing the Consumer to explicitly specify the Tenant are employed,
+              the Service Provider should ensure that access controls are in place to prevent or allow
+              cross-tenant use cases.
+            </t>
+            <t>
+              The Service Provider should consider precedence in cases where a Consumer may explicitly
+              specify a Tenant while being implicitly associated with a different Tenant.
+            </t>
+
+            <section title="URL Prefix Example" anchor="tenantURLPrefix" toc="default">
+              <t>
+                https://www.example.com/Tenants/{tenant_id}/v1/Users
+              </t>
+            </section>
+
+            <section title="Subdomain Example" anchor="tenantSubdomain" toc="default">
+              <t>
+                https://{tenant_id}.example.com/v1/Groups
+              </t>
+            </section>
+
+            <section title="HTTP Header" anchor="tenantHeader" toc="default">
+              <t>
+                The Service Provider may recognize a {tenant_id} provided by the Consumer in the HTTP Header
+                "SCIM_TENANT_ID" as the indicator of the desired target Tenant.
+              </t>
+              <t>
+                In all of these methods, the {tenant_id} is a unique identifier for the Tenant as defined by
+                the Service Provider.
+              </t>
+            </section>
+          </section>
+
+          <section title="SCIM Identifiers with Multiple Tenants" anchor="tenantIdentifiers" toc="default">
+            <t>
+              Considerations for a Multi-Tenant Implementation:
+            </t>
+            <t>
+              The Service Provider may choose to implement SCIM ids which are unique across all Resources for
+              all Tenants, but this is not required.
+            </t>
+            <t>
+              The externalId, defined by the Consumer, is required to be unique ONLY within the Resources
+              associated with the associated Tenant.
+            </t>
+          </section>
+        </section>
+
         <section title="Security Considerations" anchor="Security" toc="default">
             <t>
                 The SCIM Protocol is based on HTTP and thus subject to the security considerations found in Section 15 of
