@@ -165,7 +165,7 @@ Authorization: Bearer h480djs93hd8
             <list style="hanging">
                 <t hangText="GET">Retrieves a complete or partial Resource.
                 </t>
-                <t hangText="POST">Create new Resource or bulk modify Resources.
+                <t hangText="POST">Create new Resource, perform an extended Search, or bulk modify Resources.
                 </t>
                 <t hangText="PUT">Modifies a Resource with a complete, Consumer
                     specified Resource (replace).
@@ -224,6 +224,14 @@ Authorization: Bearer h480djs93hd8
                     <xref target="bulk-resources" format="default">POST</xref>
                 </c>
                 <c>Bulk modify Resources</c>
+                
+                <c>Search</c>
+                <c>[prefix]/.search</c>
+                <c>
+                	<xref target="query-post" format="default">POST</xref>
+                </c>
+                <c>Perform a search at system root or within a resource endpoint for one or 
+                more resource types using POST.</c>
 
             </texttable>
 
@@ -308,6 +316,7 @@ ETag: W/"e180ee84f0671b1"
   "id":"2819c223-7f76-453a-919d-413861904646",
   "externalId":"bjensen",
   "meta":{
+    "resourceType":"User",
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
@@ -322,7 +331,18 @@ ETag: W/"e180ee84f0671b1"
 }
                         ]]></artwork>
                 </figure>
-
+				<section title="Resource Types">
+	
+					<t>When adding a resource to a specific endpoint, the meta attribute 
+					"resourceType" SHALL be set by the Service Provider to the corresponding 
+					resource type for the endpoint and any extension types. For 
+					example, "/Users" will set "resourceType" to "User", and "/Groups" will
+					set "resourceType" to "Group".</t>
+					<t>[TBD: For extended resource types, the "resourceType" attribute SHALL be 
+					set by the Service Provider to have multiple values including the base type
+					plus any extneded types (e.g. 'User' and 'Employee').]</t>
+					
+				</section>
             </section>
             <section title="Retrieving Resources" anchor="get-resources-ops"
                      toc="default">
@@ -377,6 +397,7 @@ ETag: W/"f250dd84f0671c3"
   "id":"2819c223-7f76-453a-919d-413861904646,
   "externalId":"bjensen",
   "meta":{
+    "resourceType":"User",
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
@@ -452,7 +473,34 @@ Content-Type: application/json
   ]
 }                  ]]></artwork>
                     </figure>
-                    <section title="Filtering">
+                    <section title="Query Endpoints" anchor="query-endpoints">
+						<t>
+							Queries MAY be performed against a SCIM:
+							<list>
+								<t>Resource (e.g. /Users/{userid}),</t>
+								<t>Resource Type endpoint (e.g. /Users or /Groups), or</t>
+								<t>Server Root (e.g. /).</t>				
+							</list>		
+						</t>
+                        <t>
+                         	A search against a server root indicates that ALL resources within
+                            the server SHALL be included subject to filtering. For example,
+                            a filter against 'resourceType' could be used to restrict results
+                            to one or more specific resource types.               
+                        </t>
+				        <t>
+							When processing search operations across endpoints that include
+							more than one SCIM resource type (e.g. a search from the server root
+							endpoint), filters MUST be processed in the same fashion as outlined
+							in <xref target="filtering"/>. For filtered attributes that are not
+							part of a particular resource type, the service provider SHALL treat
+							the attribute as if there is no attribute value. For example, a
+							presence or equality filter for an undefined attribute evaluates as
+							FALSE.
+				        </t>                
+                    </section>
+
+                    <section title="Filtering" anchor="filtering">
                         <t>
                             Filtering is OPTIONAL. Consumers may request a subset of Resources
                             by specifying the 'filter' URL query parameter containing a filter
@@ -790,6 +838,81 @@ Authorization: Bearer h480djs93hd8
                         </t>
                     </section>
                 </section>
+				<section title="Querying Resources Using HTTP POST" anchor="query-post">
+					<t>Clients MAY execute queries without passing parameters on the URL by 
+					using the HTTP POST verb combined with the '/.search' path extension. The 
+					inclusion of '/.search' on the end of a valid SCIM endpoint SHALL be used
+					to indicate the HTTP POST verb is intended to be a query operation.</t>
+ 
+        			<t>To create a new search result set, a SCIM client sends an HTTP POST
+        			request to the desired SCIM resource endpoint (ending in '/.search'). 
+        			The body of the POST request MAY include any of the parameters as 
+        			defined in <xref target="query-resources"/>.</t>
+
+        			<t>After receiving a HTTP POST request, a response is returned as
+        			specified in <xref target="query-resources"/>.</t>
+
+					<t>[NOTE: See resourceType meta attribute in example below --> need to update rest of document!]</t>
+      				<figure align="left" alt="POST Example" anchor="POSTExample"
+                		title="Example POST Search Request">
+          				<preamble>The following example shows an HTTP POST Search request
+          				with search parameters attributes, filter, and count
+          				included:</preamble>
+
+          				<artwork align="center" height="13">POST /.search
+Host: example.com
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer h480djs93hd8
+Content-Length: ...
+
+{
+  "schemas": ["urn:scim:schemas:core:1.0"],
+  "attributes":["displayName","username"],
+  "filter":"displayName sw \"smith\"",
+  "count":10
+}</artwork>
+			        </figure>
+
+	      			<figure align="left" anchor="ExampleResponse"
+                  		title="Example POST Search Response">
+            			<preamble>A search response is shown with the first page of
+            			results. For brevity reasons, only two matches are shown: one User
+           				and one Group.</preamble>
+
+            <artwork align="center">HTTP/1.1 200 OK
+Content-Type: application/json
+Location: https://example.com/.search
+{
+  "totalResults":100,
+  "itemsPerPage":10,
+  "startIndex":1,
+  "schemas":["urn:scim:schemas:core:1.0"],
+  "Resources":[
+    {
+      "meta":{
+        "location":
+          "https://example.com/Users/2819c223-7f76-413861904646",
+        "resourceType":"User",
+        "lastModified": ...
+      }
+      "username":"jsmith",
+      "displayName":"Smith, James"
+    },
+    {
+      "meta":{
+        "location":
+          "https://example.com/Groups/c8596b90-7539-4f20968d1908",
+        "resourceType":"Group",
+        "lastModified": ...
+      }
+      "displayName":"Smith Family"
+    },
+     ...
+  ]
+} </artwork>
+          			</figure>
+				</section>
             </section>
             <section title="Modifying Resources" toc="default">
                 <t>Resources can be modified in whole or in part via PUT or PATCH,
@@ -886,6 +1009,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
     }
   ],
   "meta": {
+    "resourceType","User",
     "created":"2011-08-08T04:56:22Z",
     "lastModified":"2011-08-08T08:00:12Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
