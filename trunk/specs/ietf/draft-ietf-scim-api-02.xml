@@ -11,10 +11,10 @@
   <?rfc inline="yes"?>
   <?rfc compact="yes"?>
   <?rfc subcompact="no"?>
-  <rfc category="std" docName="draft-ietf-scim-api-01" ipr="trust200902">
+  <rfc category="std" docName="draft-ietf-scim-api-02" ipr="trust200902">
 
   <front>
-        <title abbrev="draft-scim-api-01">System for Cross-Domain Identity Management:Protocol</title>
+        <title abbrev="draft-scim-api-02">System for Cross-Domain Identity Management:Protocol</title>
 
         <author initials="T.D." surname="Drake" fullname="Trey Drake" role="editor">
             <organization abbrev="UnboundID">UnboundID</organization>
@@ -47,7 +47,7 @@
             </address>
         </author>
 
-        <date day="15" month="April" year="2013" />
+        <date day="30" month="August" year="2013" />
         <keyword>SCIM</keyword>
         <abstract>
             <t>
@@ -160,7 +160,7 @@ Authorization: Bearer h480djs93hd8
                 that support extended Resources SHOULD define Resource endpoints using the established convention; pluralize
                 the Resource name defined in the extended schema by appending an 's'.  Given there are cases where Resource
                 pluralization is ambiguous; e.g., a Resource named 'person' is legitimately 'persons' and 'people' Consumers
-                SHOULD discover Resource endpoints via the Schema Sub-Attribute 'endpoint'.
+                SHOULD discover Resource endpoints via the Resource Type attribute 'endpoint'.
             </t>
             <t>
                 <list style="hanging">
@@ -212,6 +212,13 @@ Authorization: Bearer h480djs93hd8
                     <xref target="get-resource" format="default">GET</xref>
                 </c>
                 <c>Retrieve the Service Provider's Configuration</c>
+
+                <c>Resource Type</c>
+                <c>/ResourceTypes</c>
+                <c>
+                    <xref target="get-resource" format="default">GET</xref>
+                </c>
+                <c>Retrieve the supported Resource Types</c>
 
                 <c>Schema</c>
                 <c>/Schemas</c>
@@ -286,7 +293,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "userName":"bjensen",
   "externalId":"bjensen",
   "name":{
@@ -314,7 +321,7 @@ Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"e180ee84f0671b1"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "externalId":"bjensen",
   "meta":{
@@ -333,19 +340,17 @@ ETag: W/"e180ee84f0671b1"
 }
                         ]]></artwork>
                 </figure>
-				<section title="Resource Types">
-	
-					<t>When adding a resource to a specific endpoint, the meta attribute 
-					"resourceType" SHALL be set by the Service Provider to the corresponding 
-					resource type for the endpoint and any extension types. For 
-					example, "/Users" will set "resourceType" to "User", and "/Groups" will
-					set "resourceType" to "Group".</t>
-					<t>[TBD: For extended resource types, the "resourceType" attribute SHALL be 
-					set by the Service Provider to have multiple values including the base type
-					plus any extneded types (e.g. 'User' and 'Employee').]</t>
-					
-				</section>
+
+                <section title="Resource Types">
+    
+                    <t>When adding a resource to a specific endpoint, the meta attribute 
+                    "resourceType" SHALL be set by the Service Provider to the corresponding 
+                    Resource Type for the endpoint. For example, "/Users" will set "resourceType"
+                    to "User", and "/Groups" will set "resourceType" to "Group".</t>
+                    
+                </section>
             </section>
+
             <section title="Retrieving Resources" anchor="get-resources-ops"
                      toc="default">
                 <t>Users and Group Resources are retrieved via opaque, unique URLs or
@@ -395,7 +400,7 @@ Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"f250dd84f0671c3"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646,
   "externalId":"bjensen",
   "meta":{
@@ -440,6 +445,43 @@ ETag: W/"f250dd84f0671c3"
                         they don't recognize.
                     </t>
 
+                    <t>
+                        List and query responses MUST be identified using the following
+                        URI: 'urn:scim:schemas:core:2.0:ListResponse'.  The following
+                        attributes are defined for list and query responses:
+                    </t>
+
+                    <t>
+                        <list style="hanging">
+                            <t hangText="totalResults">
+                                The total number of results returned by the list or query
+                                operation.  This may not be equal to the number of elements
+                                in the Resources attribute of the list response if
+                                <xref target="pagination" format="default">pagination</xref>
+                                is requested. REQUIRED.
+                            </t>
+                            <t hangText="Resources">
+                                A multi-valued list of complex objects containing the
+                                requested resources.  This may be a subset of the full
+                                set of Resources if
+                                <xref target="pagination" format="default">pagination</xref>
+                                is requested. REQUIRED. 
+                            </t>
+                            <t hangText="startIndex">
+                                The 1-based index of the first result in the current set of
+                                list results. REQUIRED if
+                                <xref target="pagination" format="default">pagination</xref>
+                                is requested.
+                            </t>
+                            <t hangText="itemsPerPage">
+                                The number of Resources returned in a list response page.
+                                REQUIRED if
+                                <xref target="pagination" format="default">pagination</xref>
+                                is requested.
+                            </t>
+                        </list>
+                    </t>
+
                     <t>The below example returns the userName for all Users:
                     </t>
                     <figure height="" suppress-title="false" width="" alt="" title=""
@@ -463,8 +505,8 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
+  "schemas":["urn:scim:schemas:core:2.0:ListResponse"],
   "totalResults":2,
-  "schemas":["urn:scim:schemas:core:1.0"],
   "Resources":[
     {
       "userName":"bjensen"
@@ -487,7 +529,7 @@ Content-Type: application/json
                         <t>
                          	A search against a server root indicates that ALL resources within
                             the server SHALL be included subject to filtering. For example,
-                            a filter against 'resourceType' could be used to restrict results
+                            a filter against 'meta.resourceType' could be used to restrict results
                             to one or more specific resource types.               
                         </t>
 				        <t>
@@ -706,7 +748,7 @@ co "example.org")
                         </figure>
                     </section>
 
-                    <section title="Sorting">
+                    <section title="Sorting" anchor="sorting">
                         <t>Sort is OPTIONAL. Sorting allows Consumers to specify the order
                             in which Resources are returned by specifying a combination of
                             sortBy and sortOrder URL parameters.
@@ -745,7 +787,7 @@ co "example.org")
                         </t>
                     </section>
 
-                    <section title="Pagination">
+                    <section title="Pagination" anchor="pagination">
                         <t>Pagination parameters can be used together to "page through"
                             large numbers of Resources so as not to overwhelm the Consumer or
                             Service Provider. Pagination is not session based hence Consumers
@@ -830,7 +872,7 @@ Authorization: Bearer h480djs93hd8
   "totalResults":100,
   "itemsPerPage":10,
   "startIndex":1,
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0"],
   "Resources":[{
     ...
   }]
@@ -853,10 +895,51 @@ Authorization: Bearer h480djs93hd8
         			The body of the POST request MAY include any of the parameters as 
         			defined in <xref target="query-resources"/>.</t>
 
+                    <t>Search requests MUST be identified using the following URI:
+                    'urn:scim:schemas:core:2.0:SearchRequest'.  The following attributes are
+                    defined for search requests:
+                    </t>
+
+                    <t>
+                      <list style="hanging">
+                        <t hangText="attributes">
+                          A multi-valued list of strings indicating the names of Resource attributes
+                          to return in the response. Attribute names MUST be in standard
+                          <xref target="attribute-notation" format="default">attribute notation</xref>
+                          form. See
+                          <xref target="addtl-retrieval-query-params" format="default">additional retrieval query parameters</xref>. OPTIONAL.
+                        </t>
+                        <t hangText="filter">
+                          The filter string used to request a subset of Resources.  The filter
+                          string MUST be a valid
+                          <xref target="filtering" format="default">filter</xref>
+                          expression. OPTIONAL.
+                        </t>
+                        <t hangText="sortBy">
+                          A string indicating the attribute whose value SHALL be used to order
+                          the returned responses. The sortBy attribute MUST be in standard
+                          <xref target="attribute-notation" format="default">attribute notation</xref>
+                          form. See <xref target="sorting" format="default">sorting</xref>. OPTIONAL.
+                        </t>
+                        <t hangText="sortOrder">
+                          A string indicating the order in which the sortBy parameter is applied.
+                          Allowed values are "ascending" and "descending".
+                          See <xref target="sorting" format="default">sorting</xref>. OPTIONAL.
+                        </t>
+                        <t hangText="startIndex">
+                          An integer indicating the 1-based index of the first search result.
+                          See <xref target="pagination" format="default">pagination</xref>. OPTIONAL.
+                        </t>
+                        <t hangText="count">
+                          An integer indicating the desired maximum number of search results per page.
+                          See <xref target="pagination" format="default">pagination</xref>. OPTIONAL.
+                        </t>
+                      </list>
+                    </t>
+
         			<t>After receiving a HTTP POST request, a response is returned as
         			specified in <xref target="query-resources"/>.</t>
 
-					<t>[NOTE: See resourceType meta attribute in example below --> need to update rest of document!]</t>
       				<figure align="left" alt="POST Example" anchor="POSTExample"
                 		title="Example POST Search Request">
           				<preamble>The following example shows an HTTP POST Search request
@@ -871,10 +954,11 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
-  "attributes":["displayName","username"],
-  "filter":"displayName sw \"smith\"",
-  "count":10
+  "schemas": ["urn:scim:schemas:core:2.0:SearchRequest"],
+  "attributes": ["displayName", "username"],
+  "filter": "displayName sw \"smith\"",
+  "startIndex": 1,
+  "count": 10
 }</artwork>
 			        </figure>
 
@@ -888,10 +972,10 @@ Content-Length: ...
 Content-Type: application/json
 Location: https://example.com/.search
 {
+  "schemas": ["urn:scim:schemas:core:2.0:ListResponse"],
   "totalResults":100,
   "itemsPerPage":10,
   "startIndex":1,
-  "schemas":["urn:scim:schemas:core:1.0"],
   "Resources":[
     {
       "meta":{
@@ -939,7 +1023,7 @@ Location: https://example.com/.search
 			with the exception of the password attribute. If the password attribute 
 			of the User resource is unspecified, it should be left in-tact.
 			Since this performs a full update, Consumers MAY send read-only attributes 
-			of the retrieved resource and Service Provider MUST ignore any read-only attributes 
+			of the retrieved resource and the Service Provider MUST ignore any read-only attributes 
 			that are present in the payload of a PUT request. Unless otherwise specified a successful 
 			PUT operation returns a 200 OK response code and the entire Resource within the 
 			response body, enabling the Consumer to correlate the Consumer's and Provider's views of the updated Resource.
@@ -958,7 +1042,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
@@ -994,7 +1078,7 @@ Content-Type: application/json
 ETag: W/"b431af54f0671a2"
 Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
@@ -1013,7 +1097,7 @@ Location:"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
     }
   ],
   "meta": {
-    "resourceType","User",
+    "resourceType":"User",
     "created":"2011-08-08T04:56:22Z",
     "lastModified":"2011-08-08T08:00:12Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
@@ -1107,7 +1191,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "members": [
     {
       "display": "Babs Jensen",
@@ -1161,7 +1245,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "members": [
     {
       "display": "Babs Jensen",
@@ -1190,7 +1274,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "meta": {
     "attributes": [
       "members"
@@ -1216,7 +1300,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "meta": {
     "attributes": [
       "members"
@@ -1254,7 +1338,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "members": [
     {
       "display": "Babs Jensen",
@@ -1291,7 +1375,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "emails": [
     {
       "value": "bjensen@example.com",
@@ -1319,7 +1403,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "addresses": [
     {
       "type": "work",
@@ -1362,7 +1446,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "nickName": "Barbie"
 }
             ]]></artwork>
@@ -1383,7 +1467,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "meta": {
     "attributes": [
       "nickName"
@@ -1411,7 +1495,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "name": {
     "formatted": "Ms. Barbara J Jensen III",
     "familyName": "Jensen"
@@ -1436,7 +1520,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "meta": {
     "attributes": [
       "name.formatted",
@@ -1508,6 +1592,7 @@ Authorization: Bearer h480djs93hd8
 HTTP/1.1 404 NOT FOUND
 
 {
+  "schemas": ["urn:scim:schemas:core:2.0:Error"],
   "Errors":[
     {
       "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
@@ -1529,15 +1614,22 @@ HTTP/1.1 404 NOT FOUND
                     Resource operations using one of the API supported HTTP methods; i.e., POST, PUT, PATCH or DELETE.
                 </t>
                 <t>
-                    The following Singular Attribute is defined in addition to the
-                    common attributes defined in SCIM core schema.
+                    Bulk requests are identified using the following URI: 'urn:scim:schemas:core:2.0:BulkRequest'.
+                    Bulk responses are identified using the following URI: 'urn:scim:schemas:core:2.0:BulkResponse'.
+                    Bulk requests and bulk responses share many attributes. Unless otherwise specified, each
+                    attribute below is present in both bulk requests and bulk responses.
+                </t>
+                <t>
+                  The following Singular Attribute is defined in addition to the common attributes defined in SCIM
+                  core schema.
                 </t>
 
                 <t>
                     <list style="hanging">
                         <t hangText="failOnErrors">
                             An Integer specifying the number of errors that the Service Provider will accept before the
-                            operation is terminated and an error response is returned. OPTIONAL.
+                            operation is terminated and an error response is returned. OPTIONAL in a request. Not valid
+                            in a response.
                         </t>
                     </list>
                 </t>
@@ -1678,9 +1770,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas":[
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
   "failOnErrors":1,
   "Operations":[
     {
@@ -1688,9 +1778,7 @@ Content-Length: ...
       "path":"/Users",
       "bulkId":"qwerty",
       "data":{
-        "schemas":[
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:User"],
         "userName":"Alice"
       }
     },
@@ -1699,9 +1787,7 @@ Content-Length: ...
       "path":"/Users/b7c14771-226c-4d05-8860-134711653041",
       "version":"W\/\"3694e05e9dff591\"",
       "data":{
-        "schemas":[
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:User"],
         "id":"b7c14771-226c-4d05-8860-134711653041",
         "userName":"Bob"
       }
@@ -1711,9 +1797,7 @@ Content-Length: ...
       "path":"/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
       "version":"W\/\"edac3253e2c0ef2\"",
       "data":{
-        "schemas":[
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas":["urn:scim:schemas:core:2.0:User"],
         "id":"5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
         "userName":"Dave",
         "meta":{
@@ -1743,9 +1827,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "schemas": [
-        "urn:scim:schemas:core:1.0"
-    ],
+    "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
     "Operations": [
         {
             "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
@@ -1796,9 +1878,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
   "Operations": [
     {
       "method": "POST",
@@ -1826,9 +1906,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
   "Operations": [
     {
       "method": "POST",
@@ -1889,18 +1967,14 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
       "path": "/Users",
       "bulkId": "qwerty",
       "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:User"],
         "userName": "Alice"
       }
     },
@@ -1909,9 +1983,7 @@ Content-Length: ...
       "path": "/Groups",
       "bulkId": "ytrewq",
       "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:Group"],
         "displayName": "Tour Guides",
         "members": [
           {
@@ -1936,9 +2008,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
   "Operations": [
     {
       "location": "https://example.com/v1/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
@@ -1986,12 +2056,13 @@ Location: https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a
 ETag: W/"lha5bbazU3fNvfe5"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
   "displayName": "Tour Guides",
   "meta": {
-    "created":"2011-08-01T18:29:49.793Z",
-    "lastModified":"2011-08-01T20:31:02.315Z",
+    "resourceType": "Group",
+    "created": "2011-08-01T18:29:49.793Z",
+    "lastModified": "2011-08-01T20:31:02.315Z",
     "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
     "version": "W\/\"lha5bbazU3fNvfe5\""
   },
@@ -2021,18 +2092,14 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
       "path": "/Users",
       "bulkId": "qwerty",
       "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:User"],
         "userName": "Alice"
       }
     },
@@ -2042,11 +2109,11 @@ Content-Length: ...
       "bulkId": "ytrewq",
       "data": {
         "schemas": [
-          "urn:scim:schemas:core:1.0",
-          "urn:scim:schemas:extension:enterprise:1.0"
+          "urn:scim:schemas:core:2.0:User",
+          "urn:scim:schemas:extension:enterprise:2.0:User"
         ],
         "userName": "Bob",
-        "urn:scim:schemas:extension:enterprise:1.0": {
+        "urn:scim:schemas:extension:enterprise:2.0:User": {
           "employeeNumber": "11250",
           "manager": {
             "managerId": "batchId:qwerty",
@@ -2077,18 +2144,14 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
+  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
       "path": "/Groups",
       "bulkId": "qwerty",
       "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:Group"],
         "displayName": "Group A",
         "members": [
           {
@@ -2103,9 +2166,7 @@ Content-Length: ...
       "path": "/Groups",
       "bulkId": "ytrewq",
       "data": {
-        "schemas": [
-          "urn:scim:schemas:core:1.0"
-        ],
+        "schemas": ["urn:scim:schemas:core:2.0:Group"],
         "displayName": "Group B",
         "members": [
           {
@@ -2142,22 +2203,19 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
+  "schemas": ["urn:scim:schemas:core:2.0:ListResponse"],
   "totalResults": 2,
-  "schemas": [
-    "urn:scim:schemas:core:1.0"
-  ],
   "Resources": [
     {
       "id": "c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
-      "schemas": [
-        "urn:scim:schemas:core:1.0"
-      ],
+      "schemas": ["urn:scim:schemas:core:2.0:Group"],
       "displayName": "Group A",
       "meta": {
-        "created":"2011-08-01T18:29:49.793Z",
-        "lastModified":"2011-08-01T18:29:51.135Z",
-        "location":"https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
-        "version":"W\/\"mvwNGaxB5SDq074p\""
+        "resourceType": "Group",
+        "created": "2011-08-01T18:29:49.793Z",
+        "lastModified": "2011-08-01T18:29:51.135Z",
+        "location": "https://example.com/v1/Groups/c3a26dd3-27a0-4dec-a2ac-ce211e105f97",
+        "version": "W\/\"mvwNGaxB5SDq074p\""
       },
       "members": [
         {
@@ -2169,15 +2227,14 @@ Content-Type: application/json
     },
     {
       "id": "6c5bb468-14b2-4183-baf2-06d523e03bd3",
-      "schemas": [
-        "urn:scim:schemas:core:1.0"
-      ],
+      "schemas": ["urn:scim:schemas:core:2.0:Group"],
       "displayName": "Group B",
       "meta": {
-        "created":"2011-08-01T18:29:50.873Z",
-        "lastModified":"2011-08-01T18:29:50.873Z",
-        "location":"https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
-        "version":"W\/\"wGB85s2QJMjiNnuI\""
+        "resourceType": "Group",
+        "created": "2011-08-01T18:29:50.873Z",
+        "lastModified": "2011-08-01T18:29:50.873Z",
+        "location": "https://example.com/v1/Groups/6c5bb468-14b2-4183-baf2-06d523e03bd3",
+        "version": "W\/\"wGB85s2QJMjiNnuI\""
       },
       "members": [
         {
@@ -2223,6 +2280,7 @@ Content-Type: application/json
 Location: https://example.com/v1/Bulk/yfCrVJhFIJagAHj8
 
 {
+  "schemas":["urn:scim:schemas:core:2.0:Error"],
   "Errors":[
     {
       "description":"The size of the bulk operation exceeds the maxPayloadSize (1048576).",
@@ -2291,11 +2349,11 @@ Host: example.com
                     Consumers MAY request a partial Resource representation on any
                     operation that returns a Resource within the response by specifying
                     the URL query parameter 'attributes'. When specified, each Resource
-                    returned MUST contain the minimal set of Resource attributes and, MUST
+                    returned MUST contain the minimal set of Resource attributes and MUST
                     contain no other attributes or Sub-Attributes than those explicitly requested.
 
                     The query parameter attributes value is a comma separated list of
-                    Resource attribute names in standard,
+                    Resource attribute names in standard
                     <xref target="attribute-notation" format="default">attribute notation</xref> form (e.g. userName, name, emails).
                 </t>
                 <figure height="" suppress-title="false" width="" alt="" title=""
@@ -2322,10 +2380,11 @@ Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"a330bc54f0671c9"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "meta":{
+    "resourceType": "User",
     "created":"2011-08-01T18:29:49.793Z",
     "lastModified":"2011-08-01T18:29:49.793Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
@@ -2342,13 +2401,13 @@ ETag: W/"a330bc54f0671c9"
                     All operations share a common scheme for referencing simple and complex  attributes.  In general, attributes
                     are identified by prefixing the attribute name with its schema URN
                     separated by a ':' character; e.g., the core User Resource attribute 'userName' is identified as
-                    'urn:scim:schemas:core:1.0:userName'.  Consumers MAY omit core schema attribute URN prefixes though MUST fully
+                    'urn:scim:schemas:core:2.0:userName'.  Consumers MAY omit core schema attribute URN prefixes though MUST fully
                     qualify extended attributes with the associated Resource URN; e.g., the attribute 'age' defined in
                     'urn:hr:schemas:user' is fully encoded as 'urn:hr:schemas:user:age'.
 
                     A Complex attributes' Sub-Attributes are referenced via nested, dot ('.') notation;
                     i.e., {urn}:{Attribute name}.{Sub-Attribute name}.  For example, the fully qualified path for a User's
-                    givenName is urn:scim:schemas:core:1.0:name.givenName
+                    givenName is urn:scim:schemas:core:2.0:name.givenName
 
                     All facets (URN, attribute and Sub-Attribute name) of the fully encoded Attribute name are case insensitive.
                 </t>
@@ -2358,14 +2417,37 @@ ETag: W/"a330bc54f0671c9"
             <section title="HTTP Response Codes">
                 <t>
                     The SCIM Protocol uses the response
-                    <eref
-                            target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">
-                        status codes defined in HTTP
+                    <eref target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">
+                      status codes defined in HTTP
                     </eref>
                     to indicate operation success or failure. In addition to returning a
                     HTTP response code implementers MUST return the errors in the body of
                     the response in the client requested format containing the error
                     response and, per the HTTP specification, human-readable explanations.
+                    Error responses are identified using the following URI:
+                    'urn:scim:schemas:core:2.0:Error'.  The following multi-valued attribute
+                    is defined in addition to those attributes defined in SCIM Core Schema:
+                </t>
+
+                <t>
+                    <list style="hanging">
+                        <t hangText="Errors">
+                            The list of errors encountered by the Service Provider. The value
+                            attribute is a complex type with the following sub-attributes.
+
+                            <list style="hanging">
+                                <t hangText="description">
+                                    A human-readable explanation of the error. REQUIRED.
+                                </t>
+                                <t hangText="code">
+                                    A string indicating the HTTP response code. REQUIRED.
+                                </t>
+                            </list>
+                        </t>
+                    </list>
+                </t>
+
+                <t>
                     Implementers SHOULD handle the identified errors as described below.
                 </t>
 
@@ -2422,6 +2504,7 @@ ETag: W/"a330bc54f0671c9"
 HTTP/1.1 404 NOT FOUND
 
 {
+  "schemas": ["urn:scim:schemas:core:2.0:Error"],
   "Errors":[
     {
       "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
@@ -2444,7 +2527,7 @@ HTTP/1.1 404 NOT FOUND
             </section>
             <section title="Versioning Resources" anchor="etags">
                 <t>
-                    The API supports resource versioning via standard,<eref
+                    The API supports resource versioning via standard <eref
                         target="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19">
                     HTTP ETags</eref>. Service providers MAY support weak ETags as the preferred mechanism for performing
                     conditional retrievals and ensuring Consumers do not inadvertently overwrite each others
@@ -2465,7 +2548,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "userName":"bjensen",
   "externalId":"bjensen",
   "name":{
@@ -2491,9 +2574,10 @@ Location: https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"e180ee84f0671b1"
 
 {
-  "schemas":["urn:scim:schemas:core:1.0"],
+  "schemas":["urn:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "meta":{
+    "resourceType":"User",
     "created":"2011-08-01T21:32:44.882Z",
     "lastModified":"2011-08-01T21:32:44.882Z",
     "location":"https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",

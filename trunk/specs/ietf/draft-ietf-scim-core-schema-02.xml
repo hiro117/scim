@@ -11,9 +11,9 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-ietf-scim-core-schema-01" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-scim-core-schema-02" ipr="trust200902">
   <front>
-    <title abbrev="draft-scim-core-schema-01">System for Cross-Domain Identity
+    <title abbrev="draft-scim-core-schema-02">System for Cross-Domain Identity
     Management: Core Schema</title>
 
     <author fullname="Chuck Mortimore" initials="C." role="editor"
@@ -45,7 +45,7 @@
       </address>
     </author>
 
-    <date day="15" month="April" year="2013" />
+    <date day="30" month="August" year="2013" />
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification is
@@ -115,6 +115,10 @@
               maintained by the Service Provider.
             </t>
             <t hangText="Resource:">The Service Provider managed artifact containing one or more attributes; e.g., User or Group
+            </t>
+            <t hangText="Resource Type:">A type of a Resource that is managed by a Service Provider.  The Resource Type defines the Resource name, endpoint URL, Schemas, and other meta-data which indicate where a Resource is managed and how it is composed; e.g., User or Group.
+            </t>
+            <t hangText="Schema:">A collection of Attribute Definitions that describe the contents of an entire or partial Resource; e.g., urn:scim:schemas:core:User:2.0.
             </t>
             <t hangText="Singular Attribute:">A Resource attribute that contains 0..1 values; e.g., displayName.
             </t>
@@ -350,6 +354,9 @@
 	    interpret the externalId as scoped to the Service Consumer's tenant.</t>
 
          <t hangText="meta">A complex attribute containing resource metadata.  All sub-attributes are OPTIONAL <list style="hanging">
+                <t hangText="resourceType">The name of the Resource Type of
+                the Resource. READ-ONLY.</t>
+
                 <t hangText="created">The DateTime the Resource was added to
                 the Service Provider. The attribute MUST be a DateTime.
                 READ-ONLY.</t>
@@ -389,8 +396,11 @@
             specification defines URIs for User, Group, and a standard "enterprise"
             extension.  All representations of SCIM schema MUST include a
             non-zero value array with value(s) of the URIs supported by that
-            representation.  Duplicate values MUST NOT be included.  Value
-            order is not specified and MUST not impact behavior. REQUIRED.</t>
+            representation.  The schemas attribute for a Resource MUST only
+            contain values defined as "schema" and "schemaExtensions" for the
+            Resource's Resource Type. Duplicate values MUST NOT be included.
+            Value order is not specified and MUST not impact behavior. REQUIRED.
+            </t>
           </list>
         </t>
       </section>
@@ -398,7 +408,7 @@
 
     <section title="SCIM User Schema" anchor="user-resource">
       <t>SCIM provides a schema for representing Users, identified using the
-      following URI: 'urn:scim:schemas:core:1.0'. The following
+      following URI: 'urn:scim:schemas:core:2.0:User'. The following
       attributes are defined in addition to those attributes defined in SCIM Core Schema:</t>
 
       <section title="Singular Attributes">
@@ -608,7 +618,7 @@
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:enterprise:1.0'.</t>
+      following URI: 'urn:scim:schemas:extension:enterprise:2.0:User'.</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -644,7 +654,7 @@
 
     <section title="SCIM Group Schema" anchor="group-resource">
       <t>SCIM provides a schema for representing groups, identified using the
-      following URI: 'urn:scim:schemas:core:1.0'.</t>
+      following URI: 'urn:scim:schemas:core:2.0:Group'.</t>
 
       <t>Group resources are meant to enable expression of common Group or
       role based access control models, although no explicit authorization
@@ -675,11 +685,12 @@
     </section>
     <section title="Service Provider Configuration Schema">
       <t>SCIM provides a schema for representing the Service Provider's configuration identified using the
-      following URI: 'urn:scim:schemas:core:1.0'</t>
+      following URI: 'urn:scim:schemas:core:2.0:ServiceProviderConfig'</t>
 
       <t>The Service Provider Configuration Resource enables a Service Provider to expose its compliance with the SCIM
           specification in a standardized form as well as provide additional implementation details to Consumers.
-          All attributes are READ-ONLY.
+          All attributes are READ-ONLY. Unlike other core Resources, the "id" attribute is not required for the
+          Service Provider Configuration Resource.
       </t>
 
       <t>The following Singular Attributes are defined in addition to the common attributes defined in Core Schema:
@@ -747,77 +758,102 @@
       </t>
     </section>
 
-      <section title="Resource Schema" anchor="resource-schema">
-        <t>The Resource schema specifies the Attribute(s) and meta-data that constitute a Resource. Schema Resources
-           are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:1.0'.  Unlike other core
-          Resources the schema Resource MAY contain a complex object within a Sub-Attribute and all Attributes are
-          REQUIRED unless other specified.
+      <section title="Resource Type Schema" anchor="resource-type-schema">
+        <t>The Resource Type schema specifies the meta-data about a Resource Type. Resource Type Resources
+           are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:2.0:ResourceType'.
+           Unlike other core Resources, all Attributes are REQUIRED unless otherwise specified, and the "id"
+           attribute is not required for the Resource Type Resource.
         </t>
+
         <t>The following Singular Attributes are defined:
           <list style="hanging">
-            <t hangText="name">The Resource name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group".</t>
-            <t hangText="description">The Resource's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.</t>
-            <t hangText="schema">The Resource's associated schema URI; e.g., urn:scim:schemas:core:1.0.</t>
-            <t hangText="endpoint">The Resource's HTTP addressable endpoint relative to the Base URL; e.g., /Users.</t>
+            <t hangText="name">The Resource Type name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group".  This name is referenced by the meta.resourceType attribute in all resources.</t>
+            <t hangText="description">The Resource Type's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification.</t>
+            <t hangText="endpoint">The Resource Type's HTTP addressable endpoint relative to the Base URL; e.g., /Users.</t>
+            <t hangText="schema">The Resource Type's primary schema URI; e.g., urn:scim:schemas:core:2.0:User.  This MUST be equal to the "id" attribute of the Schema.</t>
+            <t hangText="schemaExtensions">
+              A list of URIs of the Resource Type's schema extensions. OPTIONAL.
+
+              <list style="hanging">
+                <t hangText="schema">The URI of an extended schema; e.g., urn:edu:2.0:Staff.  This MUST be equal to the "id" attribute of a Schema. REQUIRED.</t>
+                <t hangText="required">A Boolean value that specifies whether the schema extension is required for the Resource Type. If true, a Resource of this type MUST include this schema extension and include any attributes declared as required in this schema extension. If false, a Resource of this type MAY omit this schema extension. REQUIRED.</t>
+              </list>
+            </t>
+          </list>
+        </t>
+      </section>
+
+      <section title="Schema Schema" anchor="schema-schema">
+
+        <t>The Schema schema specifies the Attribute(s) and meta-data that constitute a Schema. Schema Resources
+           are READ-ONLY and identified using the following URI: 'urn:scim:schemas:core:2.0:Schema'.
+           Unlike other core Resources the Schema Resource MAY contain a complex object within a Sub-Attribute
+           and all Attributes are REQUIRED unless other specified.
+        </t>
+
+        <t>The following Singular Attributes are defined:
+          <list style="hanging">
+            <t hangText="id">The unique URI of the schema.  When applicable Service Providers MUST specify the URI specified in the core schema specification; e.g., "urn:scim:core:2.0:User".  Unlike most other schemas, which use some sort of a GUID for the "id", the Schema "id" is a URI so that it can be registered and is portable between different Service Providers and Clients.</t>
+            <t hangText="name">The Schema's human readable name.  When applicable Service Providers MUST specify the name specified in the core schema specification; e.g., "User" or "Group".  OPTIONAL.</t>
+            <t hangText="description">The Schema's human readable description. When applicable Service Providers MUST specify the description specified in the core schema specification. OPTIONAL.</t>
            </list>
         </t>
-          <t>The following multi-valued attribute is defined:
-              <list style="hanging">
-                  <t hangText="attributes">A complex type that specifies the set of Resource attributes.
-                      <list style="hanging">
-                          <t hangText="name">The attribute's name.</t>
-                          <t hangText="type">The attribute's data type; e.g., String.</t>
-                          <t hangText="multiValued">Boolean value indicating the attribute's plurality.</t>
-                          <t hangText="description">The attribute's human readable description. When applicable Service
-                              Providers MUST specify the description specified in the core schema specification.
-                          </t>
-                          <t hangText="schema">The attribute's associated schema; e.g., urn:scim:schemas:core:1.0.
-                          </t>
-                          <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
-                          </t>
-                          <t hangText="required">A Boolean value that specifies if the attribute is required.
-                          </t>
-                          <t hangText="caseExact">A Boolean value that specifies if the String attribute is case sensitive.
-                          </t>
-                          <t hangText="referenceTypes">
-                            The names of the Resources that may be referenced; e.g., User. This is only applicable
-                            for attributes that are of the "reference" data type.
-                          </t>
 
-                          <t>The following multi-valued attributes are defined. There are no canonical type values defined
-                            and the primary value serves no useful purpose.
-                            <list style="hanging">
-                              <t hangText="subAttributes">A list specifying the contained attributes. OPTIONAL.
-                                <list style="hanging">
-                                  <t hangText="name">The attribute's name.</t>
-                                  <t hangText="type">The attribute's data type; e.g., String.</t>
-                                  <t hangText="description">The attribute's human readable description. When
-                                    applicable Service Providers MUST specify the description specified in the core
-                                    schema specification.
-                                  </t>
-                                  <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
-                                  </t>
-                                  <t hangText="required">A Boolean value that specifies if the attribute is required.
-                                  </t>
-                                  <t hangText="caseExact">A Boolean value that specifies if the String attribute
-                                    is case sensitive.
-                                  </t>
-                                  <t hangText="referenceTypes">
-                                    The names of the Resources that may be referenced; e.g., User. This is only applicable
-                                    for attributes that are of the "reference" data type.
-                                  </t>
-                                  <t hangText="canonicalValues">A collection of canonical values. When applicable Service
-                                    Providers MUST specify the canonical types specified in the core schema
-                                    specification; e.g.,"work","home". OPTIONAL.
-                                  </t>
-                                </list>
-                              </t>
-                            </list>
-                          </t>
+        <t>The following multi-valued attribute is defined:
+          <list style="hanging">
+            <t hangText="attributes">A complex type that specifies the set of Resource attributes.
+              <list style="hanging">
+                <t hangText="name">The attribute's name.</t>
+                <t hangText="type">The attribute's data type; e.g., String.</t>
+                <t hangText="multiValued">Boolean value indicating the attribute's plurality.</t>
+                <t hangText="description">The attribute's human readable description. When applicable Service
+                  Providers MUST specify the description specified in the core schema specification.
+                </t>
+                <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
+                </t>
+                <t hangText="required">A Boolean value that specifies if the attribute is required.
+                </t>
+                <t hangText="caseExact">A Boolean value that specifies if the String attribute is case sensitive.
+                </t>
+                <t hangText="referenceTypes">
+                  The names of the Resource Types that may be referenced; e.g., User. This is only applicable
+                  for attributes that are of the "reference" data type.
+                </t>
+
+                <t>The following multi-valued attributes are defined. There are no canonical type values defined
+                   and the primary value serves no useful purpose.
+                  <list style="hanging">
+                    <t hangText="subAttributes">A list specifying the contained attributes. OPTIONAL.
+                      <list style="hanging">
+                        <t hangText="name">The attribute's name.</t>
+                        <t hangText="type">The attribute's data type; e.g., String.</t>
+                        <t hangText="description">The attribute's human readable description. When
+                          applicable Service Providers MUST specify the description specified in the core
+                          schema specification.
+                        </t>
+                        <t hangText="readOnly">A Boolean value that specifies if the attribute is mutable.
+                        </t>
+                        <t hangText="required">A Boolean value that specifies if the attribute is required.
+                        </t>
+                        <t hangText="caseExact">A Boolean value that specifies if the String attribute
+                          is case sensitive.
+                        </t>
+                        <t hangText="referenceTypes">
+                          The names of the Resource Types that may be referenced; e.g., User. This is only applicable
+                          for attributes that are of the "reference" data type.
+                        </t>
+                        <t hangText="canonicalValues">A collection of canonical values. When applicable Service
+                          Providers MUST specify the canonical types specified in the core schema
+                          specification; e.g.,"work","home". OPTIONAL.
+                        </t>
                       </list>
-                  </t>
+                    </t>
+                  </list>
+                </t>
               </list>
-          </t>
+            </t>
+          </list>
+        </t>
     </section>
 
     <section anchor="json_representation" title="JSON Representation">
@@ -828,9 +864,16 @@
         <figure>
           <artwork><![CDATA[
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "userName": "bjensen@example.com"
+  "meta": {
+    "resourceType": "User",
+    "created": "2010-01-23T04:56:22Z",
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "W\/\"3694e05e9dff590\"",
+    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
+  }
 }
 
 ]]></artwork>
@@ -845,7 +888,7 @@
           <artwork><![CDATA[
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -965,6 +1008,7 @@
     }
   ],
   "meta": {
+    "resourceType": "User",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"a330bc54f0671c9\"",
@@ -983,7 +1027,7 @@
           <artwork><![CDATA[
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:enterprise:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:User", "urn:scim:schemas:extension:enterprise:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -1102,7 +1146,7 @@
                 +GFiBZ+GNF/cAYKcMtGcrs2i97ZkJMo="
     }
   ],
-  "urn:scim:schemas:extension:enterprise:1.0": {
+  "urn:scim:schemas:extension:enterprise:2.0:User": {
     "employeeNumber": "701984",
     "costCenter": "4130",
     "organization": "Universal Studios",
@@ -1115,6 +1159,7 @@
     }
   },
   "meta": {
+    "resourceType": "User",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff591\"",
@@ -1134,7 +1179,7 @@
           <artwork><![CDATA[
 
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
   "displayName": "Tour Guides",
   "members": [
@@ -1149,6 +1194,13 @@
       "display": "Mandy Pepperidge"
     }
   ]
+  "meta": {
+    "resourceType": "Group",
+    "created": "2010-01-23T04:56:22Z",
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "W\/\"3694e05e9dff592\"",
+    "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a"
+  }
 }
 
 ]]></artwork>
@@ -1163,7 +1215,7 @@
         <figure>
           <artwork><![CDATA[
 {
-  "schemas": ["urn:scim:schemas:core:1.0"],
+  "schemas": ["urn:scim:schemas:core:2.0:ServiceProviderConfig"],
   "documentationUrl":"http://example.com/help/scim.html",
   "patch": {
     "supported":true
@@ -1202,31 +1254,65 @@
       "documentationUrl":"http://example.com/help/httpBasic.html",
       "type":"httpbasic"
      }
-  ]
+  ],
+  "meta": {
+    "resourceType": "ServiceProviderConfig"
+    "created": "2010-01-23T04:56:22Z",
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "W\/\"3694e05e9dff594\""
+  }
 }
 
 ]]></artwork>
         </figure>
       </section>
-      <section title="Resource Schema Representation">
-        <t>The following is a normative example of the SCIM Resource Schema
+
+      <section title="Resource Type Representation">
+        <t>The following is a normative example of the SCIM Resource Type
         representation in JSON format.</t>
 
         <figure>
           <artwork><![CDATA[
 {
-  "id":"urn:scim:schemas:core:1.0:User",
-  "name":"User",
-  "description":"Core User",
-  "schema":"urn:scim:schemas:core:1.0",
-  "endpoint":"/Users",
+  "schemas": ["urn:scim:schemas:core:2.0:ResourceType"],
+  "name": "User",
+  "endpoint": "/Users",
+  "description": "Core User",
+  "schema": "urn:scim:schemas:core:2.0:User",
+  "schemaExtensions": [
+    {
+      "schema": "urn:scim:schemas:extension:enterprise:2.0:EnterpriseUser",
+      "required": true
+    }
+  ],
+  "meta": {
+    "resourceType": "ResourceType",
+    "created": "2010-01-23T04:56:22Z",
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "W\/\"3694e05e9dff595\""
+  }
+}
+
+]]></artwork>
+        </figure>
+      </section>
+
+      <section title="Schema Representation">
+        <t>The following is a normative example of the SCIM Schema
+        representation in JSON format.</t>
+
+        <figure>
+          <artwork><![CDATA[
+{
+  "id": "urn:scim:schemas:core:2.0:User",
+  "name": "User",
+  "description": "Core User",
   "attributes":[
     {
       "name":"id",
       "type":"string",
       "multiValued":false,
       "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
-      "schema":"urn:scim:schemas:core:1.0",
       "readOnly":true,
       "required":true,
       "caseExact":false
@@ -1236,7 +1322,6 @@
       "type":"complex",
       "multiValued":false,
       "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
-      "schema":"urn:scim:schemas:core:1.0",
       "readOnly":false,
       "required":false,
       "caseExact":false,
@@ -1302,7 +1387,6 @@
        "type":"complex",
        "multiValued":true,
        "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
-       "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
        "caseExact":false,
@@ -1350,7 +1434,6 @@
        "type":"complex",
        "multiValued":true,
        "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
-       "schema":"urn:scim:schemas:core:1.0",
        "readOnly":false,
        "required":false,
        "caseExact":false,
@@ -1418,20 +1501,17 @@
            "required":false,
            "caseExact":false,
            "canonicalValues":["work","home","other"]
-         },
+         }
        ]
-     },
-     {
-       "name":"employeeNumber",
-       "type":"string",
-       "multiValued":false,
-       "description":"Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
-       "schema":"urn:scim:schemas:extension:enterprise:1.0",
-       "readOnly":false,
-       "required":false,
-       "caseExact":false
      }
-   ]
+   ],
+  "meta": {
+    "resourceType": "Schema"
+    "created": "2010-01-23T04:56:22Z",
+    "lastModified": "2011-05-13T04:42:34Z",
+    "version": "W\/\"3694e05e9dff596\"",
+    "location": "https://example.com/v1/Schemas/urn:scim:schemas:core:2.0:User"
+  }
 }
 
 ]]></artwork>
