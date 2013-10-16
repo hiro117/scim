@@ -1268,7 +1268,7 @@
       </section>
 
       <section title="Resource Type Representation">
-        <t>The following is a normative example of the SCIM Resource Type
+        <t>The following is a non-normative example of the SCIM Resource Type
         representation in JSON format.</t>
 
         <figure>
@@ -1298,7 +1298,7 @@
       </section>
 
       <section title="Schema Representation">
-        <t>The following is a normative example of the SCIM Schema
+        <t>The following is a non-normative example of the SCIM Schema
         representation in JSON format.</t>
 
         <figure>
