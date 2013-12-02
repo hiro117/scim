@@ -401,7 +401,7 @@ ETag: W/"f250dd84f0671c3"
 
 {
   "schemas":["urn:scim:schemas:core:2.0:User"],
-  "id":"2819c223-7f76-453a-919d-413861904646,
+  "id":"2819c223-7f76-453a-919d-413861904646",
   "externalId":"bjensen",
   "meta":{
     "resourceType":"User",
@@ -983,7 +983,7 @@ Location: https://example.com/.search
           "https://example.com/Users/2819c223-7f76-413861904646",
         "resourceType":"User",
         "lastModified": ...
-      }
+      },
       "username":"jsmith",
       "displayName":"Smith, James"
     },
@@ -993,7 +993,7 @@ Location: https://example.com/.search
           "https://example.com/Groups/c8596b90-7539-4f20968d1908",
         "resourceType":"Group",
         "lastModified": ...
-      }
+      },
       "displayName":"Smith Family"
     },
      ...
@@ -1250,7 +1250,7 @@ If-Match: W/"a330bc54f0671c9"
     {
       "display": "Babs Jensen",
       "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
+      "value": "2819c223-7f76-453a-919d-413861904646",
       "operation": "delete"
     }
   ]
@@ -1343,7 +1343,7 @@ If-Match: W/"a330bc54f0671c9"
     {
       "display": "Babs Jensen",
       "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
+      "value": "2819c223-7f76-453a-919d-413861904646",
       "operation": "delete"
     },
     {
@@ -1413,7 +1413,7 @@ If-Match: W/"a330bc54f0671c9"
       "postalCode": "91608",
       "country": "US",
       "formatted": "100 Universal City Plaza\nHollywood, CA 91608 US",
-      "primary": true
+      "primary": true,
       "operation": "delete"
     },
     {
