@@ -866,7 +866,7 @@
 {
   "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
-  "userName": "bjensen@example.com"
+  "userName": "bjensen@example.com",
   "meta": {
     "resourceType": "User",
     "created": "2010-01-23T04:56:22Z",
@@ -1193,7 +1193,7 @@
       "$ref": "https://example.com/v1/Users/902c246b-6245-4190-8e05-00816be7344a",
       "display": "Mandy Pepperidge"
     }
-  ]
+  ],
   "meta": {
     "resourceType": "Group",
     "created": "2010-01-23T04:56:22Z",
@@ -1256,7 +1256,7 @@
      }
   ],
   "meta": {
-    "resourceType": "ServiceProviderConfig"
+    "resourceType": "ServiceProviderConfig",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff594\""
@@ -1381,132 +1381,133 @@
           "caseExact":false
         }
       ]
-     },
-     {
-       "name":"emails",
-       "type":"complex",
-       "multiValued":true,
-       "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
-       "readOnly":false,
-       "required":false,
-       "caseExact":false,
-       "subAttributes":[
-         {
-           "name":"value",
-           "type":"string",
-           "multiValued":false,
-           "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"display",
-           "type":"string",
-           "multiValued":false,
-           "description":"A human readable name, primarily used for display purposes. READ-ONLY.",
-           "readOnly":true,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"type",
-           "type":"string",
-           "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false,
-           "canonicalValues":["work","home","other"]
-         },
-         {
-           "name":"primary",
-           "type":"boolean",
-           "multiValued":false,
-           "description":"A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         }
-     },
-     {
-       "name":"addresses",
-       "type":"complex",
-       "multiValued":true,
-       "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
-       "readOnly":false,
-       "required":false,
-       "caseExact":false,
-       "subAttributes":[
-         {
-           "name":"formatted",
-           "type":"string",
-           "multiValued":false,
-           "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"streetAddress",
-           "type":"string",
-           "multiValued":false,
-           "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"locality",
-           "type":"string",
-           "multiValued":false,
-           "description":"The city or locality component.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"region",
-           "type":"string",
-           "multiValued":false,
-           "description":"The state or region component.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"postalCode",
-           "type":"string",
-           "multiValued":false,
-           "description":"The zipcode or postal code component.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"country",
-           "type":"string",
-           "multiValued":false,
-           "description":"The country name component.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false
-         },
-         {
-           "name":"type",
-           "type":"string",
-           "multiValued":false,
-           "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
-           "readOnly":false,
-           "required":false,
-           "caseExact":false,
-           "canonicalValues":["work","home","other"]
-         }
-       ]
-     }
-   ],
+    },
+    {
+      "name":"emails",
+      "type":"complex",
+      "multiValued":true,
+      "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
+      "readOnly":false,
+      "required":false,
+      "caseExact":false,
+      "subAttributes":[
+        {
+          "name":"value",
+          "type":"string",
+          "multiValued":false,
+          "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"display",
+          "type":"string",
+          "multiValued":false,
+          "description":"A human readable name, primarily used for display purposes. READ-ONLY.",
+          "readOnly":true,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"type",
+          "type":"string",
+          "multiValued":false,
+          "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false,
+          "canonicalValues":["work","home","other"]
+        },
+        {
+          "name":"primary",
+          "type":"boolean",
+          "multiValued":false,
+          "description":"A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        }
+      ]
+    },
+    {
+      "name":"addresses",
+      "type":"complex",
+      "multiValued":true,
+      "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
+      "readOnly":false,
+      "required":false,
+      "caseExact":false,
+      "subAttributes":[
+        {
+          "name":"formatted",
+          "type":"string",
+          "multiValued":false,
+          "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"streetAddress",
+          "type":"string",
+          "multiValued":false,
+          "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"locality",
+          "type":"string",
+          "multiValued":false,
+          "description":"The city or locality component.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"region",
+          "type":"string",
+          "multiValued":false,
+          "description":"The state or region component.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"postalCode",
+          "type":"string",
+          "multiValued":false,
+          "description":"The zipcode or postal code component.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"country",
+          "type":"string",
+          "multiValued":false,
+          "description":"The country name component.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false
+        },
+        {
+          "name":"type",
+          "type":"string",
+          "multiValued":false,
+          "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
+          "readOnly":false,
+          "required":false,
+          "caseExact":false,
+          "canonicalValues":["work","home","other"]
+        }
+      ]
+    }
+  ],
   "meta": {
-    "resourceType": "Schema"
+    "resourceType": "Schema",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff596\"",
