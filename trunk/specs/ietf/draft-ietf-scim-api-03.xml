@@ -503,18 +503,20 @@ Content-Type: application/json
           </figure>
 
           <section anchor="query-endpoints" title="Query Endpoints">
-            <t>Queries MAY be performed against a SCIM: <list>
-                <t>Resource (e.g. /Users/{userid}),</t>
+            <t>Queries MAY be performed against a SCIM resources or resource
+            endpoints. For example: <list>
+                <t>/Users/{userid}</t>
 
-                <t>Resource Type endpoint (e.g. /Users or /Groups), or</t>
+                <t>/Users</t>
 
-                <t>Server Root (e.g. /).</t>
+                <t>/Groups</t>
               </list></t>
 
-            <t>A search against a server root indicates that ALL resources
-            within the server SHALL be included subject to filtering. For
-            example, a filter against 'meta.resourceType' could be used to
-            restrict results to one or more specific resource types.</t>
+            <t>A server MAY support searches against the server root (e.g.
+            "/"). A search against a server root indicates that ALL resources
+            within the server SHALL be included subject to filtering. A filter
+            expression using 'meta.resourceType' could be used to restrict
+            results to one or more specific resource types.</t>
 
             <t>When processing search operations across endpoints that include
             more than one SCIM resource type (e.g. a search from the server
@@ -1580,14 +1582,16 @@ If-Match: W/"c310cd84f0281b7"
                                       </artwork>
         </figure>
 
-        <t>Server Response:</t>
+        <t>In response to a successful delete, the server SHALL respond with
+        successful HTTP status 204 (No Content). A non-normative example
+        response:</t>
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
           <artwork align="left" alt="" height="" name="" type="" width=""
                    xml:space="preserve">
             
-HTTP/1.1 200 OK
+HTTP/1.1 204 No Content
             </artwork>
         </figure>
 
@@ -1870,7 +1874,7 @@ Content-Type: application/json
             "location": "https://example.com/v1/Users/e9025315-6bea-44e1-899c-1e07454e468b",
             "method": "DELETE",
             "status": {
-                "code": "200"
+                "code": "204"
             }
         }
     ]
