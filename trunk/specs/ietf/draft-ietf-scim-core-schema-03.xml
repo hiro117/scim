@@ -25,6 +25,14 @@
       </address>
     </author>
 
+    <author fullname="Kelly Grizzle" initials="K.G." surname="Grizzle">
+      <organization abbrev="SailPoint">SailPoint</organization>
+
+      <address>
+        <email>kelly.grizzle@sailpoint.com</email>
+      </address>
+    </author>
+
     <author fullname="Patrick Harding" initials="P." surname="Harding">
       <organization abbrev="Ping">Ping Identity</organization>
 
@@ -374,7 +382,7 @@
             mapping between the local identifier of the Resource and the
             identifier used by the Service Provider. Each Resource MAY include
             a non-empty externalId value. The value of the externalId
-            attribute is always issued be the Service Consumer and can never
+            attribute is always issued by the Service Consumer and can never
             be specified by the Service Provider. The Service Provider MUST
             always interpret the externalId as scoped to the Service
             Consumer's tenant.</t>
@@ -918,7 +926,7 @@
 
                   <t hangText="immutable">The attribute MAY be defined at
                   resource creation (e.g. POST) or at record replacement via
-                  request (e.g. a PUT). The attribute MAY NOT be updated. </t>
+                  request (e.g. a PUT). The attribute MAY NOT be updated.</t>
 
                   <t hangText="writeOnly">The attribute MAY be updated at any
                   time. Attribute values MAY NOT be returned (e.g. because the
@@ -940,13 +948,13 @@
                   may occur because the original attribute value is not
                   retained by the service provider (e.g. such as with a hashed
                   value). A service provider MAY allow attributes to be used
-                  in a search filter. </t>
+                  in a search filter.</t>
 
-                  <t>(DEFAULT) The attribute is returned by default in all
-                  SCIM operation responses where attribute values are
-                  returned. If the GET request "attributes" parameter is
-                  specified, attribute values are only returned if the
-                  attribute is named in the attributes parameter. </t>
+                  <t hangText="default">(DEFAULT) The attribute is returned by
+                  default in all SCIM operation responses where attribute
+                  values are returned. If the GET request "attributes"
+                  parameter is specified, attribute values are only returned
+                  if the attribute is named in the attributes parameter.</t>
 
                   <t hangText="request">The attribute is returned in response
                   to any PUT, POST, or PATCH operations if the attribute was
