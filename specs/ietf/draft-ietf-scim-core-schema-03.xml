@@ -57,7 +57,7 @@
       </address>
     </author>
 
-    <date day="30" month="August" year="2013"/>
+    <date day="8" month="February" year="2014"/>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
@@ -121,41 +121,43 @@
 
       <section anchor="defs" title="Definitions" toc="default">
         <t><list style="hanging">
-            <t hangText="Service Provider:">A web application that provides
-            identity information via the SCIM protocol.</t>
+            <t hangText="Service Provider:">An HTTP web application that
+            provides identity information via the SCIM protocol. </t>
 
-            <t hangText="Consumer:">A website or application that uses the
-            SCIM protocol to manage identity data maintained by the Service
-            Provider.</t>
+            <t hangText="Client:">A website or application that uses the SCIM
+            protocol to manage identity data maintained by the service
+            provider. The client initiates SCIM HTTP requests to a target
+            service provider.</t>
 
-            <t hangText="Resource:">The Service Provider managed artifact
-            containing one or more attributes; e.g., User or Group</t>
+            <t hangText="Resource:">The service provider managed artifact
+            containing one or more attributes; e.g., <spanx style="verb">User</spanx>
+            or <spanx style="verb">Group</spanx>.</t>
 
-            <t hangText="Resource Type:">A type of a Resource that is managed
-            by a Service Provider. The Resource Type defines the Resource
+            <t hangText="Resource Type:">A type of a resource that is managed
+            by a service provider. The resource type defines the resource
             name, endpoint URL, Schemas, and other meta-data which indicate
-            where a Resource is managed and how it is composed; e.g., User or
-            Group.</t>
+            where a resource is managed and how it is composed; e.g., <spanx
+            style="verb">User</spanx> or <spanx style="verb">Group</spanx>.</t>
 
             <t hangText="Schema:">A collection of Attribute Definitions that
-            describe the contents of an entire or partial Resource; e.g.,
-            urn:scim:schemas:core:User:2.0.</t>
+            describe the contents of an entire or partial resource; e.g.,
+            <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.</t>
 
-            <t hangText="Singular Attribute:">A Resource attribute that
-            contains 0..1 values; e.g., displayName.</t>
+            <t hangText="Singular Attribute:">A resource attribute that
+            contains 0..1 values; e.g., <spanx style="verb">displayName</spanx>.</t>
 
-            <t hangText="Multi-valued Attribute:">A Resource attribute that
-            contains 0..n values; e.g., emails.</t>
+            <t hangText="Multi-valued Attribute:">A resource attribute that
+            contains 0..n values; e.g., <spanx style="verb">emails</spanx>.</t>
 
-            <t hangText="Simple Attribute:">A Singular or Multi-valued
-            Attribute whose value is a primitive; e.g., String.</t>
+            <t hangText="Simple Attribute:">A singular or multi-valued
+            attribute whose value is a primitive; e.g., <spanx style="verb">String</spanx>.</t>
 
-            <t hangText="Complex Attribute:">A Singular or Multi-valued
-            Attribute whose value is a composition of one or more Simple
-            Attributes.</t>
+            <t hangText="Complex Attribute:">A singular or multi-valued
+            attribute whose value is a composition of one or more simple
+            attributes; e.g., <spanx style="verb">addresses</spanx>.</t>
 
-            <t hangText="Sub-Attribute:">A Simple Attribute contained within a
-            Complex Attribute.</t>
+            <t hangText="Sub-Attribute:">A simple attribute contained within a
+            complex attribute.</t>
           </list></t>
       </section>
     </section>
@@ -167,24 +169,27 @@
 
       <t>A resource is a collection of attributes identified by one or more
       schemas. Minimally, an attribute consists of the attribute name and at
-      least one Simple or Complex value either of which may be Multi-valued.
+      least one simple or complex value either of which may be multi-valued.
       SCIM schema defines the data type, plurality and other distinguishing
       features of an attribute. Unless otherwise specified all attributes are
-      modifiable by Consumers. Immutable (read-only) attributes SHALL be
-      specified as 'READ-ONLY' within the attribute definition. Additionally,
-      Service Providers MAY choose to make some or all Resource attributes
-      immutable and SHOULD identify those attributes via the associated <xref
-      target="schemas-attribute">Resource's schema endpoint</xref>.</t>
+      modifiable by consumers. Attribute definitions contain a property <spanx
+      style="verb">mutability</spanx> that determines whether an attribute is:
+      <spanx style="verb">readOnly</spanx>, <spanx style="verb">writeOnly</spanx>,
+      <spanx style="verb">immutable</spanx>, or <spanx style="verb">readWrite</spanx>.
+      Additionally, service providers MAY define other properties such as
+      returnability <xref target="schemas-attribute">Resource's schema
+      endpoint</xref>.</t>
 
       <t>A <eref target="http://json.org">JSON</eref> (JavaScript Object
       Notation) format is defined. Attribute names SHOULD be camelCased. SCIM
-      resources represented in JSON MUST specify schema via the <xref
-      target="schemas-attribute">schemas attribute</xref>.</t>
+      resources represented in JSON MUST specify schema via the <spanx
+      style="verb">schemas</spanx> attribute<xref
+      target="schemas-attribute"/>.</t>
 
       <section anchor="attribute-types" title="Attribute Data Types">
         <t>Attribute data types are derived from <eref
         target="http://tools.ietf.org/html/rfc4627">JSON</eref> and unless
-        otherwise specified are optional, modifiable by Consumers, and of type
+        otherwise specified are optional, modifiable by clients, and of type
         <xref target="type-string">String</xref>. The JSON format defines a
         limited set of data types, hence, where appropriate, alternate JSON
         representations derived from <eref
@@ -196,16 +201,17 @@
           <t>A sequence of zero or more Unicode characters. The JSON format is
           defined in <eref
           target="http://tools.ietf.org/html/rfc4627#section-2.5">section
-          2.5</eref> of RFC 4627. A String attribute MAY specify a required
-          data format. Additionally, when Canonical Values are specified
-          Service Providers SHOULD conform to those values if appropriate, but
-          MAY provide alternate String values to represent additional
+          2.5</eref> of RFC 4627. A <spanx style="verb">String</spanx>
+          attribute MAY specify a required data format. Additionally, when
+          canonical values are specified service providers SHOULD conform to
+          those values if appropriate, but MAY provide alternate <spanx
+          style="verb">String</spanx> values to represent additional
           values.</t>
         </section>
 
         <section anchor="type-boolean" title="Boolean">
-          <t>The literal "true" or "false". The JSON format is defined in
-          <eref
+          <t>The literal "<spanx style="verb">true</spanx>" or "<spanx
+          style="verb">false</spanx>". The JSON format is defined in <eref
           target="http://tools.ietf.org/html/rfc4627#section-2.1">section
           2.1</eref> of RFC 4627.</t>
         </section>
@@ -218,7 +224,7 @@
         </section>
 
         <section anchor="type-integer" title="Integer">
-          <t>A Decimal number with no fractional digits. The JSON format is
+          <t>A decimal number with no fractional digits. The JSON format is
           defined in <eref
           target="http://tools.ietf.org/html/rfc4627#section-2.4">section
           2.4</eref> of RFC 4627 with the additional constraint that the value
@@ -229,7 +235,7 @@
           <t>A DateTime value (e.g. 2008-01-23T04:56:22Z). The attribute value
           MUST be encoded as a valid xsd:dateTime as specified in <eref
           target="http://www.w3.org/TR/xmlschema-2/#dateTime">section
-          3.2.7</eref> of the XML Schema Datatypes Specification.</t>
+          3.2.7</eref> of the "XML Schema Datatypes Specification".</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
           above and are represented as a <eref
@@ -241,7 +247,7 @@
           <t>Arbitrary binary data. The attribute value MUST be encoded as a
           valid xsd:base64Binary as specified in <eref
           target="http://www.w3.org/TR/xmlschema-2/#base64Binary">section
-          3.2.16</eref> of the XML Schema Datatypes Specification.</t>
+          3.2.16</eref> of the "XML Schema Datatypes Specification".</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
           above and are represented as a <eref
@@ -250,20 +256,20 @@
         </section>
 
         <section anchor="type-reference" title="Reference">
-          <t>A reference to a SCIM Resource. The value MUST be the absolute or
-          relative URI of the target Resource. Relative URIs should be
+          <t>A reference to a SCIM resource. The value MUST be the absolute or
+          relative URI of the target resource. Relative URIs should be
           resolved as specified in <eref
           target="http://tools.ietf.org/html/rfc3986#section-5.2">section
           5.2</eref> of RFC 3986. The base URI for relative URI resolution
           MUST include all URI components and path segments up to but not
           including the Endpoint URI; e.g., the base URI for a request to
-          https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646
-          would be https://example.com/v1/ and the relative URI for this
-          Resource would be Users/2819c223-7f76-453a-919d-413861904646.</t>
+          https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646
+          would be https://example.com/v2/ and the relative URI for this
+          resource would be Users/2819c223-7f76-453a-919d-413861904646.</t>
 
           <t>Performing a GET operation on a reference URI MUST return the
-          target Resource or an appropriate HTTP response code. The Service
-          Provider MAY optionally choose to enforce referential integrity for
+          target resource or an appropriate HTTP response code. The service
+          provider MAY optionally choose to enforce referential integrity for
           references.</t>
 
           <t>By convention, a reference is commonly represented as a "$ref"
@@ -272,8 +278,8 @@
         </section>
 
         <section anchor="type-complex" title="Complex">
-          <t>A Singular or Multi-valued Attribute whose value is a composition
-          of one or more Simple Attributes. The JSON format is defined in
+          <t>A singular or multi-valued attribute whose value is a composition
+          of one or more simple Attributes. The JSON format is defined in
           <eref
           target="http://tools.ietf.org/html/rfc4627#section-2.2">section
           2.2</eref> of RFC 4627.</t>
@@ -283,26 +289,27 @@
       <section anchor="multi-value-types" title="Multi-valued Attributes">
         <t>Multi-valued attributes are unordered lists of attributes. Each
         attribute MAY contain Sub-Attributes and therefore multi-valued
-        attributes may contain Complex Attributes. The below Sub-Attributes
+        attributes may contain complex attributes. The sub-attributes below
         are considered normative and when specified SHOULD be used as
         defined.</t>
 
         <t><list style="hanging">
             <t hangText="type">A label indicating the attribute's function;
-            e.g., "work" or "home".</t>
+            e.g., "<spanx style="verb">work</spanx>" or "<spanx style="verb">home</spanx>".</t>
 
-            <t hangText="primary">A Boolean value indicating the 'primary' or
+            <t hangText="primary">A boolean value indicating the 'primary' or
             preferred attribute value for this attribute, e.g. the preferred
             mailing address or primary e-mail address. The primary attribute
-            value 'true' MUST appear no more than once.</t>
+            value "<spanx style="verb">true</spanx>" MUST appear no more than
+            once.</t>
 
             <t hangText="display">A human readable name, primarily used for
-            display purposes. READ-ONLY.</t>
+            display purposes and has a mutability of "<spanx style="verb">immutable</spanx>".</t>
 
             <t hangText="operation">The operation to perform on the
             multi-valued attribute during a PATCH request. The only valid
             value is "delete", which signifies that this instance should be
-            removed from the Resource.</t>
+            removed from the resource.</t>
 
             <t hangText="value">The attribute's significant value; e.g., the
             e-mail address, phone number, etc. Attributes that define a
@@ -325,15 +332,15 @@
   </artwork>
               </figure></t>
 
-            <t hangText="$ref">The Reference of the target Resource, if the
-            attribute is a reference.</t>
+            <t hangText="$ref">The reference URI of the target resource, if
+            the attribute is a reference.</t>
           </list></t>
 
-        <t>When returning multi-valued attributes, Service Providers SHOULD
+        <t>When returning multi-valued attributes, service providers SHOULD
         canonicalize the value returned, if appropriate (e.g. for e-mail
-        addresses and URLs). Providers MAY return the same value more than
-        once with different types (e.g. the same e-mail address may used for
-        work and home), but SHOULD NOT return the same (type, value)
+        addresses and URLs). Service providers MAY return the same value more
+        than once with different types (e.g. the same e-mail address may used
+        for work and home), but SHOULD NOT return the same (type, value)
         combination more than once per Attribute, as this complicates
         processing by the Consumer.</t>
       </section>
@@ -349,69 +356,73 @@
       suite. Schema extensions MUST NOT redefine any attributes defined in
       this specification and SHOULD follow conventions defined in this
       specification. Each schema extension must identify a URI used to
-      identify the extension. The JSON format MUST use the <xref
-      target="schemas-attribute">"schemas" attribute</xref> to distinguish
-      extended resources and attributes.</t>
+      identify the extension. The JSON format MUST use the "<spanx
+      style="verb">schemas</spanx>" attribute<xref
+      target="schemas-attribute"/> to distinguish extended resources and
+      attributes.</t>
     </section>
 
     <section anchor="schema" title="SCIM Core Schema">
       <section title="Common Schema Attributes">
-        <t>Each SCIM Resource (Users, Groups, etc.) includes the below common
-        attributes. These attributes MUST be included in all Resources,
-        including any extended Resource types. It is not necessary to specify
-        the schemas attribute if the Resource is fully defined in this
+        <t>Each SCIM resource (Users, Groups, etc.) includes the below common
+        attributes. These attributes MUST be included in all resources,
+        including any extended resource types. It is not necessary to specify
+        the schemas attribute if the resource is fully defined in this
         document as the core schema is implicitly included.</t>
 
         <t><list style="hanging">
-            <t hangText="id">Unique identifier for the SCIM Resource as
-            defined by the Service Provider. Each representation of the
-            Resource MUST include a non-empty id value. This identifier MUST
-            be unique across the Service Provider's entire set of Resources.
-            It MUST be a stable, non-reassignable identifier that does not
-            change when the same Resource is returned in subsequent requests.
-            The value of the id attribute is always issued by the Service
-            Provider and MUST never be specified by the Service Consumer.
+            <t hangText="id">Unique identifier for the SCIM resource as
+            defined by the service provider. Each representation of the
+            resource MUST include a non-empty <spanx style="verb">id</spanx>
+            value. This identifier MUST be unique across the service
+            provider's entire set of resources. It MUST be a stable,
+            non-reassignable identifier that does not change when the same
+            resource is returned in subsequent requests. The value of the
+            <spanx style="verb">id</spanx> attribute is always issued by the
+            service provider and MUST never be specified by the client.
             bulkId: is a reserved keyword and MUST NOT be used in the unique
-            identifier. REQUIRED and READ-ONLY.</t>
+            identifier. REQUIRED and has a mutability of <spanx style="verb">readOnly</spanx>.</t>
 
-            <t hangText="externalId">An identifier for the Resource as defined
-            by the Service Consumer. The externalId may simplify
-            identification of the Resource between Service Consumer and
-            Service provider by allowing the Consumer to refer to the Resource
-            with its own identifier, obviating the need to store a local
-            mapping between the local identifier of the Resource and the
-            identifier used by the Service Provider. Each Resource MAY include
-            a non-empty externalId value. The value of the externalId
-            attribute is always issued by the Service Consumer and can never
-            be specified by the Service Provider. The Service Provider MUST
-            always interpret the externalId as scoped to the Service
-            Consumer's tenant.</t>
+            <t hangText="externalId">An identifier for the resource as defined
+            by the client. The <spanx style="verb">externalId</spanx> may
+            simplify identification of the resource between client and service
+            provider by allowing the client to refer to the resource with its
+            own identifier, obviating the need to store a local mapping
+            between the local identifier of the resource and the identifier
+            used by the service provider. Each resource MAY include a
+            non-empty externalId value. The value of the <spanx style="verb">externalId</spanx>
+            attribute is always issued by the client and can never be
+            specified by the service provider. The service provider MUST
+            always interpret the externalId as scoped to the client's
+            tenant.</t>
 
             <t hangText="meta">A complex attribute containing resource
             metadata. All sub-attributes are OPTIONAL <list style="hanging">
-                <t hangText="resourceType">The name of the Resource Type of
-                the Resource. READ-ONLY.</t>
+                <t hangText="resourceType">The name of the resource type of
+                the resource. Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
 
-                <t hangText="created">The DateTime the Resource was added to
-                the Service Provider. The attribute MUST be a DateTime.
-                READ-ONLY.</t>
+                <t hangText="created">The DateTime the resource was added to
+                the service provider. The attribute MUST be a DateTime.
+                Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
 
                 <t hangText="lastModified">The most recent DateTime the
-                details of this Resource were updated at the Service Provider.
-                If this Resource has never been modified since its initial
+                details of this resource were updated at the service provider.
+                If this resource has never been modified since its initial
                 creation, the value MUST be the same as the value of created.
-                The attribute MUST be a DateTime. READ-ONLY.</t>
+                The attribute MUST be a DateTime. Attribute has mutability of
+                <spanx style="verb">readOnly</spanx>.</t>
 
-                <t hangText="location">The URI of the Resource being returned.
+                <t hangText="location">The URI of the resource being returned.
                 This value MUST be the same as the Location HTTP response
-                header. READ-ONLY.</t>
+                header. Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
 
-                <t hangText="version">The version of the Resource being
+                <t hangText="version">The version of the resource being
                 returned. This value must be the same as the ETag HTTP
-                response header. READ-ONLY.</t>
+                response header. Attribute has mutability of <spanx
+                style="verb">readOnly</spanx>.</t>
 
                 <t hangText="attributes">The names of the attributes to remove
-                from the Resource during a PATCH operation.</t>
+                from the resource during a PATCH operation.</t>
               </list></t>
           </list></t>
       </section>
@@ -422,22 +433,21 @@
         schemas. Each resource MUST be indicated using fully qualified
         URLs.</t>
 
-        <t>When a representation does not explicitly provide support for
-        indicating a schema, such as JSON, a schemas attribute is used to
+        <t>A "<spanx style="verb">schemas</spanx>" attribute is used to
         indicate the version of SCIM schema as well as any schema
         extensions.</t>
 
         <t><list style="hanging">
-            <t hangText="schemas">The schemas attribute is an array of Strings
+            <t hangText="schemas">The schemas attribute is an array of strings
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
             that representation. Each String value must be a unique URI. This
             specification defines URIs for User, Group, and a standard
-            "enterprise" extension. All representations of SCIM schema MUST
+            enterprise-user extension. All representations of SCIM schema MUST
             include a non-zero value array with value(s) of the URIs supported
-            by that representation. The schemas attribute for a Resource MUST
+            by that representation. The schemas attribute for a resource MUST
             only contain values defined as "schema" and "schemaExtensions" for
-            the Resource's Resource Type. Duplicate values MUST NOT be
+            the resource's resource type. Duplicate values MUST NOT be
             included. Value order is not specified and MUST not impact
             behavior. REQUIRED.</t>
           </list></t>
@@ -446,22 +456,22 @@
 
     <section anchor="user-resource" title="SCIM User Schema">
       <t>SCIM provides a schema for representing Users, identified using the
-      following URI: 'urn:scim:schemas:core:2.0:User'. The following
-      attributes are defined in addition to those attributes defined in SCIM
-      Core Schema:</t>
+      following URI: <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.
+      The following attributes are defined in addition to those attributes
+      defined in SCIM Core Schema:</t>
 
       <section title="Singular Attributes">
         <t><list style="hanging">
-            <t hangText="userName">Unique identifier for the User, typically
+            <t hangText="userName">Unique identifier for the user, typically
             used by the user to directly authenticate to the service provider.
             Often displayed to the user as their unique identifier within the
             system (as opposed to id or externalId, which are generally opaque
             and not user-friendly identifiers). Each User MUST include a
             non-empty userName value. This identifier MUST be unique across
-            the Service Consumer's entire set of Users. REQUIRED.</t>
+            the client's entire set of Users. RECOMMENDED.</t>
 
-            <t hangText="name">The components of the User's real name.
-            Providers MAY return just the full name as a single string in the
+            <t hangText="name">The components of the user's real name. Service
+            providers MAY return just the full name as a single string in the
             formatted sub-attribute, or they MAY return just the individual
             component attributes using the other sub-attributes, or they MAY
             return both. If both variants are returned, they SHOULD be
@@ -469,54 +479,61 @@
             the component attributes should be combined.<list style="hanging">
                 <t hangText="formatted">The full name, including all middle
                 names, titles, and suffixes as appropriate, formatted for
-                display (e.g. Ms. Barbara Jane Jensen, III.).</t>
+                display (e.g. <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="familyName">The family name of the User, or "Last
-                Name" in most Western languages (e.g. Jensen given the full
-                name Ms. Barbara Jane Jensen, III.).</t>
+                Name" in most Western languages (e.g. <spanx style="verb">Jensen</spanx>
+                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="givenName">The given name of the User, or "First
-                Name" in most Western languages (e.g. Barbara given the full
-                name Ms. Barbara Jane Jensen, III.).</t>
+                Name" in most Western languages (e.g. <spanx style="verb">Barbara</spanx>
+                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="middleName">The middle name(s) of the User (e.g.
-                Jane given the full name Ms. Barbara Jane Jensen, III.).</t>
+                <spanx style="verb">Jane</spanx> given the full name <spanx
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="honorificPrefix">The honorific prefix(es) of the
-                User, or "Title" in most Western languages (e.g. Ms. given the
-                full name Ms. Barbara Jane Jensen, III.).</t>
+                User, or "Title" in most Western languages (e.g. <spanx
+                style="verb">Ms.</spanx> given the full name <spanx
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="honorificSuffix">The honorific suffix(es) of the
-                User, or "Suffix" in most Western languages (e.g. III. given
-                the full name Ms. Barbara Jane Jensen, III.).</t>
+                User, or "Suffix" in most Western languages (e.g. <spanx
+                style="verb">III.</spanx> given the full name <spanx
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
               </list></t>
 
-            <t hangText="displayName">The name of the User, suitable for
-            display to end-users. Each User returned MAY include a non-empty
+            <t hangText="displayName">The name of the user, suitable for
+            display to end-users. Each user returned MAY include a non-empty
             displayName value. The name SHOULD be the full name of the User
-            being described if known (e.g. Babs Jensen or Ms. Barbara J
-            Jensen, III), but MAY be a username or handle, if that is all that
-            is available (e.g. bjensen). The value provided SHOULD be the
-            primary textual label by which this User is normally displayed by
-            the Service Provider when presenting it to end-users.</t>
+            being described if known (e.g. <spanx style="verb">Babs Jensen</spanx>
+            or <spanx style="verb">Ms. Barbara J Jensen, III</spanx>), but MAY
+            be a username or handle, if that is all that is available (e.g.
+            <spanx style="verb">bjensen</spanx>). The value provided SHOULD be
+            the primary textual label by which this User is normally displayed
+            by the service provider when presenting it to end-users.</t>
 
             <t hangText="nickName">The casual way to address the user in real
-            life, e.g. "Bob" or "Bobby" instead of "Robert". This attribute
-            SHOULD NOT be used to represent a User's username (e.g. bjensen or
-            mpepperidge).</t>
+            life, e.g. "<spanx style="verb">Bob</spanx>" or "<spanx
+            style="verb">Bobby</spanx>" instead of "<spanx style="verb">Robert</spanx>".
+            This attribute SHOULD NOT be used to represent a User's username
+            (e.g. bjensen or mpepperidge).</t>
 
             <t hangText="profileUrl">A fully qualified URL to a page
-            representing the User's online profile.</t>
+            representing the user's online profile.</t>
 
-            <t hangText="title">The user’s title, such as “Vice
-            President.”</t>
+            <t hangText="title">The user’s title, such as “<spanx
+            style="verb">Vice President</spanx>”.</t>
 
             <t hangText="userType">Used to identify the organization to user
-            relationship. Typical values used might be "Contractor",
-            "Employee", "Intern", "Temp", "External", and "Unknown" but any
-            value may be used.</t>
+            relationship. Typical values used might be "<spanx style="verb">Contractor</spanx>",
+            "<spanx style="verb">Employee</spanx>", "<spanx style="verb">Intern</spanx>",
+            "<spanx style="verb">Temp</spanx>", "<spanx style="verb">External</spanx>",
+            and "<spanx style="verb">Unknown</spanx>" but any value may be
+            used.</t>
 
-            <t hangText="preferredLanguage">Indicates the User's preferred
+            <t hangText="preferredLanguage">Indicates the user's preferred
             written or spoken language. Generally used for selecting a
             localized User interface. Valid values are concatenation of the
             <eref
@@ -542,18 +559,19 @@
             target="http://www.twinsun.com/tz/tz-link.htm">"Olson" timezone
             database format</eref>; e.g.,'America/Los_Angeles'.</t>
 
-            <t hangText="active">A Boolean value indicating the User's
+            <t hangText="active">A Boolean value indicating the user's
             administrative status. The definitive meaning of this attribute is
-            determined by the Service Provider though a value of true infers
-            the User is, for example, able to login while a value of false
-            implies the User's account has been suspended.</t>
+            determined by the service provider. As a typical example, a value
+            of true infers the user is able to login while a value of false
+            implies the user's account has been suspended.</t>
 
-            <t hangText="password">The User's clear text password. This
+            <t hangText="password">The user's clear text password. This
             attribute is intended to be used as a means to specify an initial
             password when creating a new User or to reset an existing User's
-            password. No accepted standards exist to convey password policies,
-            hence Consumers should expect Service Providers to reject password
-            values. This value MUST never be returned by a Service Provider in
+            password. Password policies and the ability to update or set
+            passwords are out of scope of this document. The mutability of
+            this attribute is "<spanx style="verb">writeOnly</spanx>"
+            indicating the value MUST NOT be returned by a service provider in
             any form.</t>
           </list></t>
       </section>
@@ -563,42 +581,52 @@
 
         <t><list style="hanging">
             <t hangText="emails">E-mail addresses for the User. The value
-            SHOULD be canonicalized by the Service Provider, e.g.
-            bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type
-            values of work, home, and other.</t>
+            SHOULD be canonicalized by the service provider, e.g. <spanx
+            style="verb">bjensen@example.com</spanx> instead of <spanx
+            style="verb">bjensen@EXAMPLE.COM</spanx>. Canonical type values of
+            <spanx style="verb">work</spanx>, <spanx style="verb">home</spanx>,
+            and <spanx style="verb">other</spanx>.</t>
 
-            <t hangText="phoneNumbers">Phone numbers for the User. The value
-            SHOULD be canonicalized by the Service Provider according to
+            <t hangText="phoneNumbers">Phone numbers for the user. The value
+            SHOULD be canonicalized by the service provider according to
             format in <eref
             target="http://tools.ietf.org/html/rfc3966">RFC3966</eref> e.g.
-            'tel:+1-201-555-0123'. Canonical Type values of work, home,
-            mobile, fax, pager and other.</t>
+            'tel:+1-201-555-0123'. Canonical type values of <spanx
+            style="verb">work</spanx>, <spanx style="verb">home</spanx>,
+            <spanx style="verb">mobile</spanx>, <spanx style="verb">fax</spanx>,
+            <spanx style="verb">pager</spanx>, and <spanx style="verb">other</spanx>.</t>
 
-            <t hangText="ims">Instant messaging address for the User. No
+            <t hangText="ims">Instant messaging address for the user. No
             official canonicalization rules exist for all instant messaging
-            addresses, but Service Providers SHOULD, when appropriate, remove
+            addresses, but service providers SHOULD, when appropriate, remove
             all whitespace and convert the address to lowercase. Instead of
-            the standard Canonical Values for type, this attribute defines the
-            following Canonical Values to represent currently popular IM
-            services: aim, gtalk, icq, xmpp, msn, skype, qq, and yahoo.</t>
+            the standard canonical values for type, this attribute defines the
+            following canonical values to represent currently popular IM
+            services: <spanx style="verb">aim</spanx>, <spanx style="verb">gtalk</spanx>,
+            <spanx style="verb">icq</spanx>, <spanx style="verb">xmpp</spanx>,
+            <spanx style="verb">msn</spanx>, <spanx style="verb">skype</spanx>,
+            <spanx style="verb">qq</spanx>, <spanx style="verb">yahoo</spanx>,
+            and <spanx style="verb">other</spanx>.</t>
 
             <t hangText="photos">URL of a photo of the User. The value SHOULD
             be a canonicalized URL, and MUST point to an image file (e.g. a
             GIF, JPEG, or PNG image file) rather than to a web page containing
-            an image. Service Providers MAY return the same image at different
+            an image. Service providers MAY return the same image at different
             sizes, though it is recognized that no standard for describing
             images of various sizes currently exists. Note that this attribute
             SHOULD NOT be used to send down arbitrary photos taken by this
-            User, but specifically profile photos of the User suitable for
-            display when describing the User. Instead of the standard
-            Canonical Values for type, this attribute defines the following
-            Canonical Values to represent popular photo sizes: photo,
-            thumbnail.</t>
+            user, but specifically profile photos of the user suitable for
+            display when describing the user. Instead of the standard
+            canonical values for type, this attribute defines the following
+            canonical values to represent popular photo sizes: <spanx
+            style="verb">photo</spanx>, <spanx style="verb">thumbnail</spanx>.</t>
 
-            <t hangText="addresses">A physical mailing address for this User.
-            Canonical Type Values of work, home, and other. The value
-            attribute is a complex type with the following sub-attributes. All
-            Sub-Attributes are OPTIONAL. <list style="hanging">
+            <t hangText="addresses">A physical mailing address for this user.
+            Canonical type values of <spanx style="verb">work</spanx>, <spanx
+            style="verb">home</spanx>, and <spanx style="verb">other</spanx>.
+            The value attribute is a complex type with the following
+            sub-attributes. All sub-attributes are OPTIONAL. <list
+                style="hanging">
                 <t hangText="formatted">The full mailing address, formatted
                 for display or use with a mailing label. This attribute MAY
                 contain newlines.</t>
@@ -628,34 +656,38 @@
             group or role based access control models, although no explicit
             authorization model is defined. It is intended that the semantics
             of group membership and any behavior or authorization granted as a
-            result of membership are defined by the Service Provider. The
-            Canonical types "direct" and "indirect" are defined to describe
-            how the group membership was derived. Direct group membership
-            indicates the User is directly associated with the group and
-            SHOULD indicate that Consumers may modify membership through the
-            Group Resource. Indirect membership indicates User membership is
-            transitive or dynamic and implies that Consumers cannot modify
-            indirect group membership through the Group resource but MAY
-            modify direct group membership through the Group resource which
-            MAY influence indirect memberships. If the SCIM Service Provider
-            exposes a Group resource, the "value" sub-attribute MUST be the
-            "id" and the "$ref" sub-attribute must be the URI of the
-            corresponding Group resources to which the user belongs. Since
-            this attribute is read-only, group membership changes MUST be
+            result of membership are defined by the service provider. The
+            canonical types "<spanx style="verb">direct</spanx>" and "<spanx
+            style="verb">indirect</spanx>" are defined to describe how the
+            group membership was derived. Direct group membership indicates
+            the user is directly associated with the group and SHOULD indicate
+            that clients may modify membership through the <spanx
+            style="verb">Group</spanx> resource. Indirect membership indicates
+            user membership is transitive or dynamic and implies that clients
+            cannot modify indirect group membership through the <spanx
+            style="verb">Group</spanx> resource but MAY modify direct group
+            membership through the <spanx style="verb">Group</spanx> resource
+            which MAY influence indirect memberships. If the SCIM service
+            provider exposes a Group resource, the "value" sub-attribute MUST
+            be the "id" and the "$ref" sub-attribute must be the URI of the
+            corresponding <spanx style="verb">Group</spanx> resources to which
+            the user belongs. Since this attribute has a mutability of <spanx
+            style="verb">readOnly</spanx>, group membership changes MUST be
             applied via the <xref target="group-resource">Group
-            Resource</xref>. READ-ONLY.</t>
+            Resource</xref>. The attribute has a mutability of <spanx
+            style="verb">readOnly</spanx>.</t>
 
-            <t hangText="entitlements">A list of entitlements for the User
-            that represent a thing the User has. That is, an entitlement is an
-            additional right to a thing, object or service. No vocabulary or
-            syntax is specified and Service Providers/Consumers are expected
+            <t hangText="entitlements">A list of entitlements for the user
+            that represent a thing the user has. An entitlement MAY be an
+            additional right to a thing, object, or service. No vocabulary or
+            syntax is specified and service providers and clients are expected
             to encode sufficient information in the value so as to accurately
-            and without ambiguity determine what the User has access to. This
+            and without ambiguity determine what the user has access to. This
             value has NO canonical types though type may be useful as a means
             to scope entitlements.</t>
 
-            <t hangText="roles">A list of roles for the User that collectively
-            represent who the User is; e.g., 'Student', "Faculty". No
+            <t hangText="roles">A list of roles for the user that collectively
+            represent who the user is; e.g., 'Student', "Faculty". No
             vocabulary or syntax is specified though it is expected that a
             role value is a String or label representing a collection of
             entitlements. This value has NO canonical types.</t>
@@ -671,7 +703,7 @@
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following URI: 'urn:scim:schemas:extension:enterprise:2.0:User'.</t>
+      following schema URI: '<spanx style="verb">urn:scim:schemas:extension:enterprise:2.0:User</spanx>'.</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -689,68 +721,72 @@
 
           <t hangText="department">Identifies the name of a department.</t>
 
-          <t hangText="manager">The User's manager. A complex type that
-          optionally allows Service Providers to represent organizational
+          <t hangText="manager">The user's manager. A complex type that
+          optionally allows service providers to represent organizational
           hierarchy by referencing the "id" attribute of another User. <list
               style="hanging">
-              <t hangText="managerId">The id of the SCIM resource representing
-              the User's manager. REQUIRED.</t>
+              <t hangText="managerId">The <spanx style="verb">id</spanx> of
+              the SCIM resource representing the user's manager.
+              RECOMMENDED.</t>
 
               <t hangText="$ref">The URI of the SCIM resource representing the
-              User's manager. REQUIRED.</t>
+              User's manager. RECOMMENDED.</t>
 
-              <t hangText="displayName">The displayName of the User's manager.
-              OPTIONAL and READ-ONLY.</t>
+              <t hangText="displayName">The displayName of the user's manager.
+              This attribute is OPTIONAL and mutability is <spanx
+              style="verb">readOnly</spanx>.</t>
             </list></t>
         </list></t>
     </section>
 
     <section anchor="group-resource" title="SCIM Group Schema">
       <t>SCIM provides a schema for representing groups, identified using the
-      following URI: 'urn:scim:schemas:core:2.0:Group'.</t>
+      following schema URI: '<spanx style="verb">urn:scim:schemas:core:2.0:Group</spanx>'.</t>
 
-      <t>Group resources are meant to enable expression of common Group or
+      <t>Group resources are meant to enable expression of common group or
       role based access control models, although no explicit authorization
       model is defined. It is intended that the semantics of group membership
       and any behavior or authorization granted as a result of membership are
-      defined by the Service Provider are considered out of scope for this
+      defined by the service provider are considered out of scope for this
       specification.</t>
 
-      <t>The following Singular Attribute is defined in addition to the common
-      attributes defined in SCIM Core Schema:<list style="hanging">
+      <t>The following singular attribute is defined in addition to the common
+      attributes defined in SCIM core schema:<list style="hanging">
           <t hangText="displayName">A human readable name for the Group.
           REQUIRED.</t>
         </list></t>
 
       <t>The following multi-valued attribute is defined in addition to the
       common attributes defined in SCIM Core Schema: <list style="hanging">
-          <t hangText="members">A list of members of the Group. Canonical
-          Types "User" and "Group" are READ-ONLY. The "value" sub-attribute
-          must be the "id" and the "$ref" sub-attribute must be the URI of a
-          SCIM resource, either a User, or a Group. The intention of the Group
-          type is to allow the Service Provider to support nested Groups.
-          Service Providers MAY require Consumers to provide a non-empty
-          members value based on the "required" sub attribute of the "members"
-          attribute in Group Resource Schema.</t>
+          <t hangText="members">A list of members of the Group. While values
+          MAY be added or removed, sub-attributes of members are <spanx
+          style="verb">immutable</spanx>. The "value" sub-attribute must be
+          the "id" and the "$ref" sub-attribute must be the URI of a SCIM
+          resource, either a <spanx style="verb">User</spanx>, or a <spanx
+          style="verb">Group</spanx>. The intention of the <spanx
+          style="verb">Group</spanx> type is to allow the service provider to
+          support nested groups. Service providers MAY require clients to
+          provide a non-empty members value based on the "required" sub
+          attribute of the "members" attribute in group resource schema.</t>
         </list></t>
     </section>
 
     <section title="Service Provider Configuration Schema">
-      <t>SCIM provides a schema for representing the Service Provider's
-      configuration identified using the following URI:
-      'urn:scim:schemas:core:2.0:ServiceProviderConfig'</t>
+      <t>SCIM provides a schema for representing the service provider's
+      configuration identified using the following schema URI: '<spanx
+      style="verb">urn:scim:schemas:core:2.0:ServiceProviderConfig</spanx>'</t>
 
-      <t>The Service Provider Configuration Resource enables a Service
-      Provider to expose its compliance with the SCIM specification in a
-      standardized form as well as provide additional implementation details
-      to Consumers. All attributes are READ-ONLY. Unlike other core Resources,
-      the "id" attribute is not required for the Service Provider
-      Configuration Resource.</t>
+      <t>The service provider configuration resource enables a service
+      provider to discovery of SCIM specification features in a standardized
+      form as well as provide additional implementation details to clients.
+      All attributes are READ-ONLY (a mutability of <spanx style="verb">readOnly</spanx>).
+      Unlike other core resources, the "id" attribute is not required for the
+      service provider configuration resource.</t>
 
       <t>The following Singular Attributes are defined in addition to the
       common attributes defined in Core Schema: <list style="hanging">
           <t hangText="documentationUrl">An HTTP addressable URL pointing to
-          the Service Provider's human consumable help documentation.</t>
+          the service provider's human consumable help documentation.</t>
 
           <t hangText="patch">A complex type that specifies PATCH
           configuration options. REQUIRED. <list style="hanging">
@@ -776,7 +812,7 @@
               operation is supported. REQUIRED.</t>
 
               <t hangText="maxResults">Integer value specifying the maximum
-              number of Resources returned in a response. REQUIRED.</t>
+              number of resources returned in a response. REQUIRED.</t>
             </list></t>
 
           <t hangText="changePassword">A complex type that specifies Change
@@ -799,13 +835,14 @@
         </list></t>
 
       <t>The following multi-valued attribute is defined in addition to the
-      common attributes defined in Core Schema: <list style="hanging">
+      common attributes defined in core schema: <list style="hanging">
           <t hangText="authenticationSchemes">A complex type that specifies
-          supported Authentication Scheme properties. Instead of the standard
-          Canonical Values for type, this attribute defines the following
-          Canonical Values to represent common schemes: oauth, oauth2,
-          oauthbearertoken, httpbasic, and httpdigest. To enable seamless
-          discovery of configuration, the Service Provider SHOULD, with the
+          supported Authentication Scheme properties. This attribute defines
+          the following canonical values to represent common schemes: <spanx
+          style="verb">oauth</spanx>, <spanx style="verb">oauth2</spanx>,
+          <spanx style="verb">oauthbearertoken</spanx>, <spanx style="verb">httpbasic</spanx>,
+          and <spanx style="verb">httpdigest</spanx>. To enable seamless
+          discovery of configuration, the service provider SHOULD, with the
           appropriate security considerations, make the authenticationSchemes
           attribute publicly accessible without prior authentication.
           REQUIRED. <list style="hanging">
@@ -825,89 +862,97 @@
         </list></t>
     </section>
 
-    <section anchor="resource-type-schema" title="Resource Type Schema">
-      <t>The Resource Type schema specifies the meta-data about a Resource
-      Type. Resource Type Resources are READ-ONLY and identified using the
-      following URI: 'urn:scim:schemas:core:2.0:ResourceType'. Unlike other
-      core Resources, all Attributes are REQUIRED unless otherwise specified,
-      and the "id" attribute is not required for the Resource Type
-      Resource.</t>
+    <section anchor="resource-type-schema" title="ResourceType Schema">
+      <t>The <spanx style="verb">ResourceType</spanx> schema specifies the
+      meta-data about a resource type. Resource type resources are READ-ONLY
+      and identified using the following schema URI: '<spanx style="verb">urn:scim:schemas:core:2.0:ResourceType</spanx>'.
+      Unlike other core resources, all attributes are REQUIRED unless
+      otherwise specified. The "<spanx style="verb">id</spanx>" attribute is
+      not required for the resource type resource.</t>
 
       <t>The following Singular Attributes are defined: <list style="hanging">
-          <t hangText="name">The Resource Type name. When applicable Service
-          Providers MUST specify the name specified in the core schema
-          specification; e.g., "User" or "Group". This name is referenced by
-          the meta.resourceType attribute in all resources.</t>
+          <t hangText="id">The resource type's server unique id. Often this is
+          the same value as the "<spanx style="verb">name</spanx>" attribute.
+          OPTIONAL</t>
 
-          <t hangText="description">The Resource Type's human readable
-          description. When applicable Service Providers MUST specify the
+          <t hangText="name">The resource type name. When applicable service
+          providers MUST specify the name specified in the core schema
+          specification; e.g., "<spanx style="verb">User</spanx>" or "<spanx
+          style="verb">Group</spanx>". This name is referenced by the <spanx
+          style="verb">meta.resourceType</spanx> attribute in all
+          resources.</t>
+
+          <t hangText="description">The resource type's human readable
+          description. When applicable service providers MUST specify the
           description specified in the core schema specification.</t>
 
-          <t hangText="endpoint">The Resource Type's HTTP addressable endpoint
-          relative to the Base URL; e.g., /Users.</t>
+          <t hangText="endpoint">The resource type's HTTP addressable endpoint
+          relative to the Base URL; e.g., <spanx style="verb">/Users</spanx>.</t>
 
-          <t hangText="schema">The Resource Type's primary schema URI; e.g.,
-          urn:scim:schemas:core:2.0:User. This MUST be equal to the "id"
-          attribute of the Schema.</t>
+          <t hangText="schema">The resource type's primary schema URI; e.g.,
+          <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>. This
+          MUST be equal to the "<spanx style="verb">id</spanx>" attribute of
+          the associated <spanx style="verb">Schema</spanx> resource.</t>
 
-          <t hangText="schemaExtensions">A list of URIs of the Resource Type's
+          <t hangText="schemaExtensions">A list of URIs of the resource type's
           schema extensions. OPTIONAL. <list style="hanging">
-              <t hangText="schema">The URI of an extended schema; e.g.,
-              urn:edu:2.0:Staff. This MUST be equal to the "id" attribute of a
-              Schema. REQUIRED.</t>
+              <t hangText="schema">The URI of an extended schema; e.g., <spanx
+              style="verb">urn:edu:2.0:Staff</spanx>. This MUST be equal to
+              the "<spanx style="verb">id</spanx>" attribute of a <spanx
+              style="verb">Schema</spanx> resource. REQUIRED.</t>
 
               <t hangText="required">A Boolean value that specifies whether
-              the schema extension is required for the Resource Type. If true,
-              a Resource of this type MUST include this schema extension and
+              the schema extension is required for the resource type. If true,
+              a resource of this type MUST include this schema extension and
               include any attributes declared as required in this schema
-              extension. If false, a Resource of this type MAY omit this
+              extension. If false, a resource of this type MAY omit this
               schema extension. REQUIRED.</t>
             </list></t>
         </list></t>
     </section>
 
     <section anchor="schema-schema" title="Schema Schema">
-      <t>The Schema schema specifies the Attribute(s) and meta-data that
-      constitute a Schema. Schema Resources are READ-ONLY and identified using
-      the following URI: 'urn:scim:schemas:core:2.0:Schema'. Unlike other core
-      Resources the Schema Resource MAY contain a complex object within a
-      Sub-Attribute and all Attributes are REQUIRED unless other
-      specified.</t>
+      <t>The <spanx style="verb">Schema</spanx> schema specifies the
+      attribute(s) and meta-data that constitute a <spanx style="verb">Schema</spanx>
+      resource. Schema resources have mutability of <spanx style="verb">readOnly</spanx>
+      and identified using the following URI: '<spanx style="verb">urn:scim:schemas:core:2.0:Schema</spanx>'.
+      Unlike other core resources the <spanx style="verb">Schema</spanx>
+      resource MAY contain a complex object within a sub-attribute and all
+      attributes are REQUIRED unless otherwise specified.</t>
 
       <t>The following Singular Attributes are defined: <list style="hanging">
           <t hangText="id">The unique URI of the schema. When applicable
-          Service Providers MUST specify the URI specified in the core schema
-          specification; e.g., "urn:scim:core:2.0:User". Unlike most other
-          schemas, which use some sort of a GUID for the "id", the Schema "id"
-          is a URI so that it can be registered and is portable between
-          different Service Providers and Clients.</t>
+          service providers MUST specify the URI specified in the core schema
+          specification; e.g., "<spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>".
+          Unlike most other schemas, which use some sort of a GUID for the
+          "id", the schema "id" is a URI so that it can be registered and is
+          portable between different service providers and clients.</t>
 
-          <t hangText="name">The Schema's human readable name. When applicable
-          Service Providers MUST specify the name specified in the core schema
-          specification; e.g., "User" or "Group". OPTIONAL.</t>
+          <t hangText="name">The schema's human readable name. When applicable
+          service providers MUST specify the name specified in the core schema
+          specification; e.g., "<spanx style="verb">User</spanx>" or "<spanx
+          style="verb">Group</spanx>". OPTIONAL.</t>
 
-          <t hangText="description">The Schema's human readable description.
-          When applicable Service Providers MUST specify the description
+          <t hangText="description">The schema's human readable description.
+          When applicable service providers MUST specify the description
           specified in the core schema specification. OPTIONAL.</t>
         </list></t>
 
       <t>The following multi-valued attribute is defined: <list
           style="hanging">
           <t hangText="attributes">A complex type that specifies the set of
-          Resource attributes. <list style="hanging">
+          resource attributes. <list style="hanging">
               <t hangText="name">The attribute's name.</t>
 
-              <t hangText="type">The attribute's data type; e.g., String.</t>
+              <t hangText="type">The attribute's data type; e.g., <spanx
+              style="verb">String</spanx>.</t>
 
               <t hangText="multiValued">Boolean value indicating the
               attribute's plurality.</t>
 
               <t hangText="description">The attribute's human readable
-              description. When applicable Service Providers MUST specify the
+              description. When applicable service providers MUST specify the
               description specified in the core schema specification.</t>
-
-              <t hangText="readOnly">A Boolean value that specifies if the
-              attribute is mutable.</t>
 
               <t hangText="required">A Boolean value that specifies if the
               attribute is required.</t>
@@ -921,8 +966,8 @@
                   <t hangText="readOnly">The attribute MAY NOT be
                   modified.</t>
 
-                  <t hangText="readWrite">(DEFAULT) The attribute MAY be
-                  updated and read at any time.</t>
+                  <t hangText="readWrite">The attribute MAY be updated and
+                  read at any time. DEFAULT.</t>
 
                   <t hangText="immutable">The attribute MAY be defined at
                   resource creation (e.g. POST) or at record replacement via
@@ -950,74 +995,154 @@
                   value). A service provider MAY allow attributes to be used
                   in a search filter.</t>
 
-                  <t hangText="default">(DEFAULT) The attribute is returned by
-                  default in all SCIM operation responses where attribute
-                  values are returned. If the GET request "attributes"
-                  parameter is specified, attribute values are only returned
-                  if the attribute is named in the attributes parameter.</t>
+                  <t hangText="default">The attribute is returned by default
+                  in all SCIM operation responses where attribute values are
+                  returned. If the GET request "attributes" parameter is
+                  specified, attribute values are only returned if the
+                  attribute is named in the attributes parameter. DEFAULT.</t>
 
                   <t hangText="request">The attribute is returned in response
                   to any PUT, POST, or PATCH operations if the attribute was
                   specified by the client (for example, the attribute was
-                  modified). The attribute is returned in a GET operation only
-                  if specified in the "attributes" parameter.</t>
+                  modified). The attribute is returned in a SCIM query
+                  operation only if specified in the "<spanx style="verb">attributes</spanx>"
+                  parameter.</t>
                 </list></t>
 
               <t hangText="uniqueness">A single keyword value that specifies
-              how unique attribute values are. A server MAY reject an invalid
-              value based on uniqueness by returning HTTP Response code 400
-              (Bad Request). Valid keywords are: <list style="hanging">
-                  <t hangText="none">(DEFAULT) The values are not intended to
-                  be unique in any way.</t>
+              how the service provider enforces uniqueness of attribute
+              values. A server MAY reject an invalid value based on uniqueness
+              by returning HTTP Response code 400 (Bad Request). A client MAY
+              enforce uniqueness on the client-side to a greater degree than
+              the service provider enforces. For example, a client could make
+              a value unique while the server has uniqueness of "<spanx
+              style="verb">none</spanx>". Valid keywords are: <list
+                  style="hanging">
+                  <t hangText="none">The values are not intended to be unique
+                  in any way. DEFAULT.</t>
 
                   <t hangText="server">The value SHOULD be unique within the
-                  context of the current SCIM endpoint but MAY not be globally
-                  unique (e.g. a user-id, email address, or other server
-                  generated key or counter). No two resources on the same
-                  server SHOULD possess the same value.</t>
+                  context of the current SCIM endpoint (or tenancy) but MAY
+                  not be globally unique (e.g. a <spanx style="verb">username</spanx>,
+                  email address, or other server generated key or counter). No
+                  two resources on the same server SHOULD possess the same
+                  value.</t>
 
                   <t hangText="global">The value SHOULD be globally unique
                   (e.g. an email address, a GUID, or other value). No two
                   resources on any server SHOULD possess the same value.</t>
                 </list></t>
 
-              <t hangText="referenceTypes">The names of the Resource Types
-              that may be referenced; e.g., User. This is only applicable for
-              attributes that are of the "reference" data type.</t>
+              <t hangText="referenceTypes">The names of the resource types
+              that may be referenced; e.g., <spanx style="verb">User</spanx>.
+              This is only applicable for attributes that are of the <spanx
+              style="verb">reference</spanx> <xref target="type-reference"/>
+              data type.</t>
 
               <t>The following multi-valued attributes are defined. There are
               no canonical type values defined and the primary value serves no
               useful purpose. <list style="hanging">
-                  <t hangText="subAttributes">A list specifying the contained
-                  attributes. OPTIONAL. <list style="hanging">
-                      <t hangText="name">The attribute's name.</t>
+                  <t hangText="name">The attribute's name.</t>
 
-                      <t hangText="type">The attribute's data type; e.g.,
-                      String.</t>
+                  <t hangText="type">The attribute's data type; e.g.,
+                  String.</t>
 
-                      <t hangText="description">The attribute's human readable
-                      description. When applicable Service Providers MUST
-                      specify the description specified in the core schema
-                      specification.</t>
+                  <t hangText="description">The attribute's human readable
+                  description. When applicable service providers MUST specify
+                  the description specified in the core schema
+                  specification.</t>
 
-                      <t hangText="readOnly">A Boolean value that specifies if
-                      the attribute is mutable.</t>
+                  <t hangText="required">A Boolean value that specifies if the
+                  attribute is required.</t>
 
-                      <t hangText="required">A Boolean value that specifies if
-                      the attribute is required.</t>
+                  <t hangText="caseExact">A Boolean value that specifies if
+                  the String attribute is case sensitive.</t>
 
-                      <t hangText="caseExact">A Boolean value that specifies
-                      if the String attribute is case sensitive.</t>
+                  <t hangText="referenceTypes">The names of the resource types
+                  that may be referenced; e.g., User. This is only applicable
+                  for attributes that are of the <spanx style="verb">reference</spanx>
+                  <xref target="type-reference"/> data type.</t>
 
-                      <t hangText="referenceTypes">The names of the Resource
-                      Types that may be referenced; e.g., User. This is only
-                      applicable for attributes that are of the "reference"
-                      data type.</t>
+                  <t hangText="canonicalValues">A collection of canonical
+                  values. When applicable service providers MUST specify the
+                  canonical types specified in the core schema specification;
+                  e.g.,"<spanx style="verb">work</spanx>","<spanx
+                  style="verb">home</spanx>". OPTIONAL.</t>
 
-                      <t hangText="canonicalValues">A collection of canonical
-                      values. When applicable Service Providers MUST specify
-                      the canonical types specified in the core schema
-                      specification; e.g.,"work","home". OPTIONAL.</t>
+                  <t hangText="mutability">A single keyword indicating what
+                  types of modifications an attribute MAY accept as
+                  follows:<list style="hanging">
+                      <t hangText="readOnly">The attribute MAY NOT be
+                      modified.</t>
+
+                      <t hangText="readWrite">The attribute MAY be updated and
+                      read at any time. DEFAULT.</t>
+
+                      <t hangText="immutable">The attribute MAY be defined at
+                      resource creation (e.g. POST) or at record replacement
+                      via request (e.g. a PUT). The attribute MAY NOT be
+                      updated.</t>
+
+                      <t hangText="writeOnly">The attribute MAY be updated at
+                      any time. Attribute values MAY NOT be returned (e.g.
+                      because the value is a stored hash). Note: an attribute
+                      with mutability of "writeOnly" usually also has a
+                      returned setting of "never".</t>
+                    </list></t>
+
+                  <t hangText="returned">A single keyword that indicates when
+                  an attribute and associated values are returned in response
+                  to a GET request or in response to a PUT, POST, or PATCH
+                  request. Valid keywords are:<list style="hanging">
+                      <t hangText="always">The attribute is always returned
+                      regardless of the contents of the "attributes"
+                      parameter. For example, "id" is always returned to
+                      identify a SCIM resource.</t>
+
+                      <t hangText="never">The attribute is never returned.
+                      This may occur because the original attribute value is
+                      not retained by the service provider (e.g. such as with
+                      a hashed value). A service provider MAY allow attributes
+                      to be used in a search filter.</t>
+
+                      <t hangText="default">The attribute is returned by
+                      default in all SCIM operation responses where attribute
+                      values are returned. If the GET request "attributes"
+                      parameter is specified, attribute values are only
+                      returned if the attribute is named in the attributes
+                      parameter. DEFAULT.</t>
+
+                      <t hangText="request">The attribute is returned in
+                      response to any PUT, POST, or PATCH operations if the
+                      attribute was specified by the client (for example, the
+                      attribute was modified). The attribute is returned in a
+                      SCIM query operation only if specified in the "<spanx
+                      style="verb">attributes</spanx>" parameter.</t>
+                    </list></t>
+
+                  <t hangText="uniqueness">A single keyword value that
+                  specifies how the service provider enforces uniqueness of
+                  attribute values. A server MAY reject an invalid value based
+                  on uniqueness by returning HTTP Response code 400 (Bad
+                  Request). A client MAY enforce uniqueness on the client-side
+                  to a greater degree than the service provider enforces. For
+                  example, a client could make a value unique while the server
+                  has uniqueness of "<spanx style="verb">none</spanx>". Valid
+                  keywords are: <list style="hanging">
+                      <t hangText="none">The values are not intended to be
+                      unique in any way. DEFAULT.</t>
+
+                      <t hangText="server">The value SHOULD be unique within
+                      the context of the current SCIM endpoint (or tenancy)
+                      but MAY not be globally unique (e.g. a <spanx
+                      style="verb">username</spanx>, email address, or other
+                      server generated key or counter). No two resources on
+                      the same server SHOULD possess the same value.</t>
+
+                      <t hangText="global">The value SHOULD be globally unique
+                      (e.g. an email address, a GUID, or other value). No two
+                      resources on any server SHOULD possess the same
+                      value.</t>
                     </list></t>
                 </list></t>
             </list></t>
@@ -1040,7 +1165,7 @@
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff590\"",
-    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
+    "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
 }
 
@@ -1139,17 +1264,17 @@
   "groups": [
     {
       "value": "e9e30dba-f08f-4109-8486-d5c6a331660a",
-      "$ref": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
+      "$ref": "https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "display": "Tour Guides"
     },
     {
       "value": "fc348aa8-3835-40eb-a20b-c726e15c55b5",
-      "$ref": "https://example.com/v1/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
+      "$ref": "https://example.com/v2/Groups/fc348aa8-3835-40eb-a20b-c726e15c55b5",
       "display": "Employees"
     },
     {
       "value": "71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
-      "$ref": "https://example.com/v1/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
+      "$ref": "https://example.com/v2/Groups/71ddacd2-a8e7-49b8-a5db-ae50d0a5bfd7",
       "display": "US Employees"
     }
   ],
@@ -1180,7 +1305,7 @@
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"a330bc54f0671c9\"",
-    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
+    "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
 }
 </artwork>
@@ -1331,7 +1456,7 @@
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff591\"",
-    "location": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646"
+    "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
 }
 
@@ -1353,12 +1478,12 @@
   "members": [
     {
       "value": "2819c223-7f76-453a-919d-413861904646",
-      "$ref": "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646",
+      "$ref": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646",
       "display": "Babs Jensen"
     },
     {
       "value": "902c246b-6245-4190-8e05-00816be7344a",
-      "$ref": "https://example.com/v1/Users/902c246b-6245-4190-8e05-00816be7344a",
+      "$ref": "https://example.com/v2/Users/902c246b-6245-4190-8e05-00816be7344a",
       "display": "Mandy Pepperidge"
     }
   ],
@@ -1367,7 +1492,7 @@
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff592\"",
-    "location": "https://example.com/v1/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a"
+    "location": "https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a"
   }
 }
 
@@ -1376,8 +1501,8 @@
       </section>
 
       <section title="Service Provider Configuration Representation">
-        <t>The following is a non-normative example of the SCIM Service
-        Provider Configuration representation in JSON format.</t>
+        <t>The following is a non-normative example of the SCIM service
+        provider configuration representation in JSON format.</t>
 
         <figure>
           <artwork>
@@ -1423,6 +1548,7 @@
      }
   ],
   "meta": {
+    "location":"https://example.com/v2/ServiceProviderConfig",
     "resourceType": "ServiceProviderConfig",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
@@ -1435,14 +1561,15 @@
       </section>
 
       <section title="Resource Type Representation">
-        <t>The following is a non-normative example of the SCIM Resource Type
+        <t>The following is a non-normative example of the SCIM resource type
         representation in JSON format.</t>
 
         <figure>
           <artwork>
 {
   "schemas": ["urn:scim:schemas:core:2.0:ResourceType"],
-  "name": "User",
+  "id":"User",
+  "name":"User",
   "endpoint": "/Users",
   "description": "Core User",
   "schema": "urn:scim:schemas:core:2.0:User",
@@ -1453,6 +1580,7 @@
     }
   ],
   "meta": {
+    "location":"https://example.com/v2/ResourceTypes/User",
     "resourceType": "ResourceType",
     "created": "2010-01-23T04:56:22Z",
     "lastModified": "2011-05-13T04:42:34Z",
@@ -1465,223 +1593,1063 @@
       </section>
 
       <section title="Schema Representation">
-        <t>The following is a non-normative example of the SCIM Schema
-        representation in JSON format.</t>
+        <t>The following is intended as normative example of the SCIM Schema
+        representation in JSON format. Where permitted individual values and
+        schema MAY change. Included but not limited to, are schemas for User,
+        Group, and enterprise user.</t>
 
         <figure>
-          <artwork>
-{
-  "id": "urn:scim:schemas:core:2.0:User",
-  "name": "User",
-  "description": "Core User",
-  "attributes":[
-    {
-      "name":"id",
-      "type":"string",
-      "multiValued":false,
-      "description":"Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
-      "readOnly":true,
-      "required":true,
-      "caseExact":false
-    },
-    {
-      "name":"name",
-      "type":"complex",
-      "multiValued":false,
-      "description":"The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
-      "readOnly":false,
-      "required":false,
-      "caseExact":false,
-      "subAttributes":[
-        {
-          "name":"formatted",
-          "type":"string",
-          "multiValued":false,
-          "description":"The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.)." ,
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"familyName",
-          "type":"string",
-          "multiValued":false,
-          "description":"The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.).",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"givenName",
-          "type":"string",
-          "multiValued":false,
-          "description":"The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.).",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"middleName",
-          "type":"string",
-          "multiValued":false,
-          "description":"The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.).",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"honorificPrefix",
-          "type":"string",
-          "multiValued":false,
-          "description":"The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.).",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"honorificSuffix",
-          "type":"string",
-          "multiValued":false,
-          "description":"The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.).",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        }
-      ]
-    },
-    {
-      "name":"emails",
-      "type":"complex",
-      "multiValued":true,
-      "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
-      "readOnly":false,
-      "required":false,
-      "caseExact":false,
-      "subAttributes":[
-        {
-          "name":"value",
-          "type":"string",
-          "multiValued":false,
-          "description":"E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"display",
-          "type":"string",
-          "multiValued":false,
-          "description":"A human readable name, primarily used for display purposes. READ-ONLY.",
-          "readOnly":true,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"type",
-          "type":"string",
-          "multiValued":false,
-          "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false,
-          "canonicalValues":["work","home","other"]
-        },
-        {
-          "name":"primary",
-          "type":"boolean",
-          "multiValued":false,
-          "description":"A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        }
-      ]
-    },
-    {
-      "name":"addresses",
-      "type":"complex",
-      "multiValued":true,
-      "description":"A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
-      "readOnly":false,
-      "required":false,
-      "caseExact":false,
-      "subAttributes":[
-        {
-          "name":"formatted",
-          "type":"string",
-          "multiValued":false,
-          "description":"The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"streetAddress",
-          "type":"string",
-          "multiValued":false,
-          "description":"The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"locality",
-          "type":"string",
-          "multiValued":false,
-          "description":"The city or locality component.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"region",
-          "type":"string",
-          "multiValued":false,
-          "description":"The state or region component.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"postalCode",
-          "type":"string",
-          "multiValued":false,
-          "description":"The zipcode or postal code component.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"country",
-          "type":"string",
-          "multiValued":false,
-          "description":"The country name component.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false
-        },
-        {
-          "name":"type",
-          "type":"string",
-          "multiValued":false,
-          "description":"A label indicating the attribute's function; e.g., 'work' or 'home'.",
-          "readOnly":false,
-          "required":false,
-          "caseExact":false,
-          "canonicalValues":["work","home","other"]
-        }
-      ]
+          <artwork>[
+  {
+    "id" : "urn:scim:schemas:core:2.0:User",
+    "name" : "User",
+    "description" : "Core User",
+    "attributes" : [
+      {
+        "name" : "id",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
+        "required" : true,
+        "caseExact" : false,
+        "mutability" : "readOnly\n",
+        "returned" : "always",
+        "uniqueness" : "server"
+      },
+      {
+        "name" : "externalId",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "An identifier for the Resource as defined by the Service Consumer.",
+        "required" : true,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "userName",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Unique identifier for the User typically used by the user to directly authenticate to the service provider. Each User MUST include a non-empty userName value.  This identifier MUST be unique across the Service Consumer's entire set of Users.  REQUIRED",
+        "required" : true,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "server"
+      },
+      {
+        "name" : "name",
+        "type" : "complex",
+        "multiValued" : false,
+        "description" : "The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both. If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "formatted",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "familyName",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "givenName",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "middleName",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "honorificPrefix",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "honorificSuffix",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.).",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "displayName",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "The name of the User, suitable for display to end-users. The name SHOULD be the full name of the User being described if known",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "nickName",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "The casual way to address the user in real life, e.g. \"Bob\" or \"Bobby\" instead of \"Robert\".  This attribute SHOULD NOT be used to represent a User's username (e.g. bjensen or mpepperidge)",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "profileUrl",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "A fully qualified URL to a page representing the User's online profile",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "title",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "The user's title, such as \"Vice President.\"",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "userType",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Used to identify the organization to user relationship. Typical values used might be \"Contractor\", \"Employee\", \"Intern\", \"Temp\", \"External\", and \"Unknown\" but any value may be used ",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "preferredLanguage",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Indicates the User's preferred written or spoken language.  Generally used for selecting a localized User interface. e.g., 'en_US' specifies the language English and country US.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "locale",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Used to indicate the User's default location for purposes of localizing items such as currency, date time format, numerical representations, etc.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "timezone",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "The User's time zone in the \"Olson\" timezone database format [19]; e.g.,'America/Los_Angeles'",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "active",
+        "type" : "boolean",
+        "multiValued" : false,
+        "description" : "A Boolean value indicating the User's administrative status.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "password",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "The User's clear text password.  This attribute is intended to be used as a means to specify an initial password when creating a new User or to reset an existing User's password.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "writeOnly",
+        "returned" : "never",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "emails",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'work' or 'home'.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "work",
+              "home",
+              "other"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "phoneNumbers",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "Phone numbers for the User.  The value SHOULD be canonicalized by the Service Provider according to format in RFC3966 [20] e.g. 'tel:+1-201-555-0123'.  Canonical Type values of work, home, mobile, fax, pager and other.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "Phone number of the User",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'work' or 'home' or 'mobile' etc.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "work",
+              "home",
+              "mobile",
+              "fax",
+              "pager",
+              "other"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred phone number or primary phone number. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "ims",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "Instant messaging addresses for the User.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "Instant messaging address for the User.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'aim', 'gtalk', 'mobile' etc.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "aim",
+              "gtalk",
+              "icq",
+              "xmpp",
+              "msn",
+              "skype",
+              "qq",
+              "yahoo"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred messenger or primary messenger. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "photos",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "URLs of photos of the User.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "URL of a photo of the User.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'photo' or 'thumbnail'.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "photo",
+              "thumbnail"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred photo or thumbnail. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "addresses",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "A physical mailing address for this User, as described in (address Element). Canonical Type Values of work, home, and other. The value attribute is a complex type with the following sub-attributes.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "formatted",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "streetAddress",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "locality",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The city or locality component.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "region",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The state or region component.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "postalCode",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The zipcode or postal code component.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "country",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The country name component.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'work' or 'home'.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "work",
+              "home",
+              "other"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "groups",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "A list of groups that the user belongs to, either thorough direct membership, nested groups, or dynamically calculated",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The identifier of the User's group.",
+            "readOnly" : false,
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "$ref",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The URI of the corresponding Group resource to which the user belongs",
+            "readOnly" : false,
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "readOnly" : true,
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function; e.g., 'direct' or 'indirect'.",
+            "readOnly" : false,
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "direct",
+              "indirect"
+            ],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+            "readOnly" : false,
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readOnly",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "entitlements",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "A list of entitlements for the User that represent a thing the User has.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The value of an entitlement.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "roles",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "A list of roles for the User that collectively represent who the User is; e.g., 'Student', 'Faculty'.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The value of a role.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "x509Certificates",
+        "type" : "complex",
+        "multiValued" : true,
+        "description" : "A list of certificates issued to the User.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The value of a X509 certificate.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "display",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the attribute's function.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [],
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "primary",
+            "type" : "boolean",
+            "multiValued" : false,
+            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      }
+    ],
+    "meta" : {
+      "resourceType" : "Schema",
+      "created" : "2010-01-23T04:56:22Z",
+      "lastModified" : "2014-02-04T00:00:00Z",
+      "version" : "W/\"3694e05e9dff596\"",
+      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:core:2.0:User"
     }
-  ],
-  "meta": {
-    "resourceType": "Schema",
-    "created": "2010-01-23T04:56:22Z",
-    "lastModified": "2011-05-13T04:42:34Z",
-    "version": "W\/\"3694e05e9dff596\"",
-    "location": "https://example.com/v1/Schemas/urn:scim:schemas:core:2.0:User"
+  },
+  {
+    "id" : "urn:scim:schemas:core:2.0:Group",
+    "name" : "Group",
+    "description" : "Core Group",
+    "attributes" : [
+      {
+        "name" : "id",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
+        "required" : true,
+        "caseExact" : false,
+        "mutability" : "readWrite",
+        "returned" : "always",
+        "uniqueness" : "server"
+      },
+      {
+        "name" : "externalId",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "An identifier for the Resource as defined by the Service Consumer.",
+        "required" : true,
+        "caseExact" : false,
+        "mutability" : "readWrite",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "displayName",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "A human readable name for the Group.  REQUIRED.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "members",
+        "type" : "complex",
+        "multiValued" : false,
+        "description" : "A list of members of the Group.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "value",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The identifier of the member of this Group.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "immutable",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "$ref",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The URI of the corresponding to the member resource of this Group.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "immutable",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "type",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "A label indicating the type of resource; e.g., 'User' or 'Group'.",
+            "required" : false,
+            "caseExact" : false,
+            "canonicalValues" : [
+              "User",
+              "Group"
+            ],
+            "mutability" : "immutable",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      }
+    ],
+    "meta" : {
+      "resourceType" : "Schema",
+      "created" : "2010-01-23T04:56:22Z",
+      "lastModified" : "2014-02-04T00:00:00Z",
+      "version" : "W/\"3694e05e9dff596\"",
+      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:core:2.0:Group"
+    }
+  },
+  {
+    "id" : "urn:scim:schemas:extension:enterprise:2.0:User",
+    "name" : "EnterpriseUser",
+    "description" : "Enterprise User",
+    "attributes" : [
+      {
+        "name" : "employeeNumber",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "costCenter",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Identifies the name of a cost center.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "organization",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Identifies the name of an organization.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "division",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Identifies the name of a division.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "department",
+        "type" : "string",
+        "multiValued" : false,
+        "description" : "Identifies the name of a department.",
+        "required" : false,
+        "caseExact" : false,
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      },
+      {
+        "name" : "manager",
+        "type" : "complex",
+        "multiValued" : false,
+        "description" : "The User's manager. A complex type that optionally allows Service Providers to represent organizational hierarchy by referencing the \"id\" attribute of another User.",
+        "required" : false,
+        "caseExact" : false,
+        "subAttributes" : [
+          {
+            "name" : "managerId",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The id of the SCIM resource representing the User's  manager.  REQUIRED.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "$ref",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The URI of the SCIM resource representing the User's manager.  REQUIRED.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readWrite\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          },
+          {
+            "name" : "displayName",
+            "type" : "string",
+            "multiValued" : false,
+            "description" : "The displayName of the User's manager.  OPTIONAL and READ-ONLY.",
+            "required" : false,
+            "caseExact" : false,
+            "mutability" : "readOnly\n",
+            "returned" : "default",
+            "uniqueness" : "none"
+          }
+        ],
+        "mutability" : "readWrite\n",
+        "returned" : "default",
+        "uniqueness" : "none"
+      }
+    ],
+    "meta" : {
+      "resourceType" : "Schema",
+      "created" : "2010-01-23T04:56:22Z",
+      "lastModified" : "2014-02-04T00:00:00Z",
+      "version" : "W/\"3694e05e9dff596\"",
+      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:extension:enterprise:2.0:User"
+    }
   }
-}
-
+]
 </artwork>
         </figure>
       </section>
