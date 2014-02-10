@@ -122,7 +122,7 @@
       <section anchor="defs" title="Definitions" toc="default">
         <t><list style="hanging">
             <t hangText="Service Provider:">An HTTP web application that
-            provides identity information via the SCIM protocol. </t>
+            provides identity information via the SCIM protocol.</t>
 
             <t hangText="Client:">A website or application that uses the SCIM
             protocol to manage identity data maintained by the service
@@ -210,8 +210,8 @@
         </section>
 
         <section anchor="type-boolean" title="Boolean">
-          <t>The literal "<spanx style="verb">true</spanx>" or "<spanx
-          style="verb">false</spanx>". The JSON format is defined in <eref
+          <t>The literal <spanx style="verb">true</spanx> or <spanx
+          style="verb">false</spanx>. The JSON format is defined in <eref
           target="http://tools.ietf.org/html/rfc4627#section-2.1">section
           2.1</eref> of RFC 4627.</t>
         </section>
@@ -295,16 +295,16 @@
 
         <t><list style="hanging">
             <t hangText="type">A label indicating the attribute's function;
-            e.g., "<spanx style="verb">work</spanx>" or "<spanx style="verb">home</spanx>".</t>
+            e.g., <spanx style="verb">work</spanx> or <spanx style="verb">home</spanx>.</t>
 
             <t hangText="primary">A boolean value indicating the 'primary' or
             preferred attribute value for this attribute, e.g. the preferred
             mailing address or primary e-mail address. The primary attribute
-            value "<spanx style="verb">true</spanx>" MUST appear no more than
+            value <spanx style="verb">true</spanx> MUST appear no more than
             once.</t>
 
             <t hangText="display">A human readable name, primarily used for
-            display purposes and has a mutability of "<spanx style="verb">immutable</spanx>".</t>
+            display purposes and has a mutability of <spanx style="verb">immutable</spanx>.</t>
 
             <t hangText="operation">The operation to perform on the
             multi-valued attribute during a PATCH request. The only valid
@@ -321,15 +321,12 @@
       {"value":"bjensen@example.com"},
       {"value":"babs@example.com"}
     ]
-  }
-  </artwork>
+  } </artwork>
               </figure> May also be represented as: <figure>
                 <artwork>
   {
     "emails": ["bjensen@example.com","babs@example.com"]
-  }
-  
-  </artwork>
+  }</artwork>
               </figure></t>
 
             <t hangText="$ref">The reference URI of the target resource, if
@@ -356,10 +353,9 @@
       suite. Schema extensions MUST NOT redefine any attributes defined in
       this specification and SHOULD follow conventions defined in this
       specification. Each schema extension must identify a URI used to
-      identify the extension. The JSON format MUST use the "<spanx
-      style="verb">schemas</spanx>" attribute<xref
-      target="schemas-attribute"/> to distinguish extended resources and
-      attributes.</t>
+      identify the extension. The JSON format MUST use the <spanx
+      style="verb">schemas</spanx> attribute<xref target="schemas-attribute"/>
+      to distinguish extended resources and attributes.</t>
     </section>
 
     <section anchor="schema" title="SCIM Core Schema">
@@ -433,9 +429,8 @@
         schemas. Each resource MUST be indicated using fully qualified
         URLs.</t>
 
-        <t>A "<spanx style="verb">schemas</spanx>" attribute is used to
-        indicate the version of SCIM schema as well as any schema
-        extensions.</t>
+        <t>A <spanx style="verb">schemas</spanx> attribute is used to indicate
+        the version of SCIM schema as well as any schema extensions.</t>
 
         <t><list style="hanging">
             <t hangText="schemas">The schemas attribute is an array of strings
@@ -515,10 +510,10 @@
             by the service provider when presenting it to end-users.</t>
 
             <t hangText="nickName">The casual way to address the user in real
-            life, e.g. "<spanx style="verb">Bob</spanx>" or "<spanx
-            style="verb">Bobby</spanx>" instead of "<spanx style="verb">Robert</spanx>".
-            This attribute SHOULD NOT be used to represent a User's username
-            (e.g. bjensen or mpepperidge).</t>
+            life, e.g. <spanx style="verb">Bob</spanx> or <spanx style="verb">Bobby</spanx>
+            instead of <spanx style="verb">Robert</spanx>. This attribute
+            SHOULD NOT be used to represent a User's username (e.g. bjensen or
+            mpepperidge).</t>
 
             <t hangText="profileUrl">A fully qualified URL to a page
             representing the user's online profile.</t>
@@ -527,10 +522,10 @@
             style="verb">Vice President</spanx>”.</t>
 
             <t hangText="userType">Used to identify the organization to user
-            relationship. Typical values used might be "<spanx style="verb">Contractor</spanx>",
-            "<spanx style="verb">Employee</spanx>", "<spanx style="verb">Intern</spanx>",
-            "<spanx style="verb">Temp</spanx>", "<spanx style="verb">External</spanx>",
-            and "<spanx style="verb">Unknown</spanx>" but any value may be
+            relationship. Typical values used might be <spanx style="verb">Contractor</spanx>,
+            <spanx style="verb">Employee</spanx>, <spanx style="verb">Intern</spanx>,
+            <spanx style="verb">Temp</spanx>, <spanx style="verb">External</spanx>,
+            and <spanx style="verb">Unknown</spanx> but any value may be
             used.</t>
 
             <t hangText="preferredLanguage">Indicates the user's preferred
@@ -570,9 +565,9 @@
             password when creating a new User or to reset an existing User's
             password. Password policies and the ability to update or set
             passwords are out of scope of this document. The mutability of
-            this attribute is "<spanx style="verb">writeOnly</spanx>"
-            indicating the value MUST NOT be returned by a service provider in
-            any form.</t>
+            this attribute is <spanx style="verb">writeOnly</spanx> indicating
+            the value MUST NOT be returned by a service provider in any
+            form.</t>
           </list></t>
       </section>
 
@@ -657,8 +652,8 @@
             authorization model is defined. It is intended that the semantics
             of group membership and any behavior or authorization granted as a
             result of membership are defined by the service provider. The
-            canonical types "<spanx style="verb">direct</spanx>" and "<spanx
-            style="verb">indirect</spanx>" are defined to describe how the
+            canonical types <spanx style="verb">direct</spanx> and <spanx
+            style="verb">indirect</spanx> are defined to describe how the
             group membership was derived. Direct group membership indicates
             the user is directly associated with the group and SHOULD indicate
             that clients may modify membership through the <spanx
@@ -703,7 +698,7 @@
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following schema URI: '<spanx style="verb">urn:scim:schemas:extension:enterprise:2.0:User</spanx>'.</t>
+      following schema URI: <spanx style="verb">urn:scim:schemas:extension:enterprise:2.0:User</spanx>.</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -723,11 +718,10 @@
 
           <t hangText="manager">The user's manager. A complex type that
           optionally allows service providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User. <list
+          hierarchy by referencing the "id" attribute of another User.<list
               style="hanging">
-              <t hangText="managerId">The <spanx style="verb">id</spanx> of
-              the SCIM resource representing the user's manager.
-              RECOMMENDED.</t>
+              <t hangText="value">The <spanx style="verb">id</spanx> of the
+              SCIM resource representing the user's manager. RECOMMENDED.</t>
 
               <t hangText="$ref">The URI of the SCIM resource representing the
               User's manager. RECOMMENDED.</t>
@@ -741,7 +735,7 @@
 
     <section anchor="group-resource" title="SCIM Group Schema">
       <t>SCIM provides a schema for representing groups, identified using the
-      following schema URI: '<spanx style="verb">urn:scim:schemas:core:2.0:Group</spanx>'.</t>
+      following schema URI: <spanx style="verb">urn:scim:schemas:core:2.0:Group</spanx>.</t>
 
       <t>Group resources are meant to enable expression of common group or
       role based access control models, although no explicit authorization
@@ -773,8 +767,8 @@
 
     <section title="Service Provider Configuration Schema">
       <t>SCIM provides a schema for representing the service provider's
-      configuration identified using the following schema URI: '<spanx
-      style="verb">urn:scim:schemas:core:2.0:ServiceProviderConfig</spanx>'</t>
+      configuration identified using the following schema URI: <spanx
+      style="verb">urn:scim:schemas:core:2.0:ServiceProviderConfig</spanx></t>
 
       <t>The service provider configuration resource enables a service
       provider to discovery of SCIM specification features in a standardized
@@ -865,20 +859,20 @@
     <section anchor="resource-type-schema" title="ResourceType Schema">
       <t>The <spanx style="verb">ResourceType</spanx> schema specifies the
       meta-data about a resource type. Resource type resources are READ-ONLY
-      and identified using the following schema URI: '<spanx style="verb">urn:scim:schemas:core:2.0:ResourceType</spanx>'.
+      and identified using the following schema URI: <spanx style="verb">urn:scim:schemas:core:2.0:ResourceType</spanx>.
       Unlike other core resources, all attributes are REQUIRED unless
-      otherwise specified. The "<spanx style="verb">id</spanx>" attribute is
-      not required for the resource type resource.</t>
+      otherwise specified. The <spanx style="verb">id</spanx> attribute is not
+      required for the resource type resource.</t>
 
       <t>The following Singular Attributes are defined: <list style="hanging">
           <t hangText="id">The resource type's server unique id. Often this is
-          the same value as the "<spanx style="verb">name</spanx>" attribute.
+          the same value as the <spanx style="verb">name</spanx> attribute.
           OPTIONAL</t>
 
           <t hangText="name">The resource type name. When applicable service
           providers MUST specify the name specified in the core schema
-          specification; e.g., "<spanx style="verb">User</spanx>" or "<spanx
-          style="verb">Group</spanx>". This name is referenced by the <spanx
+          specification; e.g., <spanx style="verb">User</spanx> or <spanx
+          style="verb">Group</spanx>. This name is referenced by the <spanx
           style="verb">meta.resourceType</spanx> attribute in all
           resources.</t>
 
@@ -891,14 +885,14 @@
 
           <t hangText="schema">The resource type's primary schema URI; e.g.,
           <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>. This
-          MUST be equal to the "<spanx style="verb">id</spanx>" attribute of
-          the associated <spanx style="verb">Schema</spanx> resource.</t>
+          MUST be equal to the <spanx style="verb">id</spanx> attribute of the
+          associated <spanx style="verb">Schema</spanx> resource.</t>
 
           <t hangText="schemaExtensions">A list of URIs of the resource type's
           schema extensions. OPTIONAL. <list style="hanging">
               <t hangText="schema">The URI of an extended schema; e.g., <spanx
               style="verb">urn:edu:2.0:Staff</spanx>. This MUST be equal to
-              the "<spanx style="verb">id</spanx>" attribute of a <spanx
+              the <spanx style="verb">id</spanx> attribute of a <spanx
               style="verb">Schema</spanx> resource. REQUIRED.</t>
 
               <t hangText="required">A Boolean value that specifies whether
@@ -915,7 +909,7 @@
       <t>The <spanx style="verb">Schema</spanx> schema specifies the
       attribute(s) and meta-data that constitute a <spanx style="verb">Schema</spanx>
       resource. Schema resources have mutability of <spanx style="verb">readOnly</spanx>
-      and identified using the following URI: '<spanx style="verb">urn:scim:schemas:core:2.0:Schema</spanx>'.
+      and identified using the following URI: <spanx style="verb">urn:scim:schemas:core:2.0:Schema</spanx>.
       Unlike other core resources the <spanx style="verb">Schema</spanx>
       resource MAY contain a complex object within a sub-attribute and all
       attributes are REQUIRED unless otherwise specified.</t>
@@ -923,15 +917,15 @@
       <t>The following Singular Attributes are defined: <list style="hanging">
           <t hangText="id">The unique URI of the schema. When applicable
           service providers MUST specify the URI specified in the core schema
-          specification; e.g., "<spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>".
+          specification; e.g., <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.
           Unlike most other schemas, which use some sort of a GUID for the
           "id", the schema "id" is a URI so that it can be registered and is
           portable between different service providers and clients.</t>
 
           <t hangText="name">The schema's human readable name. When applicable
           service providers MUST specify the name specified in the core schema
-          specification; e.g., "<spanx style="verb">User</spanx>" or "<spanx
-          style="verb">Group</spanx>". OPTIONAL.</t>
+          specification; e.g., <spanx style="verb">User</spanx> or <spanx
+          style="verb">Group</spanx>. OPTIONAL.</t>
 
           <t hangText="description">The schema's human readable description.
           When applicable service providers MUST specify the description
@@ -1005,7 +999,7 @@
                   to any PUT, POST, or PATCH operations if the attribute was
                   specified by the client (for example, the attribute was
                   modified). The attribute is returned in a SCIM query
-                  operation only if specified in the "<spanx style="verb">attributes</spanx>"
+                  operation only if specified in the <spanx style="verb">attributes</spanx>
                   parameter.</t>
                 </list></t>
 
@@ -1015,8 +1009,8 @@
               by returning HTTP Response code 400 (Bad Request). A client MAY
               enforce uniqueness on the client-side to a greater degree than
               the service provider enforces. For example, a client could make
-              a value unique while the server has uniqueness of "<spanx
-              style="verb">none</spanx>". Valid keywords are: <list
+              a value unique while the server has uniqueness of <spanx
+              style="verb">none</spanx>. Valid keywords are: <list
                   style="hanging">
                   <t hangText="none">The values are not intended to be unique
                   in any way. DEFAULT.</t>
@@ -1066,8 +1060,8 @@
                   <t hangText="canonicalValues">A collection of canonical
                   values. When applicable service providers MUST specify the
                   canonical types specified in the core schema specification;
-                  e.g.,"<spanx style="verb">work</spanx>","<spanx
-                  style="verb">home</spanx>". OPTIONAL.</t>
+                  e.g.,<spanx style="verb">work</spanx>,<spanx style="verb">home</spanx>.
+                  OPTIONAL.</t>
 
                   <t hangText="mutability">A single keyword indicating what
                   types of modifications an attribute MAY accept as
@@ -1116,8 +1110,8 @@
                       response to any PUT, POST, or PATCH operations if the
                       attribute was specified by the client (for example, the
                       attribute was modified). The attribute is returned in a
-                      SCIM query operation only if specified in the "<spanx
-                      style="verb">attributes</spanx>" parameter.</t>
+                      SCIM query operation only if specified in the <spanx
+                      style="verb">attributes</spanx> parameter.</t>
                     </list></t>
 
                   <t hangText="uniqueness">A single keyword value that
@@ -1127,7 +1121,7 @@
                   Request). A client MAY enforce uniqueness on the client-side
                   to a greater degree than the service provider enforces. For
                   example, a client could make a value unique while the server
-                  has uniqueness of "<spanx style="verb">none</spanx>". Valid
+                  has uniqueness of <spanx style="verb">none</spanx>. Valid
                   keywords are: <list style="hanging">
                       <t hangText="none">The values are not intended to be
                       unique in any way. DEFAULT.</t>
@@ -1155,8 +1149,7 @@
         SCIM representation in JSON format.</t>
 
         <figure>
-          <artwork>
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "userName": "bjensen@example.com",
@@ -1167,9 +1160,7 @@
     "version": "W\/\"3694e05e9dff590\"",
     "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
-}
-
-</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1178,9 +1169,7 @@
         SCIM representation in JSON format.</t>
 
         <figure>
-          <artwork>
-
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
@@ -1307,8 +1296,7 @@
     "version": "W\/\"a330bc54f0671c9\"",
     "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
-}
-</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1317,9 +1305,7 @@
         User using the enterprise User extension in JSON format.</t>
 
         <figure>
-          <artwork>
-
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:User", "urn:scim:schemas:extension:enterprise:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
@@ -1458,9 +1444,7 @@
     "version": "W\/\"3694e05e9dff591\"",
     "location": "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
   }
-}
-
-	</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1469,9 +1453,7 @@
         representation in JSON format.</t>
 
         <figure>
-          <artwork>
-
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
   "displayName": "Tour Guides",
@@ -1494,9 +1476,7 @@
     "version": "W\/\"3694e05e9dff592\"",
     "location": "https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a"
   }
-}
-
-</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1505,8 +1485,7 @@
         provider configuration representation in JSON format.</t>
 
         <figure>
-          <artwork>
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:ServiceProviderConfig"],
   "documentationUrl":"http://example.com/help/scim.html",
   "patch": {
@@ -1554,9 +1533,7 @@
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff594\""
   }
-}
-
-</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1565,8 +1542,7 @@
         representation in JSON format.</t>
 
         <figure>
-          <artwork>
-{
+          <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:ResourceType"],
   "id":"User",
   "name":"User",
@@ -1586,9 +1562,7 @@
     "lastModified": "2011-05-13T04:42:34Z",
     "version": "W\/\"3694e05e9dff595\""
   }
-}
-
-</artwork>
+}</artwork>
         </figure>
       </section>
 
@@ -1599,7 +1573,7 @@
         Group, and enterprise user.</t>
 
         <figure>
-          <artwork>[
+          <artwork>{[
   {
     "id" : "urn:scim:schemas:core:2.0:User",
     "name" : "User",
@@ -2649,8 +2623,7 @@
       "location" : "https://example.com/v2/Schemas/urn:scim:schemas:extension:enterprise:2.0:User"
     }
   }
-]
-</artwork>
+]}</artwork>
         </figure>
       </section>
     </section>
