@@ -57,7 +57,7 @@
       </address>
     </author>
 
-    <date day="08" month="February" year="2014"/>
+    <date day="11" month="February" year="2014"/>
 
     <keyword>SCIM</keyword>
 
@@ -278,7 +278,7 @@ Authorization: Bearer h480djs93hd8
         <t>If the service provider determines creation of the requested
         resource conflicts with existing resources; e.g., a <spanx
         style="verb">User</spanx> resource with a duplicate <spanx
-        style="verb">username</spanx>, the service provider MUST return a 409
+        style="verb">userName</spanx>, the service provider MUST return a 409
         error and SHOULD indicate the conflicting attribute(s) in the body of
         the response.</t>
 
@@ -495,8 +495,8 @@ Content-Type: application/json
           </figure>
 
           <section anchor="query-endpoints" title="Query Endpoints">
-            <t>Queries MAY be performed against a SCIM resources or resource
-            endpoints. For example: <list>
+            <t>Queries MAY be performed against a SCIM resource object or a
+            resource type endpoint. For example: <list>
                 <t><spanx style="verb">/Users/{userid}</spanx></t>
 
                 <t><spanx style="verb">/Users</spanx></t>
@@ -743,7 +743,9 @@ filter=Username eq "john"
             <t>Clients MAY search by schema or schema extensions by using a
             filter expression including the "schemas" attribute.</t>
 
-            <t>Examples:</t>
+            <t>The following are examples of valid filters. Some attributes
+            (e.g. rooms and rooms.number) are hypothetical extensions and are
+            not part of SCIM core schema:</t>
 
             <figure align="left" alt="" height="" suppress-title="false"
                     title="" width="">
@@ -992,7 +994,7 @@ Content-Length: ...
 
 {
   "schemas": ["urn:scim:schemas:core:2.0:SearchRequest"],
-  "attributes": ["displayName", "username"],
+  "attributes": ["displayName", "userName"],
   "filter": "displayName sw \"smith\"",
   "startIndex": 1,
   "count": 10
@@ -1021,7 +1023,7 @@ Location: https://example.com/.search
         "resourceType":"User",
         "lastModified": ...
       },
-      "username":"jsmith",
+      "userName":"jsmith",
       "displayName":"Smith, James"
     },
     {
@@ -2417,16 +2419,16 @@ ETag: W/"a330bc54f0671c9"
         complex attributes. In general, attributes are identified by prefixing
         the attribute name with its schema URN separated by a ':' character;
         e.g., the core User resource attribute 'userName' is identified as
-        'urn:scim:schemas:core:2.0:userName'. Clients MAY omit core schema
-        attribute URN prefixes though MUST fully qualify extended attributes
-        with the associated resource URN; e.g., the attribute 'age' defined in
-        'urn:hr:schemas:user' is fully encoded as 'urn:hr:schemas:user:age'. A
-        Complex attributes' Sub-Attributes are referenced via nested, dot
-        ('.') notation; i.e., {urn}:{Attribute name}.{Sub-Attribute name}. For
-        example, the fully qualified path for a User's givenName is
-        urn:scim:schemas:core:2.0:name.givenName All facets (URN, attribute
-        and Sub-Attribute name) of the fully encoded Attribute name are case
-        insensitive.</t>
+        'urn:scim:schemas:core:2.0:User:userName'. Clients MAY omit core
+        schema attribute URN prefixes though MUST fully qualify extended
+        attributes with the associated resource URN; e.g., the attribute 'age'
+        defined in 'urn:hr:schemas:user' is fully encoded as
+        'urn:hr:schemas:user:age'. A Complex attributes' Sub-Attributes are
+        referenced via nested, dot ('.') notation; i.e., {urn}:{Attribute
+        name}.{Sub-Attribute name}. For example, the fully qualified path for
+        a User's givenName is urn:scim:schemas:core:2.0:User:name.givenName
+        All facets (URN, attribute and Sub-Attribute name) of the fully
+        encoded Attribute name are case insensitive.</t>
       </section>
 
       <section title="HTTP Response Codes">
@@ -2906,12 +2908,12 @@ X-HTTP-Method-Override: DELETE
 
           <t>56 - Make manager attribute consistent with other $ref attrs</t>
 
-          <t>57 - Update all "/v1" examples to '?v2"</t>
+          <t>57 - Update all "/v1" examples to '/v2"</t>
 
           <t>59 - Fix capitalization per IETF editor practices</t>
 
-          <t>60 - Changed &lt;eref&gt; tags to normal &lt;reference&gt;
-          tags</t>
+          <t>60 - Changed &lt;eref&gt; tags to normal &lt;xref&gt; and
+          &lt;reference&gt; tags</t>
         </list></t>
     </section>
   </back>
