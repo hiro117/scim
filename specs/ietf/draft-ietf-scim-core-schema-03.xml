@@ -194,7 +194,7 @@
 
             <t>are case insensitive (<spanx style="verb">caseExact=false</spanx>),</t>
 
-            <t>are modifiable (<spanx style="verb">mutability=readWrite),</spanx>,</t>
+            <t>are modifiable (<spanx style="verb">mutability=readWrite</spanx>),</t>
 
             <t>are returned in response to queries (<spanx style="verb">returned=default</spanx>),</t>
 
@@ -262,10 +262,9 @@
           resolved as specified in <xref target="RFC3986">Section 5.2</xref>.
           The base URI for relative URI resolution MUST include all URI
           components and path segments up to but not including the Endpoint
-          URI; e.g., the base URI for a request to
-          https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646
-          would be https://example.com/v2/ and the relative URI for this
-          resource would be Users/2819c223-7f76-453a-919d-413861904646.</t>
+          URI; e.g., the base URI for a request to <spanx style="verb">https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646</spanx>
+          would be <spanx style="verb">https://example.com/v2/</spanx> and the
+          relative URI for this resource would be <spanx style="verb">Users/2819c223-7f76-453a-919d-413861904646</spanx>.</t>
 
           <t>Performing a GET operation on a reference URI MUST return the
           target resource or an appropriate HTTP response code. The service
