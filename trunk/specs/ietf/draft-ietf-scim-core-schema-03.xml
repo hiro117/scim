@@ -57,7 +57,7 @@
       </address>
     </author>
 
-    <date day="8" month="February" year="2014"/>
+    <date day="11" month="February" year="2014"/>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
@@ -180,89 +180,76 @@
       returnability <xref target="schemas-attribute">Resource's schema
       endpoint</xref>.</t>
 
-      <t>A <eref target="http://json.org">JSON</eref> (JavaScript Object
-      Notation) format is defined. Attribute names SHOULD be camelCased. SCIM
-      resources represented in JSON MUST specify schema via the <spanx
-      style="verb">schemas</spanx> attribute<xref
-      target="schemas-attribute"/>.</t>
+      <t>A JSON (JavaScript Object Notation) format <xref target="RFC4627"/>
+      is defined. Attribute names SHOULD be camelCased. SCIM resources
+      represented in JSON MUST specify schema via the <spanx style="verb">schemas</spanx>
+      attribute<xref target="schemas-attribute"/>.</t>
 
       <section anchor="attribute-types" title="Attribute Data Types">
-        <t>Attribute data types are derived from <eref
-        target="http://tools.ietf.org/html/rfc4627">JSON</eref> and unless
-        otherwise specified are optional, modifiable by clients, and of type
-        <xref target="type-string">String</xref>. The JSON format defines a
-        limited set of data types, hence, where appropriate, alternate JSON
-        representations derived from <eref
-        target="http://www.w3.org/TR/xmlschema-2/">XML schema</eref> are
-        defined below. SCIM extensions SHOULD not introduce new data
-        types.</t>
+        <t>Attribute data types are derived from JSON <xref target="RFC4627"/>
+        and unless otherwise specified are optional, modifiable by clients,
+        and of type <xref target="type-string">String</xref>. The JSON format
+        defines a limited set of data types, hence, where appropriate,
+        alternate JSON representations derived from XML Schema <xref
+        target="XML-Schema"/> are defined below. SCIM extensions SHOULD not
+        introduce new data types.</t>
 
         <section anchor="type-string" title="String">
           <t>A sequence of zero or more Unicode characters. The JSON format is
-          defined in <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.5">section
-          2.5</eref> of RFC 4627. A <spanx style="verb">String</spanx>
-          attribute MAY specify a required data format. Additionally, when
-          canonical values are specified service providers SHOULD conform to
-          those values if appropriate, but MAY provide alternate <spanx
-          style="verb">String</spanx> values to represent additional
-          values.</t>
+          defined in <xref target="RFC4627">Section 2.5</xref> . A <spanx
+          style="verb">String</spanx> attribute MAY specify a required data
+          format. Additionally, when canonical values are specified service
+          providers SHOULD conform to those values if appropriate, but MAY
+          provide alternate <spanx style="verb">String</spanx> values to
+          represent additional values.</t>
         </section>
 
         <section anchor="type-boolean" title="Boolean">
           <t>The literal <spanx style="verb">true</spanx> or <spanx
-          style="verb">false</spanx>. The JSON format is defined in <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.1">section
-          2.1</eref> of RFC 4627.</t>
+          style="verb">false</spanx>. The JSON format is defined in <xref
+          target="RFC4627">Section 2.1</xref> .</t>
         </section>
 
         <section anchor="type-decimal" title="Decimal">
           <t>A real number with at least one digit to the left and right of
-          the period. The JSON format is defined in <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.4">section
-          2.4</eref> of RFC 4627.</t>
+          the period. The JSON format is defined in <xref
+          target="RFC4627">Section 2.4</xref> .</t>
         </section>
 
         <section anchor="type-integer" title="Integer">
           <t>A decimal number with no fractional digits. The JSON format is
-          defined in <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.4">section
-          2.4</eref> of RFC 4627 with the additional constraint that the value
-          MUST NOT contain fractionial or exponent parts.</t>
+          defined in <xref target="RFC4627">Section 2.4</xref> with the
+          additional constraint that the value MUST NOT contain fractionial or
+          exponent parts.</t>
         </section>
 
         <section anchor="type-datetime" title="DateTime">
           <t>A DateTime value (e.g. 2008-01-23T04:56:22Z). The attribute value
-          MUST be encoded as a valid xsd:dateTime as specified in <eref
-          target="http://www.w3.org/TR/xmlschema-2/#dateTime">section
-          3.2.7</eref> of the "XML Schema Datatypes Specification".</t>
+          MUST be encoded as a valid xsd:dateTime as specified in <xref
+          target="XML-Schema">Section 3.2.7</xref> .</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
-          above and are represented as a <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.5">JSON
-          String</eref>.</t>
+          above and are represented as a JSON String per <xref
+          target="RFC4627">Section 2.5</xref>.</t>
         </section>
 
         <section anchor="type-binary" title="Binary">
           <t>Arbitrary binary data. The attribute value MUST be encoded as a
-          valid xsd:base64Binary as specified in <eref
-          target="http://www.w3.org/TR/xmlschema-2/#base64Binary">section
-          3.2.16</eref> of the "XML Schema Datatypes Specification".</t>
+          valid xsd:base64Binary as specified in <xref
+          target="XML-Schema">Section 3.2.16</xref> .</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
-          above and are represented as a <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.5">JSON
-          String</eref>.</t>
+          above and are represented as a JSON String per<xref
+          target="RFC4627">Section 2.5</xref>.</t>
         </section>
 
         <section anchor="type-reference" title="Reference">
           <t>A reference to a SCIM resource. The value MUST be the absolute or
           relative URI of the target resource. Relative URIs should be
-          resolved as specified in <eref
-          target="http://tools.ietf.org/html/rfc3986#section-5.2">section
-          5.2</eref> of RFC 3986. The base URI for relative URI resolution
-          MUST include all URI components and path segments up to but not
-          including the Endpoint URI; e.g., the base URI for a request to
+          resolved as specified in <xref target="RFC3986">Section 5.2</xref>.
+          The base URI for relative URI resolution MUST include all URI
+          components and path segments up to but not including the Endpoint
+          URI; e.g., the base URI for a request to
           https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646
           would be https://example.com/v2/ and the relative URI for this
           resource would be Users/2819c223-7f76-453a-919d-413861904646.</t>
@@ -272,17 +259,15 @@
           provider MAY optionally choose to enforce referential integrity for
           references.</t>
 
-          <t>By convention, a reference is commonly represented as a "$ref"
-          sub-attribute in complex or multi-valued attributes, however this is
-          OPTIONAL.</t>
+          <t>By convention, a reference is commonly represented as a <spanx
+          style="verb">$ref</spanx> sub-attribute in complex or multi-valued
+          attributes, however this is OPTIONAL.</t>
         </section>
 
         <section anchor="type-complex" title="Complex">
           <t>A singular or multi-valued attribute whose value is a composition
           of one or more simple Attributes. The JSON format is defined in
-          <eref
-          target="http://tools.ietf.org/html/rfc4627#section-2.2">section
-          2.2</eref> of RFC 4627.</t>
+          <xref target="RFC4627">Section 2.2</xref> .</t>
         </section>
       </section>
 
@@ -308,13 +293,14 @@
 
             <t hangText="operation">The operation to perform on the
             multi-valued attribute during a PATCH request. The only valid
-            value is "delete", which signifies that this instance should be
-            removed from the resource.</t>
+            value is <spanx style="verb">delete</spanx>, which signifies that
+            this instance should be removed from the resource.</t>
 
             <t hangText="value">The attribute's significant value; e.g., the
-            e-mail address, phone number, etc. Attributes that define a
-            "value" sub-attribute MAY be alternately represented as a
-            collection of primitive types. For example: <figure>
+            e-mail address, phone number, etc. Attributes that define a <spanx
+            style="verb">value</spanx> sub-attribute MAY be alternately
+            represented as a collection of primitive types. For example:
+            <figure>
                 <artwork>
   {
     "emails": [
@@ -346,12 +332,11 @@
     <section title="Schema Extension Model">
       <t>SCIM schema follows an object extension model similar to
       ObjectClasses used in LDAP. Unlike LDAP there is no inheritance model;
-      all extensions are additive (similar to <eref
-      target="http://tools.ietf.org/html/rfc4512">LDAP Auxiliary Object
-      Classes</eref>). Each value indicates additive schema that may exist in
-      a SCIM representation as specified by extensions not defined in this
-      suite. Schema extensions MUST NOT redefine any attributes defined in
-      this specification and SHOULD follow conventions defined in this
+      all extensions are additive (similar to LDAP Auxiliary Object Class
+      <xref target="RFC4512"/>). Each value indicates additive schema that may
+      exist in a SCIM representation as specified by extensions not defined in
+      this suite. Schema extensions MUST NOT redefine any attributes defined
+      in this specification and SHOULD follow conventions defined in this
       specification. Each schema extension must identify a URI used to
       identify the extension. The JSON format MUST use the <spanx
       style="verb">schemas</spanx> attribute<xref target="schemas-attribute"/>
@@ -441,10 +426,11 @@
             enterprise-user extension. All representations of SCIM schema MUST
             include a non-zero value array with value(s) of the URIs supported
             by that representation. The schemas attribute for a resource MUST
-            only contain values defined as "schema" and "schemaExtensions" for
-            the resource's resource type. Duplicate values MUST NOT be
-            included. Value order is not specified and MUST not impact
-            behavior. REQUIRED.</t>
+            only contain values defined as <spanx style="verb">schema</spanx>
+            and <spanx style="verb">schemaExtensions</spanx> for the
+            resource's resource type. Duplicate values MUST NOT be included.
+            Value order is not specified and MUST not impact behavior.
+            REQUIRED.</t>
           </list></t>
       </section>
     </section>
@@ -476,12 +462,12 @@
                 names, titles, and suffixes as appropriate, formatted for
                 display (e.g. <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
-                <t hangText="familyName">The family name of the User, or "Last
-                Name" in most Western languages (e.g. <spanx style="verb">Jensen</spanx>
+                <t hangText="familyName">The family name of the User, or last
+                name in most Western languages (e.g. <spanx style="verb">Jensen</spanx>
                 given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
-                <t hangText="givenName">The given name of the User, or "First
-                Name" in most Western languages (e.g. <spanx style="verb">Barbara</spanx>
+                <t hangText="givenName">The given name of the User, or first
+                name in most Western languages (e.g. <spanx style="verb">Barbara</spanx>
                 given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="middleName">The middle name(s) of the User (e.g.
@@ -489,12 +475,12 @@
                 style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="honorificPrefix">The honorific prefix(es) of the
-                User, or "Title" in most Western languages (e.g. <spanx
+                User, or title in most Western languages (e.g. <spanx
                 style="verb">Ms.</spanx> given the full name <spanx
                 style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
 
                 <t hangText="honorificSuffix">The honorific suffix(es) of the
-                User, or "Suffix" in most Western languages (e.g. <spanx
+                User, or suffix in most Western languages (e.g. <spanx
                 style="verb">III.</spanx> given the full name <spanx
                 style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
               </list></t>
@@ -518,8 +504,8 @@
             <t hangText="profileUrl">A fully qualified URL to a page
             representing the user's online profile.</t>
 
-            <t hangText="title">The user’s title, such as “<spanx
-            style="verb">Vice President</spanx>”.</t>
+            <t hangText="title">The user’s title, such as <spanx
+            style="verb">Vice President</spanx>.</t>
 
             <t hangText="userType">Used to identify the organization to user
             relationship. Typical values used might be <spanx style="verb">Contractor</spanx>,
@@ -531,28 +517,22 @@
             <t hangText="preferredLanguage">Indicates the user's preferred
             written or spoken language. Generally used for selecting a
             localized User interface. Valid values are concatenation of the
-            <eref
-            target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO
-            639-1 two letter language code</eref>, an underscore, and the
-            <eref
-            target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
-            ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies
-            the language English and country US.</t>
+            ISO 639-1 two letter language code per <xref target="ISO639-2"/>,
+            an underscore, and the ISO 3166-1 2 letter country code<xref
+            target="ISO3166"/>; e.g., 'en_US' specifies the language English
+            and country US.</t>
 
             <t hangText="locale">Used to indicate the User's default location
             for purposes of localizing items such as currency, date time
             format, numerical representations, etc. A locale value is a
-            concatenation of the <eref
-            target="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO
-            639-1 two letter language code</eref>, an underscore, and the
-            <eref
-            target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
-            ISO 3166-1 2 letter country code</eref>; e.g., 'en_US' specifies
-            the language English and country US.</t>
+            concatenation of the ISO 639-1 two letter language code<xref
+            target="ISO639-2"/>, an underscore, and the ISO 3166-1 2 letter
+            country code<xref target="ISO3166"/>; e.g., 'en_US' specifies the
+            language English and country US.</t>
 
-            <t hangText="timezone">The User's time zone in the <eref
-            target="http://www.twinsun.com/tz/tz-link.htm">"Olson" timezone
-            database format</eref>; e.g.,'America/Los_Angeles'.</t>
+            <t hangText="timezone">The User's time zone in the "Olson"
+            timezone database format<xref target="Olson-TZ"/>;
+            e.g.,'America/Los_Angeles'.</t>
 
             <t hangText="active">A Boolean value indicating the user's
             administrative status. The definitive meaning of this attribute is
@@ -584,12 +564,11 @@
 
             <t hangText="phoneNumbers">Phone numbers for the user. The value
             SHOULD be canonicalized by the service provider according to
-            format in <eref
-            target="http://tools.ietf.org/html/rfc3966">RFC3966</eref> e.g.
-            'tel:+1-201-555-0123'. Canonical type values of <spanx
-            style="verb">work</spanx>, <spanx style="verb">home</spanx>,
-            <spanx style="verb">mobile</spanx>, <spanx style="verb">fax</spanx>,
-            <spanx style="verb">pager</spanx>, and <spanx style="verb">other</spanx>.</t>
+            format in <xref target="RFC3966"/> e.g. 'tel:+1-201-555-0123'.
+            Canonical type values of <spanx style="verb">work</spanx>, <spanx
+            style="verb">home</spanx>, <spanx style="verb">mobile</spanx>,
+            <spanx style="verb">fax</spanx>, <spanx style="verb">pager</spanx>,
+            and <spanx style="verb">other</spanx>.</t>
 
             <t hangText="ims">Instant messaging address for the user. No
             official canonicalization rules exist for all instant messaging
@@ -639,10 +618,10 @@
                 component.</t>
 
                 <t hangText="country">The country name component. When
-                specified the value MUST be in <eref
-                target="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm">
-                ISO 3166-1 alpha 2 "short" code format</eref>; e.g., the
-                United States and Sweden are "US" and "SE", respectively.</t>
+                specified the value MUST be in ISO 3166-1 alpha 2 "short" code
+                format<xref target="ISO3166"> </xref>; e.g., the United States
+                and Sweden are <spanx style="verb">US</spanx> and <spanx
+                style="verb">SE</spanx>, respectively.</t>
               </list></t>
 
             <t hangText="groups">A list of groups that the user belongs to,
@@ -663,12 +642,13 @@
             style="verb">Group</spanx> resource but MAY modify direct group
             membership through the <spanx style="verb">Group</spanx> resource
             which MAY influence indirect memberships. If the SCIM service
-            provider exposes a Group resource, the "value" sub-attribute MUST
-            be the "id" and the "$ref" sub-attribute must be the URI of the
-            corresponding <spanx style="verb">Group</spanx> resources to which
-            the user belongs. Since this attribute has a mutability of <spanx
-            style="verb">readOnly</spanx>, group membership changes MUST be
-            applied via the <xref target="group-resource">Group
+            provider exposes a Group resource, the <spanx style="verb">value</spanx>
+            sub-attribute MUST be the <spanx style="verb">id</spanx> and the
+            <spanx style="verb">$ref</spanx> sub-attribute must be the URI of
+            the corresponding <spanx style="verb">Group</spanx> resources to
+            which the user belongs. Since this attribute has a mutability of
+            <spanx style="verb">readOnly</spanx>, group membership changes
+            MUST be applied via the <xref target="group-resource">Group
             Resource</xref>. The attribute has a mutability of <spanx
             style="verb">readOnly</spanx>.</t>
 
@@ -682,8 +662,8 @@
             to scope entitlements.</t>
 
             <t hangText="roles">A list of roles for the user that collectively
-            represent who the user is; e.g., 'Student', "Faculty". No
-            vocabulary or syntax is specified though it is expected that a
+            represent who the user is; e.g., <spanx style="verb">Student, Faculty</spanx>.
+            No vocabulary or syntax is specified though it is expected that a
             role value is a String or label representing a collection of
             entitlements. This value has NO canonical types.</t>
 
@@ -718,8 +698,8 @@
 
           <t hangText="manager">The user's manager. A complex type that
           optionally allows service providers to represent organizational
-          hierarchy by referencing the "id" attribute of another User.<list
-              style="hanging">
+          hierarchy by referencing the <spanx style="verb">id</spanx>
+          attribute of another User.<list style="hanging">
               <t hangText="value">The <spanx style="verb">id</spanx> of the
               SCIM resource representing the user's manager. RECOMMENDED.</t>
 
@@ -754,14 +734,16 @@
       common attributes defined in SCIM Core Schema: <list style="hanging">
           <t hangText="members">A list of members of the Group. While values
           MAY be added or removed, sub-attributes of members are <spanx
-          style="verb">immutable</spanx>. The "value" sub-attribute must be
-          the "id" and the "$ref" sub-attribute must be the URI of a SCIM
-          resource, either a <spanx style="verb">User</spanx>, or a <spanx
-          style="verb">Group</spanx>. The intention of the <spanx
+          style="verb">immutable</spanx>. The <spanx style="verb">value</spanx>
+          sub-attribute must be the <spanx style="verb">id</spanx> and the
+          <spanx style="verb">$ref</spanx> sub-attribute must be the URI of a
+          SCIM resource, either a <spanx style="verb">User</spanx>, or a
+          <spanx style="verb">Group</spanx>. The intention of the <spanx
           style="verb">Group</spanx> type is to allow the service provider to
           support nested groups. Service providers MAY require clients to
-          provide a non-empty members value based on the "required" sub
-          attribute of the "members" attribute in group resource schema.</t>
+          provide a non-empty members value based on the <spanx style="verb">required</spanx>
+          sub attribute of the <spanx style="verb">members</spanx> attribute
+          in the <spanx style="verb">Group</spanx> resource schema.</t>
         </list></t>
     </section>
 
@@ -774,8 +756,9 @@
       provider to discovery of SCIM specification features in a standardized
       form as well as provide additional implementation details to clients.
       All attributes are READ-ONLY (a mutability of <spanx style="verb">readOnly</spanx>).
-      Unlike other core resources, the "id" attribute is not required for the
-      service provider configuration resource.</t>
+      Unlike other core resources, the <spanx style="verb">id</spanx>
+      attribute is not required for the service provider configuration
+      resource.</t>
 
       <t>The following Singular Attributes are defined in addition to the
       common attributes defined in Core Schema: <list style="hanging">
@@ -919,8 +902,9 @@
           service providers MUST specify the URI specified in the core schema
           specification; e.g., <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.
           Unlike most other schemas, which use some sort of a GUID for the
-          "id", the schema "id" is a URI so that it can be registered and is
-          portable between different service providers and clients.</t>
+          <spanx style="verb">id</spanx>, the schema <spanx style="verb">id</spanx>
+          is a URI so that it can be registered and is portable between
+          different service providers and clients.</t>
 
           <t hangText="name">The schema's human readable name. When applicable
           service providers MUST specify the name specified in the core schema
@@ -970,8 +954,8 @@
                   <t hangText="writeOnly">The attribute MAY be updated at any
                   time. Attribute values MAY NOT be returned (e.g. because the
                   value is a stored hash). Note: an attribute with mutability
-                  of "writeOnly" usually also has a returned setting of
-                  "never".</t>
+                  of <spanx style="verb">writeOnly</spanx> usually also has a
+                  returned setting of <spanx style="verb">never</spanx>.</t>
                 </list></t>
 
               <t hangText="returned">A single keyword that indicates when an
@@ -979,9 +963,9 @@
               GET request or in response to a PUT, POST, or PATCH request.
               Valid keywords are:<list style="hanging">
                   <t hangText="always">The attribute is always returned
-                  regardless of the contents of the "attributes" parameter.
-                  For example, "id" is always returned to identify a SCIM
-                  resource.</t>
+                  regardless of the contents of the <spanx style="verb">attributes</spanx>
+                  parameter. For example, <spanx style="verb">id</spanx> is
+                  always returned to identify a SCIM resource.</t>
 
                   <t hangText="never">The attribute is never returned. This
                   may occur because the original attribute value is not
@@ -991,9 +975,10 @@
 
                   <t hangText="default">The attribute is returned by default
                   in all SCIM operation responses where attribute values are
-                  returned. If the GET request "attributes" parameter is
-                  specified, attribute values are only returned if the
-                  attribute is named in the attributes parameter. DEFAULT.</t>
+                  returned. If the GET request <spanx style="verb">attributes</spanx>
+                  parameter is specified, attribute values are only returned
+                  if the attribute is named in the attributes parameter.
+                  DEFAULT.</t>
 
                   <t hangText="request">The attribute is returned in response
                   to any PUT, POST, or PATCH operations if the attribute was
@@ -1080,8 +1065,9 @@
                       <t hangText="writeOnly">The attribute MAY be updated at
                       any time. Attribute values MAY NOT be returned (e.g.
                       because the value is a stored hash). Note: an attribute
-                      with mutability of "writeOnly" usually also has a
-                      returned setting of "never".</t>
+                      with mutability of <spanx style="verb">writeOnly</spanx>
+                      usually also has a returned setting of <spanx
+                      style="verb">never</spanx>.</t>
                     </list></t>
 
                   <t hangText="returned">A single keyword that indicates when
@@ -1089,9 +1075,9 @@
                   to a GET request or in response to a PUT, POST, or PATCH
                   request. Valid keywords are:<list style="hanging">
                       <t hangText="always">The attribute is always returned
-                      regardless of the contents of the "attributes"
-                      parameter. For example, "id" is always returned to
-                      identify a SCIM resource.</t>
+                      regardless of the contents of the <spanx style="verb">attributes</spanx>
+                      parameter. For example, <spanx style="verb">id</spanx>
+                      is always returned to identify a SCIM resource.</t>
 
                       <t hangText="never">The attribute is never returned.
                       This may occur because the original attribute value is
@@ -1101,10 +1087,10 @@
 
                       <t hangText="default">The attribute is returned by
                       default in all SCIM operation responses where attribute
-                      values are returned. If the GET request "attributes"
-                      parameter is specified, attribute values are only
-                      returned if the attribute is named in the attributes
-                      parameter. DEFAULT.</t>
+                      values are returned. If the GET request <spanx
+                      style="verb">attributes</spanx> parameter is specified,
+                      attribute values are only returned if the attribute is
+                      named in the attributes parameter. DEFAULT.</t>
 
                       <t hangText="request">The attribute is returned in
                       response to any PUT, POST, or PATCH operations if the
@@ -2640,6 +2626,79 @@
     <references title="Normative References">
       <?rfc include="reference.RFC.2119"?>
 
+      <?rfc include="reference.RFC.3986"?>
+
+      <?rfc include="reference.RFC.3966"?>
+
+      <?rfc include="reference.RFC.4627"?>
+
+      <reference anchor="ISO3166">
+        <front>
+          <title>ISO 3166:1988 (E/F) - Codes for the representation of names
+          of countries - The International Organization for Standardization,
+          3rd edition</title>
+
+          <author>
+            <organization/>
+          </author>
+
+          <date day="15" month="08" year="1988"/>
+        </front>
+      </reference>
+
+      <reference anchor="ISO639-2">
+        <front>
+          <title>ISO639-2: Codes for the Representation of Names of
+          Languages</title>
+
+          <author>
+            <organization>ISO 639.2 Registration Authority</organization>
+          </author>
+
+          <date day="25" month="July" year="2013"/>
+        </front>
+
+        <format target="http://www.loc.gov/standards/iso639-2/php/code_list.php"
+                type="HTML"/>
+      </reference>
+
+      <reference anchor="Olson-TZ">
+        <front>
+          <title>Sources for Time Zone and Daylight Saving Time Data</title>
+
+          <author>
+            <organization/>
+          </author>
+
+          <date/>
+        </front>
+
+        <format target="http://www.twinsun.com/tz/tz-link.htm" type="HTML"/>
+      </reference>
+
+      <reference anchor="XML-Schema">
+        <front>
+          <title>XML Schema Part 2: Datatypes Second Edition</title>
+
+          <author fullname="Paul V. Biron" initials="P." surname="Biron">
+            <organization>Kaiser Permanente for Health Level
+            Seven</organization>
+          </author>
+
+          <author fullname="Ashok Malhotra" initials="A." surname="Malhotra">
+            <organization>Microsoft (formerly of IBM)</organization>
+          </author>
+
+          <date day="28" month="October" year="2004"/>
+        </front>
+
+        <format target="http://www.w3.org/TR/xmlschema-2/" type="HTML"/>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include="reference.RFC.4512"?>
+
       <reference anchor="PortableContacts">
         <front>
           <title>Portable Contacts 1.0 Draft C - Schema Only</title>
@@ -2673,11 +2732,40 @@
           <t>Chris Phillips (cjphillips@gmail.com)</t>
 
           <t>Erik Wahlström (erik.wahlstrom@nexussafe.com)</t>
+
+          <t>Phil Hunt (phil.hunt@yahoo.com)</t>
         </list></t>
 
       <t>Special thanks to Joeseph Smarr, who's excellent work on the Portable
       Contacts Specification <xref target="PortableContacts"/> provided a
       basis for the SCIM schema structure and text.</t>
+    </section>
+
+    <section title="Change Log">
+      <t>[[This section to be removed prior to publication as an RFC]]</t>
+
+      <t>Draft 02 - KG - Addition of schema extensibility</t>
+
+      <t>Draft 03 - PH - Revisions based on following tickets:<list>
+          <t>09 - Attribute uniquenes</t>
+
+          <t>10 - Returnability of attributes</t>
+
+          <t>35 - Attribute mutability (replaces readOnly)</t>
+
+          <t>52 - Minor textual changes</t>
+
+          <t>53 - Standard use of term client (some was consumer)</t>
+
+          <t>56 - Make manager attribute consistent with other $ref attrs</t>
+
+          <t>58 - Add optional id to ResourceType objects for consistency</t>
+
+          <t>59 - Fix capitalization per IETF editor practices</t>
+
+          <t>60 - Changed &lt;eref&gt; tags to normal &lt;xref&gt; and
+          &lt;reference&gt; tags</t>
+        </list></t>
     </section>
   </back>
 </rfc>
