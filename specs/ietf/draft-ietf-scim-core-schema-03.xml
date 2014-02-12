@@ -57,7 +57,7 @@
       </address>
     </author>
 
-    <date day="11" month="February" year="2014"/>
+    <date day="12" month="February" year="2014"/>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
@@ -175,9 +175,9 @@
       modifiable by consumers. Attribute definitions contain a property <spanx
       style="verb">mutability</spanx> that determines whether an attribute is:
       <spanx style="verb">readOnly</spanx>, <spanx style="verb">writeOnly</spanx>,
-      <spanx style="verb">immutable</spanx>, or <spanx style="verb">readWrite</spanx>.
-      Additionally, service providers MAY define other properties such as
-      returnability <xref target="schemas-attribute">Resource's schema
+      <spanx style="verb">immutable</spanx>, or <spanx style="verb">readWrite</spanx>(the
+      default). Additionally, service providers MAY define other properties
+      such as returnability <xref target="schemas-attribute">Resource's schema
       endpoint</xref>.</t>
 
       <t>A JSON (JavaScript Object Notation) format <xref target="RFC4627"/>
@@ -187,12 +187,25 @@
 
       <section anchor="attribute-types" title="Attribute Data Types">
         <t>Attribute data types are derived from JSON <xref target="RFC4627"/>
-        and unless otherwise specified are optional, modifiable by clients,
-        and of type <xref target="type-string">String</xref>. The JSON format
-        defines a limited set of data types, hence, where appropriate,
-        alternate JSON representations derived from XML Schema <xref
-        target="XML-Schema"/> are defined below. SCIM extensions SHOULD not
-        introduce new data types.</t>
+        and unless otherwise specified have the following characteristics (see
+        <xref target="schema-schema"/> for attribute characteristic
+        definitions):<list>
+            <t>are optional (<spanx style="verb">required=false</spanx>).</t>
+
+            <t>are case insensitive (<spanx style="verb">caseExact=false</spanx>),</t>
+
+            <t>are modifiable (<spanx style="verb">mutability=readWrite),</spanx>,</t>
+
+            <t>are returned in response to queries (<spanx style="verb">returned=default</spanx>),</t>
+
+            <t>are not unique (<spanx style="verb">uniqueness=none</spanx>),
+            and,</t>
+
+            <t>of type <xref target="type-string">String</xref>. </t>
+          </list>The JSON format defines a limited set of data types, hence,
+        where appropriate, alternate JSON representations derived from XML
+        Schema <xref target="XML-Schema"/> are defined below. SCIM extensions
+        SHOULD NOT introduce new data types.</t>
 
         <section anchor="type-string" title="String">
           <t>A sequence of zero or more Unicode characters. The JSON format is
@@ -504,8 +517,7 @@
             <t hangText="profileUrl">A fully qualified URL to a page
             representing the user's online profile.</t>
 
-            <t hangText="title">The user’s title, such as <spanx
-            style="verb">Vice President</spanx>.</t>
+            <t hangText="title">The user’s title, such as <spanx style="verb">Vice President</spanx>.</t>
 
             <t hangText="userType">Used to identify the organization to user
             relationship. Typical values used might be <spanx style="verb">Contractor</spanx>,
@@ -1572,7 +1584,7 @@
         "description" : "Unique identifier for the SCIM resource as defined by the Service Provider. Each representation of the resource MUST include a non-empty id value. This identifier MUST be unique across the Service Provider's entire set of resources. It MUST be a stable, non-reassignable identifier that does not change when the same resource is returned in subsequent requests. The value of the id attribute is always issued by the Service Provider and MUST never be specified by the Service Consumer. REQUIRED.",
         "required" : true,
         "caseExact" : false,
-        "mutability" : "readOnly\n",
+        "mutability" : "readOnly",
         "returned" : "always",
         "uniqueness" : "server"
       },
@@ -1583,7 +1595,7 @@
         "description" : "An identifier for the Resource as defined by the Service Consumer.",
         "required" : true,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1594,7 +1606,7 @@
         "description" : "Unique identifier for the User typically used by the user to directly authenticate to the service provider. Each User MUST include a non-empty userName value.  This identifier MUST be unique across the Service Consumer's entire set of Users.  REQUIRED",
         "required" : true,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "server"
       },
@@ -1613,7 +1625,7 @@
             "description" : "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1624,7 +1636,7 @@
             "description" : "The family name of the User, or Last Name in most Western languages (e.g. Jensen given the full name Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1635,7 +1647,7 @@
             "description" : "The given name of the User, or First Name in most Western languages (e.g. Barbara given the full name Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1646,7 +1658,7 @@
             "description" : "The middle name(s) of the User (e.g. Robert given the full name Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1657,7 +1669,7 @@
             "description" : "The honorific prefix(es) of the User, or Title in most Western languages (e.g. Ms. given the full name Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1668,12 +1680,12 @@
             "description" : "The honorific suffix(es) of the User, or Suffix in most Western languages (e.g. III. given the full name Ms. Barbara J Jensen, III.).",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1684,7 +1696,7 @@
         "description" : "The name of the User, suitable for display to end-users. The name SHOULD be the full name of the User being described if known",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1695,7 +1707,7 @@
         "description" : "The casual way to address the user in real life, e.g. \"Bob\" or \"Bobby\" instead of \"Robert\".  This attribute SHOULD NOT be used to represent a User's username (e.g. bjensen or mpepperidge)",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1706,7 +1718,7 @@
         "description" : "A fully qualified URL to a page representing the User's online profile",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1717,7 +1729,7 @@
         "description" : "The user's title, such as \"Vice President.\"",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1728,7 +1740,7 @@
         "description" : "Used to identify the organization to user relationship. Typical values used might be \"Contractor\", \"Employee\", \"Intern\", \"Temp\", \"External\", and \"Unknown\" but any value may be used ",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1739,7 +1751,7 @@
         "description" : "Indicates the User's preferred written or spoken language.  Generally used for selecting a localized User interface. e.g., 'en_US' specifies the language English and country US.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1750,7 +1762,7 @@
         "description" : "Used to indicate the User's default location for purposes of localizing items such as currency, date time format, numerical representations, etc.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1761,7 +1773,7 @@
         "description" : "The User's time zone in the \"Olson\" timezone database format [19]; e.g.,'America/Los_Angeles'",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1772,7 +1784,7 @@
         "description" : "A Boolean value indicating the User's administrative status.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1802,7 +1814,7 @@
             "description" : "E-mail addresses for the user. The value SHOULD be canonicalized by the Service Provider, e.g. bjensen@example.com instead of bjensen@EXAMPLE.COM. Canonical Type values of work, home, and other.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1813,7 +1825,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1829,7 +1841,7 @@
               "home",
               "other"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1840,12 +1852,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred mailing address or primary e-mail address. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1864,7 +1876,7 @@
             "description" : "Phone number of the User",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1875,7 +1887,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1894,7 +1906,7 @@
               "pager",
               "other"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1905,12 +1917,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred phone number or primary phone number. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1929,7 +1941,7 @@
             "description" : "Instant messaging address for the User.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1940,7 +1952,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1961,7 +1973,7 @@
               "qq",
               "yahoo"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -1972,12 +1984,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred messenger or primary messenger. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -1996,7 +2008,7 @@
             "description" : "URL of a photo of the User.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2007,7 +2019,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2022,7 +2034,7 @@
               "photo",
               "thumbnail"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2033,12 +2045,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g. the preferred photo or thumbnail. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2057,7 +2069,7 @@
             "description" : "The full mailing address, formatted for display or use with a mailing label. This attribute MAY contain newlines.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2068,7 +2080,7 @@
             "description" : "The full street address component, which may include house number, street name, PO BOX, and multi-line extended street address information. This attribute MAY contain newlines.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2079,7 +2091,7 @@
             "description" : "The city or locality component.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2090,7 +2102,7 @@
             "description" : "The state or region component.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2101,7 +2113,7 @@
             "description" : "The zipcode or postal code component.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2112,7 +2124,7 @@
             "description" : "The country name component.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2128,12 +2140,12 @@
               "home",
               "other"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2153,7 +2165,7 @@
             "readOnly" : false,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2165,7 +2177,7 @@
             "readOnly" : false,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2177,7 +2189,7 @@
             "readOnly" : true,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2193,7 +2205,7 @@
               "direct",
               "indirect"
             ],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2205,7 +2217,7 @@
             "readOnly" : false,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
@@ -2229,7 +2241,7 @@
             "description" : "The value of an entitlement.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2240,7 +2252,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2252,7 +2264,7 @@
             "required" : false,
             "caseExact" : false,
             "canonicalValues" : [],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2263,12 +2275,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2287,7 +2299,7 @@
             "description" : "The value of a role.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2298,7 +2310,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2310,7 +2322,7 @@
             "required" : false,
             "caseExact" : false,
             "canonicalValues" : [],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2321,12 +2333,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2345,7 +2357,7 @@
             "description" : "The value of a X509 certificate.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2356,7 +2368,7 @@
             "description" : "A human readable name, primarily used for display purposes. READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2368,7 +2380,7 @@
             "required" : false,
             "caseExact" : false,
             "canonicalValues" : [],
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2379,12 +2391,12 @@
             "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       }
@@ -2481,7 +2493,7 @@
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       }
@@ -2506,7 +2518,7 @@
         "description" : "Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2517,7 +2529,7 @@
         "description" : "Identifies the name of a cost center.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2528,7 +2540,7 @@
         "description" : "Identifies the name of an organization.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2539,7 +2551,7 @@
         "description" : "Identifies the name of a division.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2550,7 +2562,7 @@
         "description" : "Identifies the name of a department.",
         "required" : false,
         "caseExact" : false,
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       },
@@ -2569,7 +2581,7 @@
             "description" : "The id of the SCIM resource representing the User's  manager.  REQUIRED.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2580,7 +2592,7 @@
             "description" : "The URI of the SCIM resource representing the User's manager.  REQUIRED.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite\n",
+            "mutability" : "readWrite",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2591,12 +2603,12 @@
             "description" : "The displayName of the User's manager.  OPTIONAL and READ-ONLY.",
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readOnly\n",
+            "mutability" : "readOnly",
             "returned" : "default",
             "uniqueness" : "none"
           }
         ],
-        "mutability" : "readWrite\n",
+        "mutability" : "readWrite",
         "returned" : "default",
         "uniqueness" : "none"
       }
