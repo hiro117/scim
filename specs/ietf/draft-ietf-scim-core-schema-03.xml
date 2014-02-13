@@ -16,15 +16,6 @@
     <title abbrev="draft-scim-core-schema-03">System for Cross-Domain Identity
     Management: Core Schema</title>
 
-    <author fullname="Chuck Mortimore" initials="C." role="editor"
-            surname="Mortimore">
-      <organization abbrev="Salesforce">Salesforce.com</organization>
-
-      <address>
-        <email>cmortimore@salesforce.com</email>
-      </address>
-    </author>
-
     <author fullname="Kelly Grizzle" initials="K.G." surname="Grizzle">
       <organization abbrev="SailPoint">SailPoint</organization>
 
@@ -33,27 +24,19 @@
       </address>
     </author>
 
-    <author fullname="Patrick Harding" initials="P." surname="Harding">
-      <organization abbrev="Ping">Ping Identity</organization>
+    <author fullname="Phil Hunt" initials="P." role="editor" surname="Hunt">
+      <organization abbrev="Oracle">Oracle Corporation</organization>
 
       <address>
-        <email>pharding@pingidentity.com</email>
+        <email>phil.hunt@yahoo.com</email>
       </address>
     </author>
 
-    <author fullname="Paul Madsen" initials="P." surname="Madsen">
-      <organization abbrev="Ping">Ping Identity</organization>
+    <author fullname="Erik Wahlström" initials="E.W." surname="Wahlström">
+      <organization abbrev="Technology Nexus">Technology Nexus</organization>
 
       <address>
-        <email>pmadsen@pingidentity.com</email>
-      </address>
-    </author>
-
-    <author fullname="Trey Drake" initials="T." surname="Drake">
-      <organization abbrev="UnboundID">UnboundID</organization>
-
-      <address>
-        <email>trey.drake@unboundid.com</email>
+        <email>erik.wahlstrom@nexussafe.com</email>
       </address>
     </author>
 
@@ -2726,7 +2709,18 @@
       </reference>
     </references>
 
-    <section title="Contributors">
+    <section title="Acknowledgements">
+      <t>The editors would like to acknowledge the contribution and work of
+      the past draft editors:<list>
+          <t>Chuck Mortimore, Salesforce</t>
+
+          <t>Patrick Harding, Ping</t>
+
+          <t>Paul Madsen, Ping</t>
+
+          <t>Trey Drake, UnboundID</t>
+        </list></t>
+
       <t>The SCIM Community would like to thank the following people for the
       work they've done in the research, formulation, drafting, editing, and
       support of this specification.</t>

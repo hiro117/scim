@@ -16,20 +16,19 @@
     <title abbrev="draft-scim-api-03">System for Cross-Domain Identity
     Management:Protocol</title>
 
-    <author fullname="Trey Drake" initials="T.D." role="editor"
-            surname="Drake">
-      <organization abbrev="UnboundID">UnboundID</organization>
+    <author fullname="Kelly Grizzle" initials="K.G." surname="Grizzle">
+      <organization abbrev="SailPoint">SailPoint</organization>
 
       <address>
-        <email>trey.drake@unboundid.com</email>
+        <email>kelly.grizzle@sailpoint.com</email>
       </address>
     </author>
 
-    <author fullname="Chuck Mortimore" initials="C.M." surname="Mortimore">
-      <organization abbrev="SalesForce">SalesForce</organization>
+    <author fullname="Phil Hunt" initials="P." role="editor" surname="Hunt">
+      <organization abbrev="Oracle">Oracle Corporation</organization>
 
       <address>
-        <email>cmortimore@salesforce.com</email>
+        <email>phil.hunt@yahoo.com</email>
       </address>
     </author>
 
@@ -38,14 +37,6 @@
 
       <address>
         <email>morteza.ansari@cisco.com</email>
-      </address>
-    </author>
-
-    <author fullname="Kelly Grizzle" initials="K.G." surname="Grizzle">
-      <organization abbrev="SailPoint">SailPoint</organization>
-
-      <address>
-        <email>kelly.grizzle@sailpoint.com</email>
       </address>
     </author>
 
@@ -1052,18 +1043,36 @@ Location: https://example.com/.search
 
         <section anchor="edit-resource-with-put" title="Modifying with PUT"
                  toc="default">
-          <t>PUT performs a full update. clients must retrieve the entire
-          resource and PUT the desired modifications as the operation
-          overwrites all previously stored data with the exception of the
-          password attribute. If the password attribute of the User resource
-          is unspecified, it should be left in-tact. Since this performs a
-          full update, clients MAY send read-only attributes of the retrieved
-          resource and the service provider MUST ignore any read-only
-          attributes that are present in the payload of a PUT request. Unless
-          otherwise specified a successful PUT operation returns a 200 OK
-          response code and the entire resource within the response body,
-          enabling the client to correlate the client's and Provider's views
-          of the updated resource. Example:</t>
+          <t>PUT performs a full update. Clients MAY retrieve the entire
+          resource in advance, add the desired modifications and use HTTP PUT
+          which will overwrite all previously stored data. Since the PUT
+          request performs a full update, clients MAY send attributes of the
+          retrieved resource and the service provider MUST process according
+          to attribute mutability as follows:<list style="hanging">
+              <t hangText="readWrite, writeOnly">Any values provided SHALL
+              replace the existing attribute values. Omitting the attribute or
+              specific values means the attribute or specific value SHALL be
+              removed;</t>
+
+              <t hangText="immutable">If values are provided, they MUST match
+              existing data or an error is returned. If the service provider
+              has no existing values, a new value(s) MAY be specified;
+              and,</t>
+
+              <t hangText="readOnly">Any values provided (e.g.
+              meta.resourceType) SHALL be ignored. </t>
+            </list>If an attribute is "required", the client MUST specify the
+          attribute in the PUT request. </t>
+
+          <t>If a value provided for an immutable attribute with an existing
+          value is NOT matched, the server SHALL respond with an HTTP response
+          code of 400 and an apprpriate human readable message indicating an
+          attempt to change an immutable attribute.</t>
+
+          <t>Unless otherwise specified a successful PUT operation returns a
+          200 OK response code and the entire resource within the response
+          body, enabling the client to correlate the client's and Provider's
+          views of the updated resource. Example:</t>
 
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
@@ -2880,6 +2889,13 @@ X-HTTP-Method-Override: DELETE
     </section>
 
     <section title="Acknowledgments">
+      <t>The editors would like to acknowledge the contribution and work of
+      the past draft editors:<list>
+          <t>Trey Drake, UnboundID</t>
+
+          <t>Chuck Mortimore, Salesforce</t>
+        </list></t>
+
       <t>The editor would like to thank the participants in the the SCIM
       working group for their support of this specification.</t>
     </section>
