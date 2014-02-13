@@ -1054,10 +1054,10 @@ Location: https://example.com/.search
               specific values means the attribute or specific value SHALL be
               removed;</t>
 
-              <t hangText="immutable">If values are provided, they MUST match
-              existing data or an error is returned. If the service provider
-              has no existing values, a new value(s) MAY be specified;
-              and,</t>
+              <t hangText="immutable">If values are provided for elements
+              already set in the attribute they MUST match existing data or an
+              error is returned. If the service provider has no existing
+              values, a new value(s) MAY be specified; and,</t>
 
               <t hangText="readOnly">Any values provided (e.g.
               meta.resourceType) SHALL be ignored. </t>
