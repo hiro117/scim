@@ -48,6 +48,14 @@
       </address>
     </author>
 
+    <author fullname="Chuck Mortimore" initials="C." surname="Mortimore">
+      <organization abbrev="Salesforce">Salesforce.com</organization>
+
+      <address>
+        <email>cmortimore@salesforce.com</email>
+      </address>
+    </author>
+
     <date day="12" month="February" year="2014"/>
 
     <keyword>SCIM</keyword>

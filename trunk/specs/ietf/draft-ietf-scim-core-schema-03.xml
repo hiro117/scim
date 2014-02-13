@@ -40,6 +40,14 @@
       </address>
     </author>
 
+    <author fullname="Chuck Mortimore" initials="C." surname="Mortimore">
+      <organization abbrev="Salesforce">Salesforce.com</organization>
+
+      <address>
+        <email>cmortimore@salesforce.com</email>
+      </address>
+    </author>
+
     <date day="12" month="February" year="2014"/>
 
     <abstract>
@@ -2147,7 +2155,7 @@
             "readOnly" : false,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite",
+            "mutability" : "readOnly",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2159,7 +2167,7 @@
             "readOnly" : false,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite",
+            "mutability" : "readOnly",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2171,7 +2179,7 @@
             "readOnly" : true,
             "required" : false,
             "caseExact" : false,
-            "mutability" : "readWrite",
+            "mutability" : "readOnly",
             "returned" : "default",
             "uniqueness" : "none"
           },
@@ -2187,19 +2195,7 @@
               "direct",
               "indirect"
             ],
-            "mutability" : "readWrite",
-            "returned" : "default",
-            "uniqueness" : "none"
-          },
-          {
-            "name" : "primary",
-            "type" : "boolean",
-            "multiValued" : false,
-            "description" : "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
-            "readOnly" : false,
-            "required" : false,
-            "caseExact" : false,
-            "mutability" : "readWrite",
+            "mutability" : "readOnly",
             "returned" : "default",
             "uniqueness" : "none"
           }
