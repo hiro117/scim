@@ -56,7 +56,7 @@
       </address>
     </author>
 
-    <date day="27" month="February" year="2014"/>
+    <date day="04" month="March" year="2014"/>
 
     <keyword>SCIM</keyword>
 
@@ -711,26 +711,38 @@ filter=Username eq "john"
             target="RFC5234"/> below: :<figure align="center"
                 anchor="filterABNF" title="ABNF Specification of SCIM Filters">
                 <artwork>FILTER     = attrExp / logExp / prec
-PATH       = attrName / compFilt
+PATH       = attrPath / compFilt
 
-compFilt   = attrName "[" FILTER "]" ["." subAttr ]
+compFilt   = attrPath "[" FILTER "]" ["." subAttr ]
               ; FILTER uses sub-attribs of attrName
 
-attrExpr   = (PATH SP "pr") / 
-                   (PATH compareOp DQUOTE *VCHAR DQUOTE)
-compOp     = SP ("eq" / "ne" / "co" / "sw" / "ew" / "gt" / "lt" 
-                 / "ge" / "le") SP
-logExp     = FILTER ("and" / "or" ) FILTER
+attrExpr   = (PATH SP "pr") / (PATH compareOp value)
+              ; value is defined in RFC4627
+
+compOp     = SP ("eq" / "ne" /
+                 "co" /
+                 "sw" / "ew" /
+                 "gt" / "lt" /
+                 "ge" / "le") SP
+
+logExp     = FILTER ("and" / "or") FILTER
 prec       = *1"not" "(" FILTER ")"
 
-attrName   = [schema ":"] ALPHA *(nameChar) ["." subAttr] 
+attrPath   = [schema ":"] ATTRNAME ["." subAttr] 
              ; SCIM attribute name
 
 schema     = URI ; SCIM schema uri
-nameChar   = "-" / "_" / DIGIT / ALPHA
-subAttr    = ALPHA *(nameChar)
-             ; sub-attribute of a SCIM complex attribute</artwork>
+
+subAttr    = ATTRNAME
+             ; sub-attribute of a SCIM complex attribute
+
+ATTRNAME   = ALPHA *(nameChar)
+nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               </figure></t>
+
+            <t>In the above ABNF, <spanx style="verb">value</spanx> is a
+            quoted value defined in <xref target="RFC4627"/>. [[editors note:
+            value allows for nested objects. Should we restrict this?]]</t>
 
             <t>Filters MUST be evaluated using standard order of operations
             <xref target="Order-Operations"> </xref>. Attribute operators have
@@ -1254,7 +1266,7 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           <section anchor="addOp" title="Add Operation">
             <t>The <spanx style="verb">add</spanx> operation performs one of
             the following functions, depending upon what the target location
-            inidicated by <spanx style="verb">path</spanx> references:<list
+            indicated by <spanx style="verb">path</spanx> references:<list
                 style="symbols">
                 <t>If the target location specifies a multi-valued attribute,
                 a new value is added to the attribute.</t>
@@ -1380,7 +1392,7 @@ If-Match: W/"a330bc54f0671c9"
             </figure>
 
             <figure>
-              <preamble>Removal of a value from a complex-mulit-valued
+              <preamble>Removal of a value from a complex-multi-valued
               attribute (request headers removed for brevity):</preamble>
 
               <artwork>{ 
@@ -2996,6 +3008,12 @@ X-HTTP-Method-Override: DELETE
 
           <t>60 - Changed &lt;eref&gt; tags to normal &lt;xref&gt; and
           &lt;reference&gt; tags</t>
+        </list></t>
+
+      <t>Draft 04 - PH - Revisions based on the following tickets:<list>
+          <t>18 - New PATCH command based on JSON Patch (RFC6902)</t>
+
+          <t> - Provided ABNF specification for filters (used in PATCH)</t>
         </list></t>
     </section>
   </back>
