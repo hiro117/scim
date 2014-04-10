@@ -725,7 +725,7 @@ filter=Username eq "john"
                 target="RFC5234"/> below:</preamble>
 
                 <artwork>FILTER     = attrExp / logExp / prec
-ATPATH       = attrPath / compFilt
+ATPATH     = attrPath / compFilt
 
 compFilt   = attrPath "[" FILTER "]" ["." subAttr ]
               ; FILTER uses sub-attribs of attrName
@@ -1059,7 +1059,7 @@ Content-Length: ...
 }</artwork>
           </figure>
 
-          <t> </t>
+          <t/>
 
           <figure align="left" anchor="ExampleResponse"
                   title="Example POST Search Response">
@@ -1176,7 +1176,7 @@ If-Match: W/"a330bc54f0671c9"
 }</artwork>
           </figure>
 
-          <t> </t>
+          <t/>
 
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
@@ -1223,44 +1223,30 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           <t>PATCH is OPTIONAL. PATCH enables clients to send only those
           attributes requiring modification, reducing network and processing
           overhead. Attributes may be deleted, replaced, merged, or added in a
-          single request.</t>
+          single request. A SCIM PATCH request allows a client to specify a
+          sequence of one or more attribute add, remove, or replace
+          operations. The format of the SCIM PATCH request is based on JSON
+          PATCH <xref target="RFC6902"/>. One key difference between SCIM
+          PATCH and JSON PATCH is that SCIM does not support array
+          indexing.</t>
 
-          <t>The body of a PATCH request MUST contain ONE or more JSON Patch
-          operations <xref target="RFC6902"/>. The server MUST return either a
-          200 OK response code and the entire resource (subject to the
-          "attributes" query parameter - see <xref format="default"
+          <t>The body of a PATCH request MUST contain ONE or more Patch
+          operations . The server MUST return either a 200 OK response code
+          and the entire resource (subject to the "attributes" query parameter
+          - see <xref format="default"
           target="addtl-retrieval-query-params">Additional Retrieval Query
           Parameters</xref>) within the response body, or a 204 No Content
           response code and the appropriate response headers for a successful
           PATCH request. The server MUST return a 200 OK if the "attributes"
           parameter is specified on the request.</t>
 
-          <t>The <spanx style="verb">path</spanx> and <spanx style="verb">from</spanx>
-          attributes are strings containing a SCIM attribute path or a json
-          pointer and optional SCIM multi-value array filter. <figure
-              align="center"
-              title="ABNF for PATCH &quot;path&quot; and &quot;from&quot; Attributes">
-              <preamble>The ABNF syntax for <spanx style="verb">path</spanx>
-              and <spanx style="verb">from</spanx> is specified by <spanx
-              style="verb">PATH</spanx>:</preamble>
+          <t>Each SCIM PATCH operation contains <spanx style="verb">path</spanx>
+          and/or <spanx style="verb">from</spanx> attributes that are strings
+          containing a SCIM attribute path and an optional SCIM multi-value
+          array filter as specified by the ABNF syntax <spanx style="verb">ATPATH</spanx>
+          as per <xref target="filterABNF"/>.</t>
 
-              <artwork>PATH = ATPATH / json6901path
-
-json6901path = json-pointer ["/[" FILTER "]" [json-pointer] ]</artwork>
-            </figure><spanx style="verb">ATPATH</spanx> and <spanx
-          style="verb">FILTER</spanx> are as per <xref target="filterABNF"/>,
-          and <spanx style="verb">json-pointer</spanx> is as per <xref
-          target="RFC6901"/>.</t>
-
-          <t>As SCIM servers do not guarantee order of multi-value arrays, a
-          SCIM client should use caution when using JSON Pointer array
-          addressing. SCIM sub-attribute filtes MUST be specified within
-          square brackets ([ ]) to distinguish from array indexing. Clients
-          should consider that entries with high-update rates may change array
-          indexes frequently. Clients SHOULD use <spanx style="verb">Etags</spanx>
-          when accessing multi-valued attributes by array index.</t>
-
-          <t> <figure align="center">
+          <t><figure align="center">
               <preamble>Valid example <spanx style="verb">path</spanx> and
               <spanx style="verb">from</spanx> values are as
               follows:</preamble>
@@ -1269,33 +1255,23 @@ json6901path = json-pointer ["/[" FILTER "]" [json-pointer] ]</artwork>
 
 "path" = "name.familyName"
 
-"path" = "/name/familyName"
-
 "path" = "addresses[type eq \"work\"]"
 
 "path" = "members[value eq 
          \"2819c223-7f76-453a-919d-413861904646\"]"
 
-"path" = "/members/1/displayName"
-
 "path" = "members[value eq 
-         \"2819c223-7f76-453a-919d-413861904646\"].displayName"
-
-"path" = "/members/[value eq 
-         \"2819c223-7f76-453a-919d-413861904646\"]/displayName</artwork>
+         \"2819c223-7f76-453a-919d-413861904646\"].displayName"</artwork>
             </figure></t>
 
-          <section title="Supported JSON Patch Operations">
-            <t>SCIM supports the JSON Patch operations: <spanx style="verb">add</spanx>,
-            <spanx style="verb">remove</spanx>, <spanx style="verb">replace</spanx>,
-            <spanx style="verb">copy</spanx>,<spanx style="verb">move</spanx>,
-            and <spanx style="verb">test</spanx>.</t>
+          <section title="Supported Patch Operations">
+            <t>SCIM supports 3 operations: <spanx style="verb">add</spanx>,
+            <spanx style="verb">remove</spanx>, and <spanx style="verb">replace</spanx>.</t>
 
-            <t>As specified in <xref target="RFC6902"/>, a PATCH MAY contain
-            one or more JSON patch operation in a JSON array. The PATCH
-            request comprising the entire array of operations SHALL be treated
-            as atomic. If a single operation encounters an error condition,
-            the original SCIM resource MUST be restored.</t>
+            <t>A PATCH MAY contain one or more patch operations in a JSON
+            array. The PATCH request comprising the entire array of operations
+            SHALL be treated as atomic. If a single operation encounters an
+            error condition, the original SCIM resource MUST be restored.</t>
 
             <t>Each operation represents a single action to be applied to the
             same SCIM resource specified by the request URI. Operations are
@@ -1326,10 +1302,10 @@ json6901path = json-pointer ["/[" FILTER "]" [json-pointer] ]</artwork>
 
                 <t>If the target location already contains the value
                 specified, no changes SHOULD be made to the resource and a
-                success response SHOULD be returned. </t>
+                success response SHOULD be returned.</t>
 
                 <t>If the target location already exists the value is
-                replaced. </t>
+                replaced.</t>
               </list></t>
 
             <t>The operation MUST contain a <spanx style="verb">value</spanx>
@@ -1618,237 +1594,6 @@ If-Match: W/"a330bc54f0671c9"
   "path":"addresses[type eq \"work\"].streetAddress",
   "value":"911 Universal City Plaza"
 }</artwork>
-            </figure>
-          </section>
-
-          <section anchor="moveOp" title="Move Operation">
-            <t>The <spanx style="verb">move</spanx> operation moves the value
-            at a specified location (<spanx style="verb">from</spanx>) and
-            adds it at a target location (<spanx style="verb">path</spanx>).
-            The operation is functionally identical to a <spanx style="verb">remove</spanx>
-            operation on the <spanx style="verb">from</spanx> location,
-            frollowed immediately by an <spanx style="verb">add</spanx>
-            operation at the target location with the value that was just
-            removed. If a filter was used to select the path location, any
-            filter term with an attribute equality condition (e.g. <spanx
-            style="verb">[type eq \"home\"]</spanx>) SHALL retain the value of
-            the filtered attribute and SHALL NOT be overwritten by a
-            corresponding attribute value from the <spanx style="verb">from</spanx>
-            location.</t>
-
-            <figure align="left">
-              <preamble>The following shows two existing <spanx style="verb">addresses</spanx>
-              that are part of a resource in the SCIM server before
-              patching:</preamble>
-
-              <artwork>"addresses": [
-  {
-    "type": "work",
-    "streetAddress": "100 Universal City Plaza",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
-    "primary": true
-  },
-  {
-    "type": "home",
-    "streetAddress": "456 Hollywood Blvd",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "456 Hollywood Blvd\nHollywood, CA 91608 USA"
-  }
-]</artwork>
-            </figure>
-
-            <figure align="left">
-              <preamble>The following example shows how to move an address
-              from type "work" to type "home":</preamble>
-
-              <artwork>PATCH /Users/2819c223-7f76-453a-919d-413861904646
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
-
-{
-  "op":"move",
-  "from":"/addresses/[type eq \"work\"]"
-  "path":"/addresses/[type eq \"home\"]"
-
-}</artwork>
-            </figure>
-
-            <figure align="left">
-              <preamble>The following shows the attribute <spanx style="verb">addresses</spanx>
-              after the preceding PATCH <spanx style="verb">move</spanx>
-              operation.</preamble>
-
-              <artwork>"addresses": [
-  {
-    "type": "home",
-    "streetAddress": "100 Universal City Plaza",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
-    "primary": true
-  }
-]</artwork>
-            </figure>
-          </section>
-
-          <section anchor="copyOp" title="Copy Operation">
-            <t>The <spanx style="verb">copy</spanx> operation copies the value
-            at a specified location (<spanx style="verb">from</spanx>) and
-            adds it the target location (<spanx style="verb">path</spanx>).
-            This operation is functionalty the similar to an <spanx
-            style="verb">add</spanx> operation at the target location with the
-            value that specified by the <spanx style="verb">from</spanx>
-            attribute. If a filter was used to select the path location, any
-            filter term with an attribute equality condition (e.g. <spanx
-            style="verb">[type eq \"home\"]</spanx>) SHALL retain the value of
-            the filtered attribute and SHALL NOT be overwritten by a
-            corresponding attribute value from the <spanx style="verb">from</spanx>
-            location.</t>
-
-            <figure align="left">
-              <preamble>The following shows two existing <spanx style="verb">addresses</spanx>
-              that are part of a resource in the SCIM server before
-              patching:</preamble>
-
-              <artwork>"addresses": [
-  {
-    "type": "work",
-    "streetAddress": "100 Universal City Plaza",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
-    "primary": true
-  },
-  {
-    "type": "home",
-    "streetAddress": "456 Hollywood Blvd",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "456 Hollywood Blvd\nHollywood, CA 91608 USA"
-  }
-]</artwork>
-            </figure>
-
-            <figure align="left">
-              <preamble>The following example shows how to copy an address
-              from type "work" to type "home":</preamble>
-
-              <artwork>PATCH /Users/2819c223-7f76-453a-919d-413861904646
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
-
-{
-  "op":"copy",
-  "from":"/addresses/[type eq \"work\"]"
-  "path":"/addresses/[type eq \"home\"]"
-
-}</artwork>
-            </figure>
-
-            <figure align="left">
-              <preamble>The following shows the attribute <spanx style="verb">addresses</spanx>
-              after the preceding PATCH <spanx style="verb">copy</spanx>
-              operation.</preamble>
-
-              <artwork>"addresses": [
-  {
-    "type": "work",
-    "streetAddress": "100 Universal City Plaza",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
-    "primary": true
-  },
-  {
-    "type": "home",
-    "streetAddress": "100 Universal City Plaza",
-    "locality": "Hollywood",
-    "region": "CA",
-    "postalCode": "91608",
-    "country": "USA",
-    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
-    "primary": true
-  }
-]</artwork>
-            </figure>
-          </section>
-
-          <section anchor="testOp" title="Test Operation">
-            <t>The <spanx style="verb">test</spanx> operation tests the value
-            at the target location specified by the <spanx style="verb">path</spanx>is
-            equal to the specified value. The operation performs the following
-            functions depending on the target location specified by <spanx
-            style="verb">path</spanx>:<list style="symbols">
-                <t>If the target location is a single-value attribute, the
-                attributes value is compared for equality to the value
-                specified.</t>
-
-                <t>If the target location is a multi-valued attribute and no
-                filter is specified, all values are compared as if the "eq"
-                filter were applied to the attribute.</t>
-
-                <t>If the target location is a multi-valued attribute and a
-                complex filter is specified comparing a <spanx style="verb">value</spanx>,
-                the values matched by the filter are compared for equality to
-                the value specified.</t>
-
-                <t>If the target location is a complex-multi-valued attribute
-                and a complex filter is specified based on the attribute's
-                sub-attributes, the matching record is compared for equality
-                to the value specified.</t>
-
-                <t>If the target location is a complex-multi-valued attribute
-                with a complex filter and a specific sub-attribute (e.g.
-                <spanx style="verb">addresses[type eq "work"].streetAddress</spanx>),
-                the matching sub-attribute of the matching record is compared
-                to the value specified.</t>
-              </list></t>
-
-            <figure align="left">
-              <preamble>The following is an example of a test operation
-              performing conditional replace if a record has a specific
-              value.</preamble>
-
-              <artwork>PATCH /Users/2819c223-7f76-453a-919d-413861904646
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
-
-[
-  { 
-    "op":"test",
-    "path":"addresses[type eq \"work\"].streetAddress",
-    "value":"100 Universal City Plaza"
-  },
-  { 
-    "op":"replace",
-    "path":"addresses[type eq \"work\"].streetAddress",
-    "value":"911 Universal City Plaza"
-  }
-]</artwork>
             </figure>
           </section>
         </section>
@@ -3121,10 +2866,6 @@ X-HTTP-Method-Override: DELETE
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6750.xml'?>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6901.xml'?>
-
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6902.xml'?>
-
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-25.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-reschke-http-status-308-07.xml'?>
@@ -3148,6 +2889,8 @@ X-HTTP-Method-Override: DELETE
 
     <references title="Informative References">
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml'?>
+
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6902.xml'?>
 
       <reference anchor="OpenSearch">
         <front>
