@@ -2627,6 +2627,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
       <?rfc include="reference.RFC.4627"?>
 
+      <?rfc include="reference.RFC.5234"?>
+
       <reference anchor="ISO3166">
         <front>
           <title>ISO 3166:1988 (E/F) - Codes for the representation of names

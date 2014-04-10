@@ -461,10 +461,13 @@ ETag: W/"f250dd84f0671c3"
               target="pagination">pagination</xref> is requested.</t>
             </list></t>
 
-          <t>The below example returns the userName for all Users:</t>
+          <t/>
 
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
+            <preamble>The query example below requests the userName for all
+            Users:</preamble>
+
             <artwork align="left" alt="" height="" name="" type="" width=""
                      xml:space="preserve">GET /Users?attributes=userName
 Host: example.com
@@ -473,8 +476,13 @@ Authorization: Bearer h480djs93hd8
                       </artwork>
           </figure>
 
+          <t/>
+
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
+            <preamble>The following is an example response to the query
+            above:</preamble>
+
             <artwork align="left" alt="" height="" name="" type="" width=""
                      xml:space="preserve">HTTP/1.1 200 OK
 Content-Type: application/json
@@ -535,7 +543,7 @@ Content-Type: application/json
             For example, the following two expressions will evaluate to the
             same logical value:</t>
 
-            <figure align="left" alt="" height="" suppress-title="false"
+            <figure align="center" alt="" height="" suppress-title="false"
                     title="" width="">
               <artwork align="left" alt="" height="" name="" type="" width=""
                        xml:space="preserve">
@@ -554,8 +562,8 @@ filter=Username eq "john"
             <t>The operators supported in the expression are listed in the
             following table.</t>
 
-            <texttable align="left" anchor="filter-operator-table"
-                       title="Attribute             Operators">
+            <texttable align="center" anchor="filter-operator-table"
+                       title="Attribute Operators">
               <ttcol align="left">Operator</ttcol>
 
               <ttcol align="left">Description</ttcol>
@@ -648,8 +656,10 @@ filter=Username eq "john"
               chronological comparison.</c>
             </texttable>
 
-            <texttable align="left" anchor="logical-operator-table"
-                       title="Logical                Operators">
+            <t/>
+
+            <texttable align="center" anchor="logical-operator-table"
+                       title="Logical Operators">
               <ttcol align="left">Operator</ttcol>
 
               <ttcol align="left">Description</ttcol>
@@ -678,7 +688,9 @@ filter=Username eq "john"
               false.</c>
             </texttable>
 
-            <texttable anchor="grouping-operator-table"
+            <t/>
+
+            <texttable align="center" anchor="grouping-operator-table"
                        title="Grouping Operators">
               <ttcol align="left">Operator</ttcol>
 
@@ -707,16 +719,18 @@ filter=Username eq "john"
               below.</c>
             </texttable>
 
-            <t>Filters MUST conform to the filter ABNF <xref
-            target="RFC5234"/> below: :<figure align="center"
-                anchor="filterABNF" title="ABNF Specification of SCIM Filters">
+            <t><figure align="center" anchor="filterABNF"
+                title="ABNF Specification of SCIM Filters">
+                <preamble>Filters MUST conform to the filter ABNF <xref
+                target="RFC5234"/> below:</preamble>
+
                 <artwork>FILTER     = attrExp / logExp / prec
-PATH       = attrPath / compFilt
+ATPATH       = attrPath / compFilt
 
 compFilt   = attrPath "[" FILTER "]" ["." subAttr ]
               ; FILTER uses sub-attribs of attrName
 
-attrExpr   = (PATH SP "pr") / (PATH compareOp value)
+attrExpr   = (ATPATH SP "pr") / (ATPATH compareOp value)
               ; value is defined in RFC4627
 
 compOp     = SP ("eq" / "ne" /
@@ -779,12 +793,12 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             <t>Clients MAY search by schema or schema extensions by using a
             filter expression including the "schemas" attribute.</t>
 
-            <t>The following are examples of valid filters. Some attributes
-            (e.g. rooms and rooms.number) are hypothetical extensions and are
-            not part of SCIM core schema:</t>
-
             <figure align="left" alt="" height="" suppress-title="false"
-                    title="" width="">
+                    title="Example Filters" width="">
+              <preamble>The following are examples of valid filters. Some
+              attributes (e.g. rooms and rooms.number) are hypothetical
+              extensions and are not part of SCIM core schema:</preamble>
+
               <artwork align="left" alt="" height="" name="" type="" width=""
                        xml:space="preserve">filter=userName eq "bjensen"
 
@@ -879,7 +893,8 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
             <t>The following table describes the URL pagination
             parameters.</t>
 
-            <texttable anchor="consumer-pagination-options-table"
+            <texttable align="center"
+                       anchor="consumer-pagination-options-table"
                        title="Pagination Request parameters">
               <ttcol align="left">Parameter</ttcol>
 
@@ -907,7 +922,8 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
             <t>The following table describes the query response pagination
             attributes specified by the service provider.</t>
 
-            <texttable anchor="response-pagination-options-table"
+            <texttable align="center"
+                       anchor="response-pagination-options-table"
                        title="Pagination Response Elements">
               <ttcol align="left">Element</ttcol>
 
@@ -929,9 +945,11 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
               search results; e.g., 1.</c>
             </texttable>
 
-            <t>For example, to retrieve the first 10 Users set the startIndex
-            to 1 and the count to 10. <figure align="left" alt="" height=""
-                suppress-title="false" title="" width="">
+            <t><figure align="left" alt="" height="" suppress-title="false"
+                title="" width="">
+                <preamble>For example, to retrieve the first 10 Users set the
+                startIndex to 1 and the count to 10:</preamble>
+
                 <artwork align="left" alt="" height="" name="" type=""
                          width="" xml:space="preserve">
 
@@ -942,6 +960,10 @@ Authorization: Bearer h480djs93hd8
                       </artwork>
               </figure> <figure align="left" alt="" height=""
                 suppress-title="false" title="" width="">
+                <preamble>The response to the query above returns metadata
+                regarding paging similar to the following example (actual
+                resources removed for brevity):</preamble>
+
                 <artwork align="left" alt="" height="" name="" type=""
                          width="" xml:space="preserve">
 {
@@ -1036,6 +1058,8 @@ Content-Length: ...
   "count": 10
 }</artwork>
           </figure>
+
+          <t> </t>
 
           <figure align="left" anchor="ExampleResponse"
                   title="Example POST Search Response">
@@ -1149,20 +1173,18 @@ If-Match: W/"a330bc54f0671c9"
         "value":"babs@jensen.org"
     }
   ]
-}
-
-
-                       </artwork>
+}</artwork>
           </figure>
 
-          <t>The service responds with the entire, updated User</t>
+          <t> </t>
 
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
-            <artwork align="left" alt="" height="" name="" type="" width=""
-                     xml:space="preserve">
+            <preamble>The service responds with the entire, updated
+            User:</preamble>
 
-HTTP/1.1 200 OK
+            <artwork align="left" alt="" height="" name="" type="" width=""
+                     xml:space="preserve">HTTP/1.1 200 OK
 Content-Type: application/json
 ETag: W/"b431af54f0671a2"
 Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
@@ -1192,8 +1214,7 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
     "location":"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646",
     "version":"W\/\"b431af54f0671a2\""
   }
-}
-               </artwork>
+}              </artwork>
           </figure>
         </section>
 
@@ -1214,39 +1235,61 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           PATCH request. The server MUST return a 200 OK if the "attributes"
           parameter is specified on the request.</t>
 
-          <t>In the SCIM PATCH, JSON-Pointer values<xref
-          target="RFC6901"/>SHALL NOT be used for specifying <spanx
-          style="verb">path</spanx> values in a JSON PATCH under SCIM.
-          The<spanx style="verb">path</spanx> attribute is a string containing
-          a SCIM attribute or attribute filter value whose ABNF syntax is
-          <spanx style="verb">PATH</spanx> as per <xref
-          target="filterABNF"/>.</t>
+          <t>The <spanx style="verb">path</spanx> and <spanx style="verb">from</spanx>
+          attributes are strings containing a SCIM attribute path or a json
+          pointer and optional SCIM multi-value array filter. <figure
+              align="center"
+              title="ABNF for PATCH &quot;path&quot; and &quot;from&quot; Attributes">
+              <preamble>The ABNF syntax for <spanx style="verb">path</spanx>
+              and <spanx style="verb">from</spanx> is specified by <spanx
+              style="verb">PATH</spanx>:</preamble>
 
-          <t><spanx style="verb">path</spanx> is a SCIM attribute or attribute
-          and sub-attribute combined with an optional complex filter to select
-          the correct value and optional sub-attribute of a multi-valued
-          complex attribute. Valid examples are as follows:<figure
-              align="center">
+              <artwork>PATH = ATPATH / json6901path
+
+json6901path = json-pointer ["/[" FILTER "]" [json-pointer] ]</artwork>
+            </figure><spanx style="verb">ATPATH</spanx> and <spanx
+          style="verb">FILTER</spanx> are as per <xref target="filterABNF"/>,
+          and <spanx style="verb">json-pointer</spanx> is as per <xref
+          target="RFC6901"/>.</t>
+
+          <t>As SCIM servers do not guarantee order of multi-value arrays, a
+          SCIM client should use caution when using JSON Pointer array
+          addressing. SCIM sub-attribute filtes MUST be specified within
+          square brackets ([ ]) to distinguish from array indexing. Clients
+          should consider that entries with high-update rates may change array
+          indexes frequently. Clients SHOULD use <spanx style="verb">Etags</spanx>
+          when accessing multi-valued attributes by array index.</t>
+
+          <t> <figure align="center">
+              <preamble>Valid example <spanx style="verb">path</spanx> and
+              <spanx style="verb">from</spanx> values are as
+              follows:</preamble>
+
               <artwork>"path" = "members"
 
 "path" = "name.familyName"
+
+"path" = "/name/familyName"
 
 "path" = "addresses[type eq \"work\"]"
 
 "path" = "members[value eq 
          \"2819c223-7f76-453a-919d-413861904646\"]"
 
+"path" = "/members/1/displayName"
+
 "path" = "members[value eq 
-         \"2819c223-7f76-453a-919d-413861904646\"].displayName"</artwork>
+         \"2819c223-7f76-453a-919d-413861904646\"].displayName"
+
+"path" = "/members/[value eq 
+         \"2819c223-7f76-453a-919d-413861904646\"]/displayName</artwork>
             </figure></t>
 
           <section title="Supported JSON Patch Operations">
             <t>SCIM supports the JSON Patch operations: <spanx style="verb">add</spanx>,
             <spanx style="verb">remove</spanx>, <spanx style="verb">replace</spanx>,
-            and <spanx style="verb">test</spanx>. The JSON patch operations
-            <spanx style="verb">move</spanx> and <spanx style="verb">copy</spanx>
-            SHALL NOT be supported as SCIM does not support array based
-            addressing for multi-valued attributes.</t>
+            <spanx style="verb">copy</spanx>,<spanx style="verb">move</spanx>,
+            and <spanx style="verb">test</spanx>.</t>
 
             <t>As specified in <xref target="RFC6902"/>, a PATCH MAY contain
             one or more JSON patch operation in a JSON array. The PATCH
@@ -1268,6 +1311,9 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
             the following functions, depending upon what the target location
             indicated by <spanx style="verb">path</spanx> references:<list
                 style="symbols">
+                <t>If the target location does not exist, the attribute and
+                value is added.</t>
+
                 <t>If the target location specifies a multi-valued attribute,
                 a new value is added to the attribute.</t>
 
@@ -1280,9 +1326,10 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
 
                 <t>If the target location already contains the value
                 specified, no changes SHOULD be made to the resource and a
-                success response SHOULD be returned. The server MAY respond
-                with either the entire updated resource or no response body
-                (e.g. in the case of a <spanx style="verb">Group</spanx>).</t>
+                success response SHOULD be returned. </t>
+
+                <t>If the target location already exists the value is
+                replaced. </t>
               </list></t>
 
             <t>The operation MUST contain a <spanx style="verb">value</spanx>
@@ -1291,10 +1338,12 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
             sub-attributes of the complex attribute specified in the
             operation's <spanx style="verb">path</spanx>.</t>
 
-            <t>The following example shows how to add a member to a group.
-            Some text removed for readability ("..."):</t>
+            <t/>
 
-            <figure>
+            <figure align="left">
+              <preamble>The following example shows how to add a member to a
+              group. Some text removed for readability ("..."):</preamble>
+
               <artwork>PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
 Host: example.com
 Accept: application/json
@@ -1322,7 +1371,7 @@ If-Match: W/"a330bc54f0671c9"
             The server responds with either the entire updated Group or no
             response body:</t>
 
-            <figure>
+            <figure align="left">
               <artwork>HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
 ETag: W/"b431af54f0671a2"
@@ -1361,7 +1410,7 @@ Location: "https://example.com/v2/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"</
             <t>Note that server responses have been omitted for the rest of
             the PATCH examples.</t>
 
-            <figure>
+            <figure align="left">
               <preamble>Remove a single member from a group. Some text removed
               for readability ("..."):</preamble>
 
@@ -1378,7 +1427,7 @@ If-Match: W/"a330bc54f0671c9"
 }</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>Remove all members of a group:</preamble>
 
               <artwork>PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
@@ -1391,7 +1440,7 @@ If-Match: W/"a330bc54f0671c9"
 { "op":"remove","path":"members"}</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>Removal of a value from a complex-multi-valued
               attribute (request headers removed for brevity):</preamble>
 
@@ -1401,7 +1450,7 @@ If-Match: W/"a330bc54f0671c9"
 }</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>Example request to remove and add a member. Some text
               removed for readability ("..."):</preamble>
 
@@ -1431,7 +1480,7 @@ If-Match: W/"a330bc54f0671c9"
 ]</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>The following example shows how to replace all the
               members of a group with a different members list. Some text
               removed for readabilty ("..."):</preamble>
@@ -1492,7 +1541,7 @@ If-Match: W/"a330bc54f0671c9"
                 replaced.</t>
               </list></t>
 
-            <figure>
+            <figure align="left">
               <preamble>The following example shows how to replace all the
               members of a group with a different members list in a single
               replace operation. Some text removed for readability
@@ -1523,7 +1572,7 @@ If-Match: W/"a330bc54f0671c9"
 }</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>The following example shows how to change a User's
               entire "work" address.</preamble>
 
@@ -1551,7 +1600,7 @@ If-Match: W/"a330bc54f0671c9"
 }</artwork>
             </figure>
 
-            <figure>
+            <figure align="left">
               <preamble>The following example shows how to change a User's
               address. Since address does not have a value Sub-Attribute, the
               existing address must be removed and the modified address
@@ -1569,6 +1618,179 @@ If-Match: W/"a330bc54f0671c9"
   "path":"addresses[type eq \"work\"].streetAddress",
   "value":"911 Universal City Plaza"
 }</artwork>
+            </figure>
+          </section>
+
+          <section anchor="moveOp" title="Move Operation">
+            <t>The <spanx style="verb">move</spanx> operation moves the value
+            at a specified location (<spanx style="verb">from</spanx>) and
+            adds it at a target location (<spanx style="verb">path</spanx>).
+            The operation is functionally identical to a <spanx style="verb">remove</spanx>
+            operation on the <spanx style="verb">from</spanx> location,
+            frollowed immediately by an <spanx style="verb">add</spanx>
+            operation at the target location with the value that was just
+            removed. If a filter was used to select the path location, any
+            filter term with an attribute equality condition (e.g. <spanx
+            style="verb">[type eq \"home\"]</spanx>) SHALL retain the value of
+            the filtered attribute and SHALL NOT be overwritten by a
+            corresponding attribute value from the <spanx style="verb">from</spanx>
+            location.</t>
+
+            <figure align="left">
+              <preamble>The following shows two existing <spanx style="verb">addresses</spanx>
+              that are part of a resource in the SCIM server before
+              patching:</preamble>
+
+              <artwork>"addresses": [
+  {
+    "type": "work",
+    "streetAddress": "100 Universal City Plaza",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+    "primary": true
+  },
+  {
+    "type": "home",
+    "streetAddress": "456 Hollywood Blvd",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "456 Hollywood Blvd\nHollywood, CA 91608 USA"
+  }
+]</artwork>
+            </figure>
+
+            <figure align="left">
+              <preamble>The following example shows how to move an address
+              from type "work" to type "home":</preamble>
+
+              <artwork>PATCH /Users/2819c223-7f76-453a-919d-413861904646
+Host: example.com
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer h480djs93hd8
+If-Match: W/"a330bc54f0671c9"
+
+{
+  "op":"move",
+  "from":"/addresses/[type eq \"work\"]"
+  "path":"/addresses/[type eq \"home\"]"
+
+}</artwork>
+            </figure>
+
+            <figure align="left">
+              <preamble>The following shows the attribute <spanx style="verb">addresses</spanx>
+              after the preceding PATCH <spanx style="verb">move</spanx>
+              operation.</preamble>
+
+              <artwork>"addresses": [
+  {
+    "type": "home",
+    "streetAddress": "100 Universal City Plaza",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+    "primary": true
+  }
+]</artwork>
+            </figure>
+          </section>
+
+          <section anchor="copyOp" title="Copy Operation">
+            <t>The <spanx style="verb">copy</spanx> operation copies the value
+            at a specified location (<spanx style="verb">from</spanx>) and
+            adds it the target location (<spanx style="verb">path</spanx>).
+            This operation is functionalty the similar to an <spanx
+            style="verb">add</spanx> operation at the target location with the
+            value that specified by the <spanx style="verb">from</spanx>
+            attribute. If a filter was used to select the path location, any
+            filter term with an attribute equality condition (e.g. <spanx
+            style="verb">[type eq \"home\"]</spanx>) SHALL retain the value of
+            the filtered attribute and SHALL NOT be overwritten by a
+            corresponding attribute value from the <spanx style="verb">from</spanx>
+            location.</t>
+
+            <figure align="left">
+              <preamble>The following shows two existing <spanx style="verb">addresses</spanx>
+              that are part of a resource in the SCIM server before
+              patching:</preamble>
+
+              <artwork>"addresses": [
+  {
+    "type": "work",
+    "streetAddress": "100 Universal City Plaza",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+    "primary": true
+  },
+  {
+    "type": "home",
+    "streetAddress": "456 Hollywood Blvd",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "456 Hollywood Blvd\nHollywood, CA 91608 USA"
+  }
+]</artwork>
+            </figure>
+
+            <figure align="left">
+              <preamble>The following example shows how to copy an address
+              from type "work" to type "home":</preamble>
+
+              <artwork>PATCH /Users/2819c223-7f76-453a-919d-413861904646
+Host: example.com
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer h480djs93hd8
+If-Match: W/"a330bc54f0671c9"
+
+{
+  "op":"copy",
+  "from":"/addresses/[type eq \"work\"]"
+  "path":"/addresses/[type eq \"home\"]"
+
+}</artwork>
+            </figure>
+
+            <figure align="left">
+              <preamble>The following shows the attribute <spanx style="verb">addresses</spanx>
+              after the preceding PATCH <spanx style="verb">copy</spanx>
+              operation.</preamble>
+
+              <artwork>"addresses": [
+  {
+    "type": "work",
+    "streetAddress": "100 Universal City Plaza",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+    "primary": true
+  },
+  {
+    "type": "home",
+    "streetAddress": "100 Universal City Plaza",
+    "locality": "Hollywood",
+    "region": "CA",
+    "postalCode": "91608",
+    "country": "USA",
+    "formatted": "100 Universal City Plaza\nHollywood, CA 91608 USA",
+    "primary": true
+  }
+]</artwork>
             </figure>
           </section>
 
@@ -1603,7 +1825,7 @@ If-Match: W/"a330bc54f0671c9"
                 to the value specified.</t>
               </list></t>
 
-            <figure>
+            <figure align="left">
               <preamble>The following is an example of a test operation
               performing conditional replace if a record has a specific
               value.</preamble>
@@ -2899,6 +3121,8 @@ X-HTTP-Method-Override: DELETE
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6750.xml'?>
 
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6901.xml'?>
+
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6902.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-25.xml'?>
@@ -2924,8 +3148,6 @@ X-HTTP-Method-Override: DELETE
 
     <references title="Informative References">
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml'?>
-
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6901.xml'?>
 
       <reference anchor="OpenSearch">
         <front>
@@ -3013,7 +3235,7 @@ X-HTTP-Method-Override: DELETE
       <t>Draft 04 - PH - Revisions based on the following tickets:<list>
           <t>18 - New PATCH command based on JSON Patch (RFC6902)</t>
 
-          <t> - Provided ABNF specification for filters (used in PATCH)</t>
+          <t>- Provided ABNF specification for filters (used in PATCH)</t>
         </list></t>
     </section>
   </back>
