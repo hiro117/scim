@@ -56,7 +56,7 @@
       </address>
     </author>
 
-    <date day="04" month="March" year="2014"/>
+    <date day="23" month="April" year="2014"/>
 
     <keyword>SCIM</keyword>
 
@@ -100,7 +100,7 @@
 
         <t>For purposes of readability examples are not URL encoded.
         Implementers MUST percent encode URLs as described in <xref
-        target="RFC3896">Section 2.1 </xref>.</t>
+        target="RFC3986">Section 2.1 </xref>.</t>
       </section>
 
       <section anchor="defs" title="Definitions" toc="default">
@@ -534,10 +534,7 @@ Content-Type: application/json
             containing a filter expression. When specified only those
             resources matching the filter expression SHALL be returned. The
             expression language that is used in the filter parameter supports
-            references to attributes and literals. The literal values can be
-            strings enclosed in double quotes, numbers, date times enclosed in
-            double quotes, and Boolean values; i.e., true or false. String
-            literals MUST be valid <xref target="RFC4627"/>.</t>
+            references to attributes and literals.</t>
 
             <t>The attribute name and attribute operator are case insensitive.
             For example, the following two expressions will evaluate to the
@@ -698,7 +695,7 @@ filter=Username eq "john"
 
               <ttcol align="left">Behavior</ttcol>
 
-              <c>()</c>
+              <c>( )</c>
 
               <c>Precedence grouping</c>
 
@@ -706,7 +703,7 @@ filter=Username eq "john"
               change the standard order of operations; i.e., evaluate OR
               logical operators before logical AND operators.</c>
 
-              <c>[]</c>
+              <c>[ ]</c>
 
               <c>Complex attribute filter grouping</c>
 
@@ -719,44 +716,48 @@ filter=Username eq "john"
               below.</c>
             </texttable>
 
-            <t><figure align="center" anchor="filterABNF"
+            <t><figure align="left" anchor="filterABNF"
                 title="ABNF Specification of SCIM Filters">
-                <preamble>Filters MUST conform to the filter ABNF <xref
-                target="RFC5234"/> below:</preamble>
+                <preamble>SCIM filters MUST conform to the following ABNF
+                rules as per <xref target="RFC5234"/> below:</preamble>
 
-                <artwork>FILTER     = attrExp / logExp / prec
-ATPATH     = attrPath / compFilt
+                <artwork align="center">FILTER    = attrExp / logExp / valuePath / *1"not" "(" FILTER ")"
 
-compFilt   = attrPath "[" FILTER "]" ["." subAttr ]
-              ; FILTER uses sub-attribs of attrName
+valuePath = attrPath "[" FILTER "]"
+            ; FILTER uses sub-attribs of a parent attrPath
 
-attrExpr   = (ATPATH SP "pr") / (ATPATH compareOp value)
-              ; value is defined in RFC4627
+ATTRNAME  = ALPHA *(nameChar)
 
-compOp     = SP ("eq" / "ne" /
-                 "co" /
-                 "sw" / "ew" /
-                 "gt" / "lt" /
-                 "ge" / "le") SP
+nameChar  = "-" / "_" / DIGIT / ALPHA
 
-logExp     = FILTER ("and" / "or") FILTER
-prec       = *1"not" "(" FILTER ")"
+attrPath  = [URI ":"] ATTRNAME *1subAttr 
+            ; SCIM attribute name
+            ; URI is SCIM "schema" URI
 
-attrPath   = [schema ":"] ATTRNAME ["." subAttr] 
-             ; SCIM attribute name
+subAttr   = "." ATTRNAME
+            ; a sub-attribute of a complex attribute
 
-schema     = URI ; SCIM schema uri
+attrExpr  = (attrPath SP "pr") / 
+            (attrPath SP compareOp SP compValue)
 
-subAttr    = ATTRNAME
-             ; sub-attribute of a SCIM complex attribute
+compValue = false / null / true / number / string
+            ; rules from JSON (RFC7159) 
 
-ATTRNAME   = ALPHA *(nameChar)
-nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
+compareOp = "eq" / "ne" / "co" /
+                   "sw" / "ew" /
+                   "gt" / "lt" /
+                   "ge" / "le"
+
+logExp    = FILTER ("and" / "or") FILTER</artwork>
               </figure></t>
 
-            <t>In the above ABNF, <spanx style="verb">value</spanx> is a
-            quoted value defined in <xref target="RFC4627"/>. [[editors note:
-            value allows for nested objects. Should we restrict this?]]</t>
+            <t>In the above ABNF, the <spanx style="verb">compValue</spanx>
+            (comparison value) rule is built on JSON Data Interchange format
+            ABNF rules as specified in <xref target="RFC7159"/>, <spanx
+            style="verb">DIGIT</spanx> and <spanx style="verb">ALPHA</spanx>
+            are defined per <xref target="RFC5234">Appendix B.1 of</xref> and,
+            <spanx style="verb">URI</spanx> is defined per <xref
+            target="RFC3986">Appendix A of</xref>.</t>
 
             <t>Filters MUST be evaluated using standard order of operations
             <xref target="Order-Operations"> </xref>. Attribute operators have
@@ -799,8 +800,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               attributes (e.g. rooms and rooms.number) are hypothetical
               extensions and are not part of SCIM core schema:</preamble>
 
-              <artwork align="left" alt="" height="" name="" type="" width=""
-                       xml:space="preserve">filter=userName eq "bjensen"
+              <artwork align="center" alt="" height="" name="" type=""
+                       width="" xml:space="preserve">filter=userName eq "bjensen"
 
 filter=name.familyName co "O'Malley"
 
@@ -833,8 +834,8 @@ filter=userType eq "Employee" and (emails.type eq "work")
 filter=userType eq "Employee" and emails[type eq "work" and 
   value co “@example.com"]
 
-filter=emails[type eq "work" and value co “@example.com"] or ims[type
-  eq "xmpp" and value co "@foo.com"]
+filter=emails[type eq "work" and value co “@example.com"] or 
+  ims[type eq "xmpp" and value co "@foo.com"]
 
 filter=addresses[state eq "CA" and rooms[type eq "bedroom" and 
   number gt 2]]         </artwork>
@@ -1135,7 +1136,7 @@ Location: https://example.com/.search
 
           <t>If a value provided for an immutable attribute with an existing
           value is NOT matched, the server SHALL respond with an HTTP response
-          code of 400 and an apprpriate human readable message indicating an
+          code of 400 and an appropriate human readable message indicating an
           attempt to change an immutable attribute.</t>
 
           <t>Unless otherwise specified a successful PUT operation returns a
@@ -1220,67 +1221,128 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
 
         <section anchor="edit-resource-with-patch"
                  title="Modifying with PATCH" toc="default">
-          <t>PATCH is OPTIONAL. PATCH enables clients to send only those
-          attributes requiring modification, reducing network and processing
-          overhead. Attributes may be deleted, replaced, merged, or added in a
-          single request. A SCIM PATCH request allows a client to specify a
-          sequence of one or more attribute add, remove, or replace
-          operations. The format of the SCIM PATCH request is based on JSON
-          PATCH <xref target="RFC6902"/>. One key difference between SCIM
-          PATCH and JSON PATCH is that SCIM does not support array
-          indexing.</t>
+          <t>HTTP PATCH is an OPTIONAL server function that enables clients to
+          update one or more attributes of a SCIM resource using a sequence of
+          operations to <spanx style="verb">add</spanx>, <spanx style="verb">remove</spanx>,
+          or <spanx style="verb">replace</spanx> values. The general form of
+          the SCIM patch request is based on JavaScript Object Notation (JSON)
+          Patch <xref target="RFC6902"/>. One difference between SCIM patch
+          and JSON patch is that SCIM servers do not support array indexing
+          and may not support all <xref target="RFC6902"/> operation
+          types.</t>
 
-          <t>The body of a PATCH request MUST contain ONE or more Patch
-          operations . The server MUST return either a 200 OK response code
-          and the entire resource (subject to the "attributes" query parameter
-          - see <xref format="default"
+          <t>The body of an HTTP PATCH request MUST contain one or more patch
+          operation objects. A patch operation object MUST have exactly one
+          "op" member, whose value indicates the operation to perform and MAY
+          be one of <spanx style="verb">add</spanx>, <spanx style="verb">remove</spanx>,
+          or <spanx style="verb">replace</spanx> . The semantics of each
+          operation are defined below.</t>
+
+          <t/>
+
+          <figure align="left" anchor="pathABNF" title="SCIM Patch PATH Rule">
+            <preamble>Operation objects MUST have exactly one <spanx
+            style="verb">path</spanx> member which is a <spanx style="verb">String</spanx>
+            containing an attribute path as specified by the following ABNF
+            syntax rule:</preamble>
+
+            <artwork align="center">PATH = attrPath / valuePath [subAttr]</artwork>
+          </figure>
+
+          <t>The rules, <spanx style="verb">attrPath</spanx>, <spanx
+          style="verb">valuePath</spanx>, and <spanx style="verb">subAttr</spanx>
+          are defined in <xref target="filtering"/>. The <spanx style="verb">valuePath</spanx>
+          rule allows specific values of a complex, multi-valued attribute to
+          be selected.<figure align="left">
+              <preamble>Valid examples of <spanx style="verb">path</spanx>
+              values are as follows:</preamble>
+
+              <artwork align="center">"path":"members"
+
+"path":"name.familyName"
+
+"path":"addresses[type eq \"work\"]"
+
+"path":"members[value eq 
+       \"2819c223-7f76-453a-919d-413861904646\"]"
+
+"path":"members[value eq 
+       \"2819c223-7f76-453a-919d-413861904646\"].displayName"</artwork>
+            </figure></t>
+
+          <t>Each operation against an attribute MUST be compatible with the
+          attribute's mutability and schema as defined in the <xref
+          target="I-D.ietf-scim-core-schema">Attribute Types Section
+          of</xref>. For example, a client MAY NOT modify an attribute that
+          has mutability <spanx style="verb">readOnly</spanx>or <spanx
+          style="verb">immutable</spanx>. However, a client MAY <spanx
+          style="verb">add</spanx> a value to an<spanx style="verb">immutable</spanx>
+          attribute if the attribute had no previous value. An operation that
+          is not compatibile with an attribute's mutability or schema SHALL
+          return an error as indicated below.</t>
+
+          <t>Each patch operation represents a single action to be applied to
+          the same SCIM resource specified by the request URI. Operations are
+          applied sequentially in the order they appear in the array. Each
+          operation in the sequence is applied to the target resource; the
+          resulting resource becomes the target of the next operation.
+          Evaluation continues until all operations are successfully applied
+          or until an error condition is encountered.</t>
+
+          <t>A patch request, regardless of the number of operations, SHALL be
+          treated as atomic. If a single operation encounters an error
+          condition, the original SCIM resource MUST be restored, and a
+          failure status SHALL be returned.</t>
+
+          <t>If a request fails. the server SHALL return an HTTP response
+          status code of 400 and a JSON detail error response containing an
+          <spanx style="verb">error</spanx> object that SHOULD be one of the
+          following string values:<list hangIndent="4" style="hanging">
+              <t hangText="malformed_operation"><vspace blankLines="0"/>The
+              JSON operation elements could not successfully be parsed. This
+              may be due to an invalid or missing operation attribute, or it
+              could be due to a missing attribute required by a specific
+              operation.</t>
+
+              <t hangText="mutability"><vspace blankLines="0"/>The operation
+              requested is not compatible with the mutability of the selected
+              attribute.</t>
+
+              <t hangText="invalid_path"><vspace blankLines="0"/>The path
+              attribute was invalid or malformed.</t>
+
+              <t hangText="no_target"><vspace blankLines="0"/>The <spanx
+              style="verb">path</spanx> specified did not return a target
+              against which the operation could be performed.</t>
+
+              <t hangText="invalid_value"><vspace blankLines="0"/>The
+              operation <spanx style="verb">value</spanx> was missing or was
+              not compatable with the targeted attribute's type</t>
+            </list></t>
+
+          <t>The following is a non-normative example of an error response to
+          a patch request.</t>
+
+          <t><figure>
+              <artwork>HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+  "error":"mutability",
+  "error_description":"Attribute 'id' is readOnly."
+}</artwork>
+            </figure></t>
+
+          <t>On successful completion, the server MUST return either a 200 OK
+          response code and the entire resource (subject to the "attributes"
+          query parameter - see <xref format="default"
           target="addtl-retrieval-query-params">Additional Retrieval Query
           Parameters</xref>) within the response body, or a 204 No Content
           response code and the appropriate response headers for a successful
-          PATCH request. The server MUST return a 200 OK if the "attributes"
+          patch request. The server MUST return a 200 OK if the "attributes"
           parameter is specified on the request.</t>
-
-          <t>Each SCIM PATCH operation contains <spanx style="verb">path</spanx>
-          and/or <spanx style="verb">from</spanx> attributes that are strings
-          containing a SCIM attribute path and an optional SCIM multi-value
-          array filter as specified by the ABNF syntax <spanx style="verb">ATPATH</spanx>
-          as per <xref target="filterABNF"/>.</t>
-
-          <t><figure align="center">
-              <preamble>Valid example <spanx style="verb">path</spanx> and
-              <spanx style="verb">from</spanx> values are as
-              follows:</preamble>
-
-              <artwork>"path" = "members"
-
-"path" = "name.familyName"
-
-"path" = "addresses[type eq \"work\"]"
-
-"path" = "members[value eq 
-         \"2819c223-7f76-453a-919d-413861904646\"]"
-
-"path" = "members[value eq 
-         \"2819c223-7f76-453a-919d-413861904646\"].displayName"</artwork>
-            </figure></t>
-
-          <section title="Supported Patch Operations">
-            <t>SCIM supports 3 operations: <spanx style="verb">add</spanx>,
-            <spanx style="verb">remove</spanx>, and <spanx style="verb">replace</spanx>.</t>
-
-            <t>A PATCH MAY contain one or more patch operations in a JSON
-            array. The PATCH request comprising the entire array of operations
-            SHALL be treated as atomic. If a single operation encounters an
-            error condition, the original SCIM resource MUST be restored.</t>
-
-            <t>Each operation represents a single action to be applied to the
-            same SCIM resource specified by the request URI. Operations are
-            applied sequentially in the order they appear in the array. Each
-            operation in the sequence is applied to the target resource; the
-            resulting resource becomes the target of the next operation.
-            Evaluation continues until all operations are successfully applied
-            or until an error condition is encountered.</t>
-          </section>
 
           <section anchor="addOp" title="Add Operation">
             <t>The <spanx style="verb">add</spanx> operation performs one of
@@ -1300,12 +1362,13 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
                 exist (has no value), the attribute is added with the new
                 value.</t>
 
+                <t>If the target location exists, the value is replaced.</t>
+
                 <t>If the target location already contains the value
                 specified, no changes SHOULD be made to the resource and a
-                success response SHOULD be returned.</t>
-
-                <t>If the target location already exists the value is
-                replaced.</t>
+                success response SHOULD be returned. Unless other operations
+                change the resource, this operation SHALL NOT change the
+                modify timestamp of the resource.</t>
               </list></t>
 
             <t>The operation MUST contain a <spanx style="verb">value</spanx>
@@ -1333,7 +1396,7 @@ If-Match: W/"a330bc54f0671c9"
   "value":[
     {
       "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
+      "$ref": "https://example.com/v2/Users/2819c223...413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
     }
   ]
@@ -1347,11 +1410,11 @@ If-Match: W/"a330bc54f0671c9"
             The server responds with either the entire updated Group or no
             response body:</t>
 
-            <figure align="left">
+            <figure>
               <artwork>HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
 ETag: W/"b431af54f0671a2"
-Location: "https://example.com/v2/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"</artwork>
+Location: "https://example.com/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"</artwork>
             </figure>
           </section>
 
@@ -1422,7 +1485,7 @@ If-Match: W/"a330bc54f0671c9"
 
               <artwork>{ 
   "op":"remove",
-  "path":"address[type eq \"work\" and value ew \"example.com\"]"
+  "path":"emails[type eq \"work\" and value ew \"example.com\"]"
 }</artwork>
             </figure>
 
@@ -1440,7 +1503,7 @@ If-Match: W/"a330bc54f0671c9"
 [
   { 
     "op":"remove",
-    "path":"members[value eq\"2819c223-...919d-413861904646\"]"
+    "path":"members[value eq\"2819c223...919d-413861904646\"]"
   },
   {
     "op":"add",
@@ -1448,8 +1511,8 @@ If-Match: W/"a330bc54f0671c9"
     "value": [
       {
         "display": "James Smith",
-        "$ref": "https://example.com/v2/Users/08e1d05d-...8b96-473d93df9210",
-        "value": "08e1d05d-121c-4561-8b96-473d93df9210"
+        "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
+        "value": "08e1d05d...473d93df9210"
       }
     ]
   }
@@ -1476,12 +1539,12 @@ If-Match: W/"a330bc54f0671c9"
     "value":[
     {
       "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
+      "$ref": "https://example.com/v2/Users/2819c223...413861904646",
       "value": "2819c223-7f76-453a-919d-413861904646"
     },
     {
       "display": "James Smith",
-      "$ref": "https://example.com/v2/Users/08e1d05d-121c-...473d93df9210",
+      "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
       "value": "08e1d05d-121c-4561-8b96-473d93df9210"
     }]
   }
@@ -1536,13 +1599,13 @@ If-Match: W/"a330bc54f0671c9"
   "value":[
     {
       "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
+      "$ref": "https://example.com/v2/Users/2819c223...413861904646",
+      "value": "2819c223...413861904646"
     },
     {
       "display": "James Smith",
-      "$ref": "https://example.com/v2/Users/08e1d05d-121c-...473d93df9210",
-      "value": "08e1d05d-121c-4561-8b96-473d93df9210"
+      "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
+      "value": "08e1d05d...473d93df9210"
     }
   ]
 }</artwork>
@@ -1613,16 +1676,13 @@ If-Match: W/"a330bc54f0671c9"
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
-          <artwork align="left" alt="" height="" name="" type="" width=""
+          <artwork align="center" alt="" height="" name="" type="" width=""
                    xml:space="preserve">
-            
-
 DELETE /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Authorization: Bearer h480djs93hd8
 If-Match: W/"c310cd84f0281b7"
-
-                                      </artwork>
+                                  </artwork>
         </figure>
 
         <t>In response to a successful delete, the server SHALL respond with
@@ -1631,9 +1691,8 @@ If-Match: W/"c310cd84f0281b7"
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
-          <artwork align="left" alt="" height="" name="" type="" width=""
-                   xml:space="preserve">
-            
+          <artwork align="center" alt="" height="" name="" type="" width=""
+                   xml:space="preserve">            
 HTTP/1.1 204 No Content
             </artwork>
         </figure>
@@ -1642,10 +1701,8 @@ HTTP/1.1 204 No Content
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
-          <artwork align="left" alt="" height="" name="" type="" width=""
+          <artwork align="center" alt="" height="" name="" type="" width=""
                    xml:space="preserve">
-            
-
 GET /Users/2819c223-7f76-453a-919d-413861904646
 Host: example.com
 Authorization: Bearer h480djs93hd8
@@ -1656,9 +1713,8 @@ Authorization: Bearer h480djs93hd8
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
-          <artwork align="left" alt="" height="" name="" type="" width=""
-                   xml:space="preserve">
-            
+          <artwork align="center" alt="" height="" name="" type="" width=""
+                   xml:space="preserve">            
 HTTP/1.1 404 NOT FOUND
 
 {
@@ -1670,8 +1726,7 @@ HTTP/1.1 404 NOT FOUND
     }
   ]
 }
-
-            </artwork>
+        </artwork>
         </figure>
       </section>
 
@@ -1851,19 +1906,20 @@ Content-Length: ...
       }
     },
     {
-      "method":"PATCH",
-      "path":"/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
-      "version":"W\/\"edac3253e2c0ef2\"",
-      "data":{
-        "schemas":["urn:scim:schemas:core:2.0:User"],
-        "id":"5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
-        "userName":"Dave",
-        "meta":{
-          "attributes":[
-            "nickName"
-          ]
+      "method": "PATCH",
+      "path": "/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
+      "version": "W/\"edac3253e2c0ef2\"",
+      "data": {[
+        {
+            "op": "remove",
+            "path": "nickName"
+        },
+        {
+            "op": "add",
+            "path": "userName",
+            "value": "Dave"
         }
-      }
+      ]}
     },
     {
       "method":"DELETE",
@@ -2377,7 +2433,7 @@ Host: example.com
           </figure></t>
 
         <t>Service providers MUST support the Accept Headers "Accept:
-        application/json" for <xref target="RFC4627"/>. The format defaults to
+        application/json" for <xref target="RFC7159"/>. The format defaults to
         JSON if no format is specified.</t>
 
         <t>Singular attributes are encoded as string name-value-pairs in JSON;
@@ -2852,9 +2908,7 @@ X-HTTP-Method-Override: DELETE
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3896.xml' ?>
-
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml'?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2246.xml'?>
 
@@ -2866,7 +2920,11 @@ X-HTTP-Method-Override: DELETE
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6750.xml'?>
 
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.7159.xml'?>
+
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-25.xml'?>
+
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-scim-core-schema-03.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-reschke-http-status-308-07.xml'?>
 
@@ -2888,8 +2946,6 @@ X-HTTP-Method-Override: DELETE
     </references>
 
     <references title="Informative References">
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml'?>
-
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6902.xml'?>
 
       <reference anchor="OpenSearch">
@@ -2979,6 +3035,8 @@ X-HTTP-Method-Override: DELETE
           <t>18 - New PATCH command based on JSON Patch (RFC6902)</t>
 
           <t>- Provided ABNF specification for filters (used in PATCH)</t>
+
+          <t>- Updated references to RFC4627 to RFC7159</t>
         </list></t>
     </section>
   </back>
