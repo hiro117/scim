@@ -48,7 +48,7 @@
       </address>
     </author>
 
-    <date day="04" month="March" year="2014"/>
+    <date day="25" month="April" year="2014"/>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
@@ -171,17 +171,19 @@
       such as returnability <xref target="schemas-attribute">Resource's schema
       endpoint</xref>.</t>
 
-      <t>Attribute names SHOULD be camelCased. SCIM resources represented in
-      JSON MUST specify schema via the <spanx style="verb">schemas</spanx>
-      attribute<xref target="schemas-attribute"/>. Attribute names should
-      conform to the following ABNF <xref target="RFC5234"/> rules:<figure
-          anchor="attrABNF">
-          <artwork>ATTRNAME   = ALPHA *(nameChar)
+      <t>Attribute names SHOULD be camelCased. SCIM resources are represented
+      in JSON <xref target="RFC7159"/> and MUST specify schema via the <spanx
+      style="verb">schemas</spanx> attribute per <xref
+      target="schemas-attribute"/>. </t>
+
+      <t>Attribute names MUST conform to the following ABNF <xref
+      target="RFC5234"/> rules:<figure anchor="attrABNF">
+          <artwork align="center">ATTRNAME   = ALPHA *(nameChar)
 nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         </figure></t>
 
       <section anchor="attribute-types" title="Attribute Data Types">
-        <t>Attribute data types are derived from JSON <xref target="RFC4627"/>
+        <t>Attribute data types are derived from JSON <xref target="RFC7159"/>
         and unless otherwise specified have the following characteristics (see
         <xref target="schema-schema"/> for attribute characteristic
         definitions):<list>
@@ -204,7 +206,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
         <section anchor="type-string" title="String">
           <t>A sequence of zero or more Unicode characters. The JSON format is
-          defined in <xref target="RFC4627">Section 2.5</xref> . A <spanx
+          defined in <xref target="RFC7159">Section 7</xref> . A <spanx
           style="verb">String</spanx> attribute MAY specify a required data
           format. Additionally, when canonical values are specified service
           providers SHOULD conform to those values if appropriate, but MAY
@@ -215,18 +217,18 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-boolean" title="Boolean">
           <t>The literal <spanx style="verb">true</spanx> or <spanx
           style="verb">false</spanx>. The JSON format is defined in <xref
-          target="RFC4627">Section 2.1</xref> .</t>
+          target="RFC7159">Section 3</xref> .</t>
         </section>
 
         <section anchor="type-decimal" title="Decimal">
           <t>A real number with at least one digit to the left and right of
           the period. The JSON format is defined in <xref
-          target="RFC4627">Section 2.4</xref> .</t>
+          target="RFC7159">Section 6</xref> .</t>
         </section>
 
         <section anchor="type-integer" title="Integer">
           <t>A decimal number with no fractional digits. The JSON format is
-          defined in <xref target="RFC4627">Section 2.4</xref> with the
+          defined in <xref target="RFC7159">Section 6</xref> with the
           additional constraint that the value MUST NOT contain fractionial or
           exponent parts.</t>
         </section>
@@ -238,7 +240,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>Values represented in JSON MUST conform to the XML constraints
           above and are represented as a JSON String per <xref
-          target="RFC4627">Section 2.5</xref>.</t>
+          target="RFC7159">Section 7</xref>.</t>
         </section>
 
         <section anchor="type-binary" title="Binary">
@@ -248,7 +250,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>Values represented in JSON MUST conform to the XML constraints
           above and are represented as a JSON String per<xref
-          target="RFC4627">Section 2.5</xref>.</t>
+          target="RFC7159">Section 2.7</xref>.</t>
         </section>
 
         <section anchor="type-reference" title="Reference">
@@ -274,7 +276,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-complex" title="Complex">
           <t>A singular or multi-valued attribute whose value is a composition
           of one or more simple Attributes. The JSON format is defined in
-          <xref target="RFC4627">Section 2.2</xref> .</t>
+          <xref target="RFC7159">Section 4</xref> .</t>
         </section>
       </section>
 
@@ -304,23 +306,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             this instance should be removed from the resource.</t>
 
             <t hangText="value">The attribute's significant value; e.g., the
-            e-mail address, phone number, etc. Attributes that define a <spanx
-            style="verb">value</spanx> sub-attribute MAY be alternately
-            represented as a collection of primitive types. For example:
-            <figure>
-                <artwork>
-  {
-    "emails": [
-      {"value":"bjensen@example.com"},
-      {"value":"babs@example.com"}
-    ]
-  } </artwork>
-              </figure> May also be represented as: <figure>
-                <artwork>
-  {
-    "emails": ["bjensen@example.com","babs@example.com"]
-  }</artwork>
-              </figure></t>
+            e-mail address, phone number, etc.</t>
 
             <t hangText="$ref">The reference URI of the target resource, if
             the attribute is a reference.</t>
@@ -520,25 +506,46 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             and <spanx style="verb">Unknown</spanx> but any value may be
             used.</t>
 
-            <t hangText="preferredLanguage">Indicates the user's preferred
-            written or spoken language. Generally used for selecting a
-            localized User interface. Valid values are concatenation of the
-            ISO 639-1 two letter language code per <xref target="ISO639-2"/>,
-            an underscore, and the ISO 3166-1 2 letter country code<xref
-            target="ISO3166"/>; e.g., 'en_US' specifies the language English
-            and country US.</t>
+            <t anchor="preferredLanguage"
+            hangText="preferredLanguage">Indicates the user's preferred
+            written or spoken languages and is generally used for selecting a
+            localized User interface. The value indicates the set of natural
+            languages that are preferred. The format of the value is same as
+            the Accept-Language header field (not including
+            "Accept-Language:") of HTTP and is specified in <xref
+            target="I-D.ietf-httpbis-p2-semantics">Section 5.3.5 of</xref>.
+            The intent of this value is to enable cloud applications to
+            perform matching of language tags <xref target="RFC4647"/> to the
+            user's language preferences regardless of what may be indicated by
+            a user agent (which might be shared), or in a non-user present
+            interaction (such as in a delegated OAuth2 <xref
+            target="RFC6749"/> style interaction) where normal HTTP
+            Accept-Language header negotiation cannot take place.</t>
 
             <t hangText="locale">Used to indicate the User's default location
             for purposes of localizing items such as currency, date time
-            format, numerical representations, etc. A locale value is a
-            concatenation of the ISO 639-1 two letter language code<xref
-            target="ISO639-2"/>, an underscore, and the ISO 3166-1 2 letter
-            country code<xref target="ISO3166"/>; e.g., 'en_US' specifies the
-            language English and country US.</t>
+            format, numerical representations, etc. A valid value is a
+            language tag as defined in <xref target="RFC5646"/>. Computer
+            languages are explicitly excluded.</t>
 
-            <t hangText="timezone">The User's time zone in the "Olson"
-            timezone database format<xref target="Olson-TZ"/>;
-            e.g.,'America/Los_Angeles'.</t>
+            <t>A language tag is a sequence of one or more case-insensitive
+            subtags, each separated by a hyphen character ("-", %x2D). For
+            backwards compatibility reasons, servers MAY accept tags separated
+            by an underscore character ("_", %5F). In most cases, a language
+            tag consists of a primary language subtag that identifies a broad
+            family of related languages (e.g., "en" = English) which is
+            optionally followed by a series of subtags that refine or narrow
+            that language's range (e.g., "en-CA" = the variety of English as
+            communicated in Canada). Whitespace is not allowed within a
+            language tag. Example tags include:<figure align="center">
+                <artwork align="center">fr, en-US, es-419, az-Arab, x-pig-latin, man-Nkoo-GN</artwork>
+              </figure>See <xref target="RFC5646"/> for further
+            information.</t>
+
+            <t hangText="timezone">The User's time zone in IANA Time Zone
+            database format <xref target="RFC6557"/>, also known as "Olson"
+            timezone database format<xref target="Olson-TZ"/>; For example:
+            <spanx style="verb">America/Los_Angeles</spanx>.</t>
 
             <t hangText="active">A Boolean value indicating the user's
             administrative status. The definitive meaning of this attribute is
@@ -1238,8 +1245,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage":"en_US",
-  "locale": "en_US",
+  "preferredLanguage":"en-US",
+  "locale": "en-US",
   "timezone": "America/Los_Angeles",
   "active":true,
   "password":"t1meMa$heen",
@@ -1374,8 +1381,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
   ],
   "userType": "Employee",
   "title": "Tour Guide",
-  "preferredLanguage":"en_US",
-  "locale": "en_US",
+  "preferredLanguage":"en-US",
+  "locale": "en-US",
   "timezone": "America/Los_Angeles",
   "active":true,
   "password":"t1meMa$heen",
@@ -2625,9 +2632,56 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
       <?rfc include="reference.RFC.3966"?>
 
-      <?rfc include="reference.RFC.4627"?>
+      <?rfc include="reference.RFC.7159"?>
+
+      <?rfc include="reference.RFC.4647"?>
 
       <?rfc include="reference.RFC.5234"?>
+
+      <?rfc include="reference.RFC.5646"?>
+
+      <?rfc include="reference.RFC.6557"?>
+
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-25.xml'?>
+
+      <reference anchor="XML-Schema">
+        <front>
+          <title>XML Schema Part 2: Datatypes Second Edition</title>
+
+          <author fullname="Paul V. Biron" initials="P." surname="Biron">
+            <organization>Kaiser Permanente for Health Level
+            Seven</organization>
+          </author>
+
+          <author fullname="Ashok Malhotra" initials="A." surname="Malhotra">
+            <organization>Microsoft (formerly of IBM)</organization>
+          </author>
+
+          <date day="28" month="October" year="2004"/>
+        </front>
+
+        <format target="http://www.w3.org/TR/xmlschema-2/" type="HTML"/>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include="reference.RFC.4512"?>
+
+      <?rfc include="reference.RFC.6749"?>
+
+      <reference anchor="Olson-TZ">
+        <front>
+          <title>Sources for Time Zone and Daylight Saving Time Data</title>
+
+          <author>
+            <organization/>
+          </author>
+
+          <date/>
+        </front>
+
+        <format target="http://www.twinsun.com/tz/tz-link.htm" type="HTML"/>
+      </reference>
 
       <reference anchor="ISO3166">
         <front>
@@ -2658,43 +2712,6 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <format target="http://www.loc.gov/standards/iso639-2/php/code_list.php"
                 type="HTML"/>
       </reference>
-
-      <reference anchor="Olson-TZ">
-        <front>
-          <title>Sources for Time Zone and Daylight Saving Time Data</title>
-
-          <author>
-            <organization/>
-          </author>
-
-          <date/>
-        </front>
-
-        <format target="http://www.twinsun.com/tz/tz-link.htm" type="HTML"/>
-      </reference>
-
-      <reference anchor="XML-Schema">
-        <front>
-          <title>XML Schema Part 2: Datatypes Second Edition</title>
-
-          <author fullname="Paul V. Biron" initials="P." surname="Biron">
-            <organization>Kaiser Permanente for Health Level
-            Seven</organization>
-          </author>
-
-          <author fullname="Ashok Malhotra" initials="A." surname="Malhotra">
-            <organization>Microsoft (formerly of IBM)</organization>
-          </author>
-
-          <date day="28" month="October" year="2004"/>
-        </front>
-
-        <format target="http://www.w3.org/TR/xmlschema-2/" type="HTML"/>
-      </reference>
-    </references>
-
-    <references title="Informative References">
-      <?rfc include="reference.RFC.4512"?>
 
       <reference anchor="PortableContacts">
         <front>
@@ -2776,11 +2793,19 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         </list></t>
 
       <t>Draft 04 - PH - Revisions based on the following tickets:<list>
+          <t>43 - Drop short-hand notation for complex multi-valued
+          attributes</t>
+
           <t>61 - Specify attribute name limitations</t>
 
           <t>62 - Fix 'mutability' normative language</t>
 
           <t>63 - Fix incorrect EnterpriseUser schema reference</t>
+
+          <t>68 - Update JSON references from RFC4627 to RFC7159</t>
+
+          <t>71 - Made corrections to language tags in compliance with BCP47 /
+          RFC5646</t>
         </list></t>
     </section>
   </back>
