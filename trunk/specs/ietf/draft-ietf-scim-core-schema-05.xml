@@ -163,13 +163,7 @@
       least one simple or complex value either of which may be multi-valued.
       SCIM schema defines the data type, plurality and other distinguishing
       features of an attribute. Unless otherwise specified all attributes are
-      modifiable by consumers. Attribute definitions contain a property <spanx
-      style="verb">mutability</spanx> that determines whether an attribute is:
-      <spanx style="verb">readOnly</spanx>, <spanx style="verb">writeOnly</spanx>,
-      <spanx style="verb">immutable</spanx>, or <spanx style="verb">readWrite</spanx>(the
-      default). Additionally, service providers MAY define other properties
-      such as returnability <xref target="schemas-attribute">Resource's schema
-      endpoint</xref>.</t>
+      modifiable by consumers.</t>
 
       <t>Attribute names SHOULD be camelCased. SCIM resources are represented
       in JSON <xref target="RFC7159"/> and MUST specify schema via the <spanx
@@ -230,7 +224,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-integer" title="Integer">
           <t>A decimal number with no fractional digits. The JSON format is
           defined in <xref target="RFC7159">Section 6</xref> with the
-          additional constraint that the value MUST NOT contain fractionial or
+          additional constraint that the value MUST NOT contain fractional or
           exponent parts.</t>
         </section>
 
@@ -530,12 +524,12 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             languages are explicitly excluded.</t>
 
             <t>A language tag is a sequence of one or more case-insensitive
-            subtags, each separated by a hyphen character ("-", %x2D). For
+            sub-tags, each separated by a hyphen character ("-", %x2D). For
             backwards compatibility reasons, servers MAY accept tags separated
             by an underscore character ("_", %5F). In most cases, a language
-            tag consists of a primary language subtag that identifies a broad
+            tag consists of a primary language sub-tag that identifies a broad
             family of related languages (e.g., "en" = English) which is
-            optionally followed by a series of subtags that refine or narrow
+            optionally followed by a series of sub-tags that refine or narrow
             that language's range (e.g., "en-CA" = the variety of English as
             communicated in Canada). Whitespace is not allowed within a
             language tag. Example tags include:<figure align="center">
@@ -2634,7 +2628,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <section title="Registering New SCIM Schemas">
         <t>This section defines the process for registering new SCIM schemas
         with IANA. A schema URI is used as a value in the schemas attribute
-        <xref target="schemas-attribute"/> for the purpose of distinguishing
+        (<xref target="schemas-attribute"/>) for the purpose of distinguishing
         extensions used in a SCIM resource.</t>
 
         <section title="Registration Procedure">
@@ -2702,8 +2696,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
       <section title="Initial SCIM Schema Registry">
         <t>The IANA has created and will maintain the following registries for
-        SCIM schema URIs with pointers to appropriate reference documents.
-        </t>
+        SCIM schema URIs with pointers to appropriate reference documents.</t>
 
         <texttable title="SCIM Schema URIs for Data Resources">
           <ttcol>Schema URI</ttcol>
@@ -2956,6 +2949,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>72 - Added text to indicate UTF-8 is default and mandatory
           encoding format per BCP18</t>
+
+          <t>- Typo corrections and removed some redundant text</t>
         </list></t>
     </section>
   </back>

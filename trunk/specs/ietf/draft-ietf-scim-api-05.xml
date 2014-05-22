@@ -13,7 +13,7 @@
 <?rfc subcompact="no"?>
 <rfc category="std" docName="draft-ietf-scim-api-05" ipr="trust200902">
   <front>
-    <title abbrev="draft-scim-api-05">System for Cross-Domain Identity
+    <title abbrev="draft-ietf-scim-api-05">System for Cross-Domain Identity
     Management:Protocol</title>
 
     <author fullname="Phil Hunt" initials="P." role="editor" surname="Hunt">
@@ -1757,7 +1757,7 @@ HTTP/1.1 404 NOT FOUND
       </section>
 
       <section anchor="bulk-resources" title="Bulk" toc="default">
-        <t>The SCIM bulk operation is an opetional server feature that enables
+        <t>The SCIM bulk operation is an optional server feature that enables
         clients to send a potentially large collection of resource operations
         in a single request. The body of a a bulk operation contains a set of
         HTTP resource operations using one of the API supported HTTP methods;
