@@ -56,7 +56,7 @@
       </address>
     </author>
 
-    <date month="May" year="2014"/>
+    <date month="June" year="2014"/>
 
     <keyword>SCIM</keyword>
 
@@ -136,8 +136,8 @@
       taken. Because this protocol uses HTTP response status codes as the
       primary means of reporting the result of a request, servers are advised
       to respond to unauthorized or unauthenticated requests using the 401
-      response code in accordance with section 10.4.2 of <xref
-      target="RFC7236">Section 3.1</xref>.</t>
+      response code in accordance with <xref target="RFC7235">Section 3.1
+      of</xref>.</t>
 
       <t>All examples assume OAuth2 bearer token <xref target="RFC6750"/>;
       e.g.,</t>
@@ -272,8 +272,22 @@ Authorization: Bearer h480djs93hd8
       <section anchor="create-resource" title="Creating Resources"
                toc="default">
         <t>To create new resources, clients send POST requests to the resource
-        endpoint; i.e., <spanx style="verb">/Users</spanx> or <spanx
-        style="verb">/Groups</spanx>.</t>
+        container endpoint such as: <spanx style="verb">/Users</spanx> or
+        <spanx style="verb">/Groups</spanx>.</t>
+
+        <t>Attributes whose mutability is <spanx style="verb">readOnly</spanx>,
+        that are included in the request body SHALL be ignored.</t>
+
+        <t>Attributes whose mutability is <spanx style="verb">readWrite</spanx>,
+        that are omitted from the request body, MAY be assumed to be not
+        asserted by the client. The service provider MAY assign a default
+        value to non-asserted attributes in the final resource representation.
+        Service providers MAY take into account whether a client has access
+        to, or understands, all of the resource's attributes when deciding
+        whether non-asserted attributes SHALL be defaulted. Clients that would
+        like to override a server defaults, MAY specify <spanx style="verb">null</spanx>
+        for a single-valued attribute or an empty array <spanx style="verb">[]</spanx>
+        for a multi-valued attribute to clear all values.</t>
 
         <t>Successful resource creation is indicated with a 201 ("Created")
         response code. Upon successful creation, the response body MUST
@@ -442,7 +456,7 @@ ETag: W/"f250dd84f0671c3"
           they don't recognize.</t>
 
           <t>List and query responses MUST be identified using the following
-          URI: <spanx style="verb">urn:scim:schemas:core:2.0:ListResponse</spanx>.
+          URI: <spanx style="verb">urn:scim:api:messages:2.0:ListResponse</spanx>.
           The following attributes are defined for list and query
           responses:</t>
 
@@ -497,7 +511,7 @@ Authorization: Bearer h480djs93hd8
 Content-Type: application/scim+json
 
 {
-  "schemas":["urn:scim:schemas:core:2.0:ListResponse"],
+  "schemas":["urn:scim:api:messages:2.0:ListResponse"],
   "totalResults":2,
   "Resources":[
     {
@@ -980,7 +994,7 @@ Authorization: Bearer h480djs93hd8
   "totalResults":100,
   "itemsPerPage":10,
   "startIndex":1,
-  "schemas":["urn:scim:schemas:core:2.0"],
+  "schemas":["urn:scim:api:messages:2.0"],
   "Resources":[{
     ...
   }]
@@ -1006,7 +1020,7 @@ Authorization: Bearer h480djs93hd8
           parameters as defined in <xref target="query-resources"/>.</t>
 
           <t>Search requests MUST be identified using the following URI:
-          'urn:scim:schemas:core:2.0:SearchRequest'. The following attributes
+          'urn:scim:api:messages:2.0:SearchRequest'. The following attributes
           are defined for search requests:</t>
 
           <t><list style="hanging">
@@ -1074,7 +1088,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:SearchRequest"],
+  "schemas": ["urn:scim:api:messages:2.0:SearchRequest"],
   "attributes": ["displayName", "userName"],
   "filter": "displayName sw \"smith\"",
   "startIndex": 1,
@@ -1094,7 +1108,7 @@ Content-Length: ...
 Content-Type: application/scim+json
 Location: https://example.com/.search
 {
-  "schemas": ["urn:scim:schemas:core:2.0:ListResponse"],
+  "schemas": ["urn:scim:api:messages:2.0:ListResponse"],
   "totalResults":100,
   "itemsPerPage":10,
   "startIndex":1,
@@ -1136,11 +1150,11 @@ Location: https://example.com/.search
         <section anchor="edit-resource-with-put" title="Replacing with PUT"
                  toc="default">
           <t>HTTP PUT is used to perform a full update of a resource's
-          attributes. Clients who MAY have previously retrieved the entire
-          resource in advance, MAY replace the resource using an HTTP PUT.
-          Because SCIM resource identifiers are typically assigned by the
-          service provider, HTTP PUT SHOULD NOT be used to create a new
-          resource.</t>
+          attributes. Clients that MAY have previously retrieved the entire
+          resource in advance and revised it, MAY replace the resource using
+          an HTTP PUT. Because SCIM resource identifiers are typically
+          assigned by the service provider, HTTP PUT SHOULD NOT be used to
+          create new resources.</t>
 
           <t>As the operation intent is to replace all attributes, SCIM
           clients MAY send all attributes regardless of each attribute's
@@ -1148,7 +1162,7 @@ Location: https://example.com/.search
           according to the following attribute mutability rules:<list
               style="hanging">
               <t hangText="readWrite, writeOnly">Any values provided SHALL
-              replace the existing attribute values. </t>
+              replace the existing attribute values.</t>
 
               <t hangText="immutable">If value(s) are already set for the
               attribute, the input value(s) MUST match or HTTP status 400
@@ -1165,11 +1179,16 @@ Location: https://example.com/.search
 
           <t>Attributes whose mutability is <spanx style="verb">readWrite</spanx>,
           that are omitted from the request body, MAY be assumed to be not
-          asserted by the client and the service provider SHOULD remove these
-          attributes from the final resource representation. Service providers
-          MAY take into account whether a client has access to, or
-          understands, all attributes in deciding whether non-asserted
-          attributes SHALL be removed.</t>
+          asserted by the client. The service provider MAY assume any existing
+          values are to be cleared or the service provider MAY assign a
+          default value to the final resource representation. Service
+          providers MAY take into account whether a client has access to, or
+          understands, all of the resource's attributes when deciding whether
+          non-asserted attributes SHALL be removed or defaulted. Clients that
+          would like to override a server defaults, MAY specify <spanx
+          style="verb">null</spanx> for a single-valued attribute or an empty
+          array <spanx style="verb">[]</spanx> for a multi-valued attribute to
+          clear all values.</t>
 
           <t>Unless otherwise specified a successful PUT operation returns a
           200 OK response code and the entire resource within the response
@@ -1188,7 +1207,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas":["urn:scim:schemas:core:2.0:User"],
+  "schemas":["urn:scim:api:messages:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
@@ -1198,6 +1217,7 @@ If-Match: W/"a330bc54f0671c9"
     "givenName":"Barbara",
     "middleName":"Jane"
   },
+  "roles":[],
   "emails":[
     {
         "value":"bjensen@example.com"
@@ -1222,7 +1242,7 @@ Content-Type: application/scim+json
 ETag: W/"b431af54f0671a2"
 Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
 {
-  "schemas":["urn:scim:schemas:core:2.0:User"],
+  "schemas":["urn:scim:api:messages:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
@@ -1271,7 +1291,7 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           operation are defined below.</t>
 
           <t>Each operation object MUST contain the following <spanx
-          style="verb">schemas</spanx> URI: <spanx style="verb">urn:scim:schemas:core:2.0:PatchOp</spanx></t>
+          style="verb">schemas</spanx> URI: <spanx style="verb">urn:scim:api:messages:2.0:PatchOp</spanx></t>
 
           <t/>
 
@@ -1365,7 +1385,7 @@ Cache-Control: no-store
 Pragma: no-cache
   
 {
-  "schemas": ["urn:scim:schemas:core:2.0:Error"],
+  "schemas": ["urn:scim:api:messages:2.0:Error"],
   "Errors":[
     {
       "error":"mutability",
@@ -1431,7 +1451,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"add",
   "path":"members",
   "value":[
@@ -1502,7 +1522,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"remove",
   "path":"members[value eq \"2819c223-7f76-...413861904646\"]"
 }</artwork>
@@ -1518,7 +1538,7 @@ Content-Type: application/scim+json
 Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
-{ "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+{ "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"remove","path":"members"}</artwork>
             </figure>
 
@@ -1527,7 +1547,7 @@ If-Match: W/"a330bc54f0671c9"
               attribute (request headers removed for brevity):</preamble>
 
               <artwork>{ 
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"remove",
   "path":"emails[type eq \"work\" and value ew \"example.com\"]"
 }</artwork>
@@ -1546,12 +1566,12 @@ If-Match: W/"a330bc54f0671c9"
 
 [
   { 
-    "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+    "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
     "op":"remove",
     "path":"members[value eq\"2819c223...919d-413861904646\"]"
   },
   {
-    "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+    "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
     "op":"add",
     "path":"members",
     "value": [
@@ -1578,10 +1598,10 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 [
-  { "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  { "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
     "op":"remove","path":"members"},
   {
-    "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+    "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
     "op":"add",
     "path":"members",
     "value":[
@@ -1642,7 +1662,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"replace",
   "path":"members",
   "value":[
@@ -1672,7 +1692,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 { 
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"replace",
   "path":"addresses[type eq \"work\"]",
   "value":
@@ -1703,7 +1723,7 @@ Authorization: Bearer h480djs93hd8
 If-Match: W/"a330bc54f0671c9"
 
 { 
-  "schemas": ["urn:scim:schemas:core:2.0:PatchOp"],
+  "schemas": ["urn:scim:api:messages:2.0:PatchOp"],
   "op":"replace",
   "path":"addresses[type eq \"work\"].streetAddress",
   "value":"911 Universal City Plaza"
@@ -1769,7 +1789,7 @@ Authorization: Bearer h480djs93hd8
 HTTP/1.1 404 NOT FOUND
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:Error"],
+  "schemas": ["urn:scim:api:messages:2.0:Error"],
   "Errors":[
     {
       "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
@@ -1789,8 +1809,8 @@ HTTP/1.1 404 NOT FOUND
         i.e., POST, PUT, PATCH or DELETE.</t>
 
         <t>Bulk requests are identified using the following URI:
-        'urn:scim:schemas:core:2.0:BulkRequest'. Bulk responses are identified
-        using the following URI: 'urn:scim:schemas:core:2.0:BulkResponse'.
+        'urn:scim:api:messages:2.0:BulkRequest'. Bulk responses are identified
+        using the following URI: 'urn:scim:api:messages:2.0:BulkResponse'.
         Bulk requests and bulk responses share many attributes. Unless
         otherwise specified, each attribute below is present in both bulk
         requests and bulk responses.</t>
@@ -1934,7 +1954,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkRequest"],
   "failOnErrors":1,
   "Operations":[
     {
@@ -1942,7 +1962,7 @@ Content-Length: ...
       "path":"/Users",
       "bulkId":"qwerty",
       "data":{
-        "schemas": ["urn:scim:schemas:core:2.0:User"],
+        "schemas": ["urn:scim:api:messages:2.0:User"],
         "userName":"Alice"
       }
     },
@@ -1951,7 +1971,7 @@ Content-Length: ...
       "path":"/Users/b7c14771-226c-4d05-8860-134711653041",
       "version":"W\/\"3694e05e9dff591\"",
       "data":{
-        "schemas": ["urn:scim:schemas:core:2.0:User"],
+        "schemas": ["urn:scim:api:messages:2.0:User"],
         "id":"b7c14771-226c-4d05-8860-134711653041",
         "userName":"Bob"
       }
@@ -1992,7 +2012,7 @@ HTTP/1.1 200 OK
 Content-Type: application/scim+json
 
 {
-    "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
+    "schemas": ["urn:scim:api:messages:2.0:BulkResponse"],
     "Operations": [
         {
             "location": "https://example.com/v2/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
@@ -2045,7 +2065,7 @@ HTTP/1.1 200 OK
 Content-Type: application/scim+json
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkResponse"],
   "Operations": [
     {
       "method": "POST",
@@ -2073,7 +2093,7 @@ HTTP/1.1 200 OK
 Content-Type: application/scim+json
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkResponse"],
   "Operations": [
     {
       "method": "POST",
@@ -2136,7 +2156,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
@@ -2177,7 +2197,7 @@ HTTP/1.1 200 OK
 Content-Type: application/scim+json
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkResponse"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkResponse"],
   "Operations": [
     {
       "location": "https://example.com/v2/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a",
@@ -2265,7 +2285,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
@@ -2317,7 +2337,7 @@ Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:BulkRequest"],
+  "schemas": ["urn:scim:api:messages:2.0:BulkRequest"],
   "Operations": [
     {
       "method": "POST",
@@ -2377,7 +2397,7 @@ HTTP/1.1 200 OK
 Content-Type: application/scim+json
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:ListResponse"],
+  "schemas": ["urn:scim:api:messages:2.0:ListResponse"],
   "totalResults": 2,
   "Resources": [
     {
@@ -2456,7 +2476,7 @@ Content-Type: application/scim+json
 Location: https://example.com/v2/Bulk/yfCrVJhFIJagAHj8
 
 {
-  "schemas":["urn:scim:schemas:core:2.0:Error"],
+  "schemas":["urn:scim:api:messages:2.0:Error"],
   "Errors":[
     {
       "description":"The size of the bulk operation exceeds the maxPayloadSize (1048576).",
@@ -2641,7 +2661,7 @@ ETag: W/"a330bc54f0671c9"
         MUST return the errors in the body of the response in the client
         requested format containing the error response and, per the HTTP
         specification, human-readable explanations. Error responses are
-        identified using the following URI: 'urn:scim:schemas:core:2.0:Error'.
+        identified using the following URI: 'urn:scim:api:messages:2.0:Error'.
         The following multi-valued attribute is defined in addition to those
         attributes defined in SCIM Core Schema:</t>
 
@@ -2758,7 +2778,7 @@ ETag: W/"a330bc54f0671c9"
 HTTP/1.1 404 NOT FOUND
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:Error"],
+  "schemas": ["urn:scim:api:messages:2.0:Error"],
   "Errors":[
     {
       "description":"Resource 2819c223-7f76-453a-919d-413861904646 not found",
@@ -2772,11 +2792,11 @@ HTTP/1.1 404 NOT FOUND
 
       <section anchor="api-versioning" title="API Versioning">
         <t>The Base URL MAY be appended with a version identifier as a
-        separate segment in the URL path. At this time the only valid
-        identifier is 'v1'. If specified, the version identifier MUST appear
-        in the URL path immediately preceding the resource endpoint and
+        separate segment in the URL path. At this time of this specification,
+        the identifier is 'v2'. If specified, the version identifier MUST
+        appear in the URL path immediately preceding the resource endpoint and
         conform to the following scheme: the character 'v' followed by the
-        desired SCIM version number; e.g., a version 'v1' User request is
+        desired SCIM version number; e.g., a version 'v2' User request is
         specified as /v2/Users. When specified service providers MUST perform
         the operation using the desired version or reject the request. When
         omitted service providers SHOULD perform the operation using the most
@@ -3016,7 +3036,7 @@ If-None-Match: W/"e180ee84f0671b1"
 HTTP/1.1 403 FORBIDDEN
 
 {
-  "schemas": ["urn:scim:schemas:core:2.0:Error"],
+  "schemas": ["urn:scim:api:messages:2.0:Error"],
   "Errors":[
     {
       "description":"Query filter involving 'name' is restricted or confidential",
@@ -3106,11 +3126,13 @@ HTTP/1.1 403 FORBIDDEN
           </list></t>
       </section>
 
-      <section title="SCIM API Schema Registry">
+      <section title="SCIM API Message Schema Registry">
         <t>As per the IANA SCIM Schema Registry in <xref
         target="I-D.ietf-scim-core-schema"/>, the following registers and
         extends the SCIM Schema Registry to define API request/response JSON
-        schema. There is no specific associated resource type.</t>
+        schema URN identifier prefix of <spanx style="verb">urn:scim:api:messages:2.0</spanx>
+        which is part of the URN sub-Namespace for SCIM. There is no specific
+        associated resource type.</t>
 
         <texttable title="SCIM Schema URIs for Data Resources">
           <ttcol>Schema URI</ttcol>
@@ -3119,37 +3141,37 @@ HTTP/1.1 403 FORBIDDEN
 
           <ttcol>Reference</ttcol>
 
-          <c>urn:scim:schemas:core:2.0:ListResponse</c>
+          <c>urn:scim:api:messages:2.0:ListResponse</c>
 
           <c>List/Query Response</c>
 
           <c>See <xref target="query-resources"/></c>
 
-          <c>urn:scim:schemas:core:2.0:SearchRequest</c>
+          <c>urn:scim:api:messages:2.0:SearchRequest</c>
 
           <c>POST Query Request</c>
 
           <c>See <xref target="query-post"/></c>
 
-          <c>urn:scim:schemas:core:2.0:PatchOp</c>
+          <c>urn:scim:api:messages:2.0:PatchOp</c>
 
           <c>Patch Operation</c>
 
           <c>See <xref target="edit-resource-with-patch"/></c>
 
-          <c>urn:scim:schemas:core:2.0:BulkRequest</c>
+          <c>urn:scim:api:messages:2.0:BulkRequest</c>
 
           <c>Bulk Operations Request</c>
 
           <c>See <xref target="bulk-resources"/></c>
 
-          <c>urn:scim:schemas:core:2.0:BulkResponse</c>
+          <c>urn:scim:api:messages:2.0:BulkResponse</c>
 
           <c>Bulk Operations Response</c>
 
           <c>See <xref target="bulk-resources"/></c>
 
-          <c>urn:scim:schemas:core:2.0:Error</c>
+          <c>urn:scim:api:messages:2.0:Error</c>
 
           <c>Error Response</c>
 
@@ -3189,11 +3211,11 @@ HTTP/1.1 403 FORBIDDEN
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.7233.xml'?>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.7236.xml'?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.7235.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-precis-saslprepbis-07.xml'?>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-scim-core-schema-05.xml'?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-scim-core-schema-06.xml'?>
 
       <reference anchor="IANA.Language">
         <front>
@@ -3342,7 +3364,18 @@ HTTP/1.1 403 FORBIDDEN
           <t>41 - Revised content types from application/json to
           application/scim+json, registered API schemas</t>
 
+          <t>63 - Revised uri schema prefixes for API json message schemas</t>
+
           <t>66 - Updated references for RFC2616 to HTTPbis</t>
+
+          <t>75 - Added security considerations for International Strings and
+          "PRECIS" support</t>
+
+          <t>76 - Clarified handling of PUT (&amp; POST) with regards to
+          mutability and default values</t>
+
+          <t>Corrected version numbers in sec 3.11 API Versioning to v2 (from
+          v1)</t>
         </list></t>
     </section>
   </back>
