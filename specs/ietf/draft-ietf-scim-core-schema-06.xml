@@ -48,7 +48,7 @@
       </address>
     </author>
 
-    <date month="May" year="2014"/>
+    <date month="June" year="2014"/>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
@@ -71,18 +71,7 @@
   </front>
 
   <middle>
-    <section anchor="rnc" title="Requirements Notation and Conventions">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref target="RFC2119"/>
-      .</t>
-
-      <t>Throughout this document, values are quoted to indicate that they are
-      to be taken literally. When using these values in protocol messages, the
-      quotes MUST NOT be used as part of the value.</t>
-    </section>
-
-    <section anchor="overview" title="Overview">
+    <section anchor="overview" title="Introduction and Overview">
       <t>While there are existing standards for describing and exchanging user
       information, many of these standards can be difficult to implement
       and/or use; e.g., their wire protocols do not easily traverse firewalls
@@ -101,12 +90,24 @@
       this schema via an HTTP API. It draws inspiration and best practice,
       building upon existing user APIs and schemas from a wide variety of
       sources including, but not limited to, existing APIs exposed by cloud
-      providers, PortableContacts, and LDAP directory services.</t>
+      providers, PortableContacts, vCards, and LDAP directory services.</t>
 
-      <t>This document provides a platform neutral schema and extension model
-      for representing users and groups in JSON format. This schema is
-      intended for exchange and use with cloud service providers. An HTTP
-      protocol binding document is also provided.</t>
+      <t>This document provides a JSON based schema and extension model for
+      representing users and groups, as well as service provider
+      configuration. This schema is intended for exchange and use with cloud
+      service providers and other cross-domain scenarios. An HTTP protocol
+      binding document is provided separately.</t>
+
+      <section anchor="rnc" title="Requirements Notation and Conventions">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119"/> .</t>
+
+        <t>Throughout this document, values are quoted to indicate that they
+        are to be taken literally. When using these values in protocol
+        messages, the quotes MUST NOT be used as part of the value.</t>
+      </section>
 
       <section anchor="defs" title="Definitions" toc="default">
         <t><list style="hanging">
@@ -169,7 +170,8 @@
       target="schemas-attribute"/>.</t>
 
       <t>Attribute names MUST conform to the following ABNF <xref
-      target="RFC5234"/> rules:<figure anchor="attrABNF">
+      target="RFC5234"/> rules:<figure anchor="attrABNF"
+          title="ABNF for Attribute Names">
           <artwork align="center">ATTRNAME   = ALPHA *(nameChar)
 nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         </figure></t>
@@ -179,16 +181,15 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         and unless otherwise specified have the following characteristics (see
         <xref target="schema-schema"/> for attribute characteristic
         definitions):<list>
-            <t>are optional (<spanx style="verb">required=false</spanx>).</t>
+            <t>are optional (is not required).</t>
 
-            <t>are case insensitive (<spanx style="verb">caseExact=false</spanx>),</t>
+            <t>are case insensitive (caseExact=false),</t>
 
-            <t>are modifiable (<spanx style="verb">mutability=readWrite</spanx>),</t>
+            <t>are modifiable (mutability is readWrite),</t>
 
-            <t>are returned in response to queries (<spanx style="verb">returned=default</spanx>),</t>
+            <t>are returned in response to queries (returned by default),</t>
 
-            <t>are not unique (<spanx style="verb">uniqueness=none</spanx>),
-            and,</t>
+            <t>are not unique (uniqueness=none), and,</t>
 
             <t>of type <xref target="type-string">String</xref>.</t>
           </list>The JSON format defines a limited set of data types, hence,
@@ -2623,6 +2624,118 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
     </section>
 
     <section title="IANA Considerations">
+      <section anchor="scimNamespace" title="URN Sub-Namespace for SCIM">
+        <t>SCIM schemas and SCIM messages utilize URIs to identify the schema
+        in use or other relevant context. This section creates and registers
+        an IETF URN Sub-namespace for use in the SCIM specifications and
+        future extensions. </t>
+
+        <section title="Specification Template">
+          <t><list style="hanging">
+              <t hangText="Namespace ID:"><vspace blankLines="1"/>The
+              Namespace ID <spanx style="verb">scim</spanx> is requested.</t>
+
+              <t hangText="Registration Information:"><vspace
+              blankLines="1"/>Version: 1</t>
+
+              <t>Date: [[insert final submission date]]</t>
+
+              <t hangText="Declared registrant of the namespace:"><list
+                  style="hanging">
+                  <t hangText="Registering organization"><vspace
+                  blankLines="0"/>The Internet Engineering Task Force</t>
+
+                  <t hangText="Designated contact"><vspace blankLines="0"/>A
+                  designated expert will monitor the SCIM public mailing list,
+                  <spanx style="verb">scim@ietf.org</spanx>.</t>
+                </list></t>
+
+              <t hangText="Declaration of Syntactic Structure:"><vspace
+              blankLines="1"/>The Namespace Specific String (NSS) of all URNs
+              that use the "scim" NID shall have the following
+              structure:<figure>
+                  <artwork>   urn:scim:{type}:{name}{:subName}:{version}</artwork>
+                </figure>The keywords have the following meaning:<list
+                  style="symbols">
+                  <t><spanx style="verb">type</spanx> is an entity type (e.g.
+                  <spanx style="verb">schemas</spanx>, <spanx style="verb">api</spanx>,
+                  or <spanx style="verb">param</spanx>).</t>
+
+                  <t><spanx style="verb">name</spanx> is a required US-ASCII
+                  string that conforms to the URN syntax requirements (see
+                  <xref target="RFC2141"/>) and defines a major class of
+                  object used within SCIM (e.g. <spanx style="verb">core</spanx>,
+                  <spanx style="verb">extension</spanx>).</t>
+
+                  <t><spanx style="verb">subName</spanx> is an optional
+                  US-ASCII string that conforms to the URN syntax requirements
+                  (see <xref target="RFC2141"/>) and defines a sub-class of
+                  object used within SCIM (e.g. <spanx style="verb">enterprise</spanx>,
+                  <spanx style="verb">extension</spanx>).</t>
+
+                  <t><spanx style="verb">version</spanx> is the first SCIM API
+                  version number where the URN is valid (e.g. <spanx
+                  style="verb">2.0</spanx>).</t>
+                </list></t>
+
+              <t hangText="Relevant Ancillary Documentation:"><vspace
+              blankLines="1"/>None</t>
+
+              <t hangText="Identifier Uniqueness Considerations:"><vspace
+              blankLines="1"/>The designated contact shall be responsible for
+              reviewing and enforcing uniqueness.</t>
+
+              <t hangText="Identifier Persistence Considerations:"><vspace
+              blankLines="1"/>Once a name has been allocated it MUST NOT be
+              re-allocated for a different purpose. The rules provided for
+              assignments of values within a sub-namespace MUST be constructed
+              so that the meaning of values cannot change. This registration
+              mechanism is not appropriate for naming values whose meaning may
+              change over time.</t>
+
+              <t>As the SCIM specifications are updated and the SCIM API
+              version is adjusted, a new registration will be made when
+              significant changes are made. Example, <spanx style="verb">urn:scim:schemas:core:1.0</spanx>
+              and <spanx style="verb">urn:scim:schemas:core:2.0</spanx>.</t>
+
+              <t hangText="Process of Identifier Assignment:"><vspace
+              blankLines="1"/>Identifiers are assigned after the review of the
+              assigned contact via the SCIM public mailing list, <spanx
+              style="verb">scim@ietf.org</spanx>.</t>
+
+              <t hangText="Process of Identifier Resolution:"><vspace
+              blankLines="1"/>The namespace is not currently listed with a
+              Resolution Discovery System (RDS), but nothing about the
+              namespace prohibits the future definition of appropriate
+              resolution methods or listing with an RDS.</t>
+
+              <t hangText="Rules for Lexical Equivalence:"><vspace
+              blankLines="1"/>No special considerations; the rules for lexical
+              equivalence specified in <xref target="RFC2141"/> apply.</t>
+
+              <t hangText="Conformance with URN Syntax:"><vspace
+              blankLines="1"/>No special considerations.</t>
+
+              <t hangText="Validation Mechanism:"><vspace blankLines="1"/>None
+              specified.</t>
+
+              <t hangText="Scope:"><vspace blankLines="1"/>Global.</t>
+            </list></t>
+        </section>
+
+        <section title="Pre-Registered SCIM Identifiers">
+          <t>The following SCIM Identifiers are defined:<list style="hanging">
+              <t hangText="urn:scim:schemas:core:2.0"><vspace
+              blankLines="1"/>SCIM Core Schema as specified in <xref
+              target="schema"/>.</t>
+
+              <t hangText="urn:scim:schemas:extension:enterprise:2.0"><vspace
+              blankLines="1"/>Enterprise schema extensions as defined in <xref
+              target="enterpriseUser"/>.</t>
+            </list></t>
+        </section>
+      </section>
+
       <section title="Registering New SCIM Schemas">
         <t>This section defines the process for registering new SCIM schemas
         with IANA. A schema URI is used as a value in the schemas attribute
@@ -2644,16 +2757,15 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           a Standards Track RFC.</t>
 
           <t>The registration procedure begins when a completed registration
-          template, defined in the sections below, is sent to
-          vcarddav@ietf.org and iana@iana.org. Within two weeks, the
-          designated expert is expected to tell IANA and the submitter of the
-          registration whether the registration is approved, approved with
-          minor changes, or rejected with cause. When a registration is
-          rejected with cause, it can be re-submitted if the concerns listed
-          in the cause are addressed. Decisions made by the designated expert
-          can be appealed to the IESG Applications Area Director, then to the
-          IESG. They follow the normal appeals procedure for IESG
-          decisions.</t>
+          template, defined in the sections below, is sent to scim@ietf.org
+          and iana@iana.org. Within two weeks, the designated expert is
+          expected to tell IANA and the submitter of the registration whether
+          the registration is approved, approved with minor changes, or
+          rejected with cause. When a registration is rejected with cause, it
+          can be re-submitted if the concerns listed in the cause are
+          addressed. Decisions made by the designated expert can be appealed
+          to the IESG Applications Area Director, then to the IESG. They
+          follow the normal appeals procedure for IESG decisions.</t>
 
           <t>Once the registration procedure concludes successfully, IANA
           creates or modifies the corresponding record in the SCIM schema
@@ -2754,6 +2866,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
   <back>
     <references title="Normative References">
       <?rfc include="reference.RFC.2119"?>
+
+      <?rfc include="reference.RFC.2141"?>
 
       <?rfc include='reference.RFC.3629' ?>
 
@@ -2952,7 +3066,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         </list></t>
 
       <t>Draft 06 - PH - Revisions based on the following tickets<list>
-          <t>63 - Corrected enterprise user URI in 14.2 and section 7</t>
+          <t>63 - Corrected enterprise user URI in 14.2 and section 7, URI
+          namespace changes due to ticket #41</t>
 
           <t>66 - Updated reference to final HTTP/1.1 drafts (RFC 7230)</t>
 
@@ -2960,6 +3075,9 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>- Removed redundant text (e.g. SAML binding, replaced REST with
           HTTP)</t>
+
+          <t>- Reordered introduction, definitions and notation sections to
+          follow typical format</t>
         </list></t>
     </section>
   </back>
