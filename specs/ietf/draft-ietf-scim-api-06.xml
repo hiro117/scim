@@ -117,7 +117,7 @@
             <spanx style="verb">https://example.com/</spanx>, or <spanx
             style="verb">https://example.com/scim/tenancypath/</spanx>.
             Additionally client may also apply a version number to the server
-            root prefix (see <xref target="api-versioning"/>).</t>
+            root prefix (see <xref target="api-versioning"/> ).</t>
           </list></t>
       </section>
     </section>
@@ -130,7 +130,7 @@
       will impact interoperability. It is RECOMMENDED that clients be
       implemented in such a way that new authentication schemes can be
       deployed. Implementers SHOULD support existing
-      authentication/authorization schemes. In particular, OAuth2<xref
+      authentication/authorization schemes. In particular, OAuth2 <xref
       target="RFC6750"/> is RECOMMENDED. Appropriate security considerations
       of the selected authentication and authorization schemes SHOULD be
       taken. Because this protocol uses HTTP response status codes as the
@@ -139,7 +139,7 @@
       response code in accordance with <xref target="RFC7235">Section 3.1
       of</xref>.</t>
 
-      <t>All examples assume OAuth2 bearer token <xref target="RFC6750"/>;
+      <t>All examples assume OAuth2 bearer token <xref target="RFC6750"/> ;
       e.g.,</t>
 
       <figure align="left" alt="" height="" suppress-title="false" title=""
@@ -168,8 +168,8 @@ Authorization: Bearer h480djs93hd8
       resource pluralization is ambiguous; e.g., a resource named <spanx
       style="verb">Person</spanx> is legitimately <spanx style="verb">Persons</spanx>
       and <spanx style="verb">People</spanx> clients SHOULD discover resource
-      endpoints via the <spanx style="verb">/ResourceTypes</spanx> endpoint
-      .</t>
+      endpoints via the <spanx style="verb">/ResourceTypes</spanx>
+      endpoint.</t>
 
       <t><list style="hanging">
           <t hangText="GET">Retrieves a complete or partial resource.</t>
@@ -471,8 +471,8 @@ ETag: W/"f250dd84f0671c3"
               <t hangText="Resources">A multi-valued list of complex objects
               containing the requested resources. This may be a subset of the
               full set of resources if <xref format="default"
-              target="pagination">pagination</xref> is requested.
-              REQUIRED.</t>
+              target="pagination">pagination</xref> is requested. REQUIRED if
+              <spanx style="verb">totalResults</spanx> is non-zero.</t>
 
               <t hangText="startIndex">The 1-based index of the first result
               in the current set of list results. REQUIRED if <xref
@@ -483,6 +483,10 @@ ETag: W/"f250dd84f0671c3"
               list response page. REQUIRED if <xref format="default"
               target="pagination">pagination</xref> is requested.</t>
             </list></t>
+
+          <t>A query that does not return any matches SHALL return success
+          with <spanx style="verb">totalResults</spanx> set to a value of
+          0.</t>
 
           <t/>
 
@@ -539,7 +543,7 @@ Content-Type: application/scim+json
             within the server SHALL be included subject to filtering. A filter
             expression using <spanx style="verb">meta.resourceType</spanx> MAY
             be used to restrict results to one or more specific resource types
-            (e.g. <spanx style="verb">User</spanx>).</t>
+            (e.g. <spanx style="verb">User</spanx> ).</t>
 
             <t>When processing search operations across endpoints that include
             more than one SCIM resource type (e.g. a search from the server
@@ -1142,7 +1146,7 @@ Location: https://example.com/.search
       <section title="Modifying Resources" toc="default">
         <t>Resources can be modified in whole or in part via PUT or PATCH,
         respectively. Implementers MUST support PUT as specified in <xref
-        target="RFC7231">Section 4.3</xref> . Resources such as Groups may be
+        target="RFC7231">Section 4.3</xref>. Resources such as Groups may be
         very large hence implementers SHOULD support <xref
         target="RFC5789">PATCH </xref> to enable partial resource
         modifications.</t>
@@ -1159,7 +1163,7 @@ Location: https://example.com/.search
           <t>As the operation intent is to replace all attributes, SCIM
           clients MAY send all attributes regardless of each attribute's
           mutability. The server will apply attribute by attribute replace
-          according to the following attribute mutability rules:<list
+          according to the following attribute mutability rules: <list
               style="hanging">
               <t hangText="readWrite, writeOnly">Any values provided SHALL
               replace the existing attribute values.</t>
@@ -1287,7 +1291,7 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           operation objects. A patch operation object MUST have exactly one
           "op" member, whose value indicates the operation to perform and MAY
           be one of <spanx style="verb">add</spanx>, <spanx style="verb">remove</spanx>,
-          or <spanx style="verb">replace</spanx> . The semantics of each
+          or <spanx style="verb">replace</spanx>. The semantics of each
           operation are defined below.</t>
 
           <t>Each operation object MUST contain the following <spanx
@@ -1308,7 +1312,7 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           style="verb">valuePath</spanx>, and <spanx style="verb">subAttr</spanx>
           are defined in <xref target="filtering"/>. The <spanx style="verb">valuePath</spanx>
           rule allows specific values of a complex, multi-valued attribute to
-          be selected.<figure align="left">
+          be selected. <figure align="left">
               <preamble>Valid examples of <spanx style="verb">path</spanx>
               values are as follows:</preamble>
 
@@ -1329,9 +1333,9 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           attribute's mutability and schema as defined in the <xref
           target="I-D.ietf-scim-core-schema">Attribute Types Section
           of</xref>. For example, a client MAY NOT modify an attribute that
-          has mutability <spanx style="verb">readOnly</spanx>or <spanx
+          has mutability <spanx style="verb">readOnly</spanx> or <spanx
           style="verb">immutable</spanx>. However, a client MAY <spanx
-          style="verb">add</spanx> a value to an<spanx style="verb">immutable</spanx>
+          style="verb">add</spanx> a value to an <spanx style="verb">immutable</spanx>
           attribute if the attribute had no previous value. An operation that
           is not compatibile with an attribute's mutability or schema SHALL
           return an error as indicated below.</t>
@@ -1352,25 +1356,25 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           <t>If a request fails. the server SHALL return an HTTP response
           status code of 400 and a JSON detail error response containing an
           <spanx style="verb">error</spanx> object that SHOULD be one of the
-          following string values:<list hangIndent="4" style="hanging">
-              <t hangText="malformed_operation"><vspace blankLines="0"/>The
+          following string values: <list hangIndent="4" style="hanging">
+              <t hangText="malformed_operation"><vspace blankLines="0"/> The
               JSON operation elements could not successfully be parsed. This
               may be due to an invalid or missing operation attribute, or it
               could be due to a missing attribute required by a specific
               operation.</t>
 
-              <t hangText="mutability"><vspace blankLines="0"/>The operation
+              <t hangText="mutability"><vspace blankLines="0"/> The operation
               requested is not compatible with the mutability of the selected
               attribute.</t>
 
-              <t hangText="invalid_path"><vspace blankLines="0"/>The path
+              <t hangText="invalid_path"><vspace blankLines="0"/> The path
               attribute was invalid or malformed.</t>
 
-              <t hangText="no_target"><vspace blankLines="0"/>The <spanx
+              <t hangText="no_target"><vspace blankLines="0"/> The <spanx
               style="verb">path</spanx> specified did not return a target
               against which the operation could be performed.</t>
 
-              <t hangText="invalid_value"><vspace blankLines="0"/>The
+              <t hangText="invalid_value"><vspace blankLines="0"/> The
               operation <spanx style="verb">value</spanx> was missing or was
               not compatable with the targeted attribute's type</t>
             </list></t>
@@ -1399,7 +1403,7 @@ Pragma: no-cache
           response code and the entire resource (subject to the "attributes"
           query parameter - see <xref format="default"
           target="addtl-retrieval-query-params">Additional Retrieval Query
-          Parameters</xref>) within the response body, or a 204 No Content
+          Parameters</xref> ) within the response body, or a 204 No Content
           response code and the appropriate response headers for a successful
           patch request. The server MUST return a 200 OK if the "attributes"
           parameter is specified on the request.</t>
@@ -1407,7 +1411,7 @@ Pragma: no-cache
           <section anchor="addOp" title="Add Operation">
             <t>The <spanx style="verb">add</spanx> operation performs one of
             the following functions, depending upon what the target location
-            indicated by <spanx style="verb">path</spanx> references:<list
+            indicated by <spanx style="verb">path</spanx> references: <list
                 style="symbols">
                 <t>If the target location does not exist, the attribute and
                 value is added.</t>
@@ -1483,8 +1487,8 @@ Location: "https://example.com/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"</art
             <t>The <spanx style="verb">remove</spanx> operation removes the
             value at the target location specified by the <spanx style="verb">path</spanx>.
             The operation performs the following functions depending on the
-            target location specified by <spanx style="verb">path</spanx>:<list
-                style="symbols">
+            target location specified by <spanx style="verb">path</spanx> :
+            <list style="symbols">
                 <t>If the target location is a single-value attribute, the
                 attribute and its associated value is removed.</t>
 
@@ -1624,8 +1628,8 @@ If-Match: W/"a330bc54f0671c9"
             <t>The <spanx style="verb">replace</spanx> operation replaces the
             value at the target location specified by the <spanx style="verb">path</spanx>.
             The operation performs the following functions depending on the
-            target location specified by <spanx style="verb">path</spanx>:<list
-                style="symbols">
+            target location specified by <spanx style="verb">path</spanx> :
+            <list style="symbols">
                 <t>If the target location is a single-value attribute, the
                 attributes value is replaced.</t>
 
@@ -1643,8 +1647,8 @@ If-Match: W/"a330bc54f0671c9"
 
                 <t>If the target location is a complex-multi-valued attribute
                 with a complex filter and a specific sub-attribute (e.g.
-                <spanx style="verb">addresses[type eq "work"].streetAddress</spanx>),
-                the matching sub-attribute of the matching record is
+                <spanx style="verb">addresses[type eq "work"].streetAddress</spanx>
+                ), the matching sub-attribute of the matching record is
                 replaced.</t>
               </list></t>
 
@@ -2497,8 +2501,8 @@ Location: https://example.com/v2/Bulk/yfCrVJhFIJagAHj8
         data is submitted via HTTP header <spanx style="verb">Content-Type</spanx>
         as specified in <xref target="RFC7231">Section 3.1.1.5</xref> and MAY
         specify the desired response data format via an HTTP <spanx
-        style="verb">Accept</spanx> header (<xref target="RFC7231">Section
-        5.3.2</xref>); e.g.,<spanx style="verb">Accept: application/scim+json</spanx>
+        style="verb">Accept</spanx> header ( <xref target="RFC7231">Section
+        5.3.2</xref> ); e.g., <spanx style="verb">Accept: application/scim+json</spanx>
         or via URI suffix; e.g., <figure align="left" alt="" height=""
             suppress-title="false" title="" width="">
             <artwork align="left" alt="" height="" name="" type="" width=""
@@ -2557,7 +2561,7 @@ Host: example.com
         operation that returns a resource within the response by specifying
         either of the mutually exclusive URL query parameters <spanx
         style="verb">attributes</spanx> OR <spanx style="verb">excludedAtributes</spanx>
-        as follows:<list hangIndent="8" style="hanging">
+        as follows: <list hangIndent="8" style="hanging">
             <t hangText="attributes">When specified, each resource returned
             MUST contain the minimal set of resource attributes and MUST
             contain no other attributes or sub-attributes other than those
@@ -2569,12 +2573,12 @@ Host: example.com
             <t hangText="excludedAttributes">When specified, each resource
             returned MUST contain the minimal set of resource attributes.
             Additionally, the default set of attributes minus those attributes
-            listed in <spanx style="verb">excludedAttributes</spanx>are also
+            listed in <spanx style="verb">excludedAttributes</spanx> are also
             returned. The query parameter attributes value is a comma
             separated list of resource attribute names in standard <xref
             format="default" target="attribute-notation">attribute
             notation</xref> form (e.g. userName, name, emails).</t>
-          </list> .</t>
+          </list>.</t>
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
@@ -2638,7 +2642,7 @@ ETag: W/"a330bc54f0671c9"
         <t>A client MAY use a URL of the form <spanx style="verb">&lt;server-root&gt;/Me</spanx>
         as an URL alias for the User or other resource associated with the
         currently authenticated subject for any SCIM operation. A service
-        provider MAY respond in ONE of 3 ways:<list style="symbols">
+        provider MAY respond in ONE of 3 ways: <list style="symbols">
             <t>A service provider that does NOT support this feature SHOULD
             respond with status 403 (FORBIDDEN).</t>
 
@@ -2804,7 +2808,7 @@ HTTP/1.1 404 NOT FOUND
       </section>
 
       <section anchor="etags" title="Versioning Resources">
-        <t>The API supports resource versioning via standard HTTP ETags<xref
+        <t>The API supports resource versioning via standard HTTP ETags <xref
         target="RFC7233"> Section 2.3</xref>. Service providers MAY support
         weak ETags as the preferred mechanism for performing conditional
         retrievals and ensuring clients do not inadvertently overwrite each
@@ -2970,7 +2974,7 @@ If-None-Match: W/"e180ee84f0671b1"
         associated with a different Tenant.</t>
 
         <t>In all of these methods, the {tenant_id} is a unique identifier for
-        the Tenant as defined by the service provider.<list style="symbols">
+        the Tenant as defined by the service provider. <list style="symbols">
             <t>A URL prefix: <spanx style="verb">https://www.example.com/Tenants/{tenant_id}/v2/Users</spanx></t>
 
             <t>A sub-domain: <spanx style="verb">https://{tenant_id}.example.com/v2/Groups</spanx></t>
@@ -3021,14 +3025,14 @@ If-None-Match: W/"e180ee84f0671b1"
         considered "personally identifiable information" or is otherwise
         restricted by privacy laws. In these situations to ensure maximum
         security and confidentiality, clients SHOULD query using HTTP POST
-        (see <xref target="query-post"/>).</t>
+        (see <xref target="query-post"/> ).</t>
 
         <t>Servers that receive HTTP GET requests using filters that contain
         restricted or confidential information SHOULD respond with HTTP status
         403 indicating the operation is FORBIDDEN. A detialed error, <spanx
         style="verb">confidential_restricted</spanx> may be returned
         indicating the request must be submitted using POST. A non-normative
-        example:<figure align="left" alt="" height="" suppress-title="false"
+        example: <figure align="left" alt="" height="" suppress-title="false"
             title="" width="">
             <artwork align="left" alt="" height="" name="" type="" width=""
                      xml:space="preserve">
@@ -3284,7 +3288,7 @@ HTTP/1.1 403 FORBIDDEN
 
     <section title="Acknowledgments">
       <t>The editors would like to acknowledge the contribution and work of
-      the past draft editors:<list>
+      the past draft editors: <list>
           <t>Trey Drake, UnboundID</t>
 
           <t>Chuck Mortimore, Salesforce</t>
@@ -3299,7 +3303,7 @@ HTTP/1.1 403 FORBIDDEN
 
       <t>Draft 02 - KG - Addition of schema extensibility</t>
 
-      <t>Draft 03 - PH - Revisions based on following tickets:<list>
+      <t>Draft 03 - PH - Revisions based on following tickets: <list>
           <t>24 - Add filter negation</t>
 
           <t>39 - Clarification on response for DELETE</t>
@@ -3326,7 +3330,7 @@ HTTP/1.1 403 FORBIDDEN
           &lt;reference&gt; tags</t>
         </list></t>
 
-      <t>Draft 04 - PH - Revisions based on the following tickets:<list>
+      <t>Draft 04 - PH - Revisions based on the following tickets: <list>
           <t>18 - New PATCH command based on JSON Patch (RFC6902)</t>
 
           <t>- Provided ABNF specification for filters (used in PATCH)</t>
@@ -3334,7 +3338,7 @@ HTTP/1.1 403 FORBIDDEN
           <t>- Updated references to RFC4627 to RFC7159</t>
         </list></t>
 
-      <t>Draft 05 - PH - Revisions based on the following tickets:<list>
+      <t>Draft 05 - PH - Revisions based on the following tickets: <list>
           <t>03 - Support for excludedAttributes parameter</t>
 
           <t>13 - Change client use of Etags from MUST to MAY (correction)</t>
@@ -3360,7 +3364,7 @@ HTTP/1.1 403 FORBIDDEN
         </list></t>
 
       <t>Draft 06 - PH - Revisions based on the following tickets and
-      editorial changes<list>
+      editorial changes <list>
           <t>41 - Revised content types from application/json to
           application/scim+json, registered API schemas</t>
 
@@ -3374,8 +3378,11 @@ HTTP/1.1 403 FORBIDDEN
           <t>76 - Clarified handling of PUT (&amp; POST) with regards to
           mutability and default values</t>
 
-          <t>Corrected version numbers in sec 3.11 API Versioning to v2 (from
-          v1)</t>
+          <t>- Corrected version numbers in sec 3.11 API Versioning to v2
+          (from v1)</t>
+
+          <t>- Clarified that no filter matches should return success
+          totalResults=0</t>
         </list></t>
     </section>
   </back>

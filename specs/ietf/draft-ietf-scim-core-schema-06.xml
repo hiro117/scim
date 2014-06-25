@@ -80,9 +80,9 @@
       within their services. This increases both the cost and complexity
       associated with organizations adopting products and services from
       multiple cloud providers as they must perform redundant integration
-      development. Similarly, cloud services providers seeking to interoperate
-      with multiple application marketplaces or cloud identity providers must
-      be redundantly integrated.</t>
+      development. Similarly, cloud services providers seeking to
+      inter-operate with multiple application marketplaces or cloud identity
+      providers must be redundantly integrated.</t>
 
       <t>SCIM seeks to simplify this problem through a simple to implement
       specification suite that provides a common user schema and extension
@@ -102,7 +102,7 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in <xref
-        target="RFC2119"/> .</t>
+        target="RFC2119"/>.</t>
 
         <t>Throughout this document, values are quoted to indicate that they
         are to be taken literally. When using these values in protocol
@@ -170,7 +170,7 @@
       target="schemas-attribute"/>.</t>
 
       <t>Attribute names MUST conform to the following ABNF <xref
-      target="RFC5234"/> rules:<figure anchor="attrABNF"
+      target="RFC5234"/> rules: <figure anchor="attrABNF"
           title="ABNF for Attribute Names">
           <artwork align="center">ATTRNAME   = ALPHA *(nameChar)
 nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
@@ -180,7 +180,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>Attribute data types are derived from JSON <xref target="RFC7159"/>
         and unless otherwise specified have the following characteristics (see
         <xref target="schema-schema"/> for attribute characteristic
-        definitions):<list>
+        definitions): <list>
             <t>are optional (is not required).</t>
 
             <t>are case insensitive (caseExact=false),</t>
@@ -192,7 +192,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             <t>are not unique (uniqueness=none), and,</t>
 
             <t>of type <xref target="type-string">String</xref>.</t>
-          </list>The JSON format defines a limited set of data types, hence,
+          </list> The JSON format defines a limited set of data types, hence,
         where appropriate, alternate JSON representations derived from XML
         Schema <xref target="XML-Schema"/> are defined below. SCIM extensions
         SHOULD NOT introduce new data types.</t>
@@ -200,24 +200,24 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-string" title="String">
           <t>A sequence of zero or more Unicode characters encoded using UTF-8
           as per <xref target="RFC2277"/> and <xref target="RFC3629"/>. The
-          JSON format is defined in <xref target="RFC7159">Section 7</xref> .
-          A <spanx style="verb">String</spanx> attribute MAY specify a
-          required data format. Additionally, when canonical values are
-          specified service providers SHOULD conform to those values if
-          appropriate, but MAY provide alternate <spanx style="verb">String</spanx>
-          values to represent additional values.</t>
+          JSON format is defined in <xref target="RFC7159">Section 7</xref>. A
+          <spanx style="verb">String</spanx> attribute MAY specify a required
+          data format. Additionally, when canonical values are specified
+          service providers SHOULD conform to those values if appropriate, but
+          MAY provide alternate <spanx style="verb">String</spanx> values to
+          represent additional values.</t>
         </section>
 
         <section anchor="type-boolean" title="Boolean">
           <t>The literal <spanx style="verb">true</spanx> or <spanx
           style="verb">false</spanx>. The JSON format is defined in <xref
-          target="RFC7159">Section 3</xref> .</t>
+          target="RFC7159">Section 3</xref>.</t>
         </section>
 
         <section anchor="type-decimal" title="Decimal">
           <t>A real number with at least one digit to the left and right of
           the period. The JSON format is defined in <xref
-          target="RFC7159">Section 6</xref> .</t>
+          target="RFC7159">Section 6</xref>.</t>
         </section>
 
         <section anchor="type-integer" title="Integer">
@@ -230,7 +230,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-datetime" title="DateTime">
           <t>A DateTime value (e.g. 2008-01-23T04:56:22Z). The attribute value
           MUST be encoded as a valid xsd:dateTime as specified in <xref
-          target="XML-Schema">Section 3.2.7</xref> .</t>
+          target="XML-Schema">Section 3.2.7</xref>.</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
           above and are represented as a JSON String per <xref
@@ -240,10 +240,10 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-binary" title="Binary">
           <t>Arbitrary binary data. The attribute value MUST be encoded as a
           valid xsd:base64Binary as specified in <xref
-          target="XML-Schema">Section 3.2.16</xref> .</t>
+          target="XML-Schema">Section 3.2.16</xref>.</t>
 
           <t>Values represented in JSON MUST conform to the XML constraints
-          above and are represented as a JSON String per<xref
+          above and are represented as a JSON String per <xref
           target="RFC7159">Section 2.7</xref>.</t>
         </section>
 
@@ -270,7 +270,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <section anchor="type-complex" title="Complex">
           <t>A singular or multi-valued attribute whose value is a composition
           of one or more simple Attributes. The JSON format is defined in
-          <xref target="RFC7159">Section 4</xref> .</t>
+          <xref target="RFC7159">Section 4</xref>.</t>
         </section>
       </section>
 
@@ -320,26 +320,40 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <t>SCIM schema follows an object extension model similar to
       ObjectClasses used in LDAP. Unlike LDAP there is no inheritance model;
       all extensions are additive (similar to LDAP Auxiliary Object Class
-      <xref target="RFC4512"/>). Each value indicates additive schema that may
-      exist in a SCIM representation as specified by extensions not defined in
-      this suite. Schema extensions MUST NOT redefine any attributes defined
-      in this specification and SHOULD follow conventions defined in this
-      specification. Each schema extension must identify a URI used to
-      identify the extension. The JSON format MUST use the <spanx
-      style="verb">schemas</spanx> attribute<xref target="schemas-attribute"/>
-      to distinguish extended resources and attributes.</t>
+      <xref target="RFC4512"/> ). Each <spanx style="verb">schemas</spanx>
+      value indicates additive schema that may exist in a SCIM resource
+      representation. The <spanx style="verb">schemas</spanx> attribute MUST
+      contain at least one value which SHALL be the base schema for the
+      resource. The <spanx style="verb">schemas</spanx> attribute MAY contain
+      additional values indicating extended schemas that are in use. Schema
+      extensions SHOULD NOT redefine any attributes defined in this
+      specification and SHOULD follow conventions defined in this
+      specification. Except for the base object schema, the schema extension
+      URI SHALL be used as a JSON container to distinguish attributes
+      belonging to the extension namespace from base schema attributes. See
+      <xref target="enterpriseUserJSON"/> for an example JSON representation
+      of an extended User.</t>
+
+      <t>In order to determine which <spanx style="verb">schemas</spanx> URI
+      value is the base schema and which is extended schema for any given
+      resource, the resource's <spanx style="verb">resourceType</spanx>
+      attribute value MAY be used to retrieve the resource's <spanx
+      style="verb">ResourceType</spanx> schema ( <xref
+      target="resource-type-schema"/> ). See example <spanx style="verb">ResourceType</spanx>
+      representation in <xref target="resourceTypeJSON"/>.</t>
     </section>
 
     <section anchor="schema" title="SCIM Core Schema">
-      <section title="Common Schema Attributes">
-        <t>Each SCIM resource (Users, Groups, etc.) includes the below common
-        attributes. These attributes MUST be included in all resources,
-        including any extended resource types. It is not necessary to specify
-        the schemas attribute if the resource is fully defined in this
-        document as the core schema is implicitly included.</t>
+      <section anchor="commonSchema" title="Common Schema Attributes">
+        <t>Each SCIM resource (Users, Groups, etc.) includes the following
+        common attributes. These attributes MUST be included in all resources,
+        including any extended resource types. Common attributes are
+        considered to be part of every base resource schema and do not use
+        their own schemas URI and SHALL not be considered schema
+        extensions.</t>
 
         <t><list style="hanging">
-            <t hangText="id">Unique identifier for the SCIM resource as
+            <t hangText="id">A unique identifier for a SCIM resource as
             defined by the service provider. Each representation of the
             resource MUST include a non-empty <spanx style="verb">id</spanx>
             value. This identifier MUST be unique across the service
@@ -347,50 +361,49 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             non-reassignable identifier that does not change when the same
             resource is returned in subsequent requests. The value of the
             <spanx style="verb">id</spanx> attribute is always issued by the
-            service provider and MUST never be specified by the client.
-            bulkId: is a reserved keyword and MUST NOT be used in the unique
-            identifier. REQUIRED and has a mutability of <spanx style="verb">readOnly</spanx>.</t>
+            service provider and MUST NOT be specified by the client. The
+            string <spanx style="verb">bullkId</spanx> is a reserved keyword
+            and MUST NOT be used within any unique identifier value. REQUIRED
+            and has a mutability of <spanx style="verb">readOnly</spanx>.</t>
 
             <t hangText="externalId">An identifier for the resource as defined
             by the client. The <spanx style="verb">externalId</spanx> may
             simplify identification of the resource between client and service
-            provider by allowing the client to refer to the resource with its
-            own identifier, obviating the need to store a local mapping
-            between the local identifier of the resource and the identifier
-            used by the service provider. Each resource MAY include a
-            non-empty externalId value. The value of the <spanx style="verb">externalId</spanx>
-            attribute is always issued by the client and can never be
-            specified by the service provider. The service provider MUST
-            always interpret the externalId as scoped to the client's
-            tenant.</t>
+            provider by allowing the client to use a filter to locate the
+            resource with its own identifier, obviating the need to store a
+            local mapping between the local identifier of the resource and the
+            identifier used by the service provider. Each resource MAY include
+            a non-empty externalId value. The value of the <spanx
+            style="verb">externalId</spanx> attribute is always issued by the
+            client and can never be specified by the service provider. The
+            service provider MUST always interpret the externalId as scoped to
+            the client's tenant.</t>
 
             <t hangText="meta">A complex attribute containing resource
             metadata. All sub-attributes are OPTIONAL <list style="hanging">
                 <t hangText="resourceType">The name of the resource type of
-                the resource. Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
+                the resource. This attribute has mutability of <spanx
+                style="verb">readOnly</spanx>.</t>
 
                 <t hangText="created">The DateTime the resource was added to
-                the service provider. The attribute MUST be a DateTime.
-                Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
+                the service provider. The attribute MUST be a DateTime. This
+                attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
 
                 <t hangText="lastModified">The most recent DateTime the
                 details of this resource were updated at the service provider.
                 If this resource has never been modified since its initial
                 creation, the value MUST be the same as the value of created.
-                The attribute MUST be a DateTime. Attribute has mutability of
-                <spanx style="verb">readOnly</spanx>.</t>
+                The attribute MUST be a DateTime and has mutability of <spanx
+                style="verb">readOnly</spanx>.</t>
 
                 <t hangText="location">The URI of the resource being returned.
                 This value MUST be the same as the Location HTTP response
-                header. Attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
+                header. The attribute has mutability of <spanx style="verb">readOnly</spanx>.</t>
 
                 <t hangText="version">The version of the resource being
                 returned. This value must be the same as the ETag HTTP
-                response header. Attribute has mutability of <spanx
+                response header. The attribute has mutability of <spanx
                 style="verb">readOnly</spanx>.</t>
-
-                <t hangText="attributes">The names of the attributes to remove
-                from the resource during a PATCH operation.</t>
               </list></t>
           </list></t>
       </section>
@@ -401,11 +414,13 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         schemas. Each resource MUST be indicated using fully qualified
         URLs.</t>
 
-        <t>A <spanx style="verb">schemas</spanx> attribute is used to indicate
-        the version of SCIM schema as well as any schema extensions.</t>
+        <t>A <spanx style="verb">schemas</spanx> attribute contains URIs which
+        are used to indicate the namespace and version of SCIM schema as well
+        as any schema extensions. The first value SHALL indicate the base
+        schema for the resource.</t>
 
         <t><list style="hanging">
-            <t hangText="schemas">The schemas attribute is an array of strings
+            <t hangText="schemas">The schemas attribute is an array of Strings
             which allows introspection of the supported schema version for a
             SCIM representation as well any schema extensions supported by
             that representation. Each String value must be a unique URI. This
@@ -444,43 +459,47 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             component attributes using the other sub-attributes, or they MAY
             return both. If both variants are returned, they SHOULD be
             describing the same name, with the formatted name indicating how
-            the component attributes should be combined.<list style="hanging">
+            the component attributes should be combined. <list style="hanging">
                 <t hangText="formatted">The full name, including all middle
                 names, titles, and suffixes as appropriate, formatted for
-                display (e.g. <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                display (e.g. <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>
+                ).</t>
 
                 <t hangText="familyName">The family name of the User, or last
                 name in most Western languages (e.g. <spanx style="verb">Jensen</spanx>
-                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>
+                ).</t>
 
                 <t hangText="givenName">The given name of the User, or first
                 name in most Western languages (e.g. <spanx style="verb">Barbara</spanx>
-                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                given the full name <spanx style="verb">Ms. Barbara Jane Jensen, III.</spanx>
+                ).</t>
 
                 <t hangText="middleName">The middle name(s) of the User (e.g.
                 <spanx style="verb">Jane</spanx> given the full name <spanx
-                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx> ).</t>
 
                 <t hangText="honorificPrefix">The honorific prefix(es) of the
                 User, or title in most Western languages (e.g. <spanx
                 style="verb">Ms.</spanx> given the full name <spanx
-                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx> ).</t>
 
                 <t hangText="honorificSuffix">The honorific suffix(es) of the
                 User, or suffix in most Western languages (e.g. <spanx
                 style="verb">III.</spanx> given the full name <spanx
-                style="verb">Ms. Barbara Jane Jensen, III.</spanx>).</t>
+                style="verb">Ms. Barbara Jane Jensen, III.</spanx> ).</t>
               </list></t>
 
             <t hangText="displayName">The name of the user, suitable for
             display to end-users. Each user returned MAY include a non-empty
             displayName value. The name SHOULD be the full name of the User
             being described if known (e.g. <spanx style="verb">Babs Jensen</spanx>
-            or <spanx style="verb">Ms. Barbara J Jensen, III</spanx>), but MAY
-            be a username or handle, if that is all that is available (e.g.
-            <spanx style="verb">bjensen</spanx>). The value provided SHOULD be
-            the primary textual label by which this User is normally displayed
-            by the service provider when presenting it to end-users.</t>
+            or <spanx style="verb">Ms. Barbara J Jensen, III</spanx> ), but
+            MAY be a username or handle, if that is all that is available
+            (e.g. <spanx style="verb">bjensen</spanx> ). The value provided
+            SHOULD be the primary textual label by which this User is normally
+            displayed by the service provider when presenting it to
+            end-users.</t>
 
             <t hangText="nickName">The casual way to address the user in real
             life, e.g. <spanx style="verb">Bob</spanx> or <spanx style="verb">Bobby</spanx>
@@ -531,14 +550,14 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
             optionally followed by a series of sub-tags that refine or narrow
             that language's range (e.g., "en-CA" = the variety of English as
             communicated in Canada). Whitespace is not allowed within a
-            language tag. Example tags include:<figure align="center">
+            language tag. Example tags include: <figure align="center">
                 <artwork align="center">fr, en-US, es-419, az-Arab, x-pig-latin, man-Nkoo-GN</artwork>
-              </figure>See <xref target="RFC5646"/> for further
+              </figure> See <xref target="RFC5646"/> for further
             information.</t>
 
             <t hangText="timezone">The User's time zone in IANA Time Zone
             database format <xref target="RFC6557"/>, also known as "Olson"
-            timezone database format<xref target="Olson-TZ"/>; For example:
+            timezone database format <xref target="Olson-TZ"/> ; For example:
             <spanx style="verb">America/Los_Angeles</spanx>.</t>
 
             <t hangText="active">A Boolean value indicating the user's
@@ -626,9 +645,9 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
                 <t hangText="country">The country name component. When
                 specified the value MUST be in ISO 3166-1 alpha 2 "short" code
-                format<xref target="ISO3166"> </xref>; e.g., the United States
-                and Sweden are <spanx style="verb">US</spanx> and <spanx
-                style="verb">SE</spanx>, respectively.</t>
+                format <xref target="ISO3166"> </xref> ; e.g., the United
+                States and Sweden are <spanx style="verb">US</spanx> and
+                <spanx style="verb">SE</spanx>, respectively.</t>
               </list></t>
 
             <t hangText="groups">A list of groups that the user belongs to,
@@ -707,7 +726,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           <t hangText="manager">The user's manager. A complex type that
           optionally allows service providers to represent organizational
           hierarchy by referencing the <spanx style="verb">id</spanx>
-          attribute of another User.<list style="hanging">
+          attribute of another User. <list style="hanging">
               <t hangText="value">The <spanx style="verb">id</spanx> of the
               SCIM resource representing the user's manager. RECOMMENDED.</t>
 
@@ -733,7 +752,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       specification.</t>
 
       <t>The following singular attribute is defined in addition to the common
-      attributes defined in SCIM core schema:<list style="hanging">
+      attributes defined in SCIM core schema: <list style="hanging">
           <t hangText="displayName">A human readable name for the Group.
           REQUIRED.</t>
         </list></t>
@@ -764,8 +783,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <t>The service provider configuration resource enables a service
       provider to discovery of SCIM specification features in a standardized
       form as well as provide additional implementation details to clients.
-      All attributes are READ-ONLY (a mutability of <spanx style="verb">readOnly</spanx>).
-      Unlike other core resources, the <spanx style="verb">id</spanx>
+      All attributes are READ-ONLY (a mutability of <spanx style="verb">readOnly</spanx>
+      ). Unlike other core resources, the <spanx style="verb">id</spanx>
       attribute is not required for the service provider configuration
       resource.</t>
 
@@ -952,7 +971,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               alter case for a submitted value.</t>
 
               <t hangText="mutability">A single keyword indicating what types
-              of modifications an attribute MAY accept as follows:<list
+              of modifications an attribute MAY accept as follows: <list
                   style="hanging">
                   <t hangText="readOnly">The attribute SHALL NOT be
                   modified.</t>
@@ -975,7 +994,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               <t hangText="returned">A single keyword that indicates when an
               attribute and associated values are returned in response to a
               GET request or in response to a PUT, POST, or PATCH request.
-              Valid keywords are:<list style="hanging">
+              Valid keywords are: <list style="hanging">
                   <t hangText="always">The attribute is always returned
                   regardless of the contents of the <spanx style="verb">attributes</spanx>
                   parameter. For example, <spanx style="verb">id</spanx> is
@@ -1059,12 +1078,12 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
                   <t hangText="canonicalValues">A collection of canonical
                   values. When applicable service providers MUST specify the
                   canonical types specified in the core schema specification;
-                  e.g.,<spanx style="verb">work</spanx>,<spanx style="verb">home</spanx>.
+                  e.g., <spanx style="verb">work</spanx>, <spanx style="verb">home</spanx>.
                   OPTIONAL.</t>
 
                   <t hangText="mutability">A single keyword indicating what
-                  types of modifications an attribute MAY accept as
-                  follows:<list style="hanging">
+                  types of modifications an attribute MAY accept as follows:
+                  <list style="hanging">
                       <t hangText="readOnly">The attribute MAY NOT be
                       modified.</t>
 
@@ -1087,7 +1106,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
                   <t hangText="returned">A single keyword that indicates when
                   an attribute and associated values are returned in response
                   to a GET request or in response to a PUT, POST, or PATCH
-                  request. Valid keywords are:<list style="hanging">
+                  request. Valid keywords are: <list style="hanging">
                       <t hangText="always">The attribute is always returned
                       regardless of the contents of the <spanx style="verb">attributes</spanx>
                       parameter. For example, <spanx style="verb">id</spanx>
@@ -1148,7 +1167,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of the minimal required
         SCIM representation in JSON format.</t>
 
-        <figure>
+        <figure anchor="minUserJSON"
+                title="Example Minimal User JSON Representation">
           <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
@@ -1168,7 +1188,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of the fully populated
         SCIM representation in JSON format.</t>
 
-        <figure>
+        <figure anchor="fullUserJSON"
+                title="Example Full User JSON Representation">
           <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
@@ -1304,9 +1325,12 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of the fully populated
         User using the enterprise User extension in JSON format.</t>
 
-        <figure>
+        <figure anchor="enterpriseUserJSON"
+                title="Example Enterprise User JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:User", "urn:scim:schemas:extension:enterprise:2.0:User"],
+  "schemas": 
+    [ "urn:scim:schemas:core:2.0:User", 
+      "urn:scim:schemas:extension:enterprise:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -1452,7 +1476,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of SCIM Group
         representation in JSON format.</t>
 
-        <figure>
+        <figure anchor="groupJSON" title="Example Group JSON Representation">
           <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:Group"],
   "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
@@ -1484,7 +1508,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of the SCIM service
         provider configuration representation in JSON format.</t>
 
-        <figure>
+        <figure anchor="serviceProviderConfigJSON"
+                title="Example Service Provider Config JSON Representation">
           <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:ServiceProviderConfig"],
   "documentationUrl":"http://example.com/help/scim.html",
@@ -1541,7 +1566,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>The following is a non-normative example of the SCIM resource type
         representation in JSON format.</t>
 
-        <figure>
+        <figure anchor="resourceTypeJSON"
+                title="Example Resource Type JSON Representation">
           <artwork>{
   "schemas": ["urn:scim:schemas:core:2.0:ResourceType"],
   "id":"User",
@@ -1572,7 +1598,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         schema MAY change. Included but not limited to, are schemas for User,
         Group, and enterprise user.</t>
 
-        <figure>
+        <figure anchor="schemaJSON" title="Eample Schema JSON Representation">
           <artwork>{[
   {
     "id" : "urn:scim:schemas:core:2.0:User",
@@ -2628,65 +2654,80 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <t>SCIM schemas and SCIM messages utilize URIs to identify the schema
         in use or other relevant context. This section creates and registers
         an IETF URN Sub-namespace for use in the SCIM specifications and
-        future extensions. </t>
+        future extensions.</t>
 
         <section title="Specification Template">
           <t><list style="hanging">
-              <t hangText="Namespace ID:"><vspace blankLines="1"/>The
+              <t hangText="Namespace ID:"><vspace blankLines="1"/> The
               Namespace ID <spanx style="verb">scim</spanx> is requested.</t>
 
-              <t hangText="Registration Information:"><vspace
-              blankLines="1"/>Version: 1</t>
+              <t hangText="Registration Information:"><vspace blankLines="1"/>
+              Version: 1</t>
 
               <t>Date: [[insert final submission date]]</t>
 
               <t hangText="Declared registrant of the namespace:"><list
                   style="hanging">
                   <t hangText="Registering organization"><vspace
-                  blankLines="0"/>The Internet Engineering Task Force</t>
+                  blankLines="0"/> The Internet Engineering Task Force</t>
 
-                  <t hangText="Designated contact"><vspace blankLines="0"/>A
+                  <t hangText="Designated contact"><vspace blankLines="0"/> A
                   designated expert will monitor the SCIM public mailing list,
                   <spanx style="verb">scim@ietf.org</spanx>.</t>
                 </list></t>
 
               <t hangText="Declaration of Syntactic Structure:"><vspace
-              blankLines="1"/>The Namespace Specific String (NSS) of all URNs
-              that use the "scim" NID shall have the following
-              structure:<figure>
-                  <artwork>   urn:scim:{type}:{name}{:subName}:{version}</artwork>
-                </figure>The keywords have the following meaning:<list
-                  style="symbols">
-                  <t><spanx style="verb">type</spanx> is an entity type (e.g.
-                  <spanx style="verb">schemas</spanx>, <spanx style="verb">api</spanx>,
-                  or <spanx style="verb">param</spanx>).</t>
+              blankLines="1"/> The Namespace Specific String (NSS) of all URNs
+              that use the "scim" NID shall have the following structure:
+              <figure>
+                  <artwork>   urn:scim:{type}:{name}{:subName}:{version}{:className}{:resourceType}</artwork>
+                </figure> The keywords have the following meaning: <list
+                  style="hanging">
+                  <t hangText="type"><vspace blankLines="0"/> An entity type
+                  (e.g. <spanx style="verb">schemas</spanx>, <spanx
+                  style="verb">api</spanx>, or <spanx style="verb">param</spanx>
+                  ).</t>
 
-                  <t><spanx style="verb">name</spanx> is a required US-ASCII
-                  string that conforms to the URN syntax requirements (see
-                  <xref target="RFC2141"/>) and defines a major class of
-                  object used within SCIM (e.g. <spanx style="verb">core</spanx>,
-                  <spanx style="verb">extension</spanx>).</t>
-
-                  <t><spanx style="verb">subName</spanx> is an optional
+                  <t hangText="name"><vspace blankLines="0"/> A required
                   US-ASCII string that conforms to the URN syntax requirements
-                  (see <xref target="RFC2141"/>) and defines a sub-class of
-                  object used within SCIM (e.g. <spanx style="verb">enterprise</spanx>,
-                  <spanx style="verb">extension</spanx>).</t>
+                  (see <xref target="RFC2141"/> ) and defines a major
+                  namespace of object used within SCIM (e.g. <spanx
+                  style="verb">core</spanx>, <spanx style="verb">extension</spanx>
+                  ). The name "extension" MUST be used when the registered
+                  schema it refers to is intended to be used as an extension
+                  to another schema.</t>
 
-                  <t><spanx style="verb">version</spanx> is the first SCIM API
-                  version number where the URN is valid (e.g. <spanx
-                  style="verb">2.0</spanx>).</t>
+                  <t anchor="subName"><vspace blankLines="0"/> An optional
+                  US-ASCII string that conforms to the URN syntax requirements
+                  (see <xref target="RFC2141"/> ) and defines a sub-class of
+                  object used within SCIM (e.g. <spanx style="verb">enterprise</spanx>,
+                  <spanx style="verb">extension</spanx> ).</t>
+
+                  <t hangText="version"><vspace blankLines="0"/> The first
+                  SCIM API version number where the URN is valid (e.g. <spanx
+                  style="verb">2.0</spanx> ).</t>
+
+                  <t hangText="className"><vspace blankLines="0"/> An optional
+                  US-ASCII string that conforms to the URN syntax requirements
+                  (see <xref target="RFC2141"/> ) and defines a major class of
+                  object used within SCIM.</t>
+
+                  <t hangText="resourceType"><vspace blankLines="0"/> An
+                  optional US-ASCII string that conforms to the URN syntax
+                  requirements (see <xref target="RFC2141"/> ) and typically
+                  is used when referring to a resource type within SCIM (e.g.
+                  User).</t>
                 </list></t>
 
               <t hangText="Relevant Ancillary Documentation:"><vspace
-              blankLines="1"/>None</t>
+              blankLines="1"/> None</t>
 
               <t hangText="Identifier Uniqueness Considerations:"><vspace
-              blankLines="1"/>The designated contact shall be responsible for
+              blankLines="1"/> The designated contact shall be responsible for
               reviewing and enforcing uniqueness.</t>
 
               <t hangText="Identifier Persistence Considerations:"><vspace
-              blankLines="1"/>Once a name has been allocated it MUST NOT be
+              blankLines="1"/> Once a name has been allocated it MUST NOT be
               re-allocated for a different purpose. The rules provided for
               assignments of values within a sub-namespace MUST be constructed
               so that the meaning of values cannot change. This registration
@@ -2699,47 +2740,55 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               and <spanx style="verb">urn:scim:schemas:core:2.0</spanx>.</t>
 
               <t hangText="Process of Identifier Assignment:"><vspace
-              blankLines="1"/>Identifiers are assigned after the review of the
-              assigned contact via the SCIM public mailing list, <spanx
-              style="verb">scim@ietf.org</spanx>.</t>
+              blankLines="1"/> Identifiers with namespace type "schema" (e.g.
+              <spanx style="verb">urn:scim:schemas</spanx> ) are assigned
+              after the review of the assigned contact via the SCIM public
+              mailing list, <spanx style="verb">scim@ietf.org</spanx> as
+              documented in <xref target="schemaReg"/>.</t>
+
+              <t>Namespaces with type "api" (e.g. <spanx style="verb">urn:scim:api</spanx>
+              ) are reserved for IETF approved SCIM specifications. Namespaces
+              with type "param" are reserved for future use.</t>
 
               <t hangText="Process of Identifier Resolution:"><vspace
-              blankLines="1"/>The namespace is not currently listed with a
+              blankLines="1"/> The namespace is not currently listed with a
               Resolution Discovery System (RDS), but nothing about the
               namespace prohibits the future definition of appropriate
               resolution methods or listing with an RDS.</t>
 
               <t hangText="Rules for Lexical Equivalence:"><vspace
-              blankLines="1"/>No special considerations; the rules for lexical
-              equivalence specified in <xref target="RFC2141"/> apply.</t>
+              blankLines="1"/> No special considerations; the rules for
+              lexical equivalence specified in <xref target="RFC2141"/>
+              apply.</t>
 
               <t hangText="Conformance with URN Syntax:"><vspace
-              blankLines="1"/>No special considerations.</t>
+              blankLines="1"/> No special considerations.</t>
 
-              <t hangText="Validation Mechanism:"><vspace blankLines="1"/>None
-              specified.</t>
+              <t hangText="Validation Mechanism:"><vspace blankLines="1"/>
+              None specified.</t>
 
-              <t hangText="Scope:"><vspace blankLines="1"/>Global.</t>
+              <t hangText="Scope:"><vspace blankLines="1"/> Global.</t>
             </list></t>
         </section>
 
-        <section title="Pre-Registered SCIM Identifiers">
-          <t>The following SCIM Identifiers are defined:<list style="hanging">
-              <t hangText="urn:scim:schemas:core:2.0"><vspace
-              blankLines="1"/>SCIM Core Schema as specified in <xref
-              target="schema"/>.</t>
+        <section title="Pre-Registered SCIM Schema Identifiers">
+          <t>The following SCIM Identifiers are defined: <list style="hanging">
+              <t hangText="urn:scim:schemas:core:2.0"><vspace blankLines="1"/>
+              SCIM Core Schema as specified in <xref target="schema"/> and
+              <xref target="initialSchemaRegistry"/>.</t>
 
               <t hangText="urn:scim:schemas:extension:enterprise:2.0"><vspace
-              blankLines="1"/>Enterprise schema extensions as defined in <xref
-              target="enterpriseUser"/>.</t>
+              blankLines="1"/> Enterprise schema extensions as defined in
+              <xref target="enterpriseUser"/> and <xref
+              target="initialSchemaRegistry"/>.</t>
             </list></t>
         </section>
       </section>
 
-      <section title="Registering New SCIM Schemas">
+      <section anchor="schemaReg" title="Registering SCIM Schemas">
         <t>This section defines the process for registering new SCIM schemas
-        with IANA. A schema URI is used as a value in the schemas attribute
-        (<xref target="schemas-attribute"/>) for the purpose of distinguishing
+        with IANA. A schema URI is used as a value in the schemas attribute (
+        <xref target="schemas-attribute"/> ) for the purpose of distinguishing
         extensions used in a SCIM resource.</t>
 
         <section title="Registration Procedure">
@@ -2780,7 +2829,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
         <section title="Schema Registration Template">
           <t>A SCIM schema URI is defined by completing the following
-          template:<list style="hanging">
+          template: <list style="hanging">
               <t hangText="Schema URI:">Schema URI: A unique URI for the SCIM
               schema extension.</t>
 
@@ -2804,7 +2853,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         </section>
       </section>
 
-      <section title="Initial SCIM Schema Registry">
+      <section anchor="initialSchemaRegistry"
+               title="Initial SCIM Schema Registry">
         <t>The IANA has created and will maintain the following registries for
         SCIM schema URIs with pointers to appropriate reference documents.</t>
 
@@ -2976,7 +3026,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
     <section title="Acknowledgements">
       <t>The editors would like to acknowledge the contribution and work of
-      the past draft editors:<list>
+      the past draft editors: <list>
           <t>Chuck Mortimore, Salesforce</t>
 
           <t>Patrick Harding, Ping</t>
@@ -3016,7 +3066,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
       <t>Draft 02 - KG - Addition of schema extensibility</t>
 
-      <t>Draft 03 - PH - Revisions based on following tickets:<list>
+      <t>Draft 03 - PH - Revisions based on following tickets: <list>
           <t>09 - Attribute uniquenes</t>
 
           <t>10 - Returnability of attributes</t>
@@ -3037,7 +3087,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           &lt;reference&gt; tags</t>
         </list></t>
 
-      <t>Draft 04 - PH - Revisions based on the following tickets:<list>
+      <t>Draft 04 - PH - Revisions based on the following tickets: <list>
           <t>43 - Drop short-hand notation for complex multi-valued
           attributes</t>
 
@@ -3053,7 +3103,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           RFC5646</t>
         </list></t>
 
-      <t>Draft 05 - PH - Revisions based on the following tickets<list>
+      <t>Draft 05 - PH - Revisions based on the following tickets <list>
           <t>23 - Clarified that the server is not required to preserve case
           for case insensitive strings</t>
 
@@ -3065,7 +3115,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           <t>- Typo corrections and removed some redundant text</t>
         </list></t>
 
-      <t>Draft 06 - PH - Revisions based on the following tickets<list>
+      <t>Draft 06 - PH - Revisions based on the following tickets <list>
           <t>63 - Corrected enterprise user URI in 14.2 and section 7, URI
           namespace changes due to ticket #41</t>
 
@@ -3078,6 +3128,9 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>- Reordered introduction, definitions and notation sections to
           follow typical format</t>
+
+          <t>- meta.attributes removed due to new PURGE command in draft 04
+          (no longer used)</t>
         </list></t>
     </section>
   </back>
