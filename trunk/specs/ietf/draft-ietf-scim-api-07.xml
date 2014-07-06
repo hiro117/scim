@@ -56,7 +56,7 @@
       </address>
     </author>
 
-    <date month="June" year="2014"/>
+    <date month="July" year="2014"/>
 
     <keyword>SCIM</keyword>
 
@@ -174,7 +174,7 @@ Authorization: Bearer h480djs93hd8
       <t><list style="hanging">
           <t hangText="GET">Retrieves a complete or partial resource.</t>
 
-          <t hangText="POST">Create new resources, create a Search request, or
+          <t hangText="POST">Create new resources, create a search request, or
           bulk modify resources.</t>
 
           <t hangText="PUT">Modifies a resource by replacing existing
@@ -2772,9 +2772,33 @@ ETag: W/"a330bc54f0671c9"
 
           <c>invalidFilter</c>
 
-          <c>The specified filter was invalid or not supported.</c>
+          <c>The specified filter syntax was invalid (does not comply with
+          <xref target="filterABNF"/>) or the specified attribute and filter
+          comparison combination is not supported.</c>
 
-          <c>GET, POST (Search)</c>
+          <c>GET(<xref target="query-resources"/>), POST (Search - <xref
+          target="query-post"/>), PATCH (Path Filter - <xref
+          target="edit-resource-with-patch"/>)</c>
+
+          <c>tooMany</c>
+
+          <c>The specified filter yields many more results than the server is
+          willing calculate or process. For example, a filter such as <spanx
+          style="verb">userName eq "*"</spanx> would return all entries with a
+          <spanx style="verb">userName</spanx> and MAY not be acceptable to
+          the service provider.</c>
+
+          <c>GET(<xref target="query-resources"/>), POST (Search - <xref
+          target="query-post"/>)</c>
+
+          <c>uniqueness</c>
+
+          <c>One or more of attribute values is already in use or is
+          reserved.</c>
+
+          <c>POST (Create - <xref target="create-resource"/>), PUT (<xref
+          target="edit-resource-with-put"/>), PATCH (<xref
+          target="edit-resource-with-patch"/>)</c>
 
           <c>mutability</c>
 
@@ -2782,35 +2806,60 @@ ETag: W/"a330bc54f0671c9"
           attributes mutability or current state (e.g. modification of an
           immutable attribute with an existing value).</c>
 
-          <c>PUT, PATCH</c>
+          <c>PUT (<xref target="edit-resource-with-put"/>), PATCH (<xref
+          target="edit-resource-with-patch"/>)</c>
 
           <c>invalidSyntax</c>
 
           <c>The request body message structure was invalid or did not conform
           to the request schema.</c>
 
-          <c>POST (Search, Create, BULK), PUT</c>
+          <c>POST (Search - <xref target="query-resources"/>, Create - <xref
+          target="create-resource"/>, Bulk - <xref target="bulk-resources"/>),
+          PUT (<xref target="edit-resource-with-put"/>)</c>
 
           <c>invalidPath</c>
 
-          <c>The path attribute was invalid or malformed.</c>
+          <c>The path attribute was invalid or malformed (see <xref
+          target="pathABNF"/>).</c>
 
-          <c>PATCH</c>
+          <c>PATCH (<xref target="edit-resource-with-patch"/>)</c>
 
           <c>noTarget</c>
 
-          <c>The specified path did not yield an attribute or attribute value
-          that could be operated on.</c>
+          <c>The specified <spanx style="verb">path</spanx> did not yield an
+          attribute or attribute value that could be operated on. This occurs
+          when the specified <spanx style="verb">path</spanx> value contains a
+          filter that yields no match.</c>
 
-          <c>PATCH</c>
+          <c>PATCH (<xref target="edit-resource-with-patch"/>)</c>
 
           <c>invalidValue</c>
 
-          <c>A required value was missing or the value specified was not
-          compatible with the operation or attribute type.</c>
+          <c>A required value was missing, or the value specified was not
+          compatible with the operation or attribute type (see Section 2.1
+          <xref target="I-D.ietf-scim-core-schema"/>).</c>
 
-          <c>POST (Bulk, Create), PUT, PATCH</c>
+          <c>GET (<xref target="query-resources"/>), POST (Create - <xref
+          target="create-resource"/>, Search - <xref
+          target="query-resources"/>), PUT (<xref
+          target="edit-resource-with-put"/>), PATCH (<xref
+          target="edit-resource-with-patch"/>)</c>
+
+          <c>invalidVers</c>
+
+          <c>The specified API version is not supported (see <xref
+          target="api-versioning"/>).</c>
+
+          <c>GET (<xref target="query-resources"/>), POST (ALL), PUT (<xref
+          target="edit-resource-with-put"/>), PATCH (<xref
+          target="edit-resource-with-patch"/>), DELETE (<xref
+          target="delete-resource"/>)</c>
         </texttable>
+
+        <t>Note that in the table above (<xref target="scimTypes"/>), the
+        applicability table applies to the normal HTTP method but MAY apply
+        within a SCIM Bulk operation (via HTTP POST).</t>
 
         <t>Error example in response to a non-existent GET request.<figure
             align="left" alt="" height="" suppress-title="false" title=""
@@ -2837,6 +2886,14 @@ ETag: W/"a330bc54f0671c9"
   "status":"400"
 }             </artwork>
           </figure></t>
+
+        <t>[[Editor's note: while the detail error codes seem to have
+        consensus, there is a question about whether the error codes should be
+        extensible so that individual service providers may define site
+        specific codes. Should all scimTypes be URIs, so that scimTypes can be
+        registered via IANA? Should there be a separate field defined for this
+        purpose? Or, should custom signalling (for non-protocol/schema errors,
+        be out of scope?]]</t>
       </section>
 
       <section anchor="api-versioning" title="API Versioning">
@@ -3429,6 +3486,9 @@ HTTP/1.1 403 FORBIDDEN
           <t>- Clarified that no filter matches should return success
           totalResults=0</t>
         </list></t>
+
+      <t>Draft 07 - PH - Revisions regarding support of detailed errors
+      (Tickets 37, 46, 67)</t>
     </section>
   </back>
 </rfc>
