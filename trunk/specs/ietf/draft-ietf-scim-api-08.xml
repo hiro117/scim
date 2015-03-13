@@ -41,10 +41,10 @@
     </author>
 
     <author fullname="Erik Wahlström" initials="E.W." surname="Wahlström">
-      <organization abbrev="Technology Nexus">Technology Nexus</organization>
+      <organization abbrev="Nexus Technology">Technology Nexus</organization>
 
       <address>
-        <email>erik.wahlstrom@nexussafe.com</email>
+        <email>erik.wahlstrom@nexusgroup.com</email>
       </address>
     </author>
 
@@ -56,36 +56,41 @@
       </address>
     </author>
 
-    <date month="July" year="2014"/>
+    <date month="August" year="2014"/>
 
     <keyword>SCIM</keyword>
 
     <abstract>
       <t>The System for Cross-Domain Identity Management (SCIM) specification
-      is designed to make managing user identity in cloud based applications
-      and services easier using HTTP Protocol. The specification suite seeks
-      to build upon experience with existing schemas and deployments, placing
-      specific emphasis on simplicity of development and integration, while
-      applying existing authentication, authorization, and privacy models.
-      It's intent is to reduce the cost and complexity of user management
-      operations by providing a common user schema and extension model, as
-      well as binding documents to provide patterns for exchanging this schema
-      using standard protocols. In essence, make it fast, cheap, and easy to
-      move users in to, out of, and around the cloud.</t>
+      is designed to make managing user identity in multi-domain based
+      applications and services easier using HTTP Protocol. Examples include
+      but are not limited to enterprise to cloud service providers, and
+      inter-cloud based scenarios. The specification suite seeks to build upon
+      experience with existing schemas and deployments, placing specific
+      emphasis on simplicity of development and integration, while applying
+      existing authentication, authorization, and privacy models. It's intent
+      is to reduce the cost and complexity of user management operations by
+      providing a common user schema and extension model, as well as binding
+      documents to provide patterns for exchanging this schema using standard
+      protocols. In essence, make it fast, cheap, and easy to move users in
+      to, out of, and around the cloud.</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction and Overview" toc="default">
       <t>The SCIM Protocol is an application-level, HTTP protocol for
-      provisioning and managing identity data on the web. The protocol
-      supports creation, modification, retrieval, and discovery of core
-      identity resources; i.e., Users and Groups, as well as custom resource
-      extensions.</t>
+      provisioning and managing identity data on the web and in cross-domain
+      environments such as enterprise to cloud, or inter-cloud scenarios. The
+      protocol supports creation, modification, retrieval, and discovery of
+      core identity resources such as Users and Groups, as well as custom
+      resources and resource extensions.</t>
 
       <section title="Intended Audience" toc="default">
         <t>This document is intended as a guide to SCIM API usage for both
-        identity service providers and clients.</t>
+        SCIM HTTP service providers and HTTP clients that may provision
+        information to service providers or retrieve information from
+        them.</t>
       </section>
 
       <section anchor="notat" title="Notational Conventions" toc="default">
@@ -105,11 +110,11 @@
 
       <section anchor="defs" title="Definitions" toc="default">
         <t><list style="hanging">
-            <t hangText="Base URL:">The SCIM HTTP protocol is always relative
-            to a Base URL. The Base URL MUST NOT contain a query string as
-            clients may append additional path information and query
-            parameters as part of forming the request. Example: <spanx
-            style="verb">https://example.com/scim/</spanx></t>
+            <t hangText="Base URI:">The SCIM HTTP protocol is described in
+            terms of a path relative to a Base URI. The Base URI MUST NOT
+            contain a query string as clients may append additional path
+            information and query parameters as part of forming the request.
+            Example: <spanx style="verb">https://example.com/scim/</spanx></t>
 
             <t>For readability, all examples in this document are expressed
             assuming the SCIM service root and the server root are the same.
@@ -125,21 +130,20 @@
 
     <section anchor="aa" title="Authentication and Authorization"
              toc="default">
-      <t>Because SCIM uses HTTP protocol, it does not define a scheme for
-      authentication and authorization. It depends on standard HTTP
-      authentication schemes. It is RECOMMENDED that clients be implemented in
-      such a way that new authentication schemes can be deployed. Implementers
-      SHOULD support existing authentication/authorization schemes. In
-      particular, OAuth2 <xref target="RFC6750"/> is RECOMMENDED. Appropriate
-      security considerations of the selected authentication and authorization
-      schemes SHOULD be taken. Because this protocol uses HTTP response status
-      codes as the primary means of reporting the result of a request, servers
-      are advised to respond to unauthorized or unauthenticated requests using
-      the 401 response code in accordance with <xref target="RFC7235">Section
-      3.1 of</xref>.</t>
+      <t>Because SCIM builds on the HTTP protocol, it does not define a scheme
+      for authentication and authorization. SCIM depends on standard HTTP
+      authentication schemes. Implementers SHOULD support existing
+      authentication/authorization schemes. In particular, OAuth2 <xref
+      target="RFC6750"/> is RECOMMENDED. Appropriate security considerations
+      of the selected authentication and authorization schemes SHOULD be
+      taken. Because this protocol uses HTTP response status codes as the
+      primary means of reporting the result of a request, servers are advised
+      to respond to unauthorized or unauthenticated requests using the 401
+      response code in accordance with <xref target="RFC7235">Section 3.1
+      of</xref>.</t>
 
       <t>All examples show an OAuth2 bearer token <xref target="RFC6750"/>
-      (thought it is not required) ; e.g.,</t>
+      (though it is not required) ; e.g.,</t>
 
       <figure align="left" alt="" height="" suppress-title="false" title=""
               width="">
@@ -155,7 +159,7 @@ Authorization: Bearer h480djs93hd8
       requested) MUST be inferred by service providers.</t>
     </section>
 
-    <section anchor="api" title="API">
+    <section anchor="api" title="SCIM Protocol">
       <t>The SCIM protocol specifies well known endpoints and HTTP methods for
       managing resources defined in the core schema; i.e., <spanx
       style="verb">User</spanx> and <spanx style="verb">Group</spanx>
@@ -174,12 +178,13 @@ Authorization: Bearer h480djs93hd8
           <t hangText="GET">Retrieves one or more complete or partial
           resources.</t>
 
-          <t hangText="POST">Create new resources, create a search request, or
-          may be used to bulk modify resources.</t>
+          <t hangText="POST">Depending on the endpoint, creates new resources,
+          create a search request, or may be used to bulk modify
+          resources.</t>
 
           <t hangText="PUT">Modifies a resource by replacing existing
           attributes with a specified set of replacement attributes (replace).
-          PUT SHOULD NOT be used to create new resources.</t>
+          PUT MUST NOT be used to create new resources.</t>
 
           <t hangText="PATCH">Modifies a resource with a set of client
           specified changes (partial update).</t>
@@ -223,7 +228,7 @@ Authorization: Bearer h480djs93hd8
 
         <c>Service Provider Config</c>
 
-        <c>/ServiceProviderConfigs</c>
+        <c>/ServiceProvider Configs</c>
 
         <c><xref format="default" target="get-resource">GET</xref></c>
 
@@ -243,7 +248,7 @@ Authorization: Bearer h480djs93hd8
 
         <c><xref format="default" target="get-resource">GET</xref></c>
 
-        <c>Retrieve a resource's schema</c>
+        <c>Retrieve one or more supported schemas.</c>
 
         <c>Bulk</c>
 
@@ -266,16 +271,15 @@ Authorization: Bearer h480djs93hd8
       <t>All requests to the service provider are made via HTTP Methods as per
       <xref target="RFC7231">Section 4.3</xref> on a URL derived from the Base
       URL. Responses are returned in the body of the HTTP response, formatted
-      as JSON. Response and error codes SHOULD be transmitted via the HTTP
-      status code of the response (if possible), and SHOULD also be specified
-      in the body of the response (see <xref
-      target="http-response-codes"/>).</t>
+      as JSON. Error status codes SHOULD be transmitted via the HTTP status
+      code of the response (if possible), and SHOULD also be specified in the
+      body of the response (see <xref target="http-response-codes"/>).</t>
 
       <section anchor="create-resource" title="Creating Resources"
                toc="default">
         <t>To create new resources, clients send HTTP POST requests to the
-        resource container endpoint such as: <spanx style="verb">/Users</spanx>
-        or <spanx style="verb">/Groups</spanx>.</t>
+        resource endpoint such as: <spanx style="verb">/Users</spanx> or
+        <spanx style="verb">/Groups</spanx>.</t>
 
         <t>Attributes in the request body, whose mutability is <spanx
         style="verb">readOnly</spanx>, SHALL be ignored.</t>
@@ -286,27 +290,34 @@ Authorization: Bearer h480djs93hd8
         value to non-asserted attributes in the final resource representation.
         Service providers MAY take into account whether a client has access
         to, or understands, all of the resource's attributes when deciding
-        whether non-asserted attributes SHALL be defaulted. Clients that would
-        like to override a server defaults, MAY specify <spanx style="verb">null</spanx>
-        for a single-valued attribute or an empty array <spanx style="verb">[]</spanx>
-        for a multi-valued attribute to clear all values.</t>
+        whether non-asserted attributes SHALL be defaulted. Clients that
+        intend to override server defaulted attributes, MAY specify <spanx
+        style="verb">null</spanx> for a single-valued attribute or an empty
+        array <spanx style="verb">[]</spanx> for a multi-valued attribute to
+        clear all values.</t>
 
-        <t>Successful resource creation is indicated with a 201 ("Created")
-        response code. Upon successful creation, the response body MUST
-        contain the newly created resource. Since the server is free to alter
+        <t>When the service provider successfully creates the new resource, an
+        HTTP response SHALL be returned with HTTP status <spanx style="verb">201</spanx>
+        ("Created"). The response body SHOULD contain the service provider's
+        representation of the newly created resource. The URI of the created
+        resource SHALL included in the HTTP <spanx style="verb">Location</spanx>
+        header and in JSON resource representation under the attribute <spanx
+        style="verb">meta.location</spanx>. Since the server is free to alter
         and/or ignore POSTed content, returning the full representation can be
         useful to the client, enabling it to correlate the client and server
-        views of the new resource. When a resource is created, its URI must be
-        returned in the response Location header.</t>
+        views of the new resource. </t>
 
         <t>If the service provider determines creation of the requested
         resource conflicts with existing resources; e.g., a <spanx
         style="verb">User</spanx> resource with a duplicate <spanx
-        style="verb">userName</spanx>, the service provider MUST return a 409
-        error and SHOULD indicate the conflicting attribute(s) in the body of
-        the response.</t>
+        style="verb">userName</spanx>, the service provider MUST return an
+        HTTP Status 409, with <spanx style="verb">scimType</spanx> error code
+        of <spanx style="verb">uniqueness</spanx> as per <xref
+        target="http-response-codes"/>.</t>
 
-        <t>Below, the client sends a POST request containing a user</t>
+        <t>Below, in the following example, a client sends a POST request
+        containing a <spanx style="verb">User</spanx> to the <spanx
+        style="verb">/Users</spanx> endpoint.</t>
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
@@ -331,9 +342,9 @@ Content-Length: ...
                    </artwork>
         </figure>
 
-        <t>The server signals a successful creation with a status code of 201.
-        The response includes a Location header indicating the User URI, and a
-        representation of that user in the body of the response.</t>
+        <t>In response to the example request above, the server signals a
+        successful creation with an HTTP status code 201 (Created) and returns
+        a representation of the resource created.</t>
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
@@ -366,10 +377,10 @@ ETag: W/"e180ee84f0671b1"
 
         <section anchor="resourceTypes" title="Resource Types">
           <t>When adding a resource to a specific endpoint, the meta attribute
-          <spanx style="verb">resourceType</spanx> SHALL be set by the service
-          provider to the corresponding resource Type for the endpoint. For
-          example, <spanx style="verb">/Users</spanx> will set <spanx
-          style="verb">resourceType</spanx> to <spanx style="verb">User</spanx>,
+          <spanx style="verb">resourceType</spanx> SHALL be set by the HTTP
+          service provider to the corresponding resource type for the
+          endpoint. For example, <spanx style="verb">/Users</spanx> will set
+          <spanx style="verb">resourceType</spanx> to <spanx style="verb">User</spanx>,
           and <spanx style="verb">/Groups</spanx> will set <spanx
           style="verb">resourceType</spanx> to <spanx style="verb">Group</spanx>.</t>
         </section>
@@ -377,19 +388,23 @@ ETag: W/"e180ee84f0671b1"
 
       <section anchor="get-resources-ops" title="Retrieving Resources"
                toc="default">
-        <t><spanx style="verb">User</spanx> and <spanx style="verb">Group</spanx>
-        resources are retrieved via opaque, unique URLs or via Query. Service
-        providers MAY choose to respond with a sub-set of resource attributes,
-        though MUST minimally return the resource id and meta attributes.</t>
+        <t>Resources are retrieved via opaque, unique URLs or via Query. The
+        attributes returned are defined in the server's attribute schema (see
+        <xref target="I-D.ietf-scim-core-schema">Section 10</xref>) and
+        request parameters (see <xref
+        target="addtl-retrieval-query-params"/>). By default, resource
+        attributes returned in a response are those whose schema <spanx
+        style="verb">returned</spanx> setting is <spanx style="verb">always</spanx>
+        or <spanx style="verb">default</spanx>. </t>
 
         <section anchor="get-resource" title="Retrieving a known Resource"
                  toc="default">
           <t>To retrieve a known resource, clients send GET requests to the
           resource endpoint; e.g., <spanx style="verb">/Users/{id}</spanx> or
-          <spanx style="verb">/Groups/{id}</spanx>.</t>
+          <spanx style="verb">/Groups/{id}</spanx>, or <spanx style="verb">/Schemas/{id}</spanx>.</t>
 
-          <t>If the resource exists the server responds with a status code of
-          200 and includes the result in the body of the response.</t>
+          <t>If the resource exists the server responds with HTTP Status code
+          200 (OK) and includes the result in the body of the response.</t>
 
           <t>The below example retrieves a single User via the <spanx
           style="verb">/Users</spanx> endpoint.</t>
@@ -448,19 +463,19 @@ ETag: W/"f250dd84f0671c3"
           </figure>
         </section>
 
-        <section anchor="query-resources" title="List/Query Resources"
+        <section anchor="query-resources" title="Query Resources"
                  toc="default">
-          <t>SCIM defines a standard set of operations that can be used to
-          filter, sort, and paginate response results. The operations are
-          specified by adding query parameters to the resource's endpoint (see
-          following sub-sections). Service providers MAY support additional
-          query parameters not specified here, and Providers SHOULD ignore any
-          query parameters they don't recognize.</t>
+          <t>The SCIM protocol defines a standard set of query parameters that
+          can be used to filter, sort, and paginate to return zero or more
+          resources in a query response. Queries MAY be made against a single
+          resource or a resource type endpoint (e.g. <spanx style="verb">/Users</spanx>).
+          SCIM service providers MAY support additional query parameters not
+          specified here and SHOULD ignore any query parameters they do not
+          recognize.</t>
 
-          <t>List and query responses MUST be identified using the following
-          URI: <spanx style="verb">urn:scim:api:messages:2.0:ListResponse</spanx>.
-          The following attributes are defined for list and query
-          responses:</t>
+          <t>Responses MUST be identified using the following URI: <spanx
+          style="verb">urn:scim:api:messages:2.0:ListResponse</spanx>. The
+          following attributes are defined for responses:</t>
 
           <t><list style="hanging">
               <t hangText="totalResults">The total number of results returned
@@ -477,18 +492,17 @@ ETag: W/"f250dd84f0671c3"
               <spanx style="verb">totalResults</spanx> is non-zero.</t>
 
               <t hangText="startIndex">The 1-based index of the first result
-              in the current set of list results. REQUIRED if <xref
-              format="default" target="pagination">pagination</xref> is
-              requested.</t>
+              in the current set of list results. REQUIRED when partial
+              results returned due to pagination.</t>
 
               <t hangText="itemsPerPage">The number of resources returned in a
-              list response page. REQUIRED if <xref format="default"
-              target="pagination">pagination</xref> is requested.</t>
+              list response page. REQUIRED when partial results returned due
+              to pagination.</t>
             </list></t>
 
           <t>A query that does not return any matches SHALL return success
-          with <spanx style="verb">totalResults</spanx> set to a value of
-          0.</t>
+          (HTTP Status 200) with <spanx style="verb">totalResults</spanx> set
+          to a value of 0.</t>
 
           <t/>
 
@@ -531,43 +545,57 @@ Content-Type: application/scim+json
           </figure>
 
           <section anchor="query-endpoints" title="Query Endpoints">
-            <t>Queries MAY be performed against a SCIM resource object or a
-            resource type endpoint. For example: <list>
-                <t><spanx style="verb">/Users/{userid}</spanx></t>
+            <t>Queries MAY be performed against a SCIM resource object, a
+            resource type endpoint, or a SCIM server root. For example: <list>
+                <t><spanx style="verb">/Users/{id}</spanx></t>
 
                 <t><spanx style="verb">/Users</spanx></t>
 
                 <t><spanx style="verb">/Groups</spanx></t>
               </list></t>
 
-            <t>A server MAY support searches against the server root (e.g.
-            "/"). A search against a server root indicates that ALL resources
+            <t>A query against a server root indicates that ALL resources
             within the server SHALL be included subject to filtering. A filter
             expression using <spanx style="verb">meta.resourceType</spanx> MAY
             be used to restrict results to one or more specific resource types
-            (e.g. <spanx style="verb">User</spanx> ).</t>
+            (to exclude others). For example:<figure>
+                <artwork>filter=(meta.resourceType eq User) or (meta.resourceType eq Group)</artwork>
+              </figure></t>
 
-            <t>When processing search operations across endpoints that include
-            more than one SCIM resource type (e.g. a search from the server
-            root endpoint), filters MUST be processed in the same fashion as
-            outlined in <xref target="filtering"/>. For filtered attributes
-            that are not part of a particular resource type, the service
-            provider SHALL treat the attribute as if there is no attribute
-            value. For example, a presence or equality filter for an undefined
-            attribute evaluates as FALSE.</t>
+            <t>If a SCIM service provider determines that too many results
+            would be returned (e.g. because a client queried a resource type
+            endpoint or the server base URI), the server SHALL reject the
+            request by returning an HTTP response with <spanx style="verb">status</spanx>
+            400 and json attribute <spanx style="verb">scimType</spanx> set to
+            <spanx style="verb">tooMany</spanx> (see <xref
+            target="scimTypes"/>).</t>
+
+            <t>When processing query operations across endpoints that include
+            more than one SCIM resource type (e.g. a query from the server
+            root endpoint), filters MUST be processed as outlined in <xref
+            target="filtering"/>. For filtered attributes that are not part of
+            a particular resource type, the service provider SHALL treat the
+            attribute as if there is no attribute value. For example, a
+            presence or equality filter for an undefined attribute evaluates
+            as FALSE.</t>
           </section>
 
           <section anchor="filtering" title="Filtering">
-            <t>Filtering is OPTIONAL. Clients may request a subset of
-            resources by specifying the 'filter' URL query parameter
-            containing a filter expression. When specified only those
-            resources matching the filter expression SHALL be returned. The
-            expression language that is used in the filter parameter supports
-            references to attributes and literals.</t>
+            <t>Filtering is an OPTIONAL parameter for SCIM service providers.
+            Clients MAY discover service provider filter capabilities by
+            looking at the <spanx style="verb">filter</spanx> attribute of the
+            <spanx style="verb">ServiceProviderConfig</spanx> (see <xref
+            target="I-D.ietf-scim-core-schema">Section 8</xref>). Clients MAY
+            request a subset of resources by specifying the <spanx
+            style="verb">filter</spanx> query parameter containing a filter
+            expression. When specified only those resources matching the
+            filter expression SHALL be returned. The expression language that
+            is used in the filter parameter supports references to attributes
+            and literals.</t>
 
-            <t>The attribute name and attribute operator are case insensitive.
-            For example, the following two expressions will evaluate to the
-            same logical value:</t>
+            <t>Attribute names and attribute operators used in filters are
+            case insensitive. For example, the following two expressions will
+            evaluate to the same logical value:</t>
 
             <figure align="center" alt="" height="" suppress-title="false"
                     title="" width="">
@@ -638,8 +666,9 @@ filter=Username eq "john"
 
               <c>present (has value)</c>
 
-              <c>If the attribute has a non-empty value, or if it contains a
-              non-empty node for complex attributes there is a match.</c>
+              <c>If the attribute has a non-empty or non-null value, or if it
+              contains a non-empty node for complex attributes there is a
+              match. </c>
 
               <c>gt</c>
 
@@ -649,7 +678,9 @@ filter=Username eq "john"
               is a match. The actual comparison is dependent on the attribute
               type. For string attribute types, this is a lexicographical
               comparison and for DateTime types, it is a chronological
-              comparison.</c>
+              comparison. For Integer attributes it is a comparison by numeric
+              value. Boolean and Binary attributes SHALL cause a failed
+              response (HTTP Status 400) with scimType of invlaidFiler.</c>
 
               <c>ge</c>
 
@@ -659,7 +690,10 @@ filter=Username eq "john"
               operator value, there is a match. The actual comparison is
               dependent on the attribute type. For string attribute types,
               this is a lexicographical comparison and for DateTime types, it
-              is a chronological comparison.</c>
+              is a chronological comparison. For Integer attributes it is a
+              comparison by numeric value. Boolean and Binary attributes SHALL
+              cause a failed response (HTTP Status 400) with scimType of
+              invlaidFiler.</c>
 
               <c>lt</c>
 
@@ -669,7 +703,9 @@ filter=Username eq "john"
               a match. The actual comparison is dependent on the attribute
               type. For string attribute types, this is a lexicographical
               comparison and for DateTime types, it is a chronological
-              comparison.</c>
+              comparison. For Integer attributes it is a comparison by numeric
+              value. Boolean and Binary attributes SHALL cause a failed
+              response (HTTP Status 400) with scimType of invlaidFiler.</c>
 
               <c>le</c>
 
@@ -679,7 +715,10 @@ filter=Username eq "john"
               value, there is a match. The actual comparison is dependent on
               the attribute type. For string attribute types, this is a
               lexicographical comparison and for DateTime types, it is a
-              chronological comparison.</c>
+              chronological comparison. For Integer attributes it is a
+              comparison by numeric value. Boolean and Binary attributes SHALL
+              cause a failed response (HTTP Status 400) with scimType of
+              invlaidFiler.</c>
             </texttable>
 
             <t/>
@@ -820,11 +859,11 @@ logExp    = FILTER ("and" / "or") FILTER</artwork>
             for all string attributes unless the attribute is defined as case
             exact. By default all string attributes are case insensitive.</t>
 
-            <t>Clients MAY search by schema or schema extensions by using a
+            <t>Clients MAY query by schema or schema extensions by using a
             filter expression including the "schemas" attribute.</t>
 
-            <figure align="left" alt="" height="" suppress-title="false"
-                    title="Example Filters" width="">
+            <figure align="left" alt="" anchor="exampleFilters" height=""
+                    suppress-title="false" title="Example Filters" width="">
               <preamble>The following are examples of valid filters. Some
               attributes (e.g. rooms and rooms.number) are hypothetical
               extensions and are not part of SCIM core schema:</preamble>
@@ -882,10 +921,11 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
                 responses. If the sortBy attribute corresponds to a singular
                 attribute, resources are sorted according to that attribute's
                 value; if it's a multi-valued attribute, resources are sorted
-                by the value of the primary attribute, if any, or else the
-                first value in the list, if any. If the attribute is complex
-                the attribute name must be a path to a sub-attribute in
-                standard <xref format="default"
+                by the value of the primary attribute (see <xref
+                target="I-D.ietf-scim-core-schema">Section 2.2</xref>), if
+                any, or else the first value in the list, if any. If the
+                attribute is complex the attribute name must be a path to a
+                sub-attribute in standard <xref format="default"
                 target="attribute-notation">attribute notation</xref> ; e.g.,
                 <spanx style="verb">sortBy=name.givenName</spanx>. For all
                 attribute types, if there is no data for the specified <spanx
@@ -900,7 +940,7 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
                 sortOrder SHALL default to ascending. String type attributes
                 are case insensitive by default unless the attribute type is
                 defined as a case exact string. <spanx style="verb">sortOrder</spanx>
-                MUST sort according to the attribute type; i.e., for caee
+                MUST sort according to the attribute type; i.e., for case
                 insensitive attributes, sort the result using case
                 insensitive, unicode alphabetic sort order, with no specific
                 locale implied and for case exact attribute types, sort the
@@ -934,7 +974,7 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
 
               <c>startIndex</c>
 
-              <c>The 1-based index of the first search result. A value less
+              <c>The 1-based index of the first query result. A value less
               than 1 SHALL be interpreted as 1.</c>
 
               <c>1</c>
@@ -942,7 +982,7 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
               <c>count</c>
 
               <c>Non-negative Integer. Specifies the desired maximum number of
-              search results per page; e.g., 10. A negative value SHALL be
+              query results per page; e.g., 10. A negative value SHALL be
               interpreted as <spanx style="verb">0</spanx>. A value of <spanx
               style="verb">0</spanx> indicates no resource results are to be
               returned except for <spanx style="verb">totalResults</spanx>.</c>
@@ -965,7 +1005,7 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
 
               <c>itemsPerPage</c>
 
-              <c>Non-negative Integer. Specifies the number of search results
+              <c>Non-negative Integer. Specifies the number of query results
               returned in a query response page; e.g., 10.</c>
 
               <c>totalResults</c>
@@ -976,7 +1016,7 @@ filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
               <c>startIndex</c>
 
               <c>The 1-based index of the first result in the current set of
-              search results; e.g., 1.</c>
+              query results; e.g., 1.</c>
             </texttable>
 
             <t><figure align="left" alt="" height="" suppress-title="false"
@@ -1017,15 +1057,17 @@ Authorization: Bearer h480djs93hd8
 
           <section anchor="attributesParam" title="Attributes">
             <t>The following attributes control which attributes SHALL be
-            returned with a returned resource.<list style="hanging">
+            returned with a returned resource. SCIM clients MAY use up to one
+            of these two OPTIONAL parameters which MUST be supported by SCIM
+            service providers:<list style="hanging">
                 <t hangText="attributes">A multi-valued list of strings
                 indicating the names of resource attributes to return in the
                 response overriding the set of attributes that would be
-                returned by default. Attribute names MUST be in standard <xref
+                returned by default. Attribute names MUST be in standard.<xref
                 format="default" target="attribute-notation">attribute
                 notation</xref> form. See <xref format="default"
                 target="addtl-retrieval-query-params">additional retrieval
-                query parameters</xref>. OPTIONAL.</t>
+                query parameters</xref>.</t>
 
                 <t hangText="excludedAttributes">A multi-valued list of
                 strings indicating the names of resource attributes to be
@@ -1038,7 +1080,7 @@ Authorization: Bearer h480djs93hd8
                 target="attribute-notation">attribute notation</xref> form.
                 See <xref format="default"
                 target="addtl-retrieval-query-params">additional retrieval
-                query parameters</xref>. OPTIONAL.</t>
+                query parameters</xref>. </t>
               </list></t>
           </section>
         </section>
@@ -1051,14 +1093,14 @@ Authorization: Bearer h480djs93hd8
           endpoint SHALL be used to indicate the HTTP POST verb is intended to
           be a query operation.</t>
 
-          <t>To create a new search result set, a SCIM client sends an HTTP
+          <t>To create a new query result set, a SCIM client sends an HTTP
           POST request to the desired SCIM resource endpoint (ending in
           '/.search'). The body of the POST request MAY include any of the
           parameters as defined in <xref target="query-resources"/>.</t>
 
-          <t>Search requests MUST be identified using the following URI:
+          <t>Query requests MUST be identified using the following URI:
           'urn:scim:api:messages:2.0:SearchRequest'. The following attributes
-          are defined for search requests:</t>
+          are defined for query requests:</t>
 
           <t><list style="hanging">
               <t hangText="attributes">A multi-valued list of strings
@@ -1100,11 +1142,11 @@ Authorization: Bearer h480djs93hd8
               target="sorting">sorting</xref>. OPTIONAL.</t>
 
               <t hangText="startIndex">An integer indicating the 1-based index
-              of the first search result. See <xref format="default"
+              of the first query result. See <xref format="default"
               target="pagination">pagination</xref>. OPTIONAL.</t>
 
               <t hangText="count">An integer indicating the desired maximum
-              number of search results per page. See <xref format="default"
+              number of query results per page. See <xref format="default"
               target="pagination">pagination</xref>. OPTIONAL.</t>
             </list></t>
 
@@ -1112,8 +1154,8 @@ Authorization: Bearer h480djs93hd8
           specified in <xref target="query-resources"/>.</t>
 
           <figure align="left" alt="POST Example" anchor="POSTExample"
-                  title="Example POST Search Request">
-            <preamble>The following example shows an HTTP POST Search request
+                  title="Example POST Query Request">
+            <preamble>The following example shows an HTTP POST Query request
             with search parameters attributes, filter, and count
             included:</preamble>
 
@@ -1127,7 +1169,7 @@ Content-Length: ...
 {
   "schemas": ["urn:scim:api:messages:2.0:SearchRequest"],
   "attributes": ["displayName", "userName"],
-  "filter": "displayName sw \"smith\"",
+  "filter": "(displayName sw \"smith\") and (meta.resourceType eq \"User\")",
   "startIndex": 1,
   "count": 10
 }</artwork>
@@ -1136,8 +1178,8 @@ Content-Length: ...
           <t/>
 
           <figure align="left" anchor="ExampleResponse"
-                  title="Example POST Search Response">
-            <preamble>A search response is shown with the first page of
+                  title="Example POST Query Response">
+            <preamble>A query response is shown with the first page of
             results. For brevity reasons, only two matches are shown: one User
             and one Group.</preamble>
 
@@ -1180,9 +1222,8 @@ Location: https://example.com/.search
         <t>Resources can be modified in whole or in part via PUT or PATCH,
         respectively. Implementers MUST support PUT as specified in <xref
         target="RFC7231">Section 4.3</xref>. Resources such as Groups may be
-        very large hence implementers SHOULD support <xref
-        target="RFC5789">PATCH </xref> to enable partial resource
-        modifications.</t>
+        very large hence implementers SHOULD support HTTP PATCH <xref
+        target="RFC5789"/> to enable partial resource modifications.</t>
 
         <section anchor="edit-resource-with-put" title="Replacing with PUT"
                  toc="default">
@@ -1190,7 +1231,7 @@ Location: https://example.com/.search
           attributes. Clients that MAY have previously retrieved the entire
           resource in advance and revised it, MAY replace the resource using
           an HTTP PUT. Because SCIM resource identifiers are typically
-          assigned by the service provider, HTTP PUT SHOULD NOT be used to
+          assigned by the service provider, HTTP PUT MUST NOT be used to
           create new resources.</t>
 
           <t>As the operation intent is to replace all attributes, SCIM
@@ -1229,8 +1270,8 @@ Location: https://example.com/.search
 
           <t>Unless otherwise specified a successful PUT operation returns a
           200 OK response code and the entire resource within the response
-          body, enabling the client to correlate the client's and Provider's
-          views of the updated resource. Example:</t>
+          body, enabling the client to correlate the client's and the service
+          provider's views of the updated resource. Example:</t>
 
           <figure align="left" alt="" height="" suppress-title="false"
                   title="" width="">
@@ -1345,7 +1386,8 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           style="verb">valuePath</spanx>, and <spanx style="verb">subAttr</spanx>
           are defined in <xref target="filtering"/>. The <spanx style="verb">valuePath</spanx>
           rule allows specific values of a complex, multi-valued attribute to
-          be selected. <figure align="left">
+          be selected. <figure align="left" anchor="examplePaths"
+              title="Example Path Values">
               <preamble>Valid examples of <spanx style="verb">path</spanx>
               values are as follows:</preamble>
 
@@ -1371,7 +1413,9 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           style="verb">add</spanx> a value to an <spanx style="verb">immutable</spanx>
           attribute if the attribute had no previous value. An operation that
           is not compatibile with an attribute's mutability or schema SHALL
-          return an error as indicated below.</t>
+          return the appropriate HTTP response status code and a JSON detail
+          error response as defined in <xref
+          target="http-response-codes"/>.</t>
 
           <t>The attribute notation rules described in <xref
           target="attribute-notation"/> apply for describing attribute paths.
@@ -1395,12 +1439,19 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           Evaluation continues until all operations are successfully applied
           or until an error condition is encountered.</t>
 
+          <t>For a multi-valued attributes, a patch operation that sets a
+          value's <spanx style="verb">primary</spanx> attribute to <spanx
+          style="verb">true</spanx>, SHALL cause the server to automatically
+          set <spanx style="verb">primary</spanx> to <spanx style="verb">false</spanx>
+          for any other values in the array as only one value MAY be
+          primary.</t>
+
           <t>A patch request, regardless of the number of operations, SHALL be
           treated as atomic. If a single operation encounters an error
           condition, the original SCIM resource MUST be restored, and a
           failure status SHALL be returned.</t>
 
-          <t>If a request fails. the server SHALL return an HTTP response
+          <t>If a request fails, the server SHALL return an HTTP response
           status code and a JSON detail error response as defined in <xref
           target="http-response-codes"/>.</t>
 
@@ -1414,10 +1465,18 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
           parameter is specified on the request.</t>
 
           <section anchor="addOp" title="Add Operation">
-            <t>The <spanx style="verb">add</spanx> operation performs one of
-            the following functions, depending upon what the target location
-            indicated by <spanx style="verb">path</spanx> references: <list
-                style="symbols">
+            <t>The <spanx style="verb">add</spanx> operation is used to add a
+            new attribute value to an existing resource.</t>
+
+            <t>The operation MUST contain a <spanx style="verb">value</spanx>
+            member whose content specifies the value to be added. The value
+            MAY be a quoted value OR it may be a JSON object containing the
+            sub-attributes of the complex attribute specified in the
+            operation's <spanx style="verb">path</spanx>.</t>
+
+            <t>The result of the add operation depends upon what the target
+            location indicated by <spanx style="verb">path</spanx> references:
+            <list style="symbols">
                 <t>If the target location does not exist, the attribute and
                 value is added.</t>
 
@@ -1439,12 +1498,6 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
                 change the resource, this operation SHALL NOT change the
                 modify timestamp of the resource.</t>
               </list></t>
-
-            <t>The operation MUST contain a <spanx style="verb">value</spanx>
-            member whose content specifies the value to be added. The value
-            MAY be a quoted value OR it may be a JSON object containing the
-            sub-attributes of the complex attribute specified in the
-            operation's <spanx style="verb">path</spanx>.</t>
 
             <t/>
 
@@ -1495,23 +1548,36 @@ Location: "https://example.com/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"</art
             target location specified by <spanx style="verb">path</spanx> :
             <list style="symbols">
                 <t>If the target location is a single-value attribute, the
-                attribute and its associated value is removed.</t>
+                attribute and its associated value is removed and the
+                attribute SHALL be considered unassigned.</t>
 
                 <t>If the target location is a multi-valued attribute and no
-                filter is specified, the attribute and all values are
-                removed.</t>
+                filter is specified, the attribute and all values are removed
+                and the attribute SHALL be considered unassigned.</t>
 
                 <t>If the target location is a multi-valued attribute and a
                 complex filter is specified comparing a <spanx style="verb">value</spanx>,
-                the values matched by the filter are removed.</t>
+                the values matched by the filter are removed. If after removal
+                of the selected values, no other values remain, the
+                multi-valued attribute SHALL be considered unassigned.</t>
 
                 <t>If the target location is a complex-multi-valued attribute
                 and a complex filter is specified based on the attribute's
-                sub-attributes, the matching records are removed.</t>
+                sub-attributes, the matching records are removed.
+                Sub-attributes whose values have been removed SHALL be
+                considered unassigned. If the complex-multi-valued attribute
+                has no remaining records, the attribute SHALL be considered
+                unassigned.</t>
               </list></t>
 
+            <t>If an attribute is removed or becomes unassigned and is defined
+            as a required attribute or a read-only attribute, the server SHALL
+            return an HTTP response status code and a JSON detail error
+            response as defined in <xref target="http-response-codes"/> with a
+            <spanx style="verb">scimType</spanx> error of <spanx style="verb">mutability</spanx>.</t>
+
             <t>The following example shows how to remove a member from a
-            group. As with the previous example, the "display" Sub-Attribute
+            group. As with the previous example, the "display" sub-attribute
             is optional. If the user was not a member of this group, no
             changes should be made to the resource and a success response
             should be returned.</t>
@@ -1748,7 +1814,7 @@ If-Match: W/"a330bc54f0671c9"
         choose not to permanently delete the resource, but MUST return a 404
         error code for all operations associated with the previously deleted
         Id. Service providers MUST also omit the resource from future query
-        results. In addition the service provider MUST not consider the
+        results. In addition the service provider SHOULD NOT consider the
         deleted resource in conflict calculation. For example if a User
         resource is deleted, a CREATE request for a User resource with the
         same userName as the previously deleted resource should not fail with
@@ -1853,8 +1919,8 @@ HTTP/1.1 404 NOT FOUND
                 is POST.</t>
 
                 <t hangText="version">The current resource version. Version is
-                REQUIRED if the service provider supports ETags and the method
-                is PUT, DELETE, or PATCH.</t>
+                MAY be used if the service provider supports ETags and the
+                method is PUT, PATCH, or DELETE.</t>
 
                 <t hangText="path">The resource's relative path. If the method
                 is POST the value must specify a resource type endpoint; e.g.,
@@ -1870,16 +1936,17 @@ HTTP/1.1 404 NOT FOUND
                 <t hangText="location">The resource endpoint URL. REQUIRED in
                 a response, except in the event of a POST failure.</t>
 
-                <t hangText="status">A complex type that contains information
-                about the success or failure of one operation within the bulk
-                job. REQUIRED in a response. <list style="hanging">
-                    <t hangText="code">The HTTP response code that would have
-                    been returned if a a single HTTP request would have been
-                    used. REQUIRED.</t>
+                <t hangText="response">The HTTP response body to the specified
+                request operation. When indicating a response with an HTTP
+                status other than a 200 series response, the response body
+                MUST be included. For normal completion, the server MAY elect
+                to omit the response body.</t>
 
-                    <t hangText="description">A human readable error message.
-                    REQUIRED when an error occurred.</t>
-                  </list></t>
+                <t hangText="status">The HTTP response status code to the
+                requested operation. When indicating an error, the <spanx
+                style="verb">response</spanx> attribute MUST contain the
+                detailed error response as per <xref
+                target="http-response-codes"/>.</t>
               </list></t>
           </list></t>
 
@@ -1889,10 +1956,10 @@ HTTP/1.1 404 NOT FOUND
 
         <t>The service provider MUST continue performing as many changes as
         possible and disregard partial failures. The client MAY override this
-        behavior by specifying a value for failOnErrors attribute. The
-        failOnErrors attribute defines the number of errors that the service
-        provider should accept before failing the remaining operations
-        returning the response.</t>
+        behavior by specifying a value for the <spanx style="verb">failOnErrors</spanx>
+        attribute. The failOnErrors attribute defines the number of errors
+        that the service provider should accept before failing the remaining
+        operations returning the response.</t>
 
         <t>To be able to reference a newly created resource the attribute
         bulkId MUST be specified when creating new resources. The bulkId is
@@ -1902,31 +1969,32 @@ HTTP/1.1 404 NOT FOUND
         map the service provider id with the bulkId of the created
         resource.</t>
 
-        <t>There can be more then one operation per resource in each bulk job.
-        The Service client MUST take notice of the unordered structure of JSON
-        and the service provider can process operations in any order. For
-        example, if the Service client sends two PUT operations in one
-        request, the outcome is non-deterministic.</t>
+        <t>A SCIM service provider MAY elect to optimize a sequence operations
+        received (e.g. to improve processing performance). When doing so, the
+        service provider MUST ensure the clients intent is preserved and the
+        same stateful result is achieved as for non-optimized processing. For
+        example, before a <spanx style="verb">User</spanx> can be added to a
+        <spanx style="verb">Group</spanx>, they must first be created.
+        Processing these requests out of order, might result in a failure to
+        add the new <spanx style="verb">User</spanx> to the <spanx
+        style="verb">Group</spanx>.</t>
 
         <t>The service provider response MUST include the result of all
-        processed operations. A location attribute that includes the
-        resource's end point MUST be returned for all operations excluding
-        failed POSTs. The status attribute includes information about the
-        success or failure of one operation within the bulk job. The attribute
-        status MUST include the code attribute that holds the HTTP response
-        code that would have been returned if a single HTTP request would have
-        been used. If an error occurred the status MUST also include the
-        description attribute containing a human readable explanation of the
-        error.</t>
+        processed operations. A <spanx style="verb">location</spanx> attribute
+        that includes the resource's endpoint MUST be returned for all
+        operations excluding failed POSTs. The status attribute includes
+        information about the success or failure of one operation within the
+        bulk job. The attribute status MUST include the code attribute that
+        holds the HTTP response code that would have been returned if a single
+        HTTP request would have been used. If an error occurred the status
+        MUST also include the description attribute containing a human
+        readable explanation of the error.</t>
 
         <figure align="left" alt="" height="" suppress-title="false" title=""
                 width="">
           <artwork align="left" alt="" height="" name="" type="" width=""
-                   xml:space="preserve">
-                    
-"status": {
-  "code": "201"
-}
+                   xml:space="preserve">                   
+"status": "201"
 </artwork>
         </figure>
 
@@ -1937,10 +2005,14 @@ HTTP/1.1 404 NOT FOUND
           <artwork align="left" alt="" height="" name="" type="" width=""
                    xml:space="preserve">
                     
-"status": {
-  "code": "400",
-  "description": "Request is unparseable, syntactically incorrect, or violates schema."
-}</artwork>
+"status": "400",
+"response":{
+     "schemas": ["urn:scim:api:messages:2.0:Error"],
+     "scimType":"invalidSyntax"
+     "detail":"Request is unparseable, syntactically incorrect, or violates schema.",
+     "status":"400"
+ }
+</artwork>
         </figure>
 
         <t>The following example shows how to add, update, and remove a user.
@@ -2028,32 +2100,24 @@ Content-Type: application/scim+json
             "method": "POST",
             "bulkId": "qwerty",
             "version": "W\/\"oY4m4wn58tkVjJxK\"",
-            "status": {
-                "code": "201"
-            }
+            "status": "201"
         },
         {
             "location": "https://example.com/v2/Users/b7c14771-226c-4d05-8860-134711653041",
             "method": "PUT",
             "version": "W\/\"huJj29dMNgu3WXPD\"",
-            "status": {
-                "code": "200"
-            }
+            "status": "200"
         },
         {
             "location": "https://example.com/v2/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
             "method": "PATCH",
             "version": "W\/\"huJj29dMNgu3WXPD\"",
-            "status": {
-                "code": "200"
-            }
+            "status": "200"
         },
         {
             "location": "https://example.com/v2/Users/e9025315-6bea-44e1-899c-1e07454e468b",
             "method": "DELETE",
-            "status": {
-                "code": "204"
-            }
+            "status": "204"
         }
     ]
 }</artwork>
@@ -2079,9 +2143,12 @@ Content-Type: application/scim+json
     {
       "method": "POST",
       "bulkId": "qwerty",
-      "status": {
-        "code": "400",
-        "description": "Request is unparseable, syntactically incorrect, or violates schema."
+      "status": "400",
+      "response":{
+         "schemas": ["urn:scim:api:messages:2.0:Error"],
+         "scimType":"invalidSyntax"
+         "detail":"Request is unparseable, syntactically incorrect, or violates schema.",
+         "status":"400"
       }
     }
   ]
@@ -2107,33 +2174,42 @@ Content-Type: application/scim+json
     {
       "method": "POST",
       "bulkId": "qwerty",
-      "status": {
-        "code": "400",
-        "description": "Request is unparseable, syntactically incorrect, or violates schema."
+      "status": "400",
+      "response":{
+         "schemas": ["urn:scim:api:messages:2.0:Error"],
+         "scimType":"invalidSyntax"
+         "detail":"Request is unparseable, syntactically incorrect, or violates schema.",
+         "status":"400"
       }
     },
     {
       "location": "https://example.com/v2/Users/b7c14771-226c-4d05-8860-134711653041",
       "method": "PUT",
-      "status": {
-        "code": "412",
-        "description": "Failed to update as user changed on the server since you last retrieved it."
+      "status": "412",
+      "response":{
+          "schemas": ["urn:scim:api:messages:2.0:Error"],
+          "detail":"Failed to update as user changed on the server since you last retrieved it.",
+          "status":"412"
       }
     },
     {
       "location": "https://example.com/v2/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
       "method": "PATCH",
-      "status": {
-        "code": "412",
-        "description": "Failed to update as user changed on the server since you last retrieved it."
+      "status": "412",
+      "response":{
+          "schemas": ["urn:scim:api:messages:2.0:Error"],
+          "detail":"Failed to update as user changed on the server since you last retrieved it.",
+          "status":"412"
       }
     },
     {
       "location": "https://example.com/v2/Users/e9025315-6bea-44e1-899c-1e07454e468b",
       "method": "DELETE",
-      "status": {
-        "code": "404",
-        "description": "Specified resource; e.g., User, does not exist."
+      "status": "404",
+      "response":{
+          "schemas": ["urn:scim:api:messages:2.0:Error"],
+          "detail":"Resource does not exist.",
+          "status":"404"
       }
     }
   ]
@@ -2185,7 +2261,7 @@ Content-Length: ...
         "displayName": "Tour Guides",
         "members": [
           {
-            "type": "user",
+            "type": "User",
             "value": "bulkId:qwerty"
           }
         ]
@@ -2213,18 +2289,14 @@ Content-Type: application/scim+json
       "method": "POST",
       "bulkId": "qwerty",
       "version": "W\/\"4weymrEsh5O6cAEK\"",
-      "status": {
-        "code": "201"
-      }
+      "status": "201"
     },
     {
       "location": "https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a",
       "method": "POST",
       "bulkId": "ytrewq",
       "version": "W\/\"lha5bbazU3fNvfe5\"",
-      "status": {
-        "code": "201"
-      }
+      "status": "201"
     }
   ]
 }</artwork>
@@ -2357,7 +2429,7 @@ Content-Length: ...
         "displayName": "Group A",
         "members": [
           {
-            "type": "group",
+            "type": "Group",
             "value": "bulkId:ytrewq"
           }
         ]
@@ -2372,7 +2444,7 @@ Content-Length: ...
         "displayName": "Group B",
         "members": [
           {
-            "type": "group",
+            "type": "Group",
             "value": "bulkId:qwerty"
           }
         ]
@@ -2482,16 +2554,11 @@ Content-Length: 4294967296
             
 HTTP/1.1 413 Request Entity Too Large
 Content-Type: application/scim+json
-Location: https://example.com/v2/Bulk/yfCrVJhFIJagAHj8
 
 {
   "schemas":["urn:scim:api:messages:2.0:Error"],
-  "Errors":[
-    {
-      "description":"The size of the bulk operation exceeds the maxPayloadSize (1048576).",
-      "code":"413"
-    }
-  ]
+  "status": "413",
+  "detail":"The size of the bulk operation exceeds the maxPayloadSize (1048576)."
 }
 </artwork>
         </figure>
@@ -2555,11 +2622,11 @@ Host: example.com
       <section anchor="addtl-retrieval-query-params"
                title="Additional Operation Response Parameters" toc="default">
         <t>For any SCIM operation where a resource representation is returned
-        (e.g. HTTP GET), the attributes normally returned are defined as the
-        minimum attribute set plus default attributes. The minimum set are
+        (e.g. HTTP GET), the attributes returned are defined as the minimum
+        attribute set plus default attributes set. The minimum set are those
+        attributes whose schema have <spanx style="verb">returned</spanx> set
+        to <spanx style="verb">always</spanx>. The default attribute set are
         those attributes whose schema have <spanx style="verb">returned</spanx>
-        set to <spanx style="verb">always</spanx>. The defaut attribute set
-        are those attributes whose schema have <spanx style="verb">returned</spanx>
         set to <spanx style="verb">default</spanx>.</t>
 
         <t>Clients MAY request a partial resource representation on any
@@ -2567,11 +2634,12 @@ Host: example.com
         either of the mutually exclusive URL query parameters <spanx
         style="verb">attributes</spanx> OR <spanx style="verb">excludedAtributes</spanx>
         as follows: <list hangIndent="8" style="hanging">
-            <t hangText="attributes">When specified, each resource returned
-            MUST contain the minimal set of resource attributes and MUST
-            contain no other attributes or sub-attributes other than those
-            explicitly requested. The query parameter attributes value is a
-            comma separated list of resource attribute names in standard <xref
+            <t hangText="attributes">When specified the default list of
+            attributes SHALL be overridden and each resource returned MUST
+            contain the minimum set of resource attributes and any attributes
+            or sub-attributes explicitly requested by the <spanx style="verb">attributes</spanx>
+            parameter. The query parameter attributes value is a comma
+            separated list of resource attribute names in standard <xref
             format="default" target="attribute-notation">attribute
             notation</xref> form (e.g. userName, name, emails).</t>
 
@@ -2591,7 +2659,7 @@ Host: example.com
                    xml:space="preserve">
 GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=userName
 Host: example.com
-Accept: application/json
+Accept: application/scim+json
 Authorization: Bearer h480djs93hd8
 
                     </artwork>
@@ -2605,7 +2673,7 @@ Authorization: Bearer h480djs93hd8
                    xml:space="preserve">
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/scim+json
 Location: https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"a330bc54f0671c9"
 
@@ -2645,8 +2713,8 @@ ETag: W/"a330bc54f0671c9"
       </section>
 
       <section title="&quot;/Me&quot; Authenticated Subject Alias">
-        <t>A client MAY use a URL of the form <spanx style="verb">&lt;server-root&gt;/Me</spanx>
-        as an URL alias for the User or other resource associated with the
+        <t>A client MAY use a URL of the form <spanx style="verb">&lt;base-URI&gt;/Me</spanx>
+        as a URI alias for the User or other resource associated with the
         currently authenticated subject for any SCIM operation. A service
         provider MAY respond in ONE of 3 ways: <list style="symbols">
             <t>A service provider that does NOT support this feature SHOULD
@@ -2664,19 +2732,20 @@ ETag: W/"a330bc54f0671c9"
           </list></t>
       </section>
 
-      <section anchor="http-response-codes" title="HTTP Error Responses">
-        <t>The SCIM Protocol uses the response status codes defined in HTTP
-        <xref target="RFC7231"> Section 6</xref> to indicate operation success
-        or failure. In addition to returning a HTTP response code implementers
-        MUST return the errors in the body of the response in the client
-        requested format containing the error response and, per the HTTP
-        specification, human-readable explanations. Error responses are
-        identified using the following <spanx style="verb">schema</spanx> URI:
-        <spanx style="verb">urn:scim:api:messages:2.0:Error</spanx>. The
-        following attributes are defined inclusion in a SCIM error response
-        using a JSON body:<list style="hanging">
-            <t hangText="status"><vspace blankLines="0"/>The HTTP status value
-            (e.g. 400). REQUIRED</t>
+      <section anchor="http-response-codes"
+               title="HTTP Status and Error Response Handling">
+        <t>The SCIM Protocol uses the HTTP status response status codes
+        defined in <xref target="RFC7231"> Section 6</xref> to indicate
+        operation success or failure. In addition to returning a HTTP response
+        code implementers MUST return the errors in the body of the response
+        in the client requested format containing the error response and, per
+        the HTTP specification, human-readable explanations. Error responses
+        are identified using the following <spanx style="verb">schema</spanx>
+        URI: <spanx style="verb">urn:scim:api:messages:2.0:Error</spanx>. The
+        following attributes are defined for a SCIM error response using a
+        JSON body:<list style="hanging">
+            <t hangText="status"><vspace blankLines="0"/>The HTTP status code
+            (see <xref target="RFC7231">Section 6</xref>). REQUIRED</t>
 
             <t hangText="scimType"><vspace blankLines="0"/>A SCIM detailed
             error keyword. See <xref target="scimTypes"/>. OPTIONAL</t>
@@ -2685,11 +2754,11 @@ ETag: W/"a330bc54f0671c9"
             readable message. OPTIONAL</t>
           </list></t>
 
-        <t>Implementers SHOULD handle the identified errors as described
-        below.</t>
+        <t>Implementers SHOULD handle the identified HTTP status codes as
+        described below.</t>
 
         <texttable anchor="http-error-handling-table"
-                   title="Defined error cases">
+                   title="SCIM HTTP Status Code Usage">
           <ttcol align="left">Status</ttcol>
 
           <ttcol align="left">Applicability</ttcol>
@@ -2780,7 +2849,7 @@ ETag: W/"a330bc54f0671c9"
         error types are defined:</t>
 
         <texttable anchor="scimTypes"
-                   title="Table of Detail Error Keyword Values">
+                   title="Table of SCIM Detail Error Keyword Values">
           <ttcol>scimType</ttcol>
 
           <ttcol>Description</ttcol>
@@ -2801,9 +2870,9 @@ ETag: W/"a330bc54f0671c9"
 
           <c>The specified filter yields many more results than the server is
           willing calculate or process. For example, a filter such as <spanx
-          style="verb">userName eq "*"</spanx> would return all entries with a
-          <spanx style="verb">userName</spanx> and MAY not be acceptable to
-          the service provider.</c>
+          style="verb">(userName pr)</spanx> by itself would return all
+          entries with a <spanx style="verb">userName</spanx> and MAY not be
+          acceptable to the service provider.</c>
 
           <c>GET(<xref target="query-resources"/>), POST (Search - <xref
           target="query-post"/>)</c>
@@ -2858,7 +2927,7 @@ ETag: W/"a330bc54f0671c9"
           <xref target="I-D.ietf-scim-core-schema"/>).</c>
 
           <c>GET (<xref target="query-resources"/>), POST (Create - <xref
-          target="create-resource"/>, Search - <xref
+          target="create-resource"/>, Query - <xref
           target="query-resources"/>), PUT (<xref
           target="edit-resource-with-put"/>), PATCH (<xref
           target="edit-resource-with-patch"/>)</c>
@@ -2942,7 +3011,7 @@ ETag: W/"a330bc54f0671c9"
           <artwork align="left" alt="" height="" name="" type="" width=""
                    xml:space="preserve">POST /Users  HTTP/1.1
 Host: example.com
-Content-Type:  application/json
+Content-Type:  application/scim+json
 Authorization: Bearer h480djs93hd8
 Content-Length: ...
 
@@ -2967,7 +3036,7 @@ Content-Length: ...
           <artwork align="left" alt="" height="" name="" type="" width=""
                    xml:space="preserve">
 HTTP/1.1 201 Created
-Content-Type: application/json
+Content-Type: application/scim+json
 Location: https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646
 ETag: W/"e180ee84f0671b1"
 
@@ -3003,7 +3072,7 @@ ETag: W/"e180ee84f0671b1"
                    xml:space="preserve">
 GET /Users/2819c223-7f76-453a-919d-413861904646?attributes=displayName
 Host: example.com
-Accept: application/json
+Accept: application/scim+json
 Authorization: Bearer h480djs93hd8
 If-None-Match: W/"e180ee84f0671b1"
 
@@ -3134,8 +3203,9 @@ If-None-Match: W/"e180ee84f0671b1"
         the broadest interoperability.</t>
       </section>
 
-      <section title="Request URI Information Leakage">
-        <t>Clients requesting information using query filters using HTTP GET
+      <section title="Disclosure of Sensitive Information in URIs">
+        <t>As mentioned in ,<xref target="RFC7231">Section 9.4</xref>, SCIM
+        clients requesting information using query filters using HTTP GET
         SHOULD give consideration to the information content of the filters
         and whether their exposure in a URI would represent a breach of
         security or confidentiality through leakage in a web browsers or
@@ -3147,7 +3217,7 @@ If-None-Match: W/"e180ee84f0671b1"
 
         <t>Servers that receive HTTP GET requests using filters that contain
         restricted or confidential information SHOULD respond with HTTP status
-        403 indicating the operation is FORBIDDEN. A detialed error, <spanx
+        403 indicating the operation is FORBIDDEN. A detailed error, <spanx
         style="verb">confidential_restricted</spanx> may be returned
         indicating the request must be submitted using POST. A non-normative
         example: <figure align="left" alt="" height="" suppress-title="false"
@@ -3170,14 +3240,68 @@ HTTP/1.1 403 FORBIDDEN
           </figure></t>
       </section>
 
+      <section title="HTTP Considerations">
+        <t>As an HTTP based protocol, implementers of SCIM SHOULD consider all
+        security considerations of the HTTP/1.1 as enumerated in <xref
+        target="RFC7230">Section 1</xref></t>
+
+        <t>As stated in <xref target="RFC7230">Section 2.7.1</xref>, a SCIM
+        client MUST NOT generate the userinfo (i.e. username and password)
+        component (and its "@" delimiter) when an "http" URI reference is
+        generated with a message as they are now disallowed in HTTP.</t>
+      </section>
+
+      <section title="Secure Storage and Handling of Sensitive Data">
+        <t>An attacker may obtain valid username/password combinations from
+        the SCIM service provider's underlying database by gaining access to
+        the database and/or launching injection attacks. This could lead to
+        unintended disclosure of username/password combinations. The impact
+        may extend beyond the domain of the SCIM service provider if the data
+        was provisioned from other domains.</t>
+
+        <t>Administrators should undertake industry best practices to protect
+        the storage of credentials and in particular SHOULD follow
+        recommendations outlines in Section 5.1.4.1 <xref target="RFC6819"/>.
+        These recommendations include but are not limited to:<list
+            style="symbols">
+            <t>Provide injection attack counter measures (e.g. by validating
+            all inputs and parameters),</t>
+
+            <t>No cleartext storage of credentials,</t>
+
+            <t>Store credentials using an encrypted protection mechanism,
+            and</t>
+
+            <t>Avoid passwords and consider use of asymmetric cryptography
+            based credentials.</t>
+          </list></t>
+
+        <t>As outlined in <xref target="RFC6819">Section 5.1.4.2</xref>,
+        adminitrators SHOULD take counter measures to prevent online attacks
+        on secrets such as:<list style="symbols">
+            <t>Utilize secure password policy in order to increase user
+            password entrophy to hinder online attacks and password
+            guessing,</t>
+
+            <t>Mitigate attacks on passwords by locking respective accounts
+            have a number of failed attempts,</t>
+
+            <t>Use "tar pit" techniques by temporarily locking a respective
+            account and delaying responses for a certain duration. The
+            duration may increase with the number of failed attempts, and</t>
+
+            <t>Use authentication system that use CAPTCHA's and other factors
+            for authenticating users further reducing the possibility of
+            automated attacks.</t>
+          </list></t>
+      </section>
+
       <section title="Case Insensitive Comparision &amp; International Languages">
         <t>When comparing unicode strings such as in query filters or testing
         for uniqueness of usernames and passwords, strings MUST be
         appopriately prepared before comparison. See <xref
         target="precis"/>.</t>
       </section>
-
-      <section title="Universal Identifiers"/>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -3216,11 +3340,11 @@ HTTP/1.1 403 FORBIDDEN
             purpose applications intended for inter-domain provisioning.
             Clients may also be applications (e.g. mobile applications) that
             need to use SCIM for self-registration of user accounts. SCIM
-            services may be offered by web applications wishin to offer
-            support for standards based provisioning or may be a dedicated
-            SCIM service provider such as a "cloud directory". Content may be
-            treated as equivalent to <spanx style="verb">application/json</spanx>
-            type for the purpose of displaying in web browsers.</t>
+            services may be offered by web applications that offer support for
+            standards based provisioning or may be a dedicated SCIM service
+            provider such as a "cloud directory". Content may be treated as
+            equivalent to <spanx style="verb">application/json</spanx> type
+            for the purpose of displaying in web browsers.</t>
 
             <t hangText="Additional information:"><list>
                 <t>Magic number(s):</t>
@@ -3359,6 +3483,8 @@ HTTP/1.1 403 FORBIDDEN
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2277.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6750.xml'?>
+
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6819.xml'?>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.6902.xml'?>
 
@@ -3515,6 +3641,22 @@ HTTP/1.1 403 FORBIDDEN
           with IANA namespace rules</t>
 
           <t>- Fixed typo in ABNF, attrExpr should be attrExp</t>
+
+          <t>- Added more security considerations for HTTP and sensitive
+          data</t>
+
+          <t>- Revised authentication and authorization sections for greater
+          clarity.</t>
+
+          <t>- Replaced the word "search" with "query" for consistency</t>
+
+          <t>- Clarified sucessful resource creation response</t>
+
+          <t>- Added clarification on primary value handling in PATCH
+          (consistent with draft 03)</t>
+
+          <t>- Revised SCIM Bullk error handling to conform with draft 07
+          error handling</t>
         </list></t>
     </section>
   </back>
