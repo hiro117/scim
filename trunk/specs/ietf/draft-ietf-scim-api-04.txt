@@ -5,14 +5,14 @@
 Network Working Group                                         K. Grizzle
 Internet-Draft                                                 SailPoint
 Intended status: Standards Track                            P. Hunt, Ed.
-Expires: September 5, 2014                                        Oracle
+Expires: October 25, 2014                                         Oracle
                                                                M. Ansari
                                                                    Cisco
                                                            E. Wahlstroem
                                                         Technology Nexus
                                                             C. Mortimore
                                                               Salesforce
-                                                          March 04, 2014
+                                                          April 23, 2014
 
 
           System for Cross-Domain Identity Management:Protocol
@@ -47,15 +47,15 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 5, 2014.
+   This Internet-Draft will expire on October 25, 2014.
 
 
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 1]
+Grizzle, et al.         Expires October 25, 2014                [Page 1]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 Copyright Notice
@@ -90,37 +90,37 @@ Table of Contents
      3.3.  Modifying Resources . . . . . . . . . . . . . . . . . . .  21
        3.3.1.  Modifying with PUT  . . . . . . . . . . . . . . . . .  22
        3.3.2.  Modifying with PATCH  . . . . . . . . . . . . . . . .  24
-     3.4.  Deleting Resources  . . . . . . . . . . . . . . . . . . .  32
+     3.4.  Deleting Resources  . . . . . . . . . . . . . . . . . . .  33
      3.5.  Bulk  . . . . . . . . . . . . . . . . . . . . . . . . . .  34
-     3.6.  Data Input/Output Formats . . . . . . . . . . . . . . . .  48
-     3.7.  Additional retrieval query parameters . . . . . . . . . .  49
-     3.8.  Attribute Notation  . . . . . . . . . . . . . . . . . . .  50
-     3.9.  HTTP Response Codes . . . . . . . . . . . . . . . . . . .  50
-     3.10. API Versioning  . . . . . . . . . . . . . . . . . . . . .  52
-     3.11. Versioning Resources  . . . . . . . . . . . . . . . . . .  52
-     3.12. HTTP Method Overloading . . . . . . . . . . . . . . . . .  54
-   4.  Multi-Tenancy . . . . . . . . . . . . . . . . . . . . . . . .  54
-     4.1.  Associating Clients to Tenants  . . . . . . . . . . . . .  55
-       4.1.1.  URL Prefix Example  . . . . . . . . . . . . . . . . .  56
-       4.1.2.  Subdomain Example . . . . . . . . . . . . . . . . . .  56
-       4.1.3.  HTTP Header . . . . . . . . . . . . . . . . . . . . .  56
-     4.2.  SCIM Identifiers with Multiple Tenants  . . . . . . . . .  56
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  56
+     3.6.  Data Input/Output Formats . . . . . . . . . . . . . . . .  49
+     3.7.  Additional retrieval query parameters . . . . . . . . . .  50
+     3.8.  Attribute Notation  . . . . . . . . . . . . . . . . . . .  51
+     3.9.  HTTP Response Codes . . . . . . . . . . . . . . . . . . .  51
+     3.10. API Versioning  . . . . . . . . . . . . . . . . . . . . .  53
+     3.11. Versioning Resources  . . . . . . . . . . . . . . . . . .  53
+     3.12. HTTP Method Overloading . . . . . . . . . . . . . . . . .  55
+   4.  Multi-Tenancy . . . . . . . . . . . . . . . . . . . . . . . .  55
+     4.1.  Associating Clients to Tenants  . . . . . . . . . . . . .  56
+       4.1.1.  URL Prefix Example  . . . . . . . . . . . . . . . . .  57
+       4.1.2.  Subdomain Example . . . . . . . . . . . . . . . . . .  57
+       4.1.3.  HTTP Header . . . . . . . . . . . . . . . . . . . . .  57
+     4.2.  SCIM Identifiers with Multiple Tenants  . . . . . . . . .  57
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  57
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 2]
+Grizzle, et al.         Expires October 25, 2014                [Page 2]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  56
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  57
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  58
-   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  58
-   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  58
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  58
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  59
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  57
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  58
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  59
+   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  59
+   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  59
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  59
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  60
 
 1.  Introduction and Overview
 
@@ -148,7 +148,7 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
    For purposes of readability examples are not URL encoded.
    Implementers MUST percent encode URLs as described in Section 2.1
-   [RFC3896].
+   [RFC3986].
 
 1.3.  Definitions
 
@@ -165,9 +165,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 3]
+Grizzle, et al.         Expires October 25, 2014                [Page 3]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    mechanism will impact interoperability.  It is RECOMMENDED that
@@ -221,9 +221,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 4]
+Grizzle, et al.         Expires October 25, 2014                [Page 4]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    +------------+--------------------+---------------+-----------------+
@@ -277,9 +277,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 5]
+Grizzle, et al.         Expires October 25, 2014                [Page 5]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    All requests to the service provider are made via Section 9 [RFC2616]
@@ -333,9 +333,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 6]
+Grizzle, et al.         Expires October 25, 2014                [Page 6]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The server signals a successful creation with a status code of 201.
@@ -389,9 +389,9 @@ ETag: W/"e180ee84f0671b1"
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 7]
+Grizzle, et al.         Expires October 25, 2014                [Page 7]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    If the resource exists the server responds with a status code of 200
@@ -445,9 +445,9 @@ ETag: W/"f250dd84f0671c3"
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 8]
+Grizzle, et al.         Expires October 25, 2014                [Page 8]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 3.2.2.  List/Query Resources
@@ -501,9 +501,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014               [Page 9]
+Grizzle, et al.         Expires October 25, 2014                [Page 9]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The following is an example response to the query above:
@@ -557,17 +557,14 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 10]
+Grizzle, et al.         Expires October 25, 2014               [Page 10]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    expression SHALL be returned.  The expression language that is used
    in the filter parameter supports references to attributes and
-   literals.  The literal values can be strings enclosed in double
-   quotes, numbers, date times enclosed in double quotes, and Boolean
-   values; i.e., true or false.  String literals MUST be valid
-   [RFC4627].
+   literals.
 
    The attribute name and attribute operator are case insensitive.  For
    example, the following two expressions will evaluate to the same
@@ -610,17 +607,17 @@ Internet-Draft              draft-scim-api-04                 March 2014
    | pr       | present     | If the attribute has a non-empty value,  |
    |          | (has value) | or if it contains a non-empty node for   |
    |          |             | complex attributes there is a match.     |
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 11]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
    | gt       | greater     | If the attribute value is greater than   |
    |          | than        | operator value, there is a match. The    |
    |          |             | actual comparison is dependent on the    |
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 11]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
    |          |             | attribute type. For string attribute     |
    |          |             | types, this is a lexicographical         |
    |          |             | comparison and for DateTime types, it is |
@@ -669,19 +666,22 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 12]
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 12]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    +----------+-------------+------------------------------------------+
    | Operator | Description | Behavior                                 |
    +----------+-------------+------------------------------------------+
-   | ()       | Precedence  | Boolean expressions may be grouped using |
+   | ( )      | Precedence  | Boolean expressions may be grouped using |
    |          | grouping    | parentheses to change the standard order |
    |          |             | of operations; i.e., evaluate OR logical |
    |          |             | operators before logical AND operators.  |
-   | []       | Complex     | Service providers MAY support complex    |
+   | [ ]      | Complex     | Service providers MAY support complex    |
    |          | attribute   | filters where expressions MUST be        |
    |          | filter      | applied to the same value of a parent    |
    |          | grouping    | attribute specified immediately before   |
@@ -725,47 +725,49 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 13]
+Grizzle, et al.         Expires October 25, 2014               [Page 13]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
-         Filters MUST conform to the filter ABNF [RFC5234] below:
+   SCIM filters MUST conform to the following ABNF rules as per
+   [RFC5234] below:
 
-   FILTER     = attrExp / logExp / prec
-   ATPATH     = attrPath / compFilt
+     FILTER    = attrExp / logExp / valuePath / *1"not" "(" FILTER ")"
 
-   compFilt   = attrPath "[" FILTER "]" ["." subAttr ]
-                 ; FILTER uses sub-attribs of attrName
+     valuePath = attrPath "[" FILTER "]"
+                 ; FILTER uses sub-attribs of a parent attrPath
 
-   attrExpr   = (ATPATH SP "pr") / (ATPATH compareOp value)
-                 ; value is defined in RFC4627
+     ATTRNAME  = ALPHA *(nameChar)
 
-   compOp     = SP ("eq" / "ne" /
-                    "co" /
-                    "sw" / "ew" /
-                    "gt" / "lt" /
-                    "ge" / "le") SP
+     nameChar  = "-" / "_" / DIGIT / ALPHA
 
-   logExp     = FILTER ("and" / "or") FILTER
-   prec       = *1"not" "(" FILTER ")"
+     attrPath  = [URI ":"] ATTRNAME *1subAttr
+                 ; SCIM attribute name
+                 ; URI is SCIM "schema" URI
 
-   attrPath   = [schema ":"] ATTRNAME ["." subAttr]
-                ; SCIM attribute name
+     subAttr   = "." ATTRNAME
+                 ; a sub-attribute of a complex attribute
 
-   schema     = URI ; SCIM schema uri
+     attrExpr  = (attrPath SP "pr") /
+                 (attrPath SP compareOp SP compValue)
 
-   subAttr    = ATTRNAME
-                ; sub-attribute of a SCIM complex attribute
+     compValue = false / null / true / number / string
+                 ; rules from JSON (RFC7159)
 
-   ATTRNAME   = ALPHA *(nameChar)
-   nameChar   = "-" / "_" / DIGIT / ALPHA
+     compareOp = "eq" / "ne" / "co" /
+                        "sw" / "ew" /
+                        "gt" / "lt" /
+                        "ge" / "le"
+
+     logExp    = FILTER ("and" / "or") FILTER
 
                Figure 1: ABNF Specification of SCIM Filters
 
-   In the above ABNF, "value" is a quoted value defined in [RFC4627].
-   [[editors note: value allows for nested objects.  Should we restrict
-   this?]]
+   In the above ABNF, the "compValue" (comparison value) rule is built
+   on JSON Data Interchange format ABNF rules as specified in [RFC7159],
+   "DIGIT" and "ALPHA" are defined per Appendix B.1 of [RFC5234] and,
+   "URI" is defined per Appendix A of [RFC3986].
 
    Filters MUST be evaluated using standard order of operations
    [Order-Operations].  Attribute operators have the highest precedence,
@@ -776,16 +778,16 @@ Internet-Draft              draft-scim-api-04                 March 2014
    attribute, the resource MUST match if any of the instances of the
    given attribute match the specified criterion; e.g. if a User has
    multiple emails values, only one has to match for the entire User to
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 14]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
    match.  For complex attributes, a fully qualified Sub-Attribute MUST
    be specified using standard attribute notation (Section 3.8).  For
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 14]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
    example, to filter by userName the parameter value is userName and to
    filter by first name, the parameter value is name.givenName.
 
@@ -835,11 +837,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 15]
+Grizzle, et al.         Expires October 25, 2014               [Page 15]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The following are examples of valid filters.  Some attributes (e.g.
@@ -879,8 +879,8 @@ Internet-Draft              draft-scim-api-04                 March 2014
    filter=userType eq "Employee" and emails[type eq "work" and
      value co "@example.com"]
 
-   filter=emails[type eq "work" and value co "@example.com"] or ims[type
-     eq "xmpp" and value co "@foo.com"]
+   filter=emails[type eq "work" and value co "@example.com"] or
+     ims[type eq "xmpp" and value co "@foo.com"]
 
    filter=addresses[state eq "CA" and rooms[type eq "bedroom" and
      number gt 2]]
@@ -893,9 +893,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 16]
+Grizzle, et al.         Expires October 25, 2014               [Page 16]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 3.2.2.3.  Sorting
@@ -949,9 +949,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 17]
+Grizzle, et al.         Expires October 25, 2014               [Page 17]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    +------------+-------------------+----------------------------------+
@@ -1005,9 +1005,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 18]
+Grizzle, et al.         Expires October 25, 2014               [Page 18]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The response to the query above returns metadata regarding paging
@@ -1061,9 +1061,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 19]
+Grizzle, et al.         Expires October 25, 2014               [Page 19]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    sortOrder  A string indicating the order in which the sortBy
@@ -1117,9 +1117,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 20]
+Grizzle, et al.         Expires October 25, 2014               [Page 20]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    A search response is shown with the first page of results.  For
@@ -1173,9 +1173,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 21]
+Grizzle, et al.         Expires October 25, 2014               [Page 21]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 3.3.1.  Modifying with PUT
@@ -1204,8 +1204,8 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
    If a value provided for an immutable attribute with an existing value
    is NOT matched, the server SHALL respond with an HTTP response code
-   of 400 and an apprpriate human readable message indicating an attempt
-   to change an immutable attribute.
+   of 400 and an appropriate human readable message indicating an
+   attempt to change an immutable attribute.
 
    Unless otherwise specified a successful PUT operation returns a 200
    OK response code and the entire resource within the response body,
@@ -1229,9 +1229,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 22]
+Grizzle, et al.         Expires October 25, 2014               [Page 22]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    PUT /Users/2819c223-7f76-453a-919d-413861904646
@@ -1285,9 +1285,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 23]
+Grizzle, et al.         Expires October 25, 2014               [Page 23]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The service responds with the entire, updated User:
@@ -1326,81 +1326,143 @@ Location:"https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
 
 3.3.2.  Modifying with PATCH
 
-   PATCH is OPTIONAL.  PATCH enables clients to send only those
-   attributes requiring modification, reducing network and processing
-   overhead.  Attributes may be deleted, replaced, merged, or added in a
-   single request.  A SCIM PATCH request allows a client to specify a
-   sequence of one or more attribute add, remove, or replace operations.
-   The format of the SCIM PATCH request is based on JSON PATCH
-   [RFC6902].  One key difference between SCIM PATCH and JSON PATCH is
-   that SCIM does not support array indexing.
+   HTTP PATCH is an OPTIONAL server function that enables clients to
+   update one or more attributes of a SCIM resource using a sequence of
+   operations to "add", "remove", or "replace" values.  The general form
+   of the SCIM patch request is based on JavaScript Object Notation
+   (JSON) Patch [RFC6902].  One difference between SCIM patch and JSON
+   patch is that SCIM servers do not support array indexing and may not
+   support all [RFC6902] operation types.
 
-   The body of a PATCH request MUST contain ONE or more Patch operations
-   . The server MUST return either a 200 OK response code and the entire
-   resource (subject to the "attributes" query parameter - see
-
+   The body of an HTTP PATCH request MUST contain one or more patch
+   operation objects.  A patch operation object MUST have exactly one
+   "op" member, whose value indicates the operation to perform and MAY
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 24]
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 24]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
-   Additional Retrieval Query Parameters (Section 3.7)) within the
-   response body, or a 204 No Content response code and the appropriate
-   response headers for a successful PATCH request.  The server MUST
-   return a 200 OK if the "attributes" parameter is specified on the
-   request.
+   be one of "add", "remove", or "replace" . The semantics of each
+   operation are defined below.
 
-   Each SCIM PATCH operation contains "path" and/or "from" attributes
-   that are strings containing a SCIM attribute path and an optional
-   SCIM multi-value array filter as specified by the ABNF syntax
-   "ATPATH" as per Figure 1.
+   Operation objects MUST have exactly one "path" member which is a
+   "String" containing an attribute path as specified by the following
+   ABNF syntax rule:
 
-          Valid example "path" and "from" values are as follows:
+                   PATH = attrPath / valuePath [subAttr]
 
-   "path" = "members"
+                      Figure 4: SCIM Patch PATH Rule
 
-   "path" = "name.familyName"
+   The rules, "attrPath", "valuePath", and "subAttr" are defined in
+   Section 3.2.2.2.  The "valuePath" rule allows specific values of a
+   complex, multi-valued attribute to be selected.
 
-   "path" = "addresses[type eq \"work\"]"
+   Valid examples of "path" values are as follows:
 
-   "path" = "members[value eq
-            \"2819c223-7f76-453a-919d-413861904646\"]"
+       "path":"members"
 
-   "path" = "members[value eq
-            \"2819c223-7f76-453a-919d-413861904646\"].displayName"
+       "path":"name.familyName"
 
-3.3.2.1.  Supported Patch Operations
+       "path":"addresses[type eq \"work\"]"
 
-   SCIM supports 3 operations: "add", "remove", and "replace".
+       "path":"members[value eq
+              \"2819c223-7f76-453a-919d-413861904646\"]"
 
-   A PATCH MAY contain one or more patch operations in a JSON array.
-   The PATCH request comprising the entire array of operations SHALL be
+       "path":"members[value eq
+              \"2819c223-7f76-453a-919d-413861904646\"].displayName"
+
+   Each operation against an attribute MUST be compatible with the
+   attribute's mutability and schema as defined in the Attribute Types
+   Section of [I-D.ietf-scim-core-schema].  For example, a client MAY
+   NOT modify an attribute that has mutability "readOnly"or "immutable".
+   However, a client MAY "add" a value to an"immutable" attribute if the
+   attribute had no previous value.  An operation that is not
+   compatibile with an attribute's mutability or schema SHALL return an
+   error as indicated below.
+
+   Each patch operation represents a single action to be applied to the
+   same SCIM resource specified by the request URI.  Operations are
+   applied sequentially in the order they appear in the array.  Each
+   operation in the sequence is applied to the target resource; the
+   resulting resource becomes the target of the next operation.
+   Evaluation continues until all operations are successfully applied or
+   until an error condition is encountered.
+
+   A patch request, regardless of the number of operations, SHALL be
    treated as atomic.  If a single operation encounters an error
-   condition, the original SCIM resource MUST be restored.
 
-   Each operation represents a single action to be applied to the same
-   SCIM resource specified by the request URI.  Operations are applied
-   sequentially in the order they appear in the array.  Each operation
-   in the sequence is applied to the target resource; the resulting
-   resource becomes the target of the next operation.  Evaluation
-   continues until all operations are successfully applied or until an
-   error condition is encountered.
 
-3.3.2.2.  Add Operation
+
+Grizzle, et al.         Expires October 25, 2014               [Page 25]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
+   condition, the original SCIM resource MUST be restored, and a failure
+   status SHALL be returned.
+
+   If a request fails. the server SHALL return an HTTP response status
+   code of 400 and a JSON detail error response containing an "error"
+   object that SHOULD be one of the following string values:
+
+   malformed_operation
+       The JSON operation elements could not successfully be parsed.
+       This may be due to an invalid or missing operation attribute, or
+       it could be due to a missing attribute required by a specific
+       operation.
+
+   mutability
+       The operation requested is not compatible with the mutability of
+       the selected attribute.
+
+   invalid_path
+       The path attribute was invalid or malformed.
+
+   no_target
+       The "path" specified did not return a target against which the
+       operation could be performed.
+
+   invalid_value
+       The operation "value" was missing or was not compatable with the
+       targeted attribute's type
+
+   The following is a non-normative example of an error response to a
+   patch request.
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/json;charset=UTF-8
+   Cache-Control: no-store
+   Pragma: no-cache
+
+   {
+     "error":"mutability",
+     "error_description":"Attribute 'id' is readOnly."
+   }
+
+   On successful completion, the server MUST return either a 200 OK
+   response code and the entire resource (subject to the "attributes"
+   query parameter - see Additional Retrieval Query Parameters
+   (Section 3.7)) within the response body, or a 204 No Content response
+   code and the appropriate response headers for a successful patch
+   request.  The server MUST return a 200 OK if the "attributes"
+   parameter is specified on the request.
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 26]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
+3.3.2.1.  Add Operation
 
    The "add" operation performs one of the following functions,
    depending upon what the target location indicated by "path"
    references:
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 25]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
 
    o  If the target location does not exist, the attribute and value is
       added.
@@ -1414,59 +1476,78 @@ Internet-Draft              draft-scim-api-04                 March 2014
    o  If the target location specifies an attribute that does not exist
       (has no value), the attribute is added with the new value.
 
+   o  If the target location exists, the value is replaced.
+
    o  If the target location already contains the value specified, no
       changes SHOULD be made to the resource and a success response
-      SHOULD be returned.
-
-   o  If the target location already exists the value is replaced.
+      SHOULD be returned.  Unless other operations change the resource,
+      this operation SHALL NOT change the modify timestamp of the
+      resource.
 
    The operation MUST contain a "value" member whose content specifies
    the value to be added.  The value MAY be a quoted value OR it may be
    a JSON object containing the sub-attributes of the complex attribute
    specified in the operation's "path".
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 27]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
    The following example shows how to add a member to a group.  Some
    text removed for readability ("..."):
 
-PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
+   PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
+   Host: example.com
+   Accept: application/json
+   Content-Type: application/json
+   Authorization: Bearer h480djs93hd8
+   If-Match: W/"a330bc54f0671c9"
 
-{
-  "op":"add",
-  "path":"members",
-  "value":[
-    {
-      "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
-    }
-  ]
-}
+   {
+     "op":"add",
+     "path":"members",
+     "value":[
+       {
+         "display": "Babs Jensen",
+         "$ref": "https://example.com/v2/Users/2819c223...413861904646",
+         "value": "2819c223-7f76-453a-919d-413861904646"
+       }
+     ]
+   }
 
    The "display" Sub-Attribute in this request is optional since the
    value attribute uniquely identifies the user to be added.  If the
    user was already a member of this group, no changes should be made to
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 26]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
    the resource and a success response should be returned.  The server
    responds with either the entire updated Group or no response body:
 
 HTTP/1.1 204 No Content
 Authorization: Bearer h480djs93hd8
 ETag: W/"b431af54f0671a2"
-Location: "https://example.com/v2/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
+Location: "https://example.com/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 
-3.3.2.3.  Remove Operation
+3.3.2.2.  Remove Operation
 
    The "remove" operation removes the value at the target location
    specified by the "path".  The operation performs the following
@@ -1482,6 +1563,13 @@ Location: "https://example.com/v2/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
       filter is specified comparing a "value", the values matched by the
       filter are removed.
 
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 28]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
    o  If the target location is a complex-multi-valued attribute and a
       complex filter is specified based on the attribute's sub-
       attributes, the matching records are removed.
@@ -1493,26 +1581,6 @@ Location: "https://example.com/v2/Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce"
 
    Note that server responses have been omitted for the rest of the
    PATCH examples.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 27]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
 
    Remove a single member from a group.  Some text removed for
    readability ("..."):
@@ -1545,7 +1613,7 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
    {
      "op":"remove",
-     "path":"address[type eq \"work\" and value ew \"example.com\"]"
+     "path":"emails[type eq \"work\" and value ew \"example.com\"]"
    }
 
 
@@ -1553,52 +1621,38 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 28]
+Grizzle, et al.         Expires October 25, 2014               [Page 29]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    Example request to remove and add a member.  Some text removed for
    readability ("..."):
 
-PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
+ PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
+ Host: example.com
+ Accept: application/json
+ Content-Type: application/json
+ Authorization: Bearer h480djs93hd8
+ If-Match: W/"a330bc54f0671c9"
 
-[
-  {
-    "op":"remove",
-    "path":"members[value eq\"2819c223-...919d-413861904646\"]"
-  },
-  {
-    "op":"add",
-    "path":"members",
-    "value": [
-      {
-        "display": "James Smith",
-        "$ref": "https://example.com/v2/Users/08e1d05d-...8b96-473d93df9210",
-        "value": "08e1d05d-121c-4561-8b96-473d93df9210"
-      }
-    ]
-  }
-]
-
-
+ [
+   {
+     "op":"remove",
+     "path":"members[value eq\"2819c223...919d-413861904646\"]"
+   },
+   {
+     "op":"add",
+     "path":"members",
+     "value": [
+       {
+         "display": "James Smith",
+         "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
+         "value": "08e1d05d...473d93df9210"
+       }
+     ]
+   }
+ ]
 
 
 
@@ -1621,42 +1675,44 @@ If-Match: W/"a330bc54f0671c9"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 29]
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 30]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The following example shows how to replace all the members of a group
    with a different members list.  Some text removed for readabilty
    ("..."):
 
-PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
+   PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
+   Host: example.com
+   Accept: application/json
+   Content-Type: application/json
+   Authorization: Bearer h480djs93hd8
+   If-Match: W/"a330bc54f0671c9"
 
-[
-  { "op":"remove","path":"members"},
-  {
-    "op":"add",
-    "path":"members",
-    "value":[
-    {
-      "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
-    },
-    {
-      "display": "James Smith",
-      "$ref": "https://example.com/v2/Users/08e1d05d-121c-...473d93df9210",
-      "value": "08e1d05d-121c-4561-8b96-473d93df9210"
-    }]
-  }
-]
+   [
+     { "op":"remove","path":"members"},
+     {
+       "op":"add",
+       "path":"members",
+       "value":[
+       {
+         "display": "Babs Jensen",
+         "$ref": "https://example.com/v2/Users/2819c223...413861904646",
+         "value": "2819c223-7f76-453a-919d-413861904646"
+       },
+       {
+         "display": "James Smith",
+         "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
+         "value": "08e1d05d-121c-4561-8b96-473d93df9210"
+       }]
+     }
+   ]
 
-3.3.2.4.  Replace Operation
+3.3.2.3.  Replace Operation
 
    The "replace" operation replaces the value at the target location
    specified by the "path".  The operation performs the following
@@ -1677,9 +1733,9 @@ If-Match: W/"a330bc54f0671c9"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 30]
+Grizzle, et al.         Expires October 25, 2014               [Page 31]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    o  If the target location is a complex-multi-valued attribute and a
@@ -1695,31 +1751,29 @@ Internet-Draft              draft-scim-api-04                 March 2014
    with a different members list in a single replace operation.  Some
    text removed for readability ("..."):
 
-PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
-Host: example.com
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer h480djs93hd8
-If-Match: W/"a330bc54f0671c9"
+   PATCH /Groups/acbf3ae7-8463-4692-b4fd-9b4da3f908ce
+   Host: example.com
+   Accept: application/json
+   Content-Type: application/json
+   Authorization: Bearer h480djs93hd8
+   If-Match: W/"a330bc54f0671c9"
 
-{
-  "op":"replace",
-  "path":"members",
-  "value":[
-    {
-      "display": "Babs Jensen",
-      "$ref": "https://example.com/v2/Users/2819c223-...919d-413861904646",
-      "value": "2819c223-7f76-453a-919d-413861904646"
-    },
-    {
-      "display": "James Smith",
-      "$ref": "https://example.com/v2/Users/08e1d05d-121c-...473d93df9210",
-      "value": "08e1d05d-121c-4561-8b96-473d93df9210"
-    }
-  ]
-}
-
-
+   {
+     "op":"replace",
+     "path":"members",
+     "value":[
+       {
+         "display": "Babs Jensen",
+         "$ref": "https://example.com/v2/Users/2819c223...413861904646",
+         "value": "2819c223...413861904646"
+       },
+       {
+         "display": "James Smith",
+         "$ref": "https://example.com/v2/Users/08e1d05d...473d93df9210",
+         "value": "08e1d05d...473d93df9210"
+       }
+     ]
+   }
 
 
 
@@ -1733,9 +1787,11 @@ If-Match: W/"a330bc54f0671c9"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 31]
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 32]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The following example shows how to change a User's entire "work"
@@ -1789,9 +1845,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 32]
+Grizzle, et al.         Expires October 25, 2014               [Page 33]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    Id.  Service providers MUST also omit the resource from future query
@@ -1801,31 +1857,24 @@ Internet-Draft              draft-scim-api-04                 March 2014
    same userName as the previously deleted resource should not fail with
    a 409 error due to userName conflict.
 
-
-
-   DELETE /Users/2819c223-7f76-453a-919d-413861904646
-   Host: example.com
-   Authorization: Bearer h480djs93hd8
-   If-Match: W/"c310cd84f0281b7"
-
+            DELETE /Users/2819c223-7f76-453a-919d-413861904646
+            Host: example.com
+            Authorization: Bearer h480djs93hd8
+            If-Match: W/"c310cd84f0281b7"
 
    In response to a successful delete, the server SHALL respond with
    successful HTTP status 204 (No Content).  A non-normative example
    response:
 
-
-   HTTP/1.1 204 No Content
+                          HTTP/1.1 204 No Content
 
    Example: client attempt to retrieve the previously deleted User
 
-
-
-   GET /Users/2819c223-7f76-453a-919d-413861904646
-   Host: example.com
-   Authorization: Bearer h480djs93hd8
+              GET /Users/2819c223-7f76-453a-919d-413861904646
+              Host: example.com
+              Authorization: Bearer h480djs93hd8
 
    Server Response:
-
 
 HTTP/1.1 404 NOT FOUND
 
@@ -1839,17 +1888,6 @@ HTTP/1.1 404 NOT FOUND
   ]
 }
 
-
-
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 33]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
 3.5.  Bulk
 
    Bulk is OPTIONAL.  The bulk operation enables clients to send a
@@ -1860,6 +1898,14 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
    Bulk requests are identified using the following URI:
    'urn:scim:schemas:core:2.0:BulkRequest'.  Bulk responses are
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 34]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
    identified using the following URI:
    'urn:scim:schemas:core:2.0:BulkResponse'.  Bulk requests and bulk
    responses share many attributes.  Unless otherwise specified, each
@@ -1897,15 +1943,6 @@ Internet-Draft              draft-scim-api-04                 March 2014
       path  The resource's relative path.  If the method is POST the
          value must specify a resource type endpoint; e.g., /Users or /
          Groups whereas all other method values must specify the path to
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 34]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
          a specific resource; e.g., /Users/2819c223-7f76-453a-
          919d-413861904646.  REQUIRED in a request.
 
@@ -1915,6 +1952,15 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
       location  The resource endpoint URL.  REQUIRED in a response,
          except in the event of a POST failure.
+
+
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 35]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
 
       status  A complex type that contains information about the success
          or failure of one operation within the bulk job.  REQUIRED in a
@@ -1954,20 +2000,22 @@ Internet-Draft              draft-scim-api-04                 March 2014
    processed operations.  A location attribute that includes the
    resource's end point MUST be returned for all operations excluding
    failed POSTs.  The status attribute includes information about the
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 35]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
    success or failure of one operation within the bulk job.  The
    attribute status MUST include the code attribute that holds the HTTP
    response code that would have been returned if a single HTTP request
    would have been used.  If an error occurred the status MUST also
    include the description attribute containing a human readable
    explanation of the error.
+
+
+
+
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 36]
+
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    "status": {
@@ -2010,14 +2058,6 @@ Internet-Draft              draft-scim-api-04                 March 2014
            "userName":"Alice"
          }
        },
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 36]
-
-Internet-Draft              draft-scim-api-04                 March 2014
-
-
        {
          "method":"PUT",
          "path":"/Users/b7c14771-226c-4d05-8860-134711653041",
@@ -2026,22 +2066,31 @@ Internet-Draft              draft-scim-api-04                 March 2014
            "schemas": ["urn:scim:schemas:core:2.0:User"],
            "id":"b7c14771-226c-4d05-8860-134711653041",
            "userName":"Bob"
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 37]
+
+Internet-Draft              draft-scim-api-04                 April 2014
+
+
          }
        },
        {
-         "method":"PATCH",
-         "path":"/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
-         "version":"W\/\"edac3253e2c0ef2\"",
-         "data":{
-           "schemas":["urn:scim:schemas:core:2.0:User"],
-           "id":"5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
-           "userName":"Dave",
-           "meta":{
-             "attributes":[
-               "nickName"
-             ]
+         "method": "PATCH",
+         "path": "/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc",
+         "version": "W/\"edac3253e2c0ef2\"",
+         "data": {[
+           {
+               "op": "remove",
+               "path": "nickName"
+           },
+           {
+               "op": "add",
+               "path": "userName",
+               "value": "Dave"
            }
-         }
+         ]}
        },
        {
          "method":"DELETE",
@@ -2069,9 +2118,16 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 37]
+
+
+
+
+
+
+
+Grizzle, et al.         Expires October 25, 2014               [Page 38]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2125,9 +2181,9 @@ Content-Type: application/json
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 38]
+Grizzle, et al.         Expires October 25, 2014               [Page 39]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2181,9 +2237,9 @@ Content-Type: application/json
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 39]
+Grizzle, et al.         Expires October 25, 2014               [Page 40]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2237,9 +2293,9 @@ Content-Type: application/json
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 40]
+Grizzle, et al.         Expires October 25, 2014               [Page 41]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    provider MUST replace the string "bulkId:qwerty" with the permanent
@@ -2293,9 +2349,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 41]
+Grizzle, et al.         Expires October 25, 2014               [Page 42]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2349,9 +2405,9 @@ Content-Type: application/json
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 42]
+Grizzle, et al.         Expires October 25, 2014               [Page 43]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2405,9 +2461,9 @@ ETag: W/"lha5bbazU3fNvfe5"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 43]
+Grizzle, et al.         Expires October 25, 2014               [Page 44]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    POST /v2/Bulk
@@ -2461,9 +2517,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 44]
+Grizzle, et al.         Expires October 25, 2014               [Page 45]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    POST /v2/Bulk
@@ -2517,9 +2573,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 45]
+Grizzle, et al.         Expires October 25, 2014               [Page 46]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    GET /v2/Groups?filter=displayName sw 'Group'
@@ -2573,9 +2629,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 46]
+Grizzle, et al.         Expires October 25, 2014               [Page 47]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2629,9 +2685,9 @@ Content-Type: application/json
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 47]
+Grizzle, et al.         Expires October 25, 2014               [Page 48]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    The service provider MUST define the maximum number of operations and
@@ -2680,14 +2736,14 @@ Location: https://example.com/v2/Bulk/yfCrVJhFIJagAHj8
    Host: example.com
 
    Service providers MUST support the Accept Headers "Accept:
-   application/json" for [RFC4627].  The format defaults to JSON if no
+   application/json" for [RFC7159].  The format defaults to JSON if no
    format is specified.
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 48]
+Grizzle, et al.         Expires October 25, 2014               [Page 49]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    Singular attributes are encoded as string name-value-pairs in JSON;
@@ -2741,9 +2797,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 49]
+Grizzle, et al.         Expires October 25, 2014               [Page 50]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 HTTP/1.1 200 OK
@@ -2797,9 +2853,9 @@ ETag: W/"a330bc54f0671c9"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 50]
+Grizzle, et al.         Expires October 25, 2014               [Page 51]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    Errors  The list of errors encountered by the service provider.  The
@@ -2853,9 +2909,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 51]
+Grizzle, et al.         Expires October 25, 2014               [Page 52]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    | 413 REQUEST  | POST          | {"maxOperations":                  |
@@ -2909,9 +2965,9 @@ HTTP/1.1 404 NOT FOUND
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 52]
+Grizzle, et al.         Expires October 25, 2014               [Page 53]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    specified as an HTTP header and SHOULD be specified within the
@@ -2965,9 +3021,9 @@ ETag: W/"e180ee84f0671b1"
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 53]
+Grizzle, et al.         Expires October 25, 2014               [Page 54]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    With the returned ETag, clients MAY choose to retrieve the resource
@@ -3021,9 +3077,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 54]
+Grizzle, et al.         Expires October 25, 2014               [Page 55]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    2.  Each single client creates and accesses a private subset of
@@ -3077,9 +3133,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 55]
+Grizzle, et al.         Expires October 25, 2014               [Page 56]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 4.1.1.  URL Prefix Example
@@ -3133,9 +3189,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 56]
+Grizzle, et al.         Expires October 25, 2014               [Page 57]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
 6.1.  Normative References
@@ -3144,6 +3200,12 @@ Internet-Draft              draft-scim-api-04                 March 2014
               Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Semantics and Content", draft-ietf-
               httpbis-p2-semantics-25 (work in progress), November 2013.
+
+   [I-D.ietf-scim-core-schema]
+              Grizzle, K., Hunt, P., Wahlstroem, E., and C. Mortimore,
+              "System for Cross-Domain Identity Management: Core
+              Schema", draft-ietf-scim-core-schema-03 (work in
+              progress), February 2014.
 
    [I-D.reschke-http-status-308]
               Reschke, J., "The Hypertext Transfer Protocol (HTTP)
@@ -3164,11 +3226,9 @@ Internet-Draft              draft-scim-api-04                 March 2014
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
-   [RFC3896]  Nicklass, O., "Definitions of Managed Objects for the DS3/
-              E3 Interface Type", RFC 3896, September 2004.
-
-   [RFC4627]  Crockford, D., "The application/json Media Type for
-              JavaScript Object Notation (JSON)", RFC 4627, July 2006.
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66, RFC
+              3986, January 2005.
 
    [RFC5234]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
               Specifications: ABNF", STD 68, RFC 5234, January 2008.
@@ -3185,14 +3245,13 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-
-
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 57]
+Grizzle, et al.         Expires October 25, 2014               [Page 58]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
+
+   [RFC7159]  Bray, T., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", RFC 7159, March 2014.
 
 6.2.  Informative References
 
@@ -3201,9 +3260,6 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
    [Order-Operations]
               Wikipedia, "Order of Operations: Programming Languages", .
-
-   [RFC4627]  Crockford, D., "The application/json Media Type for
-              JavaScript Object Notation (JSON)", RFC 4627, July 2006.
 
    [RFC6902]  Bryan, P. and M. Nottingham, "JavaScript Object Notation
               (JSON) Patch", RFC 6902, April 2013.
@@ -3245,9 +3301,9 @@ Appendix C.  Change Log
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 58]
+Grizzle, et al.         Expires October 25, 2014               [Page 59]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
       50 - Filters for multi-valued complex attributes
@@ -3271,6 +3327,8 @@ Internet-Draft              draft-scim-api-04                 March 2014
       18 - New PATCH command based on JSON Patch (RFC6902)
 
       - Provided ABNF specification for filters (used in PATCH)
+
+      - Updated references to RFC4627 to RFC7159
 
 Authors' Addresses
 
@@ -3299,11 +3357,9 @@ Authors' Addresses
 
 
 
-
-
-Grizzle, et al.         Expires September 5, 2014              [Page 59]
+Grizzle, et al.         Expires October 25, 2014               [Page 60]
 
-Internet-Draft              draft-scim-api-04                 March 2014
+Internet-Draft              draft-scim-api-04                 April 2014
 
 
    Chuck Mortimore
@@ -3357,4 +3413,4 @@ Internet-Draft              draft-scim-api-04                 March 2014
 
 
 
-Grizzle, et al.         Expires September 5, 2014              [Page 60]
+Grizzle, et al.         Expires October 25, 2014               [Page 61]
