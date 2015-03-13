@@ -11,9 +11,9 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-ietf-scim-core-schema-07" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-scim-core-schema-08" ipr="trust200902">
   <front>
-    <title abbrev="draft-scim-core-schema-07">System for Cross-Domain Identity
+    <title abbrev="draft-scim-core-schema-08">System for Cross-Domain Identity
     Management: Core Schema</title>
 
     <author fullname="Kelly Grizzle" initials="K.G." surname="Grizzle">
@@ -132,7 +132,7 @@
 
             <t hangText="Schema:">A collection of Attribute Definitions that
             describe the contents of an entire or partial resource; e.g.,
-            <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.</t>
+            <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:User</spanx>.</t>
 
             <t hangText="Singular Attribute:">A resource attribute that
             contains 0..1 values; e.g., <spanx style="verb">displayName</spanx>.</t>
@@ -450,7 +450,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
     <section anchor="user-resource" title="SCIM User Schema">
       <t>SCIM provides a schema for representing Users, identified using the
-      following URI: <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.
+      following URI: <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:User</spanx>.
       The following attributes are defined in addition to those attributes
       defined in SCIM Core Schema:</t>
 
@@ -716,7 +716,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <t>The following SCIM extension defines attributes commonly used in
       representing users that belong to, or act on behalf of a business or
       enterprise. The enterprise user extension is identified using the
-      following schema URI: <spanx style="verb">urn:scim:schemas:extension:enterprise:2.0:User</spanx>.</t>
+      following schema URI: <spanx style="verb">urn:ietf:params:scim:schemas:extension:enterprise:2.0:User</spanx>.</t>
 
       <t>The following Singular Attributes are defined:</t>
 
@@ -753,7 +753,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
     <section anchor="group-resource" title="SCIM Group Schema">
       <t>SCIM provides a schema for representing groups, identified using the
-      following schema URI: <spanx style="verb">urn:scim:schemas:core:2.0:Group</spanx>.</t>
+      following schema URI: <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:Group</spanx>.</t>
 
       <t>Group resources are meant to enable expression of common group or
       role based access control models, although no explicit authorization
@@ -789,7 +789,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
              title="Service Provider Configuration Schema">
       <t>SCIM provides a schema for representing the service provider's
       configuration identified using the following schema URI: <spanx
-      style="verb">urn:scim:schemas:core:2.0:ServiceProviderConfig</spanx></t>
+      style="verb">urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig</spanx></t>
 
       <t>The service provider configuration resource enables a service
       provider to discovery of SCIM specification features in a standardized
@@ -881,7 +881,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
     <section anchor="resource-type-schema" title="ResourceType Schema">
       <t>The <spanx style="verb">ResourceType</spanx> schema specifies the
       meta-data about a resource type. Resource type resources are READ-ONLY
-      and identified using the following schema URI: <spanx style="verb">urn:scim:schemas:core:2.0:ResourceType</spanx>.
+      and identified using the following schema URI: <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:ResourceType</spanx>.
       Unlike other core resources, all attributes are REQUIRED unless
       otherwise specified. The <spanx style="verb">id</spanx> attribute is not
       required for the resource type resource.</t>
@@ -906,9 +906,9 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
           relative to the Base URL; e.g., <spanx style="verb">/Users</spanx>.</t>
 
           <t hangText="schema">The resource type's primary schema URI; e.g.,
-          <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>. This
-          MUST be equal to the <spanx style="verb">id</spanx> attribute of the
-          associated <spanx style="verb">Schema</spanx> resource.</t>
+          <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:User</spanx>.
+          This MUST be equal to the <spanx style="verb">id</spanx> attribute
+          of the associated <spanx style="verb">Schema</spanx> resource.</t>
 
           <t hangText="schemaExtensions">A list of URIs of the resource type's
           schema extensions. OPTIONAL. <list style="hanging">
@@ -931,7 +931,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <t>The <spanx style="verb">Schema</spanx> schema specifies the
       attribute(s) and meta-data that constitute a <spanx style="verb">Schema</spanx>
       resource. Schema resources have mutability of <spanx style="verb">readOnly</spanx>
-      and identified using the following URI: <spanx style="verb">urn:scim:schemas:core:2.0:Schema</spanx>.
+      and identified using the following URI: <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:Schema</spanx>.
       Unlike other core resources the <spanx style="verb">Schema</spanx>
       resource MAY contain a complex object within a sub-attribute and all
       attributes are REQUIRED unless otherwise specified.</t>
@@ -939,7 +939,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <t>The following Singular Attributes are defined: <list style="hanging">
           <t hangText="id">The unique URI of the schema. When applicable
           service providers MUST specify the URI specified in the core schema
-          specification; e.g., <spanx style="verb">urn:scim:schemas:core:2.0:User</spanx>.
+          specification; e.g., <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0:User</spanx>.
           Unlike most other schemas, which use some sort of a GUID for the
           <spanx style="verb">id</spanx>, the schema <spanx style="verb">id</spanx>
           is a URI so that it can be registered and is portable between
@@ -1181,7 +1181,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <figure anchor="minUserJSON"
                 title="Example Minimal User JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:User"],
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "userName": "bjensen@example.com",
   "meta": {
@@ -1202,7 +1202,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <figure anchor="fullUserJSON"
                 title="Example Full User JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:User"],
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -1340,8 +1340,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
                 title="Example Enterprise User JSON Representation">
           <artwork>{
   "schemas": 
-    [ "urn:scim:schemas:core:2.0:User", 
-      "urn:scim:schemas:extension:enterprise:2.0:User"],
+    [ "urn:ietf:params:scim:schemas:core:2.0:User", 
+      "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"],
   "id": "2819c223-7f76-453a-919d-413861904646",
   "externalId": "701984",
   "userName": "bjensen@example.com",
@@ -1460,7 +1460,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
                 +GFiBZ+GNF/cAYKcMtGcrs2i97ZkJMo="
     }
   ],
-  "urn:scim:schemas:extension:enterprise:2.0:User": {
+  "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
     "employeeNumber": "701984",
     "costCenter": "4130",
     "organization": "Universal Studios",
@@ -1489,7 +1489,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
         <figure anchor="groupJSON" title="Example Group JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:Group"],
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:Group"],
   "id": "e9e30dba-f08f-4109-8486-d5c6a331660a",
   "displayName": "Tour Guides",
   "members": [
@@ -1522,7 +1522,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <figure anchor="serviceProviderConfigJSON"
                 title="Example Service Provider Config JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:ServiceProviderConfig"],
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"],
   "documentationUrl":"http://example.com/help/scim.html",
   "patch": {
     "supported":true
@@ -1580,15 +1580,15 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <figure anchor="resourceTypeJSON"
                 title="Example Resource Type JSON Representation">
           <artwork>{
-  "schemas": ["urn:scim:schemas:core:2.0:ResourceType"],
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"],
   "id":"User",
   "name":"User",
   "endpoint": "/Users",
   "description": "Core User",
-  "schema": "urn:scim:schemas:core:2.0:User",
+  "schema": "urn:ietf:params:scim:schemas:core:2.0:User",
   "schemaExtensions": [
     {
-      "schema": "urn:scim:schemas:extension:enterprise:2.0:User",
+      "schema": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
       "required": true
     }
   ],
@@ -1612,7 +1612,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
         <figure anchor="schemaJSON" title="Eample Schema JSON Representation">
           <artwork>{[
   {
-    "id" : "urn:scim:schemas:core:2.0:User",
+    "id" : "urn:ietf:params:scim:schemas:core:2.0:User",
     "name" : "User",
     "description" : "Core User",
     "attributes" : [
@@ -2433,11 +2433,11 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       "created" : "2010-01-23T04:56:22Z",
       "lastModified" : "2014-02-04T00:00:00Z",
       "version" : "W/\"3694e05e9dff596\"",
-      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:core:2.0:User"
+      "location" : "https://example.com/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:User"
     }
   },
   {
-    "id" : "urn:scim:schemas:core:2.0:Group",
+    "id" : "urn:ietf:params:scim:schemas:core:2.0:Group",
     "name" : "Group",
     "description" : "Core Group",
     "attributes" : [
@@ -2530,11 +2530,11 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       "created" : "2010-01-23T04:56:22Z",
       "lastModified" : "2014-02-04T00:00:00Z",
       "version" : "W/\"3694e05e9dff596\"",
-      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:core:2.0:Group"
+      "location" : "https://example.com/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group"
     }
   },
   {
-    "id" : "urn:scim:schemas:extension:enterprise:2.0:User",
+    "id" : "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
     "name" : "EnterpriseUser",
     "description" : "Enterprise User",
     "attributes" : [
@@ -2645,7 +2645,7 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       "created" : "2010-01-23T04:56:22Z",
       "lastModified" : "2014-02-04T00:00:00Z",
       "version" : "W/\"3694e05e9dff596\"",
-      "location" : "https://example.com/v2/Schemas/urn:scim:schemas:extension:enterprise:2.0:User"
+      "location" : "https://example.com/v2/Schemas/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
     }
   }
 ]}</artwork>
@@ -2661,6 +2661,24 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
     </section>
 
     <section title="IANA Considerations">
+      <section title="New Registration of SCIM URN Sub-namespace">
+        <t>IANA has created a registry for new IETF URN sub-namespaces, <spanx
+        style="verb">urn:ietf:params:scim:</spanx>, per <xref
+        target="RFC3553"/>. The registration request is as follows:</t>
+
+        <t>Per <xref target="RFC3553"/>, IANA has registered a new URN
+        sub-namespace, <spanx style="verb">urn:ietf:params:scim</spanx>.<list
+            style="symbols">
+            <t>Registry name: scim</t>
+
+            <t>Specification: [this document]</t>
+
+            <t>Repository: [see <xref target="scimNamespace"/>]</t>
+
+            <t>Index value: values [see <xref target="scimNamespace"/>]</t>
+          </list></t>
+      </section>
+
       <section anchor="scimNamespace" title="URN Sub-Namespace for SCIM">
         <t>SCIM schemas and SCIM messages utilize URIs to identify the schema
         in use or other relevant context. This section creates and registers
@@ -2691,54 +2709,51 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
               blankLines="1"/> The Namespace Specific String (NSS) of all URNs
               that use the "scim" NID shall have the following structure:
               <figure>
-                  <artwork>   urn:scim:{type}:{name}{:subName}:{version}{:className}{:resourceType}</artwork>
+                  <artwork>urn:ietf:params:scim:{type}:{name}{:sName}:{vers}{:class}{:resType}</artwork>
                 </figure> The keywords have the following meaning: <list
                   style="hanging">
-                  <t hangText="type"><vspace blankLines="0"/> An entity type
-                  (e.g. <spanx style="verb">schemas</spanx>, <spanx
-                  style="verb">api</spanx>, or <spanx style="verb">param</spanx>
-                  ).</t>
+                  <t hangText="type"><vspace blankLines="0"/> The entity type
+                  which is either <spanx style="verb">schemas</spanx> or
+                  <spanx style="verb">api</spanx>.</t>
 
                   <t hangText="name"><vspace blankLines="0"/> A required
                   US-ASCII string that conforms to the URN syntax requirements
                   (see <xref target="RFC2141"/> ) and defines a major
                   namespace of object used within SCIM (e.g. <spanx
                   style="verb">core</spanx>, <spanx style="verb">extension</spanx>
-                  ). The name "extension" MUST be used when the registered
+                  ). The name "extension" MAY be used when the registered
                   schema it refers to is intended to be used as an extension
                   to another schema.</t>
 
-                  <t anchor="subName"><vspace blankLines="0"/> An optional
+                  <t anchor="sName"><vspace blankLines="0"/> An optional
                   US-ASCII string that conforms to the URN syntax requirements
                   (see <xref target="RFC2141"/> ) and defines a sub-class of
-                  object used within SCIM (e.g. <spanx style="verb">enterprise</spanx>,
-                  <spanx style="verb">extension</spanx> ).</t>
+                  object used within SCIM (e.g. <spanx style="verb">enterprise</spanx>).</t>
 
-                  <t hangText="version"><vspace blankLines="0"/> The first
-                  SCIM protocol version number where the URN is valid (e.g.
-                  <spanx style="verb">2.0</spanx> ).</t>
+                  <t hangText="vers"><vspace blankLines="0"/>The first SCIM
+                  protocol version number where the URN is valid (e.g. <spanx
+                  style="verb">2.0</spanx> ).</t>
 
-                  <t hangText="className"><vspace blankLines="0"/> An optional
+                  <t hangText="class"><vspace blankLines="0"/>An optional
                   US-ASCII string that conforms to the URN syntax requirements
                   (see <xref target="RFC2141"/> ) and defines a major class of
                   object used within SCIM.</t>
 
-                  <t hangText="resourceType"><vspace blankLines="0"/> An
-                  optional US-ASCII string that conforms to the URN syntax
-                  requirements (see <xref target="RFC2141"/> ) and typically
-                  is used when referring to a resource type within SCIM (e.g.
-                  User).</t>
+                  <t hangText="resType"><vspace blankLines="0"/> An optional
+                  US-ASCII string that conforms to the URN syntax requirements
+                  (see <xref target="RFC2141"/> ) and typically is used when
+                  referring to a resource type within SCIM (e.g. User).</t>
                 </list></t>
 
               <t hangText="Relevant Ancillary Documentation:"><vspace
-              blankLines="1"/> None</t>
+              blankLines="1"/>None</t>
 
               <t hangText="Identifier Uniqueness Considerations:"><vspace
-              blankLines="1"/> The designated contact shall be responsible for
+              blankLines="1"/>The designated contact shall be responsible for
               reviewing and enforcing uniqueness.</t>
 
               <t hangText="Identifier Persistence Considerations:"><vspace
-              blankLines="1"/> Once a name has been allocated it MUST NOT be
+              blankLines="1"/>Once a name has been allocated it MUST NOT be
               re-allocated for a different purpose. The rules provided for
               assignments of values within a sub-namespace MUST be constructed
               so that the meaning of values cannot change. This registration
@@ -2747,17 +2762,17 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
               <t>As the SCIM specifications are updated and the SCIM protocol
               version is adjusted, a new registration will be made when
-              significant changes are made. Example, <spanx style="verb">urn:scim:schemas:core:1.0</spanx>
-              and <spanx style="verb">urn:scim:schemas:core:2.0</spanx>.</t>
+              significant changes are made. Example, <spanx style="verb">urn:ietf:params:scim:schemas:core:1.0 (externally defined, not previously registered)</spanx>
+              and <spanx style="verb">urn:ietf:params:scim:schemas:core:2.0</spanx>.</t>
 
               <t hangText="Process of Identifier Assignment:"><vspace
               blankLines="1"/> Identifiers with namespace type "schema" (e.g.
-              <spanx style="verb">urn:scim:schemas</spanx> ) are assigned
-              after the review of the assigned contact via the SCIM public
-              mailing list, <spanx style="verb">scim@ietf.org</spanx> as
-              documented in <xref target="schemaReg"/>.</t>
+              <spanx style="verb">urn:ietf:params:scim:schemas</spanx> ) are
+              assigned after the review of the assigned contact via the SCIM
+              public mailing list, <spanx style="verb">scim@ietf.org</spanx>
+              as documented in <xref target="schemaReg"/>.</t>
 
-              <t>Namespaces with type "api" (e.g. <spanx style="verb">urn:scim:api</spanx>
+              <t>Namespaces with type "api" (e.g. <spanx style="verb">urn:ietf:params:scim:api</spanx>
               ) are reserved for IETF approved SCIM specifications. Namespaces
               with type "param" are reserved for future use.</t>
 
@@ -2784,11 +2799,13 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
         <section title="Pre-Registered SCIM Schema Identifiers">
           <t>The following SCIM Identifiers are defined: <list style="hanging">
-              <t hangText="urn:scim:schemas:core:2.0"><vspace blankLines="1"/>
-              SCIM Core Schema as specified in <xref target="schema"/> and
-              <xref target="initialSchemaRegistry"/>.</t>
+              <t hangText="urn:ietf:params:scim:schemas:core:2.0"><vspace
+              blankLines="1"/> SCIM Core Schema as specified in <xref
+              target="schema"/> and <xref
+              target="initialSchemaRegistry"/>.</t>
 
-              <t hangText="urn:scim:schemas:extension:enterprise:2.0"><vspace
+              <t
+              hangText="urn:ietf:params:scim:schemas:extension:enterprise:2.0"><vspace
               blankLines="1"/> Enterprise schema extensions as defined in
               <xref target="enterpriseUser"/> and <xref
               target="initialSchemaRegistry"/>.</t>
@@ -2876,19 +2893,19 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <ttcol>Reference</ttcol>
 
-          <c>urn:scim:schemas:core:2.0:User</c>
+          <c>urn:ietf:params:scim:schemas:core:2.0:User</c>
 
           <c>User Resource</c>
 
           <c>See <xref target="user-resource"/></c>
 
-          <c>urn:scim:schemas:extension:enterprise:2.0:User</c>
+          <c>urn:ietf:params:scim:schemas:extension:enterprise:2.0:User</c>
 
           <c>Enterprise User Extension</c>
 
           <c>See <xref target="enterpriseUser"/></c>
 
-          <c>urn:scim:schemas:core:2.0:Group</c>
+          <c>urn:ietf:params:scim:schemas:core:2.0:Group</c>
 
           <c>Group Resource</c>
 
@@ -2902,19 +2919,19 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <ttcol>Reference</ttcol>
 
-          <c>urn:scim:schemas:core:2.0:ServiceProviderConfig</c>
+          <c>urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig</c>
 
           <c>Service Provider Configuration Schema</c>
 
           <c>See <xref target="serviceProviderConfig"/></c>
 
-          <c>urn:scim:schemas:core:2.0:ResourceType</c>
+          <c>urn:ietf:params:scim:schemas:core:2.0:ResourceType</c>
 
           <c>Resource Type Config</c>
 
           <c>See <xref target="resource-type-schema"/></c>
 
-          <c>urn:scim:schemas:core:2.0:Schema</c>
+          <c>urn:ietf:params:scim:schemas:core:2.0:Schema</c>
 
           <c>Schema Definitions Schema</c>
 
@@ -2929,6 +2946,8 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
       <?rfc include="reference.RFC.2119"?>
 
       <?rfc include="reference.RFC.2141"?>
+
+      <?rfc include='reference.RFC.3553' ?>
 
       <?rfc include='reference.RFC.3629' ?>
 
@@ -3150,6 +3169,9 @@ nameChar   = "-" / "_" / DIGIT / ALPHA</artwork>
 
           <t>- Clarified meaning of null and unassigned</t>
         </list></t>
+
+      <t>Draft 08 - PH - Revised IANA namespace to urn:ietf:params:scim per
+      RFC3553</t>
     </section>
   </back>
 </rfc>
